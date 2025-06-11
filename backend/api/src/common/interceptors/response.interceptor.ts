@@ -13,6 +13,7 @@ export interface Response<T> {
   statusCode: string;
   data: T;
   message: string;
+  errors: string[];
   isSuccess: boolean;
 }
 
@@ -27,6 +28,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
         statusCode: 'ok',
         data: data || {},
         message: 'Operation completed successfully',
+        errors: [],
         isSuccess: true,
       })),
       catchError((error) => {
