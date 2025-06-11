@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model projects {
+  id          String    @id(map: "PK_6271df0a7aed1d6c0691ce6ac50") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String    @db.VarChar
+  description String?   @db.VarChar
+  status      String    @default("active") @db.VarChar
+  startDate   DateTime? @db.Date
+  endDate     DateTime? @db.Date
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @default(now()) @db.Timestamp(6)
+  tasks       tasks[]
+}
+
+model tasks {
+  id           String    @id(map: "PK_8d12ff38fcc62aaba2cab748772") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title        String    @db.VarChar
+  description  String?   @db.VarChar
+  status       String    @default("pending") @db.VarChar
+  dueDate      DateTime? @db.Date
+  createdAt    DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime  @default(now()) @db.Timestamp(6)
+  projectId    String?   @db.Uuid
+  assignedToId String?   @db.Uuid
+  users        users?    @relation(fields: [assignedToId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d020677feafe94eba0cb9d846d1")
+  projects     projects? @relation(fields: [projectId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_e08fca67ca8966e6b9914bf2956")
+}
+
+model users {
+  id        String   @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name      String   @db.VarChar
+  email     String   @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar
+  password  String   @db.VarChar
+  role      String   @default("user") @db.VarChar
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @db.Timestamp(6)
+  tasks     tasks[]
+}
