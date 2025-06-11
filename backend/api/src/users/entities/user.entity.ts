@@ -19,7 +19,7 @@ export class User {
   role: string;
 
   @OneToMany(() => Task, task => task.assignedTo)
-  tasks: Task[];
+  tasks?: Task[];
 
   @CreateDateColumn()
   createdAt: Date;

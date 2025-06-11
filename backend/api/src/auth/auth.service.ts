@@ -6,20 +6,18 @@ import {
 import { LoginDto } from './dto/login-dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { User } from 'src/users/entities/user.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async exchangeGoogleCode(code: string): Promise<string> {
@@ -60,7 +58,7 @@ export class AuthService {
   }
 
   async findOrCreateUser(userInfo: any): Promise<User> {
-    const existingUser = await this.userRepository.findOne({
+    const existingUser = await this.prismaService.users.findUnique({
       where: { email: userInfo.email },
     });
 
@@ -68,34 +66,39 @@ export class AuthService {
       return existingUser;
     }
 
-    const newUser = this.userRepository.create({
-      name: userInfo.name,
-      email: userInfo.email,
-      password: '',
+    const newUser = await this.prismaService.users.create({
+      data: {
+        name: userInfo.name,
+        email: userInfo.email,
+        password: '',
+      },
     });
 
-    return await this.userRepository.save(newUser);
+    return newUser;
   }
 
   async create(signUpDto: SignUpDto) {
     const { email, password, name } = signUpDto;
-    const isUser = await this.userRepository.findOne({ where: { email } });
+    const isUser = await this.prismaService.users.findUnique({ where: { email } });
+    
     if (isUser) {
       throw new BadRequestException('Email already in use');
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
-    const user = this.userRepository.create({
-      name,
-      email,
-      password: hashPassword,
+    const user = await this.prismaService.users.create({
+      data: {
+        name,
+        email,
+        password: hashPassword,
+      },
     });
-    return this.userRepository.save(user);
+    return user;
   }
 
   async loginUser(loginDto: LoginDto) {
     const { email, password } = loginDto;
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.prismaService.users.findUnique({ where: { email } });
 
     if (!user) throw new UnauthorizedException('Invalid credentials');
     const isMatch = await bcrypt.compare(password, user.password);

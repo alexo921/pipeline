@@ -6,6 +6,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { PrismaModule } from './common/prisma/prisma.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     TasksModule,
     UsersModule,
     AuthModule,
+    PrismaModule
   ],
 })
 export class AppModule {}
