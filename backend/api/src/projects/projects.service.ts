@@ -1,28 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Project } from './entities/project.entity';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 
 @Injectable()
 export class ProjectsService {
   constructor(
-    @InjectRepository(Project)
-    private projectsRepository: Repository<Project>,
+    private readonly prismaService: PrismaService,
   ) {}
 
-  create(createProjectDto: CreateProjectDto) {
-    const project = this.projectsRepository.create(createProjectDto);
-    return this.projectsRepository.save(project);
+  async create(createProjectDto: CreateProjectDto) {
+    const project = await this.prismaService.projects.create({
+      data: createProjectDto,
+    });
+    return project;
   }
 
-  findAll() {
-    return this.projectsRepository.find();
+  async findAll() {
+    return this.prismaService.projects.findMany();
   }
 
   async findOne(id: string) {
-    const project = await this.projectsRepository.findOneBy({ id });
+    const project = await this.prismaService.projects.findUnique({
+      where: { id },
+    });
     if (!project) {
       throw new NotFoundException(`Project with ID ${id} not found`);
     }
@@ -31,12 +32,17 @@ export class ProjectsService {
 
   async update(id: string, updateProjectDto: UpdateProjectDto) {
     const project = await this.findOne(id);
-    await this.projectsRepository.update(id, updateProjectDto);
+    await this.prismaService.projects.update({
+      where: { id },
+      data: updateProjectDto,
+    });
     return this.findOne(id);
   }
 
   async remove(id: string) {
     const project = await this.findOne(id);
-    return this.projectsRepository.remove(project);
+    return this.prismaService.projects.delete({
+      where: { id },
+    });
   }
-} 
+}
