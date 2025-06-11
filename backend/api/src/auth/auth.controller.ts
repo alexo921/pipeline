@@ -63,7 +63,7 @@ export class AuthController {
       const user = await this.authService.findOrCreateUser(userInfo);
 
       const jwt = await this.jwtService.signAsync({
-        id: user.id,
+        sub: user.id,
         email: user.email,
       });
 
