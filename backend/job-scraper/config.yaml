@@ -1,0 +1,95 @@
+# Scraper Configuration
+database:
+  host: localhost
+  port: 5432
+  dbname: job_scraper
+  user: postgres
+  password: ""  # Set via environment variable DB_PASSWORD
+  table_name: job_listings
+
+csv:
+  required_columns:
+    - source_site
+    - search_url
+    - role
+    - state
+    - city
+    - zip_code
+    - location_scope
+    - location_source
+    - parse_location?
+    - setting_type
+  validation_rules:
+    source_site:
+      not_null: true
+      allowed_values: ["myCNAjobs"]
+    search_url:
+      not_null: true
+      pattern: "^https://www\\.mycnajobs\\.com/.*"
+    role:
+      not_null: true
+      allowed_values: ["ALL_MATCHING"]
+    state:
+      pattern: "^[A-Z]{2}$"
+    zip_code:
+      pattern: "^\\d{5}(\\.0)?$"
+    location_scope:
+      allowed_values: ["city", "multi"]
+    parse_location?:
+      allowed_values: ["Yes", "No"]
+    setting_type:
+      allowed_values: ["home_care", "mixed"]
+
+scraper:
+  rate_limits:
+    calls_per_minute: 10
+    max_retries: 3
+    retry_delay_base: 4
+    retry_delay_max: 10
+  
+  headers:
+    accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+    accept_language: "en-US,en;q=0.5"
+    connection: "keep-alive"
+    upgrade_insecure_requests: "1"
+
+  sources:
+    mycnajobs:
+      base_url: "https://www.mycnajobs.com"
+      selectors:
+        job_listing: "div.job-listing"
+        job_title: "h2.job-title"
+        company_name: "span.company-name"
+        location: "span.location"
+        description: "div.description"
+        posted_date: "span.posted-date"
+        apply_link: "a.apply-button"
+      pagination:
+        enabled: true
+        param: "page"
+        start: 1
+        max_pages: 20  # Adjust based on site's limitations
+
+logging:
+  level: INFO
+  file: "job_scraper.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+deduplication:
+  fields:
+    - job_title
+    - company_name
+    - location
+    - posted_date
+  lookback_days: 30  # Don't store duplicates within this time window
+
+location_parsing:
+  remote_keywords:
+    - remote
+    - virtual
+    - work from home
+    - wfh
+    - telecommute
+  state_validation:
+    enabled: true
+    require_match: true 
