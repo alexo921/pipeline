@@ -16,6 +16,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { error } from 'console';
+import { ForgotPassDto } from './dto/forgot-password-dto';
+import { ResetPasswordDto } from './dto/Reset-password-Dto';
 
 @Controller('auth')
 export class AuthController {
@@ -33,6 +35,16 @@ export class AuthController {
   @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.authService.loginUser(loginDto);
+  }
+
+  @Post('forgot-password')
+  forgotPassword(@Body() forgotDto: ForgotPassDto) {
+    return this.authService.forgotPass(forgotDto);
+  }
+
+  @Post('reset-password')
+  resetPass(@Body() resetPassDto: ResetPasswordDto) {
+    return this.authService.resetPass(resetPassDto);
   }
 
   @Get('google')
