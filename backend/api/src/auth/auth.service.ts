@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { LoginDto } from './dto/login-dto';
 import { SignUpDto } from './dto/sign-up.dto';
-import { User } from 'src/users/entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -57,7 +56,7 @@ export class AuthService {
     return response.data;
   }
 
-  async findOrCreateUser(userInfo: any): Promise<User> {
+  async findOrCreateUser(userInfo: any): Promise<any> {
     const existingUser = await this.prismaService.users.findUnique({
       where: { email: userInfo.email },
     });
