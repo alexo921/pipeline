@@ -97,11 +97,9 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('me')
+  @Get('profile')
   getProfile(@Request() req) {
-    return {
-      message: 'you are authenticated',
-      user: req.user,
-    };
+    const id = req.user.userId;
+    return this.authService.getProfile(id);
   }
 }

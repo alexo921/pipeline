@@ -114,8 +114,9 @@ export class AuthService {
 
     const payload = { sub: user.id, email: user.email };
     const token = this.jwtService.sign(payload);
+    const { password: _, ...result } = user;
 
-    return { access_token: token };
+    return { token, result };
   }
 
   async forgotPass(forgotPass: ForgotPassDto) {
@@ -178,15 +179,6 @@ export class AuthService {
 
     const user = await this.prismaService.users.findUnique({
       where: { email },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        password: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-      },
     });
 
     if (!user) {
@@ -205,5 +197,15 @@ export class AuthService {
     });
 
     return { message: 'Password changed successfully' };
+  }
+
+  async getProfile(id: string) {
+    const user = await this.prismaService.users.findUnique({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const { password, ...result } = user;
+    return result;
   }
 }
