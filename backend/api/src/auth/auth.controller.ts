@@ -16,6 +16,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { error } from 'console';
+import { ForgotPassDto } from './dto/forgot-password-dto';
+import { ResetPasswordDto } from './dto/Reset-password-Dto';
+import { ChangePasswordDto } from './dto/change-password-dto';
 
 @Controller('auth')
 export class AuthController {
@@ -33,6 +36,22 @@ export class AuthController {
   @Post('login')
   login(@Body() loginDto: LoginDto) {
     return this.authService.loginUser(loginDto);
+  }
+
+  @Post('forgot-password')
+  forgotPassword(@Body() forgotDto: ForgotPassDto) {
+    return this.authService.forgotPass(forgotDto);
+  }
+
+  @Post('reset-password')
+  resetPass(@Body() resetPassDto: ResetPasswordDto) {
+    return this.authService.resetPass(resetPassDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('change-password')
+  changePass(@Request() req, @Body() changePassDto: ChangePasswordDto) {
+    return this.authService.changePass(req.user.email, changePassDto);
   }
 
   @Get('google')
@@ -78,11 +97,9 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('me')
+  @Get('profile')
   getProfile(@Request() req) {
-    return {
-      message: 'you are authenticated',
-      user: req.user,
-    };
+    const id = req.user.userId;
+    return this.authService.getProfile(id);
   }
 }
