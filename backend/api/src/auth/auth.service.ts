@@ -13,6 +13,7 @@ import axios from 'axios';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { ForgotPassDto } from './dto/forgot-password-dto';
 import { ResetPasswordDto } from './dto/Reset-password-Dto';
+import { ChangePasswordDto } from './dto/change-password-dto';
 
 @Injectable()
 export class AuthService {
@@ -170,5 +171,39 @@ export class AuthService {
     });
 
     return { message: 'Password has been reset successfully' };
+  }
+
+  async changePass(email: string, changePassDto: ChangePasswordDto) {
+    const { currentPassword, newPassword } = changePassDto;
+
+    const user = await this.prismaService.users.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await this.prismaService.users.update({
+      where: { email },
+      data: { password: hashedNewPassword },
+    });
+
+    return { message: 'Password changed successfully' };
   }
 }

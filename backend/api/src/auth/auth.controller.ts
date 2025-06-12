@@ -18,6 +18,7 @@ import { Response } from 'express';
 import { error } from 'console';
 import { ForgotPassDto } from './dto/forgot-password-dto';
 import { ResetPasswordDto } from './dto/Reset-password-Dto';
+import { ChangePasswordDto } from './dto/change-password-dto';
 
 @Controller('auth')
 export class AuthController {
@@ -45,6 +46,12 @@ export class AuthController {
   @Post('reset-password')
   resetPass(@Body() resetPassDto: ResetPasswordDto) {
     return this.authService.resetPass(resetPassDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('change-password')
+  changePass(@Request() req, @Body() changePassDto: ChangePasswordDto) {
+    return this.authService.changePass(req.user.email, changePassDto);
   }
 
   @Get('google')
