@@ -7,8 +7,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  CANDIDATE
+  EMPLOYER
+  ADMIN
+}
+
+enum OnboardingStep {
+  INITIAL_DETAILS
+  LOCATION_DETAILS
+  AVIALABILITY_DETAILS
+}
+
+enum HealthcareRole {
+  CNA
+  LPN
+  RN
+  PCA
+  HHA
+  OTHER
+}
+
+enum CertificationStatus {
+  Certified
+  NotCertified
+  Pending
+  Inprogress
+}
+
+enum WorkType {
+  FullTime
+  PartTime
+  PerDiem
+  LiveIn
+}
+
+enum ShiftType {
+  Day
+  Night
+  Weekend
+  Overnight
+  Flexible
+}
+
+enum JobStatus {
+  WorkingFullTime
+  WorkingFullTimeAvailable
+  WorkingPartTimeAvailable
+  NotWorkingAvailable
+  NotWorkingOpenOffers
+}
+
 model projects {
-  id          String    @id(map: "PK_6271df0a7aed1d6c0691ce6ac50") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id          String    @id() @default(uuid())
   name        String    @db.VarChar
   description String?   @db.VarChar
   status      String    @default("active") @db.VarChar
@@ -20,26 +71,59 @@ model projects {
 }
 
 model tasks {
-  id           String    @id(map: "PK_8d12ff38fcc62aaba2cab748772") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title        String    @db.VarChar
-  description  String?   @db.VarChar
-  status       String    @default("pending") @db.VarChar
-  dueDate      DateTime? @db.Date
-  createdAt    DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt    DateTime  @default(now()) @db.Timestamp(6)
-  projectId    String?   @db.Uuid
-  assignedToId String?   @db.Uuid
-  users        users?    @relation(fields: [assignedToId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_d020677feafe94eba0cb9d846d1")
-  projects     projects? @relation(fields: [projectId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_e08fca67ca8966e6b9914bf2956")
+  id           String   @id @default(uuid())
+  title        String
+  description  String?
+  status       String   @default("pending")
+  dueDate      DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  projectId    String?
+  assignedToId String?
+
+  assignedTo   users?     @relation("UserTasks", fields: [assignedToId], references: [id])
+  projects     projects?  @relation(fields: [projectId], references: [id])
 }
 
 model users {
-  id        String   @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name      String   @db.VarChar
-  email     String   @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar
-  password  String   @db.VarChar
-  role      String   @default("user") @db.VarChar
-  createdAt DateTime @default(now()) @db.Timestamp(6)
-  updatedAt DateTime @default(now()) @db.Timestamp(6)
-  tasks     tasks[]
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(CANDIDATE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tasks     tasks[]   @relation("UserTasks")
+  candidate candidates?
+
+  @@index([email])
+  @@unique([email, role])
+}
+
+model candidates {
+  id                    String   @id @default(uuid())
+  name                  String
+  email                 String   @unique
+  userId                String   @unique
+  healthcareRole        HealthcareRole
+  certificationStatus   CertificationStatus
+  zipCode               String?  // nullable
+  address               String?  // nullable
+  maxTravelDistance     Int?     // stored in minutes; nullable
+  workType              WorkType[]        // multiple select
+  shiftType             ShiftType[]       // multiple select
+  currentJobStatus      JobStatus?
+  step                  OnboardingStep
+  isOnboarded           Boolean  @default(false)
+  isActive              Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  // relation
+  user                  users    @relation(fields: [userId], references: [id])
+
+  @@index([email,name])
+  @@unique([email,userId])
 }
