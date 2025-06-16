@@ -1,7 +1,11 @@
 import { BadRequestException, Body, Controller, Put } from '@nestjs/common';
 import { OnboardingService } from './onboarding.service';
-import { OnboardingDto } from './dtos/onboarding.dto';
 import { OnboardingStep } from 'src/common/enums/enums';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
+import { InitialDetailsDto } from './dtos/initial-details.dto';
+import { LocationDetailsDto } from './dtos/location-details.dto';
+import { AvailabilityDetailsDto } from './dtos/availability-details.dto';
 
 @Controller('candidate/onboarding')
 export class OnboardingController {
@@ -9,40 +13,46 @@ export class OnboardingController {
 
   @Put()
   async handleOnboarding(@Body() data: any) {
-
     if (!data.step || !Object.values(OnboardingStep).includes(data.step)) {
       throw new BadRequestException('Invalid step number');
     }
 
     switch (data.step) {
-      case OnboardingStep.INITIAL_DETAILS:
-        return this.onboardingService.handleStepOne({
-          name: data.name,
-          email: data.email,
-          healthcareRole: data.healthcareRole,
-          certificationStatus: data.certificationStatus,
-        });
+      case OnboardingStep.INITIAL_DETAILS: {
+        const dto = plainToInstance(InitialDetailsDto, data);
+        const errors = await validate(dto);
+        if (errors.length > 0) {
+          throw new BadRequestException(errors);
+        }
+        return this.onboardingService.handleStepOne(dto);
+      }
 
-      case OnboardingStep.LOCATION_DETAILS:
+      case OnboardingStep.LOCATION_DETAILS: {
         if (!data.id) {
           throw new BadRequestException('ID is required');
         }
+        const dto = plainToInstance(LocationDetailsDto, data);
+        const errors = await validate(dto);
+        if (errors.length > 0) {
+          throw new BadRequestException(errors);
+        }
 
-        return this.onboardingService.handleStepTwo(data.id, {
-          zipCode: data.zipCode,
-          address: data.address,
-          maxTravelDistance: data.maxTravelDistance,
-        });
+        return this.onboardingService.handleStepTwo(dto.id, dto);
+      }
 
-      case OnboardingStep.AVIALABILITY_DETAILS:
+
+      case OnboardingStep.AVAILABILITY_DETAILS:{
         if (!data.id) {
           throw new BadRequestException('Client ID is required');
         }
-        return this.onboardingService.handleStepThree(data.id, {
-          workType: data.workType,
-          shiftType: data.shiftType,
-          currentJobStatus: data.currentJobStatus,
-        });
+        const dto = plainToInstance(AvailabilityDetailsDto, data);
+        const errors = await validate(dto);
+        if (errors.length > 0) {
+          throw new BadRequestException(errors);
+        }
+
+        return this.onboardingService.handleStepThree(dto.id, dto);
+      }
 
       default:
         throw new BadRequestException('Invalid step number');
