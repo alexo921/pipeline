@@ -16,7 +16,7 @@ enum Role {
 enum OnboardingStep {
   INITIAL_DETAILS
   LOCATION_DETAILS
-  AVIALABILITY_DETAILS
+  AVAILABILITY_DETAILS
 }
 
 enum HealthcareRole {
