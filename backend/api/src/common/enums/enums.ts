@@ -48,3 +48,28 @@ export enum JobStatus {
   NotWorkingAvailable = 'NotWorkingAvailable',
   NotWorkingOpenOffers = 'NotWorkingOpenOffers',
 }
+
+export enum ThrivingFactor {
+  FRIENDLY_TEAM = 'FriendlyTeam',
+  CLEAR_ONBOARDING = 'ClearOnboarding',
+  FLEXIBLE_SCHEDULE = 'FlexibleSchedule',
+  HIGHER_PAY = 'HigherPay',
+  MANAGEABLE_LOAD = 'ManageableLoad',
+  CAREER_GROWTH = 'CareerGrowth',
+}
+
+export enum WorkSettingExperience {
+  LTC = 'LTC',
+  HomeCare = 'HomeCare',
+  Hospital = 'Hospital',
+  Rehab = 'Rehab',
+  StartingOut = 'StartingOut',
+}
+
+export enum PreferredSetting {
+  LTC = 'LTC',
+  HomeCare = 'HomeCare',
+  Hospital = 'Hospital',
+  Rehab = 'Rehab',
+  Open = 'Open',
+}

@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsString, IsDateString, IsOptional, IsBoolean, IsDate } from 'class-validator';
+import { IsString, IsOptional, IsBoolean, IsDate } from 'class-validator';
 
 export class CreateExperienceDto {
   @IsString()
