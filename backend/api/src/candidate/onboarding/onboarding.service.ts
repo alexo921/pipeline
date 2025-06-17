@@ -36,6 +36,10 @@ export class OnboardingService {
     });
 
     if (existingCandidate) {
+
+      if(existingCandidate.isOnboarded){
+        throw new BadRequestException(`User already exists with same email ${email}`)
+      }
       return existingCandidate;
     }
 
@@ -107,7 +111,7 @@ export class OnboardingService {
     // TODO: send email for verification with token
     await this.emailService.sendVerificationEmail(candidate.email, token);
 
-    return this.prismaService.candidates.update({
+    return await this.prismaService.candidates.update({
       where: { id: id },
       data: {
         workType,
@@ -171,9 +175,6 @@ export class OnboardingService {
     });
     return {
       message: 'Password set successfully and onboarding completed',
-      user: userWithoutPassword,
-      candidate: updatedCandidate,
-      token: loginToken,
     };
   }
 }

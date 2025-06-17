@@ -27,7 +27,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
       map((data) => ({
         statusCode: 'ok',
         data: data || {},
-        message: 'Operation completed successfully',
+        message: data?.message ||'Operation completed successfully',
         errors: [],
         isSuccess: true,
       })),
