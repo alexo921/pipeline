@@ -58,6 +58,31 @@ enum JobStatus {
   NotWorkingOpenOffers
 }
 
+enum WorkSettingExperience {
+  LTC
+  HomeCare
+  Hospital
+  Rehab
+  StartingOut
+}
+
+enum PreferredSetting {
+  LTC
+  HomeCare
+  Hospital
+  Rehab
+  Open
+}
+
+enum ThrivingFactor {
+  FriendlyTeam
+  ClearOnboarding
+  FlexibleSchedule
+  HigherPay
+  ManageableLoad
+  CareerGrowth
+}
+
 model projects {
   id          String    @id() @default(uuid())
   name        String    @db.VarChar
@@ -96,7 +121,7 @@ model users {
   updatedAt DateTime @updatedAt
 
   tasks     tasks[]   @relation("UserTasks")
-  candidate candidates?
+  candidate candidates[]
 
   @@index([email])
   @@unique([email, role])
@@ -118,12 +143,38 @@ model candidates {
   step                  OnboardingStep
   isOnboarded           Boolean  @default(false)
   isActive              Boolean  @default(false)
+  hourlyRate            Int?
+  yearlyRate            Int?
+  payLocationBased      Boolean @default(false)
+  workSettingExperience WorkSettingExperience[]
+  preferredSetting      PreferredSetting[]
+  thrivingFactors       ThrivingFactor[]
+  jobFrustationNotes    String?
+  referencedBy          String?
+
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
   // relation
   user                  users    @relation(fields: [userId], references: [id])
+  experience            experiences[]
 
   @@index([email,name])
   @@unique([email,userId])
+}
+
+model experiences {
+  id                    String   @id @default(uuid())
+  candidateId           String   
+  employer              String
+  role                  String
+  startDate             DateTime
+  endDate               DateTime?
+  isCurrent             Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  candidate             candidates @relation(fields: [candidateId], references: [id])
+
+  @@index([candidateId])
 }
