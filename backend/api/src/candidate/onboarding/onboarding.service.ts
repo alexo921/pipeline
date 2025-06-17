@@ -9,12 +9,16 @@ import { JwtService } from '@nestjs/jwt';
 import { AvailabilityDetailsDto } from './dtos/availability-details.dto';
 import { InitialDetailsDto } from './dtos/initial-details.dto';
 import { LocationDetailsDto } from './dtos/location-details.dto';
+import { EmailService } from 'src/email/email.service';
+import { SetPassword } from './dtos/set-password.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class OnboardingService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
   ) {}
 
   async getCandidateById(id?: string) {
@@ -92,8 +96,16 @@ export class OnboardingService {
       throw new NotFoundException('No candidate found with this id');
     }
 
-    // const token = this.jwtService.sign({ candidateId: candidate.id, email: candidate.email, role: Role.CANDIDATE});
-    //TODO: send email for verification with token
+    const token = this.jwtService.sign(
+      {
+        candidateId: candidate.id,
+        email: candidate.email,
+        role: candidate.healthcareRole,
+      },
+      { expiresIn: '1h' },
+    );
+    // TODO: send email for verification with token
+    await this.emailService.sendVerificationEmail(candidate.email, token);
 
     return this.prismaService.candidates.update({
       where: { id: id },
@@ -104,5 +116,64 @@ export class OnboardingService {
         step: OnboardingStep.AVAILABILITY_DETAILS,
       },
     });
+  }
+
+  async verifyEmail(token: string) {
+    const payload = await this.jwtService.verify(token);
+
+    if (payload.exp && Date.now() >= payload.exp * 1000) {
+      throw new BadRequestException('Token has expired');
+    }
+
+    const candidate = await this.prismaService.candidates.findUnique({
+      where: { email: payload.email },
+    });
+
+    if (!candidate) {
+      throw new BadRequestException('Invalid token');
+    }
+
+    return {
+      message: 'Email verified',
+      redirectUrl: `${process.env.FRONTEND_URL}/set-password?token=${token}`,
+    };
+  }
+
+  async setPassword(dto: SetPassword) {
+    const { password, token } = dto;
+    const payload = await this.jwtService.verify(token);
+
+    if (!payload) {
+      throw new BadRequestException('Invalid token');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const [updatedUser, updatedCandidate] =
+      await this.prismaService.$transaction([
+        this.prismaService.users.update({
+          where: { email: payload.email },
+          data: { password: hashedPassword },
+        }),
+        this.prismaService.candidates.update({
+          where: { email: payload.email },
+          data: {
+            isOnboarded: true,
+            isActive: true,
+          },
+        }),
+      ]);
+    const { password: _, ...userWithoutPassword } = updatedUser;
+
+    const loginToken = this.jwtService.sign({
+      sub: updatedUser.id,
+      email: updatedUser.email,
+      role: updatedUser.role,
+    });
+    return {
+      message: 'Password set successfully and onboarding completed',
+      user: userWithoutPassword,
+      candidate: updatedCandidate,
+      token: loginToken,
+    };
   }
 }
