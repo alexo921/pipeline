@@ -139,9 +139,9 @@ export class AuthService {
       },
     );
 
+    await this.emailService.sendPasswordResetEmail(email, token, isUser.name);
     return {
-      message: 'Reset token generated successfully',
-      token: token,
+      message: 'A password reset link has been sent to your email.',
     };
   }
 

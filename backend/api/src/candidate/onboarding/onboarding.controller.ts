@@ -1,4 +1,12 @@
-import { BadRequestException, Body, Controller, Put } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Put,
+  Get,
+  Query,
+  Post,
+} from '@nestjs/common';
 import { OnboardingService } from './onboarding.service';
 import { OnboardingStep } from 'src/common/enums/enums';
 import { plainToInstance } from 'class-transformer';
@@ -6,6 +14,7 @@ import { validate, ValidationError } from 'class-validator';
 import { InitialDetailsDto } from './dtos/initial-details.dto';
 import { LocationDetailsDto } from './dtos/location-details.dto';
 import { AvailabilityDetailsDto } from './dtos/availability-details.dto';
+import { SetPassword } from './dtos/set-password.dto';
 
 function formatErrors(errors: ValidationError[]): string[] {
   return errors.flatMap((error) => Object.values(error.constraints || {}));
@@ -44,8 +53,7 @@ export class OnboardingController {
         return this.onboardingService.handleStepTwo(dto.id, dto);
       }
 
-
-      case OnboardingStep.AVAILABILITY_DETAILS:{
+      case OnboardingStep.AVAILABILITY_DETAILS: {
         if (!data.id) {
           throw new BadRequestException('Client ID is required');
         }
@@ -61,5 +69,15 @@ export class OnboardingController {
       default:
         throw new BadRequestException('Invalid step number');
     }
+  }
+
+  @Get('verify-email')
+  verifyEmail(@Query('token') token: string) {
+    return this.onboardingService.verifyEmail(token);
+  }
+
+  @Post('set-password')
+  setPassword(@Body() dto:SetPassword){
+    return this.onboardingService.setPassword(dto);
   }
 }
