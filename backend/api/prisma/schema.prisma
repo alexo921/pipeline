@@ -144,13 +144,13 @@ model candidates {
   isOnboarded           Boolean  @default(false)
   isActive              Boolean  @default(false)
   hourlyRate            Int?
-  yearlyRate            Int?
+  yearlySalary          Int?
   payLocationBased      Boolean @default(false)
   workSettingExperience WorkSettingExperience[]
   preferredSetting      PreferredSetting[]
   thrivingFactors       ThrivingFactor[]
   jobFrustationNotes    String?
-  referencedBy          String?
+  referredBy            String?
 
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
