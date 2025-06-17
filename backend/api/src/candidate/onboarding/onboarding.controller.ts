@@ -71,8 +71,8 @@ export class OnboardingController {
     }
   }
 
-  @Get('verify-email')
-  verifyEmail(@Query('token') token: string) {
+  @Post('verify-email')
+  verifyEmail(@Body('token') token: string) {
     return this.onboardingService.verifyEmail(token);
   }
 
