@@ -1,8 +1,9 @@
 # Scraper Configuration
 database:
+  enabled: false  # Set to true when database is needed
   host: localhost
   port: 5432
-  dbname: job_scraper
+  name: job_scraper
   user: postgres
   password: ""  # Set via environment variable DB_PASSWORD
   table_name: job_listings

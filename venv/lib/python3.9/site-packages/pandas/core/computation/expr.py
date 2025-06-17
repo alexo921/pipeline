@@ -20,8 +20,6 @@ import numpy as np
 
 from pandas.errors import UndefinedVariableError
 
-from pandas.core.dtypes.common import is_string_dtype
-
 import pandas.core.common as com
 from pandas.core.computation.ops import (
     ARITH_OPS_SYMS,
@@ -33,6 +31,7 @@ from pandas.core.computation.ops import (
     UNARY_OPS_SYMS,
     BinOp,
     Constant,
+    Div,
     FuncNode,
     Op,
     Term,
@@ -371,7 +370,7 @@ class BaseExprVisitor(ast.NodeVisitor):
         "Add",
         "Sub",
         "Mult",
-        "Div",
+        None,
         "Pow",
         "FloorDiv",
         "Mod",
@@ -522,12 +521,10 @@ class BaseExprVisitor(ast.NodeVisitor):
         elif self.engine != "pytables":
             if (
                 getattr(lhs, "return_type", None) == object
-                or is_string_dtype(getattr(lhs, "return_type", None))
                 or getattr(rhs, "return_type", None) == object
-                or is_string_dtype(getattr(rhs, "return_type", None))
             ):
                 # evaluate "==" and "!=" in python if either of our operands
-                # has an object or string return type
+                # has an object return type
                 return self._maybe_eval(res, eval_in_python + maybe_eval_in_python)
         return res
 
@@ -535,6 +532,9 @@ class BaseExprVisitor(ast.NodeVisitor):
         op, op_class, left, right = self._maybe_transform_eq_ne(node)
         left, right = self._maybe_downcast_constants(left, right)
         return self._maybe_evaluate_binop(op, op_class, left, right)
+
+    def visit_Div(self, node, **kwargs):
+        return lambda lhs, rhs: Div(lhs, rhs)
 
     def visit_UnaryOp(self, node, **kwargs):
         op = self.visit(node.op)

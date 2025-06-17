@@ -14,8 +14,6 @@ import warnings
 
 import numpy as np
 
-from pandas._config import using_string_dtype
-
 from pandas._libs import (
     lib,
     tslib,
@@ -637,12 +635,12 @@ class DatetimeArray(dtl.TimelikeOps, dtl.DatelikeOps):  # type: ignore[misc]
     # ----------------------------------------------------------------
     # Array-Like / EA-Interface Methods
 
-    def __array__(self, dtype=None, copy=None) -> np.ndarray:
+    def __array__(self, dtype=None) -> np.ndarray:
         if dtype is None and self.tz:
             # The default for tz-aware is object, to preserve tz info
             dtype = object
 
-        return super().__array__(dtype=dtype, copy=copy)
+        return super().__array__(dtype=dtype)
 
     def __iter__(self) -> Iterator:
         """
@@ -1308,13 +1306,6 @@ default 'raise'
             values, "month_name", locale=locale, reso=self._creso
         )
         result = self._maybe_mask_results(result, fill_value=None)
-        if using_string_dtype():
-            from pandas import (
-                StringDtype,
-                array as pd_array,
-            )
-
-            return pd_array(result, dtype=StringDtype(na_value=np.nan))  # type: ignore[return-value]
         return result
 
     def day_name(self, locale=None) -> npt.NDArray[np.object_]:
@@ -1372,14 +1363,6 @@ default 'raise'
             values, "day_name", locale=locale, reso=self._creso
         )
         result = self._maybe_mask_results(result, fill_value=None)
-        if using_string_dtype():
-            # TODO: no tests that check for dtype of result as of 2024-08-15
-            from pandas import (
-                StringDtype,
-                array as pd_array,
-            )
-
-            return pd_array(result, dtype=StringDtype(na_value=np.nan))  # type: ignore[return-value]
         return result
 
     @property
@@ -2410,7 +2393,7 @@ def objects_to_datetime64(
     assert errors in ["raise", "ignore", "coerce"]
 
     # if str-dtype, convert
-    data = np.asarray(data, dtype=np.object_)
+    data = np.array(data, copy=False, dtype=np.object_)
 
     result, tz_parsed = tslib.array_to_datetime(
         data,

@@ -71,15 +71,15 @@ class TestIndex:
         tm.assert_contains_all(arr, new_index)
         tm.assert_index_equal(index, new_index)
 
-    def test_constructor_copy(self, using_infer_string):
-        index = Index(list("abc"), name="name")
+    @pytest.mark.parametrize("index", ["string"], indirect=True)
+    def test_constructor_copy(self, index, using_infer_string):
         arr = np.array(index)
         new_index = Index(arr, copy=True, name="name")
         assert isinstance(new_index, Index)
         assert new_index.name == "name"
         if using_infer_string:
             tm.assert_extension_array_equal(
-                new_index.values, pd.array(arr, dtype="str")
+                new_index.values, pd.array(arr, dtype="string[pyarrow_numpy]")
             )
         else:
             tm.assert_numpy_array_equal(arr, new_index.values)
@@ -160,7 +160,7 @@ class TestIndex:
         df = DataFrame(np.random.default_rng(2).random((5, 3)))
         df["date"] = dts
         result = DatetimeIndex(df["date"], freq="MS")
-        dtype = object if not using_infer_string else "str"
+        dtype = object if not using_infer_string else "string"
         assert df["date"].dtype == dtype
         expected.name = "date"
         tm.assert_index_equal(result, expected)
@@ -354,12 +354,11 @@ class TestIndex:
             msg = "When changing to a larger dtype"
             with pytest.raises(ValueError, match=msg):
                 index.view("i8")
+        elif index.dtype == "string":
+            with pytest.raises(NotImplementedError, match="i8"):
+                index.view("i8")
         else:
-            msg = (
-                r"Cannot change data-type for array of references\.|"
-                r"Cannot change data-type for object array\.|"
-                r"Cannot change data-type for array of strings\.|"
-            )
+            msg = "Cannot change data-type for object array"
             with pytest.raises(TypeError, match=msg):
                 index.view("i8")
 
@@ -958,9 +957,10 @@ class TestIndex:
         result = index.isin(empty)
         tm.assert_numpy_array_equal(expected, result)
 
-    def test_isin_string_null(self, string_dtype_no_object):
+    @td.skip_if_no("pyarrow")
+    def test_isin_arrow_string_null(self):
         # GH#55821
-        index = Index(["a", "b"], dtype=string_dtype_no_object)
+        index = Index(["a", "b"], dtype="string[pyarrow_numpy]")
         result = index.isin([None])
         expected = np.array([False, False])
         tm.assert_numpy_array_equal(result, expected)

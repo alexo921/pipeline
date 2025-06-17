@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import (
     TYPE_CHECKING,
-    Any,
     Literal,
 )
 
@@ -30,8 +29,6 @@ from pandas.core.construction import ensure_wrapped_if_datetimelike
 from pandas.core.strings.object_array import ObjectStringArrayMixin
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
-
     from pandas._typing import (
         AxisInt,
         Dtype,
@@ -140,6 +137,9 @@ class NumpyExtensionArray(  # type: ignore[misc]
             result = result.copy()
         return cls(result)
 
+    def _from_backing_data(self, arr: np.ndarray) -> NumpyExtensionArray:
+        return type(self)(arr)
+
     # ------------------------------------------------------------------------
     # Data
 
@@ -150,12 +150,7 @@ class NumpyExtensionArray(  # type: ignore[misc]
     # ------------------------------------------------------------------------
     # NumPy Array Interface
 
-    def __array__(
-        self, dtype: NpDtype | None = None, copy: bool | None = None
-    ) -> np.ndarray:
-        if copy is not None:
-            # Note: branch avoids `copy=None` for NumPy 1.x support
-            return np.array(self._ndarray, dtype=dtype, copy=copy)
+    def __array__(self, dtype: NpDtype | None = None) -> np.ndarray:
         return np.asarray(self._ndarray, dtype=dtype)
 
     def __array_ufunc__(self, ufunc: np.ufunc, method: str, *inputs, **kwargs):
@@ -290,9 +285,6 @@ class NumpyExtensionArray(  # type: ignore[misc]
         See NDFrame.interpolate.__doc__.
         """
         # NB: we return type(self) even if copy=False
-        if not self.dtype._is_numeric:
-            raise TypeError(f"Cannot interpolate with {self.dtype} dtype")
-
         if not copy:
             out_data = self._ndarray
         else:
@@ -564,11 +556,6 @@ class NumpyExtensionArray(  # type: ignore[misc]
             return TimedeltaArray._simple_new(result, dtype=result.dtype)
         return type(self)(result)
 
-    def _formatter(self, boxed: bool = False) -> Callable[[Any], str | None]:
-        # NEP 51: https://github.com/numpy/numpy/pull/22449
-        if self.dtype.kind in "SU":
-            return "'{}'".format
-        elif self.dtype == "object":
-            return repr
-        else:
-            return str
+    # ------------------------------------------------------------------------
+    # String methods interface
+    _str_na_value = np.nan

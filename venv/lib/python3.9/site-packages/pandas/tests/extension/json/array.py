@@ -25,11 +25,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
 )
-import warnings
 
 import numpy as np
-
-from pandas.util._exceptions import find_stack_level
 
 from pandas.core.dtypes.cast import construct_1d_object_array_from_listlike
 from pandas.core.dtypes.common import (
@@ -149,28 +146,13 @@ class JSONArray(ExtensionArray):
     def __ne__(self, other):
         return NotImplemented
 
-    def __array__(self, dtype=None, copy=None):
-        if copy is False:
-            warnings.warn(
-                "Starting with NumPy 2.0, the behavior of the 'copy' keyword has "
-                "changed and passing 'copy=False' raises an error when returning "
-                "a zero-copy NumPy array is not possible. pandas will follow "
-                "this behavior starting with pandas 3.0.\nThis conversion to "
-                "NumPy requires a copy, but 'copy=False' was passed. Consider "
-                "using 'np.asarray(..)' instead.",
-                FutureWarning,
-                stacklevel=find_stack_level(),
-            )
-
+    def __array__(self, dtype=None):
         if dtype is None:
             dtype = object
         if dtype == object:
             # on py38 builds it looks like numpy is inferring to a non-1D array
             return construct_1d_object_array_from_listlike(list(self))
-        if copy is None:
-            # Note: branch avoids `copy=None` for NumPy 1.x support
-            return np.asarray(self.data, dtype=dtype)
-        return np.asarray(self.data, dtype=dtype, copy=copy)
+        return np.asarray(self.data, dtype=dtype)
 
     @property
     def nbytes(self) -> int:
@@ -225,12 +207,11 @@ class JSONArray(ExtensionArray):
                 return self.copy()
             return self
         elif isinstance(dtype, StringDtype):
+            value = self.astype(str)  # numpy doesn't like nested dicts
             arr_cls = dtype.construct_array_type()
-            return arr_cls._from_sequence(self, dtype=dtype, copy=False)
-        elif not copy:
-            return np.asarray([dict(x) for x in self], dtype=dtype)
-        else:
-            return np.array([dict(x) for x in self], dtype=dtype, copy=copy)
+            return arr_cls._from_sequence(value, dtype=dtype, copy=False)
+
+        return np.array([dict(x) for x in self], dtype=dtype, copy=copy)
 
     def unique(self):
         # Parent method doesn't work since np.array will try to infer
