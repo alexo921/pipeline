@@ -12,6 +12,7 @@ import { LocationDetailsDto } from './dtos/location-details.dto';
 import { EmailService } from 'src/email/email.service';
 import { SetPassword } from './dtos/set-password.dto';
 import * as bcrypt from 'bcryptjs';
+import { CandidateService } from '../candidate.service';
 
 @Injectable()
 export class OnboardingService {
@@ -19,21 +20,15 @@ export class OnboardingService {
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
+    private readonly candidateService: CandidateService
   ) {}
 
-  async getCandidateById(id?: string) {
-    return this.prismaService.candidates.findUnique({
-      where: { id: id },
-    });
-  }
 
   // setting up onboarding data
   async handleStepOne(data: InitialDetailsDto) {
     const { name, email, healthcareRole, certificationStatus } = data;
 
-    const existingCandidate = await this.prismaService.candidates.findUnique({
-      where: { email },
-    });
+    const existingCandidate = await this.candidateService.getCandidateByEmail(email);
 
     if (existingCandidate) {
 
@@ -74,7 +69,7 @@ export class OnboardingService {
   async handleStepTwo(id: string, data: LocationDetailsDto) {
     const { zipCode, address, maxTravelDistance } = data;
 
-    const candidate = await this.getCandidateById(id);
+    const candidate = await this.candidateService.getCandidateById(id);
 
     if (!candidate) {
       throw new NotFoundException('No candidate found with this id');
@@ -94,7 +89,7 @@ export class OnboardingService {
   async handleStepThree(id: string, data: AvailabilityDetailsDto) {
     const { workType, currentJobStatus, shiftType } = data;
 
-    const candidate = await this.getCandidateById(id);
+    const candidate = await this.candidateService.getCandidateById(id);
 
     if (!candidate) {
       throw new NotFoundException('No candidate found with this id');
@@ -129,9 +124,7 @@ export class OnboardingService {
       throw new BadRequestException('Token has expired');
     }
 
-    const candidate = await this.prismaService.candidates.findUnique({
-      where: { email: payload.email },
-    });
+    const candidate = await this.candidateService.getCandidateByEmail(payload.email);
 
     if (!candidate) {
       throw new BadRequestException('Invalid token');
