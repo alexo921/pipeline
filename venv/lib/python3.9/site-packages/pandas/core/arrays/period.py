@@ -256,10 +256,7 @@ class PeriodArray(dtl.DatelikeOps, libperiod.PeriodMixin):  # type: ignore[misc]
                 raise raise_on_incompatible(values, dtype.freq)
             values, dtype = values._ndarray, values.dtype
 
-        if not copy:
-            values = np.asarray(values, dtype="int64")
-        else:
-            values = np.array(values, dtype="int64", copy=copy)
+        values = np.array(values, dtype="int64", copy=copy)
         if dtype is None:
             raise ValueError("dtype is not specified and cannot be inferred")
         dtype = cast(PeriodDtype, dtype)
@@ -403,30 +400,10 @@ class PeriodArray(dtl.DatelikeOps, libperiod.PeriodMixin):  # type: ignore[misc]
     def freqstr(self) -> str:
         return freq_to_period_freqstr(self.freq.n, self.freq.name)
 
-    def __array__(
-        self, dtype: NpDtype | None = None, copy: bool | None = None
-    ) -> np.ndarray:
+    def __array__(self, dtype: NpDtype | None = None) -> np.ndarray:
         if dtype == "i8":
-            # For NumPy 1.x compatibility we cannot use copy=None.  And
-            # `copy=False` has the meaning of `copy=None` here:
-            if not copy:
-                return np.asarray(self.asi8, dtype=dtype)
-            else:
-                return np.array(self.asi8, dtype=dtype)
-
-        if copy is False:
-            warnings.warn(
-                "Starting with NumPy 2.0, the behavior of the 'copy' keyword has "
-                "changed and passing 'copy=False' raises an error when returning "
-                "a zero-copy NumPy array is not possible. pandas will follow "
-                "this behavior starting with pandas 3.0.\nThis conversion to "
-                "NumPy requires a copy, but 'copy=False' was passed. Consider "
-                "using 'np.asarray(..)' instead.",
-                FutureWarning,
-                stacklevel=find_stack_level(),
-            )
-
-        if dtype == bool:
+            return self.asi8
+        elif dtype == bool:
             return ~self._isnan
 
         # This will raise TypeError for non-object dtypes

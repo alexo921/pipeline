@@ -12,7 +12,6 @@ from pandas._libs import (
     Timestamp,
 )
 from pandas._libs.tslibs.dtypes import freq_to_period_freqstr
-from pandas.compat.numpy import np_version_gt2
 
 import pandas as pd
 from pandas import (
@@ -639,14 +638,13 @@ class TestDatetimeArray(SharedTests):
 
     def test_array_interface(self, datetime_index):
         arr = datetime_index._data
-        copy_false = None if np_version_gt2 else False
 
         # default asarray gives the same underlying data (for tz naive)
         result = np.asarray(arr)
         expected = arr._ndarray
         assert result is expected
         tm.assert_numpy_array_equal(result, expected)
-        result = np.array(arr, copy=copy_false)
+        result = np.array(arr, copy=False)
         assert result is expected
         tm.assert_numpy_array_equal(result, expected)
 
@@ -655,13 +653,11 @@ class TestDatetimeArray(SharedTests):
         expected = arr._ndarray
         assert result is expected
         tm.assert_numpy_array_equal(result, expected)
-        result = np.array(arr, dtype="datetime64[ns]", copy=copy_false)
+        result = np.array(arr, dtype="datetime64[ns]", copy=False)
         assert result is expected
         tm.assert_numpy_array_equal(result, expected)
         result = np.array(arr, dtype="datetime64[ns]")
-        if not np_version_gt2:
-            # TODO: GH 57739
-            assert result is not expected
+        assert result is not expected
         tm.assert_numpy_array_equal(result, expected)
 
         # to object dtype
@@ -700,7 +696,6 @@ class TestDatetimeArray(SharedTests):
         # GH#23524
         arr = arr1d
         dti = self.index_cls(arr1d)
-        copy_false = None if np_version_gt2 else False
 
         expected = dti.asi8.view("M8[ns]")
         result = np.array(arr, dtype="M8[ns]")
@@ -709,18 +704,17 @@ class TestDatetimeArray(SharedTests):
         result = np.array(arr, dtype="datetime64[ns]")
         tm.assert_numpy_array_equal(result, expected)
 
-        # check that we are not making copies when setting copy=copy_false
-        result = np.array(arr, dtype="M8[ns]", copy=copy_false)
+        # check that we are not making copies when setting copy=False
+        result = np.array(arr, dtype="M8[ns]", copy=False)
         assert result.base is expected.base
         assert result.base is not None
-        result = np.array(arr, dtype="datetime64[ns]", copy=copy_false)
+        result = np.array(arr, dtype="datetime64[ns]", copy=False)
         assert result.base is expected.base
         assert result.base is not None
 
     def test_array_i8_dtype(self, arr1d):
         arr = arr1d
         dti = self.index_cls(arr1d)
-        copy_false = None if np_version_gt2 else False
 
         expected = dti.asi8
         result = np.array(arr, dtype="i8")
@@ -729,8 +723,8 @@ class TestDatetimeArray(SharedTests):
         result = np.array(arr, dtype=np.int64)
         tm.assert_numpy_array_equal(result, expected)
 
-        # check that we are still making copies when setting copy=copy_false
-        result = np.array(arr, dtype="i8", copy=copy_false)
+        # check that we are still making copies when setting copy=False
+        result = np.array(arr, dtype="i8", copy=False)
         assert result.base is not expected.base
         assert result.base is None
 
@@ -886,24 +880,20 @@ class TestDatetimeArray(SharedTests):
 
         tm.assert_datetime_array_equal(result, expected)
 
-    def test_strftime(self, arr1d, using_infer_string):
+    def test_strftime(self, arr1d):
         arr = arr1d
 
         result = arr.strftime("%Y %b")
         expected = np.array([ts.strftime("%Y %b") for ts in arr], dtype=object)
-        if using_infer_string:
-            expected = pd.array(expected, dtype=pd.StringDtype(na_value=np.nan))
-        tm.assert_equal(result, expected)
+        tm.assert_numpy_array_equal(result, expected)
 
-    def test_strftime_nat(self, using_infer_string):
+    def test_strftime_nat(self):
         # GH 29578
         arr = DatetimeIndex(["2019-01-01", NaT])._data
 
         result = arr.strftime("%Y-%m-%d")
         expected = np.array(["2019-01-01", np.nan], dtype=object)
-        if using_infer_string:
-            expected = pd.array(expected, dtype=pd.StringDtype(na_value=np.nan))
-        tm.assert_equal(result, expected)
+        tm.assert_numpy_array_equal(result, expected)
 
 
 class TestTimedeltaArray(SharedTests):
@@ -960,14 +950,13 @@ class TestTimedeltaArray(SharedTests):
 
     def test_array_interface(self, timedelta_index):
         arr = timedelta_index._data
-        copy_false = None if np_version_gt2 else False
 
         # default asarray gives the same underlying data
         result = np.asarray(arr)
         expected = arr._ndarray
         assert result is expected
         tm.assert_numpy_array_equal(result, expected)
-        result = np.array(arr, copy=copy_false)
+        result = np.array(arr, copy=False)
         assert result is expected
         tm.assert_numpy_array_equal(result, expected)
 
@@ -976,13 +965,11 @@ class TestTimedeltaArray(SharedTests):
         expected = arr._ndarray
         assert result is expected
         tm.assert_numpy_array_equal(result, expected)
-        result = np.array(arr, dtype="timedelta64[ns]", copy=copy_false)
+        result = np.array(arr, dtype="timedelta64[ns]", copy=False)
         assert result is expected
         tm.assert_numpy_array_equal(result, expected)
         result = np.array(arr, dtype="timedelta64[ns]")
-        if not np_version_gt2:
-            # TODO: GH 57739
-            assert result is not expected
+        assert result is not expected
         tm.assert_numpy_array_equal(result, expected)
 
         # to object dtype
@@ -1148,16 +1135,8 @@ class TestPeriodArray(SharedTests):
         result = np.asarray(arr, dtype=object)
         tm.assert_numpy_array_equal(result, expected)
 
-        # to int64 gives the underlying representation
         result = np.asarray(arr, dtype="int64")
         tm.assert_numpy_array_equal(result, arr.asi8)
-
-        result2 = np.asarray(arr, dtype="int64")
-        assert np.may_share_memory(result, result2)
-
-        result_copy1 = np.array(arr, dtype="int64", copy=True)
-        result_copy2 = np.array(arr, dtype="int64", copy=True)
-        assert not np.may_share_memory(result_copy1, result_copy2)
 
         # to other dtypes
         msg = r"float\(\) argument must be a string or a( real)? number, not 'Period'"
@@ -1168,24 +1147,20 @@ class TestPeriodArray(SharedTests):
         expected = np.asarray(arr).astype("S20")
         tm.assert_numpy_array_equal(result, expected)
 
-    def test_strftime(self, arr1d, using_infer_string):
+    def test_strftime(self, arr1d):
         arr = arr1d
 
         result = arr.strftime("%Y")
         expected = np.array([per.strftime("%Y") for per in arr], dtype=object)
-        if using_infer_string:
-            expected = pd.array(expected, dtype=pd.StringDtype(na_value=np.nan))
-        tm.assert_equal(result, expected)
+        tm.assert_numpy_array_equal(result, expected)
 
-    def test_strftime_nat(self, using_infer_string):
+    def test_strftime_nat(self):
         # GH 29578
         arr = PeriodArray(PeriodIndex(["2019-01-01", NaT], dtype="period[D]"))
 
         result = arr.strftime("%Y-%m-%d")
         expected = np.array(["2019-01-01", np.nan], dtype=object)
-        if using_infer_string:
-            expected = pd.array(expected, dtype=pd.StringDtype(na_value=np.nan))
-        tm.assert_equal(result, expected)
+        tm.assert_numpy_array_equal(result, expected)
 
 
 @pytest.mark.parametrize(

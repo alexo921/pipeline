@@ -147,7 +147,6 @@ class TestCommon:
         new_copy = index.copy(deep=True, name="banana")
         assert new_copy.name == "banana"
 
-    @pytest.mark.filterwarnings(r"ignore:Dtype inference:FutureWarning")
     def test_copy_name(self, index_flat):
         # GH#12309: Check that the "name" argument
         # passed at initialization is honored.
@@ -453,7 +452,6 @@ def test_sort_values_invalid_na_position(index_with_missing, na_position):
         index_with_missing.sort_values(na_position=na_position)
 
 
-@pytest.mark.fails_arm_wheels
 @pytest.mark.filterwarnings(r"ignore:PeriodDtype\[B\] is deprecated:FutureWarning")
 @pytest.mark.parametrize("na_position", ["first", "last"])
 def test_sort_values_with_missing(index_with_missing, na_position, request):

@@ -632,7 +632,7 @@ def infer_fill_value(val):
     """
     if not is_list_like(val):
         val = [val]
-    val = np.asarray(val)
+    val = np.array(val, copy=False)
     if val.dtype.kind in "mM":
         return np.array("NaT", dtype=val.dtype)
     elif val.dtype == object:

@@ -112,8 +112,8 @@ class MockNumpyLikeArray:
     def __len__(self) -> int:
         return len(self._values)
 
-    def __array__(self, dtype=None, copy=None):
-        return np.asarray(self._values, dtype=dtype)
+    def __array__(self, t=None):
+        return np.asarray(self._values, dtype=t)
 
     @property
     def ndim(self):
@@ -1584,31 +1584,6 @@ class TestTypeInference:
             np.array(["foo", "bar", np.nan], dtype=object), skipna=False
         )
         assert not lib.is_string_array(np.array([1, 2]))
-
-    @pytest.mark.parametrize(
-        "func",
-        [
-            "is_bool_array",
-            "is_date_array",
-            "is_datetime_array",
-            "is_datetime64_array",
-            "is_float_array",
-            "is_integer_array",
-            "is_interval_array",
-            "is_string_array",
-            "is_time_array",
-            "is_timedelta_or_timedelta64_array",
-        ],
-    )
-    def test_is_dtype_array_empty_obj(self, func):
-        # https://github.com/pandas-dev/pandas/pull/60796
-        func = getattr(lib, func)
-
-        arr = np.empty((2, 0), dtype=object)
-        assert not func(arr)
-
-        arr = np.empty((0, 2), dtype=object)
-        assert not func(arr)
 
     def test_to_object_array_tuples(self):
         r = (5, 6)

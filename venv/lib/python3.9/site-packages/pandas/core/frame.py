@@ -656,37 +656,26 @@ class DataFrame(NDFrame, OpsMixin):
     def _constructor(self) -> Callable[..., DataFrame]:
         return DataFrame
 
-    def _constructor_from_mgr(self, mgr, axes) -> DataFrame:
-        df = DataFrame._from_mgr(mgr, axes=axes)
-
-        if type(self) is DataFrame:
-            # This would also work `if self._constructor is DataFrame`, but
-            #  this check is slightly faster, benefiting the most-common case.
-            return df
-
-        elif type(self).__name__ == "GeoDataFrame":
-            # Shim until geopandas can override their _constructor_from_mgr
-            #  bc they have different behavior for Managers than for DataFrames
+    def _constructor_from_mgr(self, mgr, axes):
+        if self._constructor is DataFrame:
+            # we are pandas.DataFrame (or a subclass that doesn't override _constructor)
+            return DataFrame._from_mgr(mgr, axes=axes)
+        else:
+            assert axes is mgr.axes
             return self._constructor(mgr)
-
-        # We assume that the subclass __init__ knows how to handle a
-        #  pd.DataFrame object.
-        return self._constructor(df)
 
     _constructor_sliced: Callable[..., Series] = Series
 
-    def _constructor_sliced_from_mgr(self, mgr, axes) -> Series:
-        ser = Series._from_mgr(mgr, axes)
-        ser._name = None  # caller is responsible for setting real name
+    def _sliced_from_mgr(self, mgr, axes) -> Series:
+        return Series._from_mgr(mgr, axes)
 
-        if type(self) is DataFrame:
-            # This would also work `if self._constructor_sliced is Series`, but
-            #  this check is slightly faster, benefiting the most-common case.
+    def _constructor_sliced_from_mgr(self, mgr, axes):
+        if self._constructor_sliced is Series:
+            ser = self._sliced_from_mgr(mgr, axes)
+            ser._name = None  # caller is responsible for setting real name
             return ser
-
-        # We assume that the subclass __init__ knows how to handle a
-        #  pd.Series object.
-        return self._constructor_sliced(ser)
+        assert axes is mgr.axes
+        return self._constructor_sliced(mgr)
 
     # ----------------------------------------------------------------------
     # Constructors
@@ -1414,8 +1403,7 @@ class DataFrame(NDFrame, OpsMixin):
             na_rep=na_rep,
             quoting=quoting,
         )
-        # error: Incompatible return value type (got "DataFrame", expected "Self")
-        return self._constructor_from_mgr(mgr, axes=mgr.axes)  # type: ignore[return-value]
+        return self._constructor_from_mgr(mgr, axes=mgr.axes)
 
     # ----------------------------------------------------------------------
 
@@ -1439,11 +1427,6 @@ class DataFrame(NDFrame, OpsMixin):
         Please see
         `Table Visualization <../../user_guide/style.ipynb>`_ for more examples.
         """
-        # Raise AttributeError so that inspect works even if jinja2 is not installed.
-        has_jinja2 = import_optional_dependency("jinja2", errors="ignore")
-        if not has_jinja2:
-            raise AttributeError("The '.style' accessor requires jinja2")
-
         from pandas.io.formats.style import Styler
 
         return Styler(self)
@@ -1997,7 +1980,7 @@ class DataFrame(NDFrame, OpsMixin):
             dtype = np.dtype(dtype)
         result = self._mgr.as_array(dtype=dtype, copy=copy, na_value=na_value)
         if result.dtype is not dtype:
-            result = np.asarray(result, dtype=dtype)
+            result = np.array(result, dtype=dtype, copy=False)
 
         return result
 
@@ -4984,9 +4967,7 @@ class DataFrame(NDFrame, OpsMixin):
         -----
         * To select all *numeric* types, use ``np.number`` or ``'number'``
         * To select strings you must use the ``object`` dtype, but note that
-          this will return *all* object dtype columns. With
-          ``pd.options.future.infer_string`` enabled, using ``"str"`` will
-          work to select all string columns.
+          this will return *all* object dtype columns
         * See the `numpy dtype hierarchy
           <https://numpy.org/doc/stable/reference/arrays.scalars.html>`__
         * To select datetimes, use ``np.datetime64``, ``'datetime'`` or
@@ -5096,8 +5077,7 @@ class DataFrame(NDFrame, OpsMixin):
             return True
 
         mgr = self._mgr._get_data_subset(predicate).copy(deep=None)
-        # error: Incompatible return value type (got "DataFrame", expected "Self")
-        return self._constructor_from_mgr(mgr, axes=mgr.axes).__finalize__(self)  # type: ignore[return-value]
+        return self._constructor_from_mgr(mgr, axes=mgr.axes).__finalize__(self)
 
     def insert(
         self,

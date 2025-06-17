@@ -19,7 +19,7 @@ import warnings
 import numpy as np
 from numpy import ma
 
-from pandas._config import using_string_dtype
+from pandas._config import using_pyarrow_string_dtype
 
 from pandas._libs import lib
 from pandas._libs.tslibs import (
@@ -566,10 +566,14 @@ def sanitize_array(
     if not is_list_like(data):
         if index is None:
             raise ValueError("index must be specified when data is not list-like")
-        if isinstance(data, str) and using_string_dtype() and original_dtype is None:
+        if (
+            isinstance(data, str)
+            and using_pyarrow_string_dtype()
+            and original_dtype is None
+        ):
             from pandas.core.arrays.string_ import StringDtype
 
-            dtype = StringDtype(na_value=np.nan)
+            dtype = StringDtype("pyarrow_numpy")
         data = construct_1d_arraylike_from_scalar(data, len(index), dtype)
 
         return data
@@ -589,8 +593,6 @@ def sanitize_array(
         # create an extension array from its dtype
         _sanitize_non_ordered(data)
         cls = dtype.construct_array_type()
-        if not hasattr(data, "__array__"):
-            data = list(data)
         subarr = cls._from_sequence(data, dtype=dtype, copy=copy)
 
     # GH#846
@@ -602,19 +604,20 @@ def sanitize_array(
             subarr = data
             if data.dtype == object:
                 subarr = maybe_infer_to_datetimelike(data)
-                if object_index and using_string_dtype() and is_string_dtype(subarr):
+                if (
+                    object_index
+                    and using_pyarrow_string_dtype()
+                    and is_string_dtype(subarr)
+                ):
                     # Avoid inference when string option is set
                     subarr = data
-            elif data.dtype.kind == "U" and using_string_dtype():
+            elif data.dtype.kind == "U" and using_pyarrow_string_dtype():
                 from pandas.core.arrays.string_ import StringDtype
 
-                dtype = StringDtype(na_value=np.nan)
+                dtype = StringDtype(storage="pyarrow_numpy")
                 subarr = dtype.construct_array_type()._from_sequence(data, dtype=dtype)
 
-            if (
-                subarr is data
-                or (subarr.dtype == "str" and subarr.dtype.storage == "python")  # type: ignore[union-attr]
-            ) and copy:
+            if subarr is data and copy:
                 subarr = subarr.copy()
 
         else:
@@ -623,10 +626,7 @@ def sanitize_array(
 
     elif hasattr(data, "__array__"):
         # e.g. dask array GH#38645
-        if not copy:
-            data = np.asarray(data)
-        else:
-            data = np.array(data, copy=copy)
+        data = np.array(data, copy=copy)
         return sanitize_array(
             data,
             index=index,
@@ -744,11 +744,8 @@ def _sanitize_str_dtypes(
         # GH#19853: If data is a scalar, result has already the result
         if not lib.is_scalar(data):
             if not np.all(isna(data)):
-                data = np.asarray(data, dtype=dtype)
-            if not copy:
-                result = np.asarray(data, dtype=object)
-            else:
-                result = np.array(data, dtype=object, copy=copy)
+                data = np.array(data, dtype=dtype, copy=False)
+            result = np.array(data, dtype=object, copy=copy)
     return result
 
 
@@ -813,8 +810,6 @@ def _try_cast(
         # this will raise if we have e.g. floats
 
         subarr = maybe_cast_to_integer_array(arr, dtype)
-    elif not copy:
-        subarr = np.asarray(arr, dtype=dtype)
     else:
         subarr = np.array(arr, dtype=dtype, copy=copy)
 

@@ -1207,8 +1207,10 @@ class TestToDatetime:
         # GH#12424
         msg = "errors='ignore' is deprecated"
         with tm.assert_produces_warning(FutureWarning, match=msg):
-            res = to_datetime(Series(["2362-01-01", np.nan]), errors="ignore")
-        exp = Series(["2362-01-01", np.nan])
+            res = to_datetime(
+                Series(["2362-01-01", np.nan], dtype=object), errors="ignore"
+            )
+        exp = Series(["2362-01-01", np.nan], dtype=object)
         tm.assert_series_equal(res, exp)
 
     def test_to_datetime_tz(self, cache):
@@ -1492,9 +1494,7 @@ class TestToDatetime:
             warn, match="Could not infer format", raise_on_extra_warnings=False
         ):
             res = to_datetime(values, errors="ignore", format=format)
-        tm.assert_index_equal(
-            res, Index(values, dtype="object" if format is None else "str")
-        )
+        tm.assert_index_equal(res, Index(values, dtype=object))
 
         with tm.assert_produces_warning(
             warn, match="Could not infer format", raise_on_extra_warnings=False
@@ -1911,14 +1911,6 @@ class TestToDatetimeUnit:
         msg = "cannot specify both format and unit"
         with pytest.raises(ValueError, match=msg):
             to_datetime([1], unit="D", format="%Y%m%d", cache=cache)
-
-    def test_unit_str(self, cache):
-        # GH 57051
-        # Test that strs aren't dropping precision to 32-bit accidentally.
-        with tm.assert_produces_warning(FutureWarning):
-            res = to_datetime(["1704660000"], unit="s", origin="unix")
-        expected = to_datetime([1704660000], unit="s", origin="unix")
-        tm.assert_index_equal(res, expected)
 
     def test_unit_array_mixed_nans(self, cache):
         values = [11111111111111111, 1, 1.0, iNaT, NaT, np.nan, "NaT", ""]
@@ -3407,18 +3399,7 @@ class TestOrigin:
         with pytest.raises(ValueError, match=msg):
             to_datetime("2005-01-01", origin="1960-01-01", unit=unit)
 
-    @pytest.mark.parametrize(
-        "epochs",
-        [
-            Timestamp(1960, 1, 1),
-            datetime(1960, 1, 1),
-            "1960-01-01",
-            np.datetime64("1960-01-01"),
-        ],
-    )
-    def test_epoch(self, units, epochs):
-        epoch_1960 = Timestamp(1960, 1, 1)
-        units_from_epochs = np.arange(5, dtype=np.int64)
+    def test_epoch(self, units, epochs, epoch_1960, units_from_epochs):
         expected = Series(
             [pd.Timedelta(x, unit=units) + epoch_1960 for x in units_from_epochs]
         )
@@ -3715,7 +3696,7 @@ def test_to_datetime_mixed_not_necessarily_iso8601_raise():
     ("errors", "expected"),
     [
         ("coerce", DatetimeIndex(["2020-01-01 00:00:00", NaT])),
-        ("ignore", Index(["2020-01-01", "01-01-2000"], dtype="str")),
+        ("ignore", Index(["2020-01-01", "01-01-2000"], dtype=object)),
     ],
 )
 def test_to_datetime_mixed_not_necessarily_iso8601_coerce(errors, expected):

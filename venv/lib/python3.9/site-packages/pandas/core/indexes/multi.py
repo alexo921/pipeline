@@ -65,7 +65,6 @@ from pandas.core.dtypes.common import (
     is_list_like,
     is_object_dtype,
     is_scalar,
-    is_string_dtype,
     pandas_dtype,
 )
 from pandas.core.dtypes.dtypes import (
@@ -775,7 +774,7 @@ class MultiIndex(Index):
             ):
                 vals = vals.astype(object)
 
-            vals = np.asarray(vals)
+            vals = np.array(vals, copy=False)
             vals = algos.take_nd(vals, codes, fill_value=index._na_value)
             values.append(vals)
 
@@ -1310,24 +1309,8 @@ class MultiIndex(Index):
             new_index._id = self._id
         return new_index
 
-    def __array__(self, dtype=None, copy=None) -> np.ndarray:
+    def __array__(self, dtype=None) -> np.ndarray:
         """the array interface, return my values"""
-        if copy is False:
-            # self.values is always a newly construct array, so raise.
-            warnings.warn(
-                "Starting with NumPy 2.0, the behavior of the 'copy' keyword has "
-                "changed and passing 'copy=False' raises an error when returning "
-                "a zero-copy NumPy array is not possible. pandas will follow "
-                "this behavior starting with pandas 3.0.\nThis conversion to "
-                "NumPy requires a copy, but 'copy=False' was passed. Consider "
-                "using 'np.asarray(..)' instead.",
-                FutureWarning,
-                stacklevel=find_stack_level(),
-            )
-        if copy is True:
-            # explicit np.array call to ensure a copy is made and unique objects
-            # are returned, because self.values is cached
-            return np.array(self.values, dtype=dtype)
         return self.values
 
     def view(self, cls=None) -> Self:
@@ -1352,12 +1335,10 @@ class MultiIndex(Index):
     def _is_memory_usage_qualified(self) -> bool:
         """return a boolean if we need a qualified .info display"""
 
-        def f(dtype) -> bool:
-            return is_object_dtype(dtype) or (
-                is_string_dtype(dtype) and dtype.storage == "python"
-            )
+        def f(level) -> bool:
+            return "mixed" in level or "string" in level or "unicode" in level
 
-        return any(f(level.dtype) for level in self.levels)
+        return any(f(level) for level in self._inferred_type_levels)
 
     # Cannot determine type of "memory_usage"
     @doc(Index.memory_usage)  # type: ignore[has-type]
@@ -3416,7 +3397,7 @@ class MultiIndex(Index):
                     locs = (level_codes >= idx.start) & (level_codes < idx.stop)
                     return locs
 
-                locs = np.asarray(level_codes == idx, dtype=bool)
+                locs = np.array(level_codes == idx, dtype=bool, copy=False)
 
                 if not locs.any():
                     # The label is present in self.levels[level] but unused:

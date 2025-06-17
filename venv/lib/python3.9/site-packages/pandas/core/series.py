@@ -533,7 +533,7 @@ class Series(base.IndexOpsMixin, NDFrame):  # type: ignore[misc]
                 data = data.reindex(index, copy=copy)
                 copy = False
                 data = data._mgr
-        elif isinstance(data, Mapping):
+        elif is_dict_like(data):
             data, index = self._init_dict(data, index, dtype)
             dtype = None
             copy = False
@@ -605,7 +605,7 @@ class Series(base.IndexOpsMixin, NDFrame):  # type: ignore[misc]
                 )
 
     def _init_dict(
-        self, data: Mapping, index: Index | None = None, dtype: DtypeObj | None = None
+        self, data, index: Index | None = None, dtype: DtypeObj | None = None
     ):
         """
         Derive the "_mgr" and "index" attributes of a new Series from a
@@ -662,17 +662,14 @@ class Series(base.IndexOpsMixin, NDFrame):  # type: ignore[misc]
         return Series
 
     def _constructor_from_mgr(self, mgr, axes):
-        ser = Series._from_mgr(mgr, axes=axes)
-        ser._name = None  # caller is responsible for setting real name
-
-        if type(self) is Series:
-            # This would also work `if self._constructor is Series`, but
-            #  this check is slightly faster, benefiting the most-common case.
+        if self._constructor is Series:
+            # we are pandas.Series (or a subclass that doesn't override _constructor)
+            ser = Series._from_mgr(mgr, axes=axes)
+            ser._name = None  # caller is responsible for setting real name
             return ser
-
-        # We assume that the subclass __init__ knows how to handle a
-        #  pd.Series object.
-        return self._constructor(ser)
+        else:
+            assert axes is mgr.axes
+            return self._constructor(mgr)
 
     @property
     def _constructor_expanddim(self) -> Callable[..., DataFrame]:
@@ -684,19 +681,18 @@ class Series(base.IndexOpsMixin, NDFrame):  # type: ignore[misc]
 
         return DataFrame
 
+    def _expanddim_from_mgr(self, mgr, axes) -> DataFrame:
+        from pandas.core.frame import DataFrame
+
+        return DataFrame._from_mgr(mgr, axes=mgr.axes)
+
     def _constructor_expanddim_from_mgr(self, mgr, axes):
         from pandas.core.frame import DataFrame
 
-        df = DataFrame._from_mgr(mgr, axes=mgr.axes)
-
-        if type(self) is Series:
-            # This would also work `if self._constructor_expanddim is DataFrame`,
-            #  but this check is slightly faster, benefiting the most-common case.
-            return df
-
-        # We assume that the subclass __init__ knows how to handle a
-        #  pd.DataFrame object.
-        return self._constructor_expanddim(df)
+        if self._constructor_expanddim is DataFrame:
+            return self._expanddim_from_mgr(mgr, axes)
+        assert axes is mgr.axes
+        return self._constructor_expanddim(mgr)
 
     # types
     @property
@@ -975,9 +971,7 @@ class Series(base.IndexOpsMixin, NDFrame):  # type: ignore[misc]
 
     # ----------------------------------------------------------------------
     # NDArray Compat
-    def __array__(
-        self, dtype: npt.DTypeLike | None = None, copy: bool | None = None
-    ) -> np.ndarray:
+    def __array__(self, dtype: npt.DTypeLike | None = None) -> np.ndarray:
         """
         Return the values as a NumPy array.
 
@@ -989,9 +983,6 @@ class Series(base.IndexOpsMixin, NDFrame):  # type: ignore[misc]
         dtype : str or numpy.dtype, optional
             The dtype to use for the resulting NumPy array. By default,
             the dtype is inferred from the data.
-
-        copy : bool or None, optional
-            See :func:`numpy.asarray`.
 
         Returns
         -------
@@ -1028,17 +1019,8 @@ class Series(base.IndexOpsMixin, NDFrame):  # type: ignore[misc]
               dtype='datetime64[ns]')
         """
         values = self._values
-        if copy is None:
-            # Note: branch avoids `copy=None` for NumPy 1.x support
-            arr = np.asarray(values, dtype=dtype)
-        else:
-            arr = np.array(values, dtype=dtype, copy=copy)
-
-        if copy is True:
-            return arr
-        if using_copy_on_write() and (
-            copy is False or astype_is_view(values.dtype, arr.dtype)
-        ):
+        arr = np.asarray(values, dtype=dtype)
+        if using_copy_on_write() and astype_is_view(values.dtype, arr.dtype):
             arr = arr.view()
             arr.flags.writeable = False
         return arr
@@ -2814,8 +2796,6 @@ class Series(base.IndexOpsMixin, NDFrame):  # type: ignore[misc]
         dtype: float64
         """
         nv.validate_round(args, kwargs)
-        if self.dtype == "object":
-            raise TypeError("Expected numeric dtype, got object instead.")
         new_mgr = self._mgr.round(decimals=decimals, using_cow=using_copy_on_write())
         return self._constructor_from_mgr(new_mgr, axes=new_mgr.axes).__finalize__(
             self, method="round"
