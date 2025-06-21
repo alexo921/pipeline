@@ -14,6 +14,7 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 import { ForgotPassDto } from './dto/forgot-password-dto';
 import { ResetPasswordDto } from './dto/Reset-password-Dto';
 import { ChangePasswordDto } from './dto/change-password-dto';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly prismaService: PrismaService,
+    private readonly emailService: EmailService,
   ) {}
 
   async exchangeGoogleCode(code: string): Promise<string> {
@@ -137,9 +139,9 @@ export class AuthService {
       },
     );
 
+    await this.emailService.sendPasswordResetEmail(email, token, isUser.name);
     return {
-      message: 'Reset token generated successfully',
-      token: token,
+      message: 'A password reset link has been sent to your email.',
     };
   }
 
