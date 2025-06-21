@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="32" viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- This is a placeholder. You'll need to copy the actual SVG content from the brand kit -->
+  <path d="M0 16C0 7.16344 7.16344 0 16 0H104C112.837 0 120 7.16344 120 16C120 24.8366 112.837 32 104 32H16C7.16344 32 0 24.8366 0 16Z" fill="url(#paint0_linear)"/>
+  <defs>
+    <linearGradient id="paint0_linear" x1="0" y1="16" x2="120" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0066FF"/>
+      <stop offset="1" stop-color="#00D1FF"/>
+    </linearGradient>
+  </defs>
+</svg> 
