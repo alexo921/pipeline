@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { SaveJobsService } from './save-jobs.service';
 import { SaveJobDto } from './dto/save-job.dto';
 
@@ -6,8 +6,8 @@ import { SaveJobDto } from './dto/save-job.dto';
 export class SaveJobsController {
   constructor(private readonly saveJobsService: SaveJobsService) {}
 
-  @Post('add')
-  async getSavedJob(@Body() { userId, jobId }: SaveJobDto): Promise<any> {
+  @Get()
+  async getSavedJob(@Body() { userId, jobId }: SaveJobDto): Promise<any> {//candidate id 
     return this.saveJobsService.getSavedJob(userId, jobId);
   }
 
@@ -15,4 +15,8 @@ export class SaveJobsController {
   async deleteSavedJob(@Body() { userId, jobId }: SaveJobDto): Promise<any> {
     return this.saveJobsService.deleteSavedJob(userId, jobId);
   }
+  @Post()
+  async addJob(@Body() { userId, jobId }: SaveJobDto): Promise<any>{
+    return this.saveJobsService.addSavedJob(userId,jobId);
+  } 
 }

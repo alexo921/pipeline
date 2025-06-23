@@ -42,4 +42,26 @@ export class SaveJobsService {
       },
     });
   }
+
+  async addSavedJob(userId: string, jobId: string) {
+    const existingJob = await this.prisma.saved_jobs.findFirst({
+      where: {
+        userId,
+        jobId,
+      },
+    });
+
+    if (existingJob) {
+      return { message: 'Job already saved for this user.' };
+    }
+
+    const savedJob = await this.prisma.saved_jobs.create({
+      data: {
+        userId,
+        jobId,
+      },
+    });
+
+    return savedJob;
+  }
 }
