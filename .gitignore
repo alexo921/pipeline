@@ -34,9 +34,25 @@ coverage/
 .DS_Store
 Thumbs.db
 
-# Docker volumes
+# Docker
+docker-compose.override.yml
+.dockerignore
+Dockerfile.dev
+Dockerfile.prod
+docker-compose.dev.yml
+docker-compose.prod.yml
+
+# Docker volumes and data
 postgres_data/
 redis_data/
+*_data/
+
+# Docker build cache
+.docker/
+
+# Docker logs
+docker-logs/
+*.docker.log
 
 # Python
 venv/

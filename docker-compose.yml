@@ -1,27 +1,111 @@
 version: '3.8'
+
+networks:
+  pipeline-network:
+    driver: bridge
+
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:15
+    container_name: pipeline-postgres
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: pipeline_development_db
+      POSTGRES_USER: pipeline_admin
+      POSTGRES_PASSWORD: Sj29!3*hs&UjN
+      POSTGRES_DB: pipeline_production_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups  # For database backups
+    networks:
+      - pipeline-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d pipeline_production_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   redis:
-    image: redis:latest
+    image: redis:7-alpine
+    container_name: pipeline-redis
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
-  kafka:
-    image: bitnami/kafka:latest
-    environment:
-      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+    networks:
+      - pipeline-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  api:
+    build: 
+      context: ./backend/api
+      dockerfile: Dockerfile
+    container_name: pipeline-api
     ports:
-      - "9092:9092"
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://pipeline_admin:Sj29!3*hs&UjN@postgres:5432/pipeline_production_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - pipeline-network
+    restart: unless-stopped
+    volumes:
+      - ./backend/api/uploads:/app/uploads  # If you have file uploads
+
+  web-dashboard:
+    build:
+      context: ./frontend/web-dashboard
+      dockerfile: Dockerfile
+    container_name: pipeline-web
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: https://api.pipelineworkforce.com
+    networks:
+      - pipeline-network
+    restart: unless-stopped
+
+  admin-panel:
+    build:
+      context: ./admin-panel
+      dockerfile: Dockerfile
+    container_name: pipeline-admin
+    ports:
+      - "3002:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: https://api.pipelineworkforce.com
+    networks:
+      - pipeline-network
+    restart: unless-stopped
+
+  job-scraper:
+    build:
+      context: ./backend/job-scraper
+      dockerfile: Dockerfile
+    container_name: pipeline-scraper
+    environment:
+      DATABASE_URL: postgresql://pipeline_admin:Sj29!3*hs&UjN@postgres:5432/pipeline_production_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pipeline-network
+    restart: unless-stopped
+    volumes:
+      - ./backend/job-scraper/output:/app/output
 
 volumes:
   postgres_data:
