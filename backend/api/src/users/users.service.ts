@@ -1,19 +1,28 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private prismaService: PrismaService,
-  ) {}
+  constructor(private prismaService: PrismaService) {}
 
-  create(createUserDto: CreateUserDto) {
-    const user = this.prismaService.users.create({
+  async create(createUserDto: CreateUserDto) {
+    const existingUser = await this.prismaService.users.findUnique({
+      where: { email: createUserDto.email },
+    });
+
+    if (existingUser) {
+      throw new BadRequestException('A user with this email already exists');
+    }
+
+    return this.prismaService.users.create({
       data: createUserDto,
     });
-    return user;
   }
 
   findAll() {
@@ -48,4 +57,4 @@ export class UsersService {
       where: { id },
     });
   }
-} 
+}

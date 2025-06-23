@@ -13,7 +13,7 @@ export class ExperienceService {
 
   
   async create(data: CreateExperienceDto) {
-    const candidate = this.candidateService.getCandidateById(data.candidateId);
+    const candidate = await this.candidateService.getCandidateById(data.candidateId);
 
     if (!candidate) {
       throw new BadRequestException('Invalid candidate ID');
@@ -36,7 +36,7 @@ export class ExperienceService {
       throw new BadRequestException('candidate ID is required');
     }
 
-    const candidate = this.candidateService.getCandidateById(candidateId);
+    const candidate = await this.candidateService.getCandidateById(candidateId);
 
     if (!candidate) {
       throw new BadRequestException('Invalid candidate ID');
