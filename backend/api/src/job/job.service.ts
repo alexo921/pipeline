@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
+import { JobQueryDto } from './dto/job-query.dto';
+import { contains } from 'class-validator';
 
 @Injectable()
 export class JobService {
@@ -17,7 +18,7 @@ export class JobService {
       url: 'https://www.mycnajobs.com/job-listings/4194251/home-health-aide-hha.html?searchId=1750101598.6548&page=1',
       source: 'myCNAjobs',
       scrapedDate: new Date('2025-06-16'),
-      postedDate: new Date('2025-05-15'), 
+      postedDate: new Date('2025-05-15'),
       jobType: 'Part Time',
       duties: [
         'Provide client care according to approved Plan of Care',
@@ -40,8 +41,47 @@ export class JobService {
     return await this.prismaService.jobs.create({ data: jobData });
   }
 
-  findAll() {
-    return `This action returns all job`;
+  async findAll(query: JobQueryDto) {
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const [jobs, total] = await Promise.all([
+      this.prismaService.jobs.findMany({
+        where: query.search
+          ? {
+              OR: [
+                { title: { contains: query.search, mode: 'insensitive' } },
+                { company: { contains: query.search, mode: 'insensitive' } },
+              ],
+            }
+          : {},
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+        include: { company_details: true },
+      }),
+      this.prismaService.jobs.count({
+        where: query.search
+          ? {
+              OR: [
+                { title: { contains: query.search, mode: 'insensitive' } },
+                { company: { contains: query.search, mode: 'insensitive' } },
+              ],
+            }
+          : {},
+      }),
+    ]);
+
+    return {
+      jobs,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   findOne(id: number) {
