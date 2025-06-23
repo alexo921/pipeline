@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { CandidateModule } from './candidate/candidate.module';
+import { JobModule } from './job/job.module';
+import { UserSavedJobsModule } from './user_saved_jobs/user_saved_jobs.module';
 
 @Module({
   imports: [
@@ -27,7 +29,9 @@ import { CandidateModule } from './candidate/candidate.module';
     UsersModule,
     AuthModule,
     PrismaModule,
-    CandidateModule
+    CandidateModule,
+    JobModule,
+    UserSavedJobsModule
   ],
 })
 export class AppModule {}
