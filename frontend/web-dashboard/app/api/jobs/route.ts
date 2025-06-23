@@ -70,27 +70,99 @@ function generateSalary(title: JobTitle) {
   };
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Path to the JSON file in the root directory
-    const filePath = path.join(process.cwd(), '..', '..', 'jobs_output_20250617_135843.json');
+    // Get query parameters
+    const { searchParams } = new URL(request.url);
+    const limit = parseInt(searchParams.get('limit') || '50');
+    const category = searchParams.get('category');
+    const location = searchParams.get('location');
+    const minSalary = searchParams.get('minSalary');
+    const maxSalary = searchParams.get('maxSalary');
+
+    // Path to the Connecticut healthcare jobs JSON file
+    const filePath = path.join(process.cwd(), 'ct_healthcare_jobs_1000_20250623_165457.json');
     
     // Check if file exists
     if (!fs.existsSync(filePath)) {
-      console.log('Job data file not found, returning empty array');
+      console.log('Connecticut job data file not found, returning empty array');
       return NextResponse.json([]);
     }
 
     // Read and parse the JSON file
     const fileContents = fs.readFileSync(filePath, 'utf8');
-    const jobData = JSON.parse(fileContents);
+    let jobData = JSON.parse(fileContents);
 
-    // Return the job data (limit to reasonable number for performance)
-    const limitedData = Array.isArray(jobData) ? jobData.slice(0, 100) : [];
+    if (!Array.isArray(jobData)) {
+      console.log('Invalid job data format');
+      return NextResponse.json([]);
+    }
+
+    // Apply filters
+    let filteredJobs = jobData;
+
+    if (category && category !== 'all') {
+      filteredJobs = filteredJobs.filter((job: any) => 
+        job.category && job.category.toLowerCase().includes(category.toLowerCase())
+      );
+    }
+
+    if (location && location !== 'all') {
+      filteredJobs = filteredJobs.filter((job: any) => 
+        job.location && job.location.toLowerCase().includes(location.toLowerCase())
+      );
+    }
+
+    if (minSalary) {
+      filteredJobs = filteredJobs.filter((job: any) => 
+        job.salary_min >= parseInt(minSalary)
+      );
+    }
+
+    if (maxSalary) {
+      filteredJobs = filteredJobs.filter((job: any) => 
+        job.salary_max <= parseInt(maxSalary)
+      );
+    }
+
+    // Sort by quality score (highest first) and then by posted date
+    filteredJobs.sort((a: any, b: any) => {
+      if (a.quality_score !== b.quality_score) {
+        return (b.quality_score || 0) - (a.quality_score || 0);
+      }
+      return new Date(b.posted_date || 0).getTime() - new Date(a.posted_date || 0).getTime();
+    });
+
+    // Limit results for performance
+    const limitedData = filteredJobs.slice(0, limit);
     
-    return NextResponse.json(limitedData);
+    // Transform data to match expected format
+    const transformedData = limitedData.map((job: any) => ({
+      id: job.id || `job_${Math.random().toString(36).substr(2, 9)}`,
+      title: job.title,
+      company: job.company,
+      location: job.location,
+      type: job.job_type || 'Full-time',
+      salary: {
+        min: job.salary_min || 0,
+        max: job.salary_max || 0,
+        currency: 'USD',
+        period: 'year'
+      },
+      description: job.description || job.requirements || '',
+      requirements: job.requirements || '',
+      benefits: job.benefits || '',
+      postedDate: job.posted_date || job.scraped_date?.split('T')[0],
+      url: job.url,
+      category: job.category,
+      qualityScore: job.quality_score || 0,
+      source: job.source || 'ct_healthcare_jobs'
+    }));
+
+    console.log(`Returning ${transformedData.length} Connecticut healthcare jobs`);
+    return NextResponse.json(transformedData);
   } catch (error) {
-    console.error('Error reading job data:', error);
+    console.error('Error reading Connecticut job data:', error);
     return NextResponse.json([]);
   }
 } 

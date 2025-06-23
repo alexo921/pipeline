@@ -23,24 +23,59 @@ const loadJobData = async (): Promise<Job[]> => {
 
 // Transform raw job data to our Job interface
 const transformJobData = (rawJobs: any[]): Job[] => {
-  return rawJobs.map((job, index) => ({
-    id: index + 1,
-    title: job.title || 'No Title',
-    company: job.company || 'Unknown Company',
-    location: job.city && job.state ? `${job.city}, ${job.state}` : (job.location || 'Location TBD'),
-    salary: job.salary || "Competitive",
-    tags: [
-      { id: index * 3 + 1, label: getJobCategory(job.title || ''), type: "category" as TagType },
-      { id: index * 3 + 2, label: job.job_type || "Full-Time", type: "employment" as TagType },
-      { id: index * 3 + 3, label: getExperienceLevel(job.title || '', job.description || ''), type: "experience" as TagType }
-    ],
-    overview: job.description || "No description available.",
-    url: job.url || undefined // Include the job URL for applications
-  }));
+  return rawJobs.map((job, index) => {
+    // Format salary display
+    let salaryDisplay = "Competitive";
+    if (job.salary && job.salary.min && job.salary.max) {
+      const minFormatted = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(job.salary.min);
+      const maxFormatted = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(job.salary.max);
+      salaryDisplay = `${minFormatted} - ${maxFormatted}/year`;
+    } else if (typeof job.salary === 'string') {
+      salaryDisplay = job.salary;
+    }
+
+    return {
+      id: job.id || `job_${index + 1}`,
+      title: job.title || 'No Title',
+      company: job.company || 'Unknown Company',
+      location: job.location || 'Location TBD',
+      salary: salaryDisplay,
+      tags: [
+        { id: index * 3 + 1, label: getJobCategory(job.title || '', job.category), type: "category" as TagType },
+        { id: index * 3 + 2, label: job.job_type || job.type || "Full-Time", type: "employment" as TagType },
+        { id: index * 3 + 3, label: getExperienceLevel(job.title || '', job.description || job.requirements || ''), type: "experience" as TagType }
+      ],
+      overview: job.description || job.requirements || "No description available.",
+      url: job.url || undefined // Include the job URL for applications
+    };
+  });
 };
 
 // Helper function to categorize jobs
-const getJobCategory = (title: string): string => {
+const getJobCategory = (title: string, category?: string): string => {
+  // Use provided category first if available
+  if (category) {
+    const categoryLower = category.toLowerCase();
+    if (categoryLower.includes('nursing')) return 'Nurse';
+    if (categoryLower.includes('cna')) return 'CNA';
+    if (categoryLower.includes('medical assistant')) return 'Medical Assistant';
+    if (categoryLower.includes('home health')) return 'Home Health';
+    if (categoryLower.includes('therapy')) return 'Therapy';
+    if (categoryLower.includes('admin')) return 'Administration';
+    return category;
+  }
+  
+  // Fall back to title-based categorization
   const titleLower = title.toLowerCase();
   if (titleLower.includes('nurse') || titleLower.includes('rn') || titleLower.includes('lpn')) return 'Nurse';
   if (titleLower.includes('cna') || titleLower.includes('aide') || titleLower.includes('assistant')) return 'Healthcare';
