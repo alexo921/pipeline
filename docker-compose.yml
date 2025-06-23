@@ -3,8 +3,8 @@ services:
   postgres:
     image: postgres:latest
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: pipeline_admin
+      POSTGRES_PASSWORD: 3r90!jsQ#9tyJ2
       POSTGRES_DB: pipeline_development_db
     ports:
       - "5432:5432"

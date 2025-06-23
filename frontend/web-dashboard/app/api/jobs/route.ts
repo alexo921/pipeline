@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 
 const jobTitles = [
   'Registered Nurse (RN)',
@@ -68,100 +70,27 @@ function generateSalary(title: JobTitle) {
   };
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    console.log('API route called');
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '9');
-    const search = (searchParams.get('search') || '').toLowerCase();
-    const locationFilter = (searchParams.get('location') || '').toLowerCase();
-
-    console.log('Search params:', { page, limit, search, locationFilter });
-
-    // Generate all jobs first
-    let jobs = Array.from({ length: 50 }, (_, i) => {
-      const title = jobTitles[i % jobTitles.length];
-      const location = locations[i % locations.length];
-      const facilityType = facilityTypes[i % facilityTypes.length];
-      const type = jobTypes[i % jobTypes.length];
-      const salary = generateSalary(title);
-      
-      return {
-        id: `job-${i + 1}`,
-        title,
-        facilityType,
-        location,
-        companyLogo: '/placeholder-logo.svg',
-        applyUrl: `https://example.com/apply/${i + 1}`,
-        salary,
-        type,
-        postedAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-        description: `Join our team as a ${title} in ${location}. We're looking for dedicated healthcare professionals to provide exceptional care to our patients.`,
-        requirements: [
-          'Valid license/certification',
-          'Previous healthcare experience',
-          'Strong communication skills',
-          'Ability to work various shifts',
-        ],
-        benefits: [
-          'Competitive salary',
-          'Health insurance',
-          '401(k) matching',
-          'Paid time off',
-          'Professional development opportunities',
-        ],
-      };
-    });
-
-    // Apply filters if any
-    if (search) {
-      jobs = jobs.filter(job => 
-        job.title.toLowerCase().includes(search) ||
-        job.description.toLowerCase().includes(search) ||
-        job.facilityType.toLowerCase().includes(search)
-      );
+    // Path to the JSON file in the root directory
+    const filePath = path.join(process.cwd(), '..', '..', 'jobs_output_20250617_135843.json');
+    
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      console.log('Job data file not found, returning empty array');
+      return NextResponse.json([]);
     }
 
-    if (locationFilter) {
-      jobs = jobs.filter(job => 
-        job.location.toLowerCase().includes(locationFilter)
-      );
-    }
+    // Read and parse the JSON file
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const jobData = JSON.parse(fileContents);
 
-    // Calculate pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedJobs = jobs.slice(startIndex, endIndex);
-    const totalJobs = jobs.length;
-    const totalPages = Math.ceil(totalJobs / limit);
-    const hasMore = page < totalPages;
-
-    console.log('Sending response:', {
-      jobsCount: paginatedJobs.length,
-      totalJobs,
-      totalPages,
-      hasMore
-    });
-
-    // Simulate API latency
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    return NextResponse.json({
-      jobs: paginatedJobs,
-      pagination: {
-        page,
-        limit,
-        totalJobs,
-        totalPages,
-        hasMore
-      }
-    });
+    // Return the job data (limit to reasonable number for performance)
+    const limitedData = Array.isArray(jobData) ? jobData.slice(0, 100) : [];
+    
+    return NextResponse.json(limitedData);
   } catch (error) {
-    console.error('API Error:', error);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
+    console.error('Error reading job data:', error);
+    return NextResponse.json([]);
   }
 } 
