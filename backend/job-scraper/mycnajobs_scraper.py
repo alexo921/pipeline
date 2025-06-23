@@ -25,6 +25,8 @@ class MyCNAJobsScraper:
             'Cache-Control': 'no-cache',
             'Pragma': 'no-cache',
         })
+        self.max_pages = 50  # Increased default max pages
+        self.page_delay = 2  # Delay between pages in seconds
         
     def _parse_salary(self, text: str) -> Dict[str, Any]:
         """Parse salary information from text."""
@@ -426,18 +428,71 @@ class MyCNAJobsScraper:
         
     def _has_next_page(self, html: str) -> bool:
         """Check if there is a next page of results."""
-        soup = BeautifulSoup(html, 'html.parser')
-        next_button = soup.select_one('a.next-page:not(.disabled), .pagination .next:not(.disabled), a[rel="next"], .next a')
-        return bool(next_button and 'disabled' not in next_button.get('class', []))
+        try:
+            soup = BeautifulSoup(html, 'html.parser')
+            
+            # Check for pagination elements
+            pagination = soup.select_one('.pagination, .pager, nav[role="navigation"]')
+            if not pagination:
+                logger.debug("No pagination element found")
+                return False
+            
+            # Look for next page indicators
+            next_indicators = [
+                'a.next-page:not(.disabled)',
+                '.pagination .next:not(.disabled)',
+                'a[rel="next"]',
+                '.next a',
+                'a:contains("Next")',
+                'a:contains("»")'
+            ]
+            
+            for indicator in next_indicators:
+                next_button = soup.select_one(indicator)
+                if next_button and 'disabled' not in next_button.get('class', []):
+                    logger.debug(f"Found next page button: {indicator}")
+                    return True
+            
+            # Check if current page number is less than total pages
+            current_page = None
+            total_pages = None
+            
+            # Look for current page indicator
+            active_page = soup.select_one('.pagination .active, .current-page')
+            if active_page:
+                try:
+                    current_page = int(active_page.get_text(strip=True))
+                except ValueError:
+                    pass
+            
+            # Look for total pages indicator
+            last_page = soup.select('.pagination a')[-1]
+            if last_page:
+                try:
+                    total_pages = int(last_page.get_text(strip=True))
+                except ValueError:
+                    pass
+            
+            if current_page and total_pages and current_page < total_pages:
+                logger.debug(f"Current page {current_page} is less than total pages {total_pages}")
+                return True
+            
+            logger.debug("No next page indicator found")
+            return False
+            
+        except Exception as e:
+            logger.error(f"Error checking for next page: {str(e)}")
+            return False
         
     def scrape_jobs(self) -> List[Dict[str, Any]]:
         """Scrape CNA jobs in Connecticut."""
         all_jobs = []
         page = 1
-        max_pages = 10
         seen_urls = set()
+        consecutive_empty_pages = 0
+        max_empty_pages = 3  # Stop after 3 consecutive empty pages
         
-        while page <= max_pages:
+        while page <= self.max_pages:
             logger.info(f"Fetching page {page}")
             
             try:
@@ -452,25 +507,54 @@ class MyCNAJobsScraper:
                 jobs = self._extract_jobs_from_page(response.text)
                 logger.info(f"Found {len(jobs)} jobs on page {page}")
                 
+                # Track empty pages
+                if not jobs:
+                    consecutive_empty_pages += 1
+                    logger.warning(f"Empty page encountered ({consecutive_empty_pages}/{max_empty_pages})")
+                    if consecutive_empty_pages >= max_empty_pages:
+                        logger.info(f"Stopping after {max_empty_pages} consecutive empty pages")
+                        break
+                else:
+                    consecutive_empty_pages = 0
+                
                 # Add new jobs to the list
+                new_jobs = 0
                 for job in jobs:
                     if job['url'] not in seen_urls:
                         all_jobs.append(job)
                         seen_urls.add(job['url'])
-                        
+                        new_jobs += 1
+                
+                logger.info(f"Added {new_jobs} new jobs from page {page}")
+                
                 # Check if we should continue to the next page
-                if not jobs or not self._has_next_page(response.text):
+                if not self._has_next_page(response.text):
                     logger.info("No more pages to scrape")
                     break
                     
                 # Add delay between pages
-                time.sleep(2)
+                logger.debug(f"Waiting {self.page_delay} seconds before next page")
+                time.sleep(self.page_delay)
                 page += 1
                 
             except requests.exceptions.RequestException as e:
                 logger.error(f"Error fetching page {page}: {str(e)}")
+                # Retry the page once after a longer delay
+                try:
+                    logger.info(f"Retrying page {page} after 10 second delay")
+                    time.sleep(10)
+                    response = self.session.get(url)
+                    response.raise_for_status()
+                    continue
+                except:
+                    logger.error(f"Retry failed for page {page}, stopping pagination")
+                    break
+            except Exception as e:
+                logger.error(f"Unexpected error on page {page}: {str(e)}")
                 break
-                
+        
+        logger.info(f"Scraping completed. Total pages scraped: {page}")
+        logger.info(f"Total unique jobs found: {len(all_jobs)}")
         return all_jobs
 
 def main():
