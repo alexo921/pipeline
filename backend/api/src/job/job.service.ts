@@ -4,6 +4,7 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 import { JobQueryDto } from './dto/job-query.dto';
 import { contains } from 'class-validator';
 
+
 @Injectable()
 export class JobService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -83,16 +84,20 @@ export class JobService {
       },
     };
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} job`;
+  // TODO : find one needed
+  async findOne(id: string) {
+    const result = await this.prismaService.jobs.findUnique({
+      where: { id },
+    });
+    console.log('result =>', result);
+    return result; // Optionally return the result if needed
   }
 
-  update(id: number, updateJobDto: UpdateJobDto) {
-    return `This action updates a #${id} job`;
-  }
+  // update(id: number, updateJobDto: UpdateJobDto) {
+  //   return `This action updates a #${id} job`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} job`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} job`;
+  // }
 }
