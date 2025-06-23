@@ -4,10 +4,64 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
+  --background-rgb: 250, 250, 250;
+  --font-baloo: 'Baloo 2', cursive;
+  --font-avenir: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
+  background-color: #F4F4F4;
+  position: relative;
+  overflow-x: hidden;
   min-height: 100vh;
   @apply bg-page-gradient;
+}
+
+/* Gradient blur in top-right corner */
+body::before {
+  content: '';
+  position: fixed;
+  top: -200px;
+  right: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(59, 130, 246, 0.1) 50%, transparent 70%);
+  filter: blur(80px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Gradient blur in bottom corner */
+body::after {
+  content: '';
+  position: fixed;
+  bottom: -200px;
+  left: -100px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(168, 85, 247, 0.08) 50%, transparent 70%);
+  filter: blur(60px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@layer base {
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  
+  .font-baloo {
+    font-family: var(--font-baloo);
+  }
+  
+  .font-avenir {
+    font-family: var(--font-avenir);
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto;
+  }
 }
