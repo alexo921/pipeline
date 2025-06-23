@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { JobService } from './job.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
+import { JobQueryDto } from './dto/job-query.dto';
 
 @Controller('job')
 export class JobController {
@@ -20,9 +22,9 @@ export class JobController {
     return this.jobService.create();
   }
 
-  @Get()
-  findAll() {
-    return this.jobService.findAll();
+  @Get('get-all-jobs')
+  findAll(@Query() query: JobQueryDto) {
+    return this.jobService.findAll(query);
   }
 
   @Get(':id')
