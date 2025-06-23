@@ -112,19 +112,100 @@ model tasks {
 }
 
 model users {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(CANDIDATE)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  tasks     tasks[]   @relation("UserTasks")
-  candidate candidates[]
+  id          String      @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String      @db.VarChar
+  email       String      @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar
+  password    String      @db.VarChar
+  role        Role        @default(CANDIDATE)
+  createdAt   DateTime    @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime    @default(now()) @db.Timestamp(6)
+  tasks       tasks[]     @relation("UserTasks")
+  candidate   candidates[]
+  saved_jobs  saved_jobs[]
 
   @@index([email])
   @@unique([email, role])
+}
+
+// Job-related models
+model jobs {
+  id                    String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title                 String       @db.VarChar
+  company               String       @db.VarChar
+  location             String?      @db.VarChar
+  description          String?      @db.Text
+  url                  String       @unique @db.VarChar
+  source               String       @db.VarChar
+  scrapedDate         DateTime     @db.Date
+  postedDate          DateTime?    @db.Date
+  jobType             String?      @db.VarChar
+  requirements        String[]     @db.VarChar
+  benefits            String[]     @db.VarChar
+  duties              String[]     @db.VarChar
+  shift               String?      @db.VarChar
+  experienceRequired  String?      @db.VarChar
+  certificationsRequired String[]  @db.VarChar
+  salaryMin           Float?       @db.Real
+  salaryMax           Float?       @db.Real
+  salaryPeriod        String?      @db.VarChar
+  city                String?      @db.VarChar
+  state               String?      @db.VarChar
+  zipCode             String?      @db.VarChar
+  status              String       @default("active") @db.VarChar
+  createdAt           DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt           DateTime     @default(now()) @db.Timestamp(6)
+  companyId           String?      @db.Uuid
+  company_details     companies?   @relation(fields: [companyId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  saved_by            saved_jobs[]
+}
+
+model companies {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name        String    @unique @db.VarChar
+  website     String?   @db.VarChar
+  description String?   @db.Text
+  industry    String?   @db.VarChar
+  size        String?   @db.VarChar
+  founded     Int?      @db.Integer
+  headquarters String?  @db.VarChar
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @default(now()) @db.Timestamp(6)
+  jobs        jobs[]
+}
+
+// Scraping metadata and tracking
+model scraping_runs {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  source      String    @db.VarChar
+  startTime   DateTime  @db.Timestamp(6)
+  endTime     DateTime? @db.Timestamp(6)
+  status      String    @default("running") @db.VarChar
+  totalJobs   Int       @default(0) @db.Integer
+  newJobs     Int       @default(0) @db.Integer
+  updatedJobs Int       @default(0) @db.Integer
+  errors      String[]  @db.Text
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @default(now()) @db.Timestamp(6)
+}
+
+// Saved jobs relationship
+model saved_jobs {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  userId      String    @db.Uuid
+  jobId       String    @db.Uuid
+  notes       String?   @db.Text
+  status      String    @default("saved") @db.VarChar // saved, applied, interviewed, rejected, accepted
+  appliedDate DateTime? @db.Date
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @default(now()) @db.Timestamp(6)
+  user        users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job         jobs      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobId], name: "saved_jobs_user_job_unique")
+  @@index([userId], name: "saved_jobs_user_id_index")
+  @@index([jobId], name: "saved_jobs_job_id_index")
+  @@index([status], name: "saved_jobs_status_index")
+}
 }
 
 model candidates {
