@@ -16,7 +16,7 @@ export class UserSavedJobsController {
   constructor(private readonly userSavedJobsService: UserSavedJobsService) {}
 
   @Post()
-  create(@Body() createUserSavedJobDto: CreateUserSavedJobDto) {
+  create() {
     return this.userSavedJobsService.create();
   }
 

@@ -6,7 +6,7 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 @Injectable()
 export class UserSavedJobsService {
   constructor(private readonly prismaService: PrismaService) {}
-  create() {
+  async create() {
     const user_saved_job = {
       userId: '67811873-1beb-4f1b-8e73-2614295cfcef',
       jobId: '572c35ad-aafe-4740-8af6-fa61cde00cc6',
@@ -16,6 +16,7 @@ export class UserSavedJobsService {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
+    return await this.prismaService.saved_jobs.create({ data: user_saved_job });
   }
 
   findAll() {
