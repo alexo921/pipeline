@@ -14,5 +14,7 @@ export interface Job {
   salary: string;
   tags: Tag[];
   overview: string;
+  description?: string; // Full job description from scraper
+  requirements?: string[] | string; // Job requirements
   url?: string; // Optional URL for job application
 } 
