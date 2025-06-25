@@ -74,14 +74,14 @@ export async function GET(request: NextRequest) {
   try {
     // Get query parameters
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '50');
+    const limit = parseInt(searchParams.get('limit') || '1000');
     const category = searchParams.get('category');
     const location = searchParams.get('location');
     const minSalary = searchParams.get('minSalary');
     const maxSalary = searchParams.get('maxSalary');
 
     // Path to the Connecticut healthcare jobs JSON file
-    const filePath = path.join(process.cwd(), 'ct_healthcare_jobs_1000_20250623_165457.json');
+    const filePath = path.join(process.cwd(), 'brightstar_ct_jobs_1000_20250625_002803_enhanced_descriptions.json');
     
     // Check if file exists
     if (!fs.existsSync(filePath)) {
@@ -136,28 +136,55 @@ export async function GET(request: NextRequest) {
     // Limit results for performance
     const limitedData = filteredJobs.slice(0, limit);
     
+    // Parse salary range from BrightStar format (e.g., "$15-25/hour" or "$45-65k/year")
+    function parseSalaryRange(salaryRange: string) {
+      if (!salaryRange) return { min: 0, max: 0 };
+      
+      // Extract numbers from salary range
+      const numbers = salaryRange.match(/\d+/g);
+      if (!numbers || numbers.length < 2) return { min: 0, max: 0 };
+      
+      let min = parseInt(numbers[0]);
+      let max = parseInt(numbers[1]);
+      
+      // Convert hourly to annual (assuming 40 hours/week, 52 weeks/year)
+      if (salaryRange.includes('/hour')) {
+        min = min * 40 * 52;
+        max = max * 40 * 52;
+      } else if (salaryRange.includes('k')) {
+        min = min * 1000;
+        max = max * 1000;
+      }
+      
+      return { min, max };
+    }
+
     // Transform data to match expected format
-    const transformedData = limitedData.map((job: any) => ({
-      id: job.id || `job_${Math.random().toString(36).substr(2, 9)}`,
-      title: job.title,
-      company: job.company,
-      location: job.location,
-      type: job.job_type || 'Full-time',
-      salary: {
-        min: job.salary_min || 0,
-        max: job.salary_max || 0,
-        currency: 'USD',
-        period: 'year'
-      },
-      description: job.description || job.requirements || '',
-      requirements: job.requirements || '',
-      benefits: job.benefits || '',
-      postedDate: job.posted_date || job.scraped_date?.split('T')[0],
-      url: job.url,
-      category: job.category,
-      qualityScore: job.quality_score || 0,
-      source: job.source || 'ct_healthcare_jobs'
-    }));
+    const transformedData = limitedData.map((job: any) => {
+      const salaryData = parseSalaryRange(job.salary_range);
+      
+      return {
+        id: job.id || `job_${Math.random().toString(36).substr(2, 9)}`,
+        title: job.title,
+        company: job.company,
+        location: job.location,
+        type: job.job_type || 'Full-time',
+        salary: {
+          min: job.salary_min || salaryData.min || 0,
+          max: job.salary_max || salaryData.max || 0,
+          currency: 'USD',
+          period: 'year'
+        },
+        description: job.description || (Array.isArray(job.requirements) ? job.requirements.join(', ') : job.requirements) || '',
+        requirements: Array.isArray(job.requirements) ? job.requirements.join('\n• ') : (job.requirements || ''),
+        benefits: Array.isArray(job.benefits) ? job.benefits.join(', ') : (job.benefits || ''),
+        postedDate: job.posted_date || job.scraped_date?.split('T')[0] || job.scraped_at?.split('T')[0],
+        url: job.url,
+        category: job.category,
+        qualityScore: job.quality_score || 0,
+        source: job.source || 'brightstar_care'
+      };
+    });
 
     console.log(`Returning ${transformedData.length} Connecticut healthcare jobs`);
     return NextResponse.json(transformedData);
