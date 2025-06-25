@@ -223,7 +223,7 @@ export default function JobsPage() {
   const [loading, setLoading] = useState(true);
   const [locationSearch, setLocationSearch] = useState('');
 
-  const jobsPerPage = 100; // Show 100 jobs per page
+  const jobsPerPage = 18; // Show 18 jobs per page maximum
 
   // Load job data on component mount
   useEffect(() => {
@@ -675,56 +675,100 @@ export default function JobsPage() {
 
             {/* Right Column - Job Details */}
             <div 
-              className={`bg-white rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] ${!selectedJob ? 'invisible' : ''}`}
+              className={`bg-white rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] sticky top-8 self-start ${!selectedJob ? 'invisible' : ''}`}
               style={{
                 width: '705px',
-                height: '1503px'
+                maxHeight: 'calc(100vh - 4rem)'
               }}
             >
               {selectedJob ? (
-                <div className="p-6" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h2 className="text-[30px] font-black leading-[130%] text-[#2466D0] mb-3 font-avenir">
-                        {selectedJob.title}
-                      </h2>
-                      <p className="text-[16px] font-bold leading-[140%] text-[#01253F] font-avenir">
-                        {selectedJob.company}<br />
-                        {selectedJob.location}<br />
-                        {selectedJob.salary}
-                      </p>
-                    </div>
-                    <button 
-                      onClick={() => {
-                        if (selectedJob?.url) {
-                          window.open(selectedJob.url, '_blank', 'noopener,noreferrer');
-                        } else {
-                          alert('Application URL not available for this job.');
-                        }
-                      }}
-                      className="bg-[#2CB3BF] text-white font-black text-[20px] py-3 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
-                    >
-                      Apply
-                    </button>
-                  </div>
-                  
-                  <div className="flex gap-3 mb-6 flex-wrap">
-                    {selectedJob.tags.map((tag) => (
-                      <div key={tag.id} className={`flex items-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}>
-                        <span className="text-[14px] font-bold text-[#01253F] font-avenir">
-                          {tag.label}
-                        </span>
+                <div className="h-full flex flex-col">
+                  {/* Header - Fixed */}
+                  <div className="p-6 border-b border-gray-200 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h2 className="text-[30px] font-black leading-[130%] text-[#2466D0] mb-3 font-avenir">
+                          {selectedJob.title}
+                        </h2>
+                        <p className="text-[16px] font-bold leading-[140%] text-[#01253F] font-avenir">
+                          {selectedJob.company}<br />
+                          {selectedJob.location}<br />
+                          {selectedJob.salary}
+                        </p>
                       </div>
-                    ))}
+                      <button 
+                        onClick={() => {
+                          if (selectedJob?.url) {
+                            window.open(selectedJob.url, '_blank', 'noopener,noreferrer');
+                          } else {
+                            alert('Application URL not available for this job.');
+                          }
+                        }}
+                        className="bg-[#2CB3BF] text-white font-black text-[20px] py-3 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                    
+                    <div className="flex gap-3 flex-wrap">
+                      {selectedJob.tags.map((tag) => (
+                        <div key={tag.id} className={`flex items-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}>
+                          <span className="text-[14px] font-bold text-[#01253F] font-avenir">
+                            {tag.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="border-t-2 border-[#8AADFC] pt-6">
-                    <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
-                      Overview
-                    </h3>
-                    <p className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
-                      {selectedJob.overview}
-                    </p>
+                  {/* Content - Scrollable */}
+                  <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    <div className="border-t-2 border-[#8AADFC] pt-6">
+                      <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
+                        Overview
+                      </h3>
+                      <p className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir mb-6">
+                        {selectedJob.overview}
+                      </p>
+
+                      {/* Job Description */}
+                      {selectedJob.description && (
+                        <div className="mb-6">
+                          <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
+                            Job Description
+                          </h3>
+                          <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
+                            {selectedJob.description.split('\n').map((paragraph, index) => (
+                              paragraph.trim() && (
+                                <p key={index} className="mb-3 last:mb-0">
+                                  {paragraph.trim()}
+                                </p>
+                              )
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Requirements */}
+                      {selectedJob.requirements && (
+                        <div className="mb-6">
+                          <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
+                            Requirements
+                          </h3>
+                          <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
+                            {Array.isArray(selectedJob.requirements) ? (
+                              <ul className="list-disc pl-5 space-y-2">
+                                {selectedJob.requirements.map((req, index) => (
+                                  <li key={index}>{req}</li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p>{selectedJob.requirements}</p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ) : (
