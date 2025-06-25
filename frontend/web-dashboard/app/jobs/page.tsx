@@ -675,10 +675,11 @@ export default function JobsPage() {
 
             {/* Right Column - Job Details */}
             <div 
-              className={`bg-white rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] sticky top-8 self-start ${!selectedJob ? 'invisible' : ''}`}
+              className={`bg-white rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] sticky top-8 self-start overflow-hidden ${!selectedJob ? 'invisible' : ''}`}
               style={{
                 width: '705px',
-                maxHeight: 'calc(100vh - 4rem)'
+                maxHeight: 'calc(100vh - 4rem)',
+                minHeight: '600px'
               }}
             >
               {selectedJob ? (
@@ -722,12 +723,15 @@ export default function JobsPage() {
                   </div>
 
                   {/* Content - Scrollable */}
-                  <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                  <div className="flex-1 overflow-y-auto p-6" style={{
+                    scrollbarWidth: 'thin',
+                    scrollbarColor: '#cbd5e0 #f7fafc'
+                  }}>
                     <div className="border-t-2 border-[#8AADFC] pt-6">
                       <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
                         Overview
                       </h3>
-                      <p className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir mb-6">
+                      <p className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir mb-6 break-words">
                         {selectedJob.overview}
                       </p>
 
@@ -738,13 +742,17 @@ export default function JobsPage() {
                             Job Description
                           </h3>
                           <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
-                            {selectedJob.description.split('\n').map((paragraph, index) => (
-                              paragraph.trim() && (
-                                <p key={index} className="mb-3 last:mb-0">
+                            {selectedJob.description
+                              .replace(/Skip to content/g, '')
+                              .replace(/Back to search/g, '')
+                              .replace(/EASY APPLY.*?Apply Now/g, '')
+                              .split(/\n+/)
+                              .filter(paragraph => paragraph.trim().length > 0)
+                              .map((paragraph, index) => (
+                                <p key={index} className="mb-3 last:mb-0 break-words whitespace-pre-wrap">
                                   {paragraph.trim()}
                                 </p>
-                              )
-                            ))}
+                              ))}
                           </div>
                         </div>
                       )}
@@ -759,11 +767,11 @@ export default function JobsPage() {
                             {Array.isArray(selectedJob.requirements) ? (
                               <ul className="list-disc pl-5 space-y-2">
                                 {selectedJob.requirements.map((req, index) => (
-                                  <li key={index}>{req}</li>
+                                  <li key={index} className="break-words">{req}</li>
                                 ))}
                               </ul>
                             ) : (
-                              <p>{selectedJob.requirements}</p>
+                              <p className="break-words whitespace-pre-wrap">{selectedJob.requirements}</p>
                             )}
                           </div>
                         </div>
@@ -780,6 +788,24 @@ export default function JobsPage() {
           </div>
         </div>
       </div>
+
+      {/* Custom Scrollbar Styles */}
+      <style jsx>{`
+        .overflow-y-auto::-webkit-scrollbar {
+          width: 6px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-track {
+          background: #f7fafc;
+          border-radius: 3px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+          background: #cbd5e0;
+          border-radius: 3px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+          background: #a0aec0;
+        }
+      `}</style>
     </div>
   );
 } 
