@@ -556,7 +556,7 @@ export default function JobsPage() {
           </div>
 
           {/* Two Column Layout */}
-          <div className="flex justify-center gap-8">
+          <div className="flex justify-center gap-8 items-start">
             {/* Left Column - Job Listings */}
             <div className="space-y-4 flex-1 max-w-2xl">
               {currentJobs.length > 0 ? (
@@ -675,15 +675,18 @@ export default function JobsPage() {
 
             {/* Right Column - Job Details */}
             <div 
-              className={`bg-white rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] sticky top-8 self-start overflow-hidden ${!selectedJob ? 'invisible' : ''}`}
+              className={`bg-white rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] ${!selectedJob ? 'invisible' : ''}`}
               style={{
                 width: '705px',
+                position: 'sticky',
+                top: '2rem',
                 maxHeight: 'calc(100vh - 4rem)',
-                minHeight: '600px'
+                minHeight: '600px',
+                overflow: 'hidden'
               }}
             >
               {selectedJob ? (
-                <div className="h-full flex flex-col">
+                <div className="h-full flex flex-col" style={{ height: '100%' }}>
                   {/* Header - Fixed */}
                   <div className="p-6 border-b border-gray-200 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                     <div className="flex justify-between items-start mb-4">
@@ -723,10 +726,15 @@ export default function JobsPage() {
                   </div>
 
                   {/* Content - Scrollable */}
-                  <div className="flex-1 overflow-y-auto p-6" style={{
-                    scrollbarWidth: 'thin',
-                    scrollbarColor: '#cbd5e0 #f7fafc'
-                  }}>
+                  <div 
+                    className="flex-1 p-6" 
+                    style={{
+                      overflowY: 'auto',
+                      maxHeight: 'calc(100vh - 12rem)',
+                      scrollbarWidth: 'thin',
+                      scrollbarColor: '#cbd5e0 #f7fafc'
+                    }}
+                  >
                     <div className="border-t-2 border-[#8AADFC] pt-6">
                       <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
                         Overview
