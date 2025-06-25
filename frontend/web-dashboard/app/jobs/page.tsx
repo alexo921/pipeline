@@ -8,7 +8,7 @@ import { Search, MapPin, Filter, ChevronDown, X } from 'lucide-react';
 // Dynamic job data loader
 const loadJobData = async (): Promise<Job[]> => {
   try {
-    const response = await fetch('/api/jobs');
+    const response = await fetch('/api/jobs?limit=1000');
     if (response.ok) {
       const rawJobs = await response.json();
       return transformJobData(rawJobs);
@@ -55,7 +55,9 @@ const transformJobData = (rawJobs: any[]): Job[] => {
         { id: index * 3 + 2, label: job.job_type || job.type || "Full-Time", type: "employment" as TagType },
         { id: index * 3 + 3, label: getExperienceLevel(job.title || '', job.description || job.requirements || ''), type: "experience" as TagType }
       ],
-      overview: job.description || job.requirements || "No description available.",
+      overview: job.description ? job.description.substring(0, 200) + "..." : "No description available.",
+      description: job.description || undefined,
+      requirements: job.requirements || undefined,
       url: job.url || undefined // Include the job URL for applications
     };
   });
@@ -221,7 +223,7 @@ export default function JobsPage() {
   const [loading, setLoading] = useState(true);
   const [locationSearch, setLocationSearch] = useState('');
 
-  const jobsPerPage = 8; // Changed from 6 to 8
+  const jobsPerPage = 100; // Show 100 jobs per page
 
   // Load job data on component mount
   useEffect(() => {
