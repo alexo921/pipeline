@@ -86,7 +86,10 @@ export class AuthController {
         email: user.email,
       });
 
-      return res.send({ token: jwt, user: userInfo });
+      // return res.send({ token: jwt, user: userInfo });
+      return res.redirect(
+        `http://localhost:3000/auth/callback?token=${jwt}&email=${user.email}`,
+      );
     } catch (err) {
       error('Google OAuth error', err.stack);
       return res.status(500).send({
