@@ -39,7 +39,7 @@ export class EmailService {
   }
 
   async sendPasswordResetEmail(email: string, token: string, name: string) {
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+    const resetLink = `${process.env.FRONTEND_URL}/change-password?token=${token}`;
 
     const contentHtml = `
       <p style="font-size: 16px; color: #555;">

@@ -14,7 +14,10 @@ async function bootstrap() {
     .build();
 
   // Enable CORS
-  app.enableCors();
+  app.enableCors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  });
 
   // Set up global response interceptor
   app.useGlobalInterceptors(new ResponseInterceptor());
