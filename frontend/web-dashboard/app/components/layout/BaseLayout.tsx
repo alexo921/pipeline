@@ -147,11 +147,11 @@ export default function BaseLayout({
       </main>
 
       {showFooter && (
-        <footer className="text-[#01253F] py-16">
-          <div className="max-w-[1400px] mx-auto px-8">
-            <div className="flex justify-between items-start">
+        <footer className="text-[#01253F] py-16 w-full max-w-full">
+          <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-8">
+            <div className="flex flex-col lg:flex-row justify-between items-start gap-12 w-full">
               {/* Left side - Logo and description */}
-              <div className="flex flex-col max-w-[345px]">
+              <div className="flex flex-col max-w-[345px] w-full mb-8 lg:mb-0">
                 <div className="flex items-center mb-6">
                   <Image
                     src="/logo-navy.svg"
@@ -161,11 +161,9 @@ export default function BaseLayout({
                     priority
                   />
                 </div>
-                
                 <p className="text-[20px] font-normal leading-[167%] text-[#01253F] mb-6 font-avenir">
                   Lorem ipsum dolor sit amet consectetur adipiscing elit aliquam
                 </p>
-                
                 {/* Social Media Icons */}
                 <div className="flex items-center gap-6">
                   {/* Facebook */}
@@ -204,11 +202,10 @@ export default function BaseLayout({
                   </div>
                 </div>
               </div>
-              
               {/* Middle columns */}
-              <div className="flex gap-16">
+              <div className="flex flex-col sm:flex-row lg:flex-1 gap-8 lg:gap-12 w-full lg:w-auto justify-between">
                 {/* Product Column */}
-                <div className="flex flex-col">
+                <div className="flex flex-col mb-8 sm:mb-0 w-full sm:w-auto lg:flex-1 lg:min-w-[180px]">
                   <h4 className="text-[22px] font-bold leading-[110%] text-[#01253F] mb-11 font-avenir">
                     Product
                   </h4>
@@ -240,9 +237,8 @@ export default function BaseLayout({
                     </li>
                   </ul>
                 </div>
-                
                 {/* Company Column */}
-                <div className="flex flex-col">
+                <div className="flex flex-col mb-8 sm:mb-0 w-full sm:w-auto lg:flex-1 lg:min-w-[180px]">
                   <h4 className="text-[22px] font-bold leading-[110%] text-[#01253F] mb-11 font-avenir">
                     Company
                   </h4>
@@ -274,9 +270,8 @@ export default function BaseLayout({
                     </li>
                   </ul>
                 </div>
-                
                 {/* Support Column */}
-                <div className="flex flex-col">
+                <div className="flex flex-col w-full sm:w-auto lg:flex-1 lg:min-w-[180px]">
                   <h4 className="text-[22px] font-bold leading-[110%] text-[#01253F] mb-11 font-avenir">
                     Support
                   </h4>
@@ -309,9 +304,8 @@ export default function BaseLayout({
                   </ul>
                 </div>
               </div>
-              
               {/* Right side - Contact us */}
-              <div className="flex flex-col max-w-[252px]">
+              <div className="flex flex-col max-w-[252px] w-full mt-8 lg:mt-0 lg:w-[252px] flex-shrink-0">
                 <h4 className="text-[22px] font-bold leading-[110%] text-[#01253F] mb-11 font-avenir">
                   Contacts us
                 </h4>
@@ -357,13 +351,12 @@ export default function BaseLayout({
                 </div>
               </div>
             </div>
-            
             {/* Bottom section */}
-            <div className="flex justify-between items-center mt-16 pt-8">
-              <div className="text-[18px] font-normal leading-[167%] text-[#01253F] font-avenir">
+            <div className="flex flex-col sm:flex-row justify-between items-center mt-16 pt-8 gap-4 w-full">
+              <div className="text-[18px] font-normal leading-[167%] text-[#01253F] font-avenir text-center sm:text-left w-full sm:w-auto">
                 Copyright © 2025 Pipeline
               </div>
-              <div className="text-[18px] font-normal leading-[167%] text-[#01253F] font-avenir">
+              <div className="text-[18px] font-normal leading-[167%] text-[#01253F] font-avenir text-center sm:text-right w-full sm:w-auto">
                 All Rights Reserved | Terms and Conditions | Privacy Policy
               </div>
             </div>
