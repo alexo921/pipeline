@@ -328,13 +328,17 @@ export default function JobsPage() {
     setSelectedJob(job);
   };
 
-  const handleContainerClick = () => {
-    setSelectedJob(null);
+  const handleContainerClick = (e: React.MouseEvent) => {
+    // Only close if clicking on the actual container background, not on interactive elements
+    if (e.target === e.currentTarget) {
+      setSelectedJob(null);
+    }
   };
 
   const handlePaginationClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
     // Do nothing - just prevent bubbling to container
   };
 
@@ -814,6 +818,12 @@ export default function JobsPage() {
           background: #a0aec0;
         }
       `}</style>
+
+      {/* Job Modal */}
+      <JobModal 
+        job={selectedJob} 
+        onClose={() => setSelectedJob(null)} 
+      />
     </div>
   );
 } 
