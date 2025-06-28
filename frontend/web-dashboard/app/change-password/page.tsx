@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +13,7 @@ type FormData = {
   confirmPassword: string;
 };
 
-const ChangePasswordScreen: React.FC = () => {
+const ChangePasswordContent: React.FC = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -199,31 +199,38 @@ const ChangePasswordScreen: React.FC = () => {
                 disabled={isLoading}
                 className="w-full bg-[#2CB3BF] text-white hover:bg-[#269aa5] py-3 px-4 rounded-lg font-medium text-sm disabled:opacity-50"
               >
-                {isLoading ? "Updating Password..." : "Update Password"}
+                {isLoading ? "Changing Password..." : "Change Password"}
               </button>
             </form>
           </>
         ) : (
-          <div className="text-center mb-8">
-            <div className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
-              <CheckCircle className="w-10 h-10 text-green-600" />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-              Password Updated!
-            </h1>
-            <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-              Your password has been successfully updated.
+          <div className="text-center">
+            <CheckCircle className="mx-auto text-green-500 mb-4" size={48} />
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              Password Changed Successfully!
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Your password has been updated. You can now log in with your new
+              password.
             </p>
             <button
               onClick={() => router.push("/jobs")}
-              className="w-full bg-[#2CB3BF] text-white hover:bg-[#269aa5] py-3 px-4 rounded-lg font-medium text-sm"
+              className="bg-[#2CB3BF] text-white hover:bg-[#269aa5] py-2 px-4 rounded-lg font-medium text-sm"
             >
-              Continue
+              Go to Home Page
             </button>
           </div>
         )}
       </div>
     </div>
+  );
+};
+
+const ChangePasswordScreen: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ChangePasswordContent />
+    </Suspense>
   );
 };
 
