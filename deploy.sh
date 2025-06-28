@@ -171,7 +171,7 @@ create_backup() {
     # Backup database
     if docker ps | grep -q pipeline-postgres; then
         log "Backing up database..."
-        docker exec pipeline-postgres pg_dump -U postgres pipeline > "$BACKUP_PATH/database.sql"
+        docker exec pipeline-postgres pg_dump -U postgres pipeline_production_db > "$BACKUP_PATH/database.sql"
     fi
     
     # Backup important config files
@@ -277,10 +277,12 @@ deploy_component() {
 deploy_frontend() {
     log "Deploying frontend (web-dashboard)..."
     
-    # Copy latest job data if it exists
-    if [[ -f "$PROJECT_DIR/backend/job-scraper/ct_healthcare_jobs_1000_20250623_165457.json" ]]; then
-        cp "$PROJECT_DIR/backend/job-scraper/ct_healthcare_jobs_1000_20250623_165457.json" "$PROJECT_DIR/frontend/web-dashboard/"
-    fi
+    # Copy all job data JSON files to public directory for Next.js static serving
+    mkdir -p "$PROJECT_DIR/frontend/web-dashboard/public/"
+    find "$PROJECT_DIR/backend/job-scraper/" -maxdepth 1 -type f -name "*.json" -exec cp {} "$PROJECT_DIR/frontend/web-dashboard/public/" \;
+    
+
+    
     
     if [[ "$NO_BUILD" != "true" ]]; then
         docker-compose build web-dashboard
@@ -414,7 +416,7 @@ rollback_deployment() {
     # Restore database
     if [[ -f "$BACKUP_PATH/database.sql" ]]; then
         log "Restoring database..."
-        docker exec -i pipeline-postgres psql -U postgres -d pipeline < "$BACKUP_PATH/database.sql"
+        docker exec -i pipeline-postgres psql -U postgres -d pipeline_production_db < "$BACKUP_PATH/database.sql"
     fi
     
     # Restore nginx config
