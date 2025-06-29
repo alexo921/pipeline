@@ -4,6 +4,6 @@ import { SaveJobsService } from './save-jobs.service';
 
 @Module({
   controllers: [SaveJobsController],
-  providers: [SaveJobsService]
+  providers: [SaveJobsService],
 })
 export class SaveJobsModule {}

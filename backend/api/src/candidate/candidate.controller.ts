@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Param, Put, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CandidateService } from './candidate.service';
-import { UpdateCandidateDto } from './dto/update-candidate.dto';
 import { CandidateQueryDto } from './dto/candidate-list-query.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
