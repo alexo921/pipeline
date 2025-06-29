@@ -16,11 +16,13 @@ import { LocationDetailsDto } from './dtos/location-details.dto';
 import { AvailabilityDetailsDto } from './dtos/availability-details.dto';
 import { SetPassword } from './dtos/set-password.dto';
 import { CandidateService } from '../candidate.service';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 function formatErrors(errors: ValidationError[]): string[] {
   return errors.flatMap((error) => Object.values(error.constraints || {}));
 }
 
+@ApiTags('Candidate Onboarding')
 @Controller('candidate/onboarding')
 export class OnboardingController {
   constructor(
@@ -29,6 +31,7 @@ export class OnboardingController {
   ) {}
 
   @Put()
+  @ApiOperation({ summary: 'Handle onboarding steps' })
   async handleOnboarding(@Body() data: any) {
     if (!data.step || !Object.values(OnboardingStep).includes(data.step)) {
       throw new BadRequestException('Invalid step number');
@@ -83,11 +86,13 @@ export class OnboardingController {
   }
 
   @Post('verify-email')
+  @ApiOperation({ summary: 'Verify user email' })
   verifyEmail(@Body('token') token: string) {
     return this.onboardingService.verifyEmail(token);
   }
 
   @Post('set-password')
+  @ApiOperation({ summary: 'Set user password' })
   setPassword(@Body() dto: SetPassword) {
     return this.onboardingService.setPassword(dto);
   }
