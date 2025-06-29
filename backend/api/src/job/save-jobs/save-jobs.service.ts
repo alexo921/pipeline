@@ -29,7 +29,6 @@ export class SaveJobsService {
     if (!savedJob) {
       throw new Error('Saved job not found');
     }
-
     return this.prisma.saved_jobs.delete({
       where: {
         saved_jobs_user_job_unique: {
