@@ -121,7 +121,7 @@ model users {
   updatedAt DateTime @updatedAt
 
   tasks     tasks[]   @relation("UserTasks")
-  candidate candidates[]
+  candidate candidates?
   saved_jobs  saved_jobs[]
 
   @@index([email])
