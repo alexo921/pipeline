@@ -51,7 +51,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
     });
 
-    return response;
+    return { token: response.token, user: response.result };
   }
 
   @Post('forgot-password')
@@ -123,6 +123,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
+  @ApiOperation({ summary: 'Get user profile' })
   @ApiBearerAuth()
   getProfile(@Request() req) {
     const id = req.user.userId;
