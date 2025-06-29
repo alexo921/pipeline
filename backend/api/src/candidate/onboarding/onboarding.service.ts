@@ -13,6 +13,7 @@ import { EmailService } from 'src/email/email.service';
 import { SetPassword } from './dtos/set-password.dto';
 import * as bcrypt from 'bcryptjs';
 import { CandidateService } from '../candidate.service';
+import { JwtPayload } from 'src/auth/auth.service';
 
 @Injectable()
 export class OnboardingService {
@@ -20,20 +21,21 @@ export class OnboardingService {
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
-    private readonly candidateService: CandidateService
+    private readonly candidateService: CandidateService,
   ) {}
-
 
   // setting up onboarding data
   async handleStepOne(data: InitialDetailsDto) {
     const { name, email, healthcareRole, certificationStatus } = data;
 
-    const existingCandidate = await this.candidateService.getCandidateByEmail(email);
+    const existingCandidate =
+      await this.candidateService.getCandidateByEmail(email);
 
     if (existingCandidate) {
-
-      if(existingCandidate.isOnboarded){
-        throw new BadRequestException(`User already exists with same email ${email}`)
+      if (existingCandidate.isOnboarded) {
+        throw new BadRequestException(
+          `User already exists with same email ${email}`,
+        );
       }
       return existingCandidate;
     }
@@ -61,8 +63,8 @@ export class OnboardingService {
       });
 
       return candidate;
-    } catch (error) {
-      throw new Error(error);
+    } catch (error: unknown) {
+      throw new Error((error as Error).message);
     }
   }
 
@@ -118,13 +120,15 @@ export class OnboardingService {
   }
 
   async verifyEmail(token: string) {
-    const payload = await this.jwtService.verify(token);
+    const payload: JwtPayload = this.jwtService.verify<JwtPayload>(token);
 
     if (payload.exp && Date.now() >= payload.exp * 1000) {
       throw new BadRequestException('Token has expired');
     }
 
-    const candidate = await this.candidateService.getCandidateByEmail(payload.email);
+    const candidate = await this.candidateService.getCandidateByEmail(
+      payload.email,
+    );
 
     if (!candidate) {
       throw new BadRequestException('Invalid token');
@@ -138,34 +142,28 @@ export class OnboardingService {
 
   async setPassword(dto: SetPassword) {
     const { password, token } = dto;
-    const payload = await this.jwtService.verify(token);
+    const payload: JwtPayload = this.jwtService.verify<JwtPayload>(token);
 
     if (!payload) {
       throw new BadRequestException('Invalid token');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const [updatedUser, updatedCandidate] =
-      await this.prismaService.$transaction([
-        this.prismaService.users.update({
-          where: { email: payload.email },
-          data: { password: hashedPassword },
-        }),
-        this.prismaService.candidates.update({
-          where: { email: payload.email },
-          data: {
-            isOnboarded: true,
-            isActive: true,
-          },
-        }),
-      ]);
-    const { password: _, ...userWithoutPassword } = updatedUser;
 
-    const loginToken = this.jwtService.sign({
-      sub: updatedUser.id,
-      email: updatedUser.email,
-      role: updatedUser.role,
-    });
+    await this.prismaService.$transaction([
+      this.prismaService.users.update({
+        where: { email: payload.email },
+        data: { password: hashedPassword },
+      }),
+      this.prismaService.candidates.update({
+        where: { email: payload.email },
+        data: {
+          isOnboarded: true,
+          isActive: true,
+        },
+      }),
+    ]);
+
     return {
       message: 'Password set successfully and onboarding completed',
     };
