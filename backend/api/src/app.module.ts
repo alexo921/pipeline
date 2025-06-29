@@ -8,7 +8,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { CandidateModule } from './candidate/candidate.module';
 import { JobModule } from './job/job.module';
-import { UserSavedJobsModule } from './user_saved_jobs/user_saved_jobs.module';
 
 @Module({
   imports: [
@@ -31,7 +30,6 @@ import { UserSavedJobsModule } from './user_saved_jobs/user_saved_jobs.module';
     PrismaModule,
     CandidateModule,
     JobModule,
-    UserSavedJobsModule
   ],
 })
 export class AppModule {}
