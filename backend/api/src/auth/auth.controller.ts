@@ -34,8 +34,20 @@ export class AuthController {
   }
 
   @Post('login')
-  login(@Body() loginDto: LoginDto) {
-    return this.authService.loginUser(loginDto);
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const response = await this.authService.loginUser(loginDto);
+
+    res.cookie('access_token', response.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+    });
+
+    return response;
   }
 
   @Post('forgot-password')
