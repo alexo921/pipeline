@@ -19,7 +19,9 @@ import { error } from 'console';
 import { ForgotPassDto } from './dto/forgot-password-dto';
 import { ResetPasswordDto } from './dto/Reset-password-Dto';
 import { ChangePasswordDto } from './dto/change-password-dto';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -29,11 +31,13 @@ export class AuthController {
   ) {}
 
   @Post('signup')
+  @ApiOperation({ summary: 'Register a new user' })
   signup(@Body() signUpDto: SignUpDto) {
     return this.authService.create(signUpDto);
   }
 
   @Post('login')
+  @ApiOperation({ summary: 'Login an existing user' })
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response,
@@ -51,22 +55,27 @@ export class AuthController {
   }
 
   @Post('forgot-password')
+  @ApiOperation({ summary: 'Request password reset' })
   forgotPassword(@Body() forgotDto: ForgotPassDto) {
     return this.authService.forgotPass(forgotDto);
   }
 
   @Post('reset-password')
+  @ApiOperation({ summary: 'Reset user password' })
   resetPass(@Body() resetPassDto: ResetPasswordDto) {
     return this.authService.resetPass(resetPassDto);
   }
 
+  @ApiOperation({ summary: 'Change user password' })
   @UseGuards(AuthGuard('jwt'))
   @Post('change-password')
+  @ApiBearerAuth()
   changePass(@Request() req, @Body() changePassDto: ChangePasswordDto) {
     return this.authService.changePass(req.user.email, changePassDto);
   }
 
   @Get('google')
+  @ApiOperation({ summary: 'Initiate Google OAuth' })
   initiateGoogleAuth(@Res() res: Response) {
     const clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
     const redirectUri = `${this.configService.get<string>('APP_URL')}${this.configService.get<string>('GOOGLE_CALLBACK_URL')}`;
@@ -82,6 +91,7 @@ export class AuthController {
   }
 
   @Get('google/callback')
+  @ApiOperation({ summary: 'Handle Google OAuth callback' })
   async handleGoogleCallback(
     @Query('code') code: string,
     @Res() res: Response,
@@ -113,6 +123,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
+  @ApiBearerAuth()
   getProfile(@Request() req) {
     const id = req.user.userId;
     return this.authService.getProfile(id);
