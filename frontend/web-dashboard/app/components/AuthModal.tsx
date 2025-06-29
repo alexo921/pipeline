@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginSchema } from "../schemas/AuthSchema";
+import { useAuth } from "../contexts/AuthContext";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ interface AuthModalProps {
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
+  const { refreshUser } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,12 +48,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         throw new Error(result.message || "Login failed");
       }
 
-      localStorage.setItem("access_token", result.data.token);
+      await refreshUser();
 
       handleClose();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Login error:", error);
-      setLoginError(error.message || "login failed");
+      if (error instanceof Error) {
+        setLoginError(error.message || "login failed");
+      } else {
+        setLoginError("login failed");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -239,7 +245,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
           <div className="mt-6 text-center">
             <p className="text-gray-600 text-sm">
-              Don't have an account?
+              Don&apos;t have an account?
               <button
                 onClick={handleSignup}
                 className="ml-1 text-blue-600 hover:text-blue-700 font-medium transition-colors"
@@ -288,14 +294,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </svg>
               <span className="ml-2 text-xs sm:text-sm">
                 {/* Continue with Google */}
-                <button
-                  onClick={() =>
-                    (window.location.href =
-                      "http://localhost:3001/api/auth/google")
-                  }
-                >
-                  continue with Google
-                </button>
+                continue with Google
               </span>
             </button>
           </div>
