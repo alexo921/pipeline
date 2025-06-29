@@ -353,6 +353,35 @@ export default function JobsPage() {
     return 'bg-gray-200';
   };
 
+  // Generate pagination numbers with smart ellipsis
+  const generatePaginationNumbers = (currentPage: number, totalPages: number) => {
+    const delta = 2; // Number of pages to show on each side of current page
+    const range = [];
+    const rangeWithDots = [];
+
+    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+      range.push(i);
+    }
+
+    if (currentPage - delta > 2) {
+      rangeWithDots.push(1, '...');
+    } else {
+      rangeWithDots.push(1);
+    }
+
+    rangeWithDots.push(...range);
+
+    if (currentPage + delta < totalPages - 1) {
+      rangeWithDots.push('...', totalPages);
+    } else {
+      rangeWithDots.push(totalPages);
+    }
+
+    return rangeWithDots;
+  };
+
+  const paginationNumbers = generatePaginationNumbers(currentPage, totalPages);
+
   // Loading state
   if (loading) {
     return (
@@ -559,243 +588,270 @@ export default function JobsPage() {
             </p>
           </div>
 
-          {/* Two Column Layout */}
-          <div className="flex justify-center gap-8 items-start">
-            {/* Left Column - Job Listings */}
-            <div className="space-y-4 flex-1 max-w-2xl">
-              {currentJobs.length > 0 ? (
-                currentJobs.map((job) => (
-                  <div 
-                    key={job.id}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleJobClick(job);
-                    }}
-                    className={`bg-white rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] p-6 cursor-pointer hover:shadow-[6px_4px_15px_rgba(36,102,208,0.6)] transition-all duration-200 w-full overflow-hidden ${
-                      selectedJob?.id === job.id ? 'ring-2 ring-[#2466D0]' : ''
-                    }`}
-                    style={{
-                      height: '212px'
-                    }}
-                  >
-                    <div className="flex justify-between items-start mb-4 h-full">
-                      <div className="flex-1 min-w-0 pr-4">
-                        <h3 className="text-[24px] font-black leading-[130%] text-[#2466D0] mb-2 font-avenir truncate">
-                          {job.title}
-                        </h3>
-                        <p className="text-[14px] font-bold leading-[140%] text-[#01253F] font-avenir mb-3">
-                          {job.company}<br />
-                          {job.location}<br />
-                          {job.salary}
-                        </p>
+          {/* Responsive Layout - Mobile: full width, Desktop: 40/60 split */}
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 xl:gap-8 items-start w-full">
+            {/* Job Listings - Mobile full width, Desktop 40% */}
+            <div className="w-full lg:w-2/5 lg:min-w-0 job-listings">
+              <div className="space-y-4">
+                {currentJobs.length > 0 ? (
+                  currentJobs.map((job) => (
+                    <div 
+                      key={job.id}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleJobClick(job);
+                      }}
+                      className={`bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] p-4 lg:p-6 cursor-pointer hover:shadow-[6px_4px_15px_rgba(36,102,208,0.6)] transition-all duration-200 w-full overflow-hidden ${
+                        selectedJob?.id === job.id ? 'ring-2 ring-[#2466D0]' : ''
+                      }`}
+                      style={{
+                        minHeight: '140px',
+                        height: 'auto'
+                      }}
+                    >
+                      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start h-full">
+                        <div className="flex-1 min-w-0 lg:pr-4 mb-3 lg:mb-0">
+                          <h3 className="text-lg lg:text-[20px] font-black leading-[130%] text-[#2466D0] mb-2 font-avenir line-clamp-2">
+                            {job.title}
+                          </h3>
+                          <div className="text-sm lg:text-[14px] font-bold leading-[140%] text-[#01253F] font-avenir space-y-0.5">
+                            <p>{job.company}</p>
+                            <p>{job.location}</p>
+                            <p>{job.salary}</p>
+                          </div>
+                        </div>
+                        
+                        {/* Tags - Display in rows of 2 */}
+                        <div className="flex flex-wrap gap-1.5 lg:gap-2" style={{ maxWidth: '200px' }}>
+                          {job.tags.slice(0, 4).map((tag) => (
+                            <div 
+                              key={tag.id} 
+                              className={`flex items-center ${getTagColor(tag.label)} rounded-full px-3 py-1`}
+                              style={{ 
+                                width: 'calc(50% - 0.375rem)',
+                                minWidth: 'fit-content'
+                              }}
+                            >
+                              <span className="text-xs lg:text-[12px] font-bold text-[#01253F] font-avenir whitespace-nowrap truncate">
+                                {tag.label}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-lg lg:text-[20px] text-[#7691A4] font-avenir">No jobs match your current filters.</p>
+                  </div>
+                )}
+              
+                {/* Spacer to ensure enough scroll height for sticky behavior */}
+                {currentJobs.length < 18 && (
+                  <div style={{ height: `${(18 - currentJobs.length) * 228}px` }} className="pointer-events-none"></div>
+                )}
+
+                {/* Pagination - Mobile optimized */}
+                {totalPages > 1 && (
+                  <div className="mb-2 text-xs text-red-600 font-mono">Pagination numbers: {JSON.stringify(paginationNumbers)}</div>
+                )}
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-3 mt-8 lg:mt-6" onClick={handlePaginationClick}>
+                    {/* Previous Button */}
+                    {currentPage > 1 && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handlePageChange(currentPage - 1);
+                        }}
+                        className="flex items-center rounded-full px-4 lg:px-6 py-2.5 lg:py-3 hover:bg-gray-100 transition-colors cursor-pointer bg-white shadow-sm text-sm lg:text-base font-avenir text-[#7691A4]"
+                      >
+                        <ChevronDown className="w-4 h-4 lg:w-5 lg:h-5 text-[#7691A4] rotate-90 mr-1 lg:mr-2" strokeWidth={2} />
+                        Prev
+                      </button>
+                    )}
+                    {/* Page Numbers with Smart Pagination */}
+                    {paginationNumbers.map((page, index) => (
+                      page === '...' ? (
+                        <span
+                          key={`ellipsis-${index}`}
+                          className="rounded-full w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center text-base lg:text-[20px] font-bold font-avenir text-[#7691A4]"
+                        >
+                          ...
+                        </span>
+                      ) : (
+                        <button
+                          key={`page-${page}`}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handlePageChange(page as number);
+                          }}
+                          onPointerDown={(e) => {
+                            e.stopPropagation();
+                          }}
+                          className={`rounded-full w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center transition-colors cursor-pointer shadow-sm text-base lg:text-[20px] font-bold font-avenir ${
+                            currentPage === page
+                              ? 'bg-[#01253F] text-white'
+                              : 'bg-white text-[#01253F] hover:bg-gray-100'
+                          }`}
+                          style={{ zIndex: 10 }}
+                        >
+                          {page}
+                        </button>
+                      )
+                    ))}
+                    {/* Next Button */}
+                    {currentPage < totalPages && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handlePageChange(currentPage + 1);
+                        }}
+                        className="flex items-center rounded-full px-4 lg:px-6 py-2.5 lg:py-3 hover:bg-gray-100 transition-colors cursor-pointer bg-white shadow-sm text-sm lg:text-base font-avenir text-[#7691A4]"
+                      >
+                        Next
+                        <ChevronDown className="w-4 h-4 lg:w-5 lg:h-5 text-[#7691A4] -rotate-90 ml-1 lg:ml-2" strokeWidth={2} />
+                      </button>
+                    )}
+                  </div>
+                )}
+                </div>
+              </div>
+
+              {/* Job Details Panel - Desktop 60% */}
+              <div
+                className={`job-details-panel hidden lg:block bg-white rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] lg:w-3/5 lg:min-w-0 sticky top-8 ${!selectedJob ? 'invisible' : ''}`}
+                style={{
+                  maxWidth: '100%',
+                  boxSizing: 'border-box',
+                  height: 'fit-content',
+                  maxHeight: 'calc(100vh - 64px)',
+                  minHeight: '600px',
+                  position: 'sticky',
+                  top: '2rem',
+                  alignSelf: 'flex-start',
+                }}
+              >
+                {selectedJob ? (
+                  <div className="h-full flex flex-col" style={{ height: '100%' }}>
+                    {/* Header - Fixed */}
+                    <div className="p-6 border-b border-gray-200 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h2 className="text-[30px] font-black leading-[130%] text-[#2466D0] mb-3 font-avenir">
+                            {selectedJob.title}
+                          </h2>
+                          <p className="text-[16px] font-bold leading-[140%] text-[#01253F] font-avenir">
+                            {selectedJob.company}<br />
+                            {selectedJob.location}<br />
+                            {selectedJob.salary}
+                          </p>
+                        </div>
+                        <button 
+                          onClick={() => {
+                            if (selectedJob?.url) {
+                              window.open(selectedJob.url, '_blank', 'noopener,noreferrer');
+                            } else {
+                              alert('Application URL not available for this job.');
+                            }
+                          }}
+                          className="bg-[#2CB3BF] text-white font-black text-[20px] py-3 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
+                        >
+                          Apply
+                        </button>
                       </div>
                       
-                      {/* Tags on the right side */}
-                      <div className="flex flex-col gap-2 items-end">
-                        {job.tags.slice(0, 3).map((tag) => (
-                          <div key={tag.id} className={`flex items-center ${getTagColor(tag.label)} rounded-full px-3 py-1`}>
-                            <span className="text-[12px] font-bold text-[#01253F] font-avenir whitespace-nowrap">
+                      <div className="flex gap-3 flex-wrap">
+                        {selectedJob.tags.map((tag) => (
+                          <div key={tag.id} className={`flex items-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}>
+                            <span className="text-[14px] font-bold text-[#01253F] font-avenir">
                               {tag.label}
                             </span>
                           </div>
                         ))}
                       </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-[20px] text-[#7691A4] font-avenir">No jobs match your current filters.</p>
-                </div>
-              )}
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex justify-center items-center gap-3 mt-8" onClick={handlePaginationClick}>
-                  {/* Previous Button */}
-                  {currentPage > 1 && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handlePageChange(currentPage - 1);
+                    {/* Content - Scrollable */}
+                    <div 
+                      className="flex-1 p-6" 
+                      style={{
+                        overflowY: 'auto',
+                        maxHeight: 'calc(100vh - 12rem)',
+                        scrollbarWidth: 'thin',
+                        scrollbarColor: '#cbd5e0 #f7fafc'
                       }}
-                      className="flex items-center rounded-full px-6 py-3 hover:bg-gray-100 transition-colors cursor-pointer bg-white shadow-sm"
                     >
-                      <ChevronDown className="w-5 h-5 text-[#7691A4] rotate-90 mr-2" strokeWidth={2} />
-                      Prev
-                    </button>
-                  )}
-                  
-                  {/* Page Numbers */}
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <button
-                      key={`page-${page}`}
-                      type="button"
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log(`Clicking page ${page}, current page: ${currentPage}`);
-                        handlePageChange(page);
-                      }}
-                      onPointerDown={(e) => {
-                        e.stopPropagation();
-                      }}
-                      className={`rounded-full w-10 h-10 flex items-center justify-center transition-colors cursor-pointer shadow-sm text-[20px] font-bold font-avenir ${
-                        currentPage === page
-                          ? 'bg-[#01253F] text-white'
-                          : 'bg-white text-[#01253F] hover:bg-gray-100'
-                      }`}
-                      style={{ zIndex: 10 }}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                  
-                  {/* Next Button */}
-                  {currentPage < totalPages && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handlePageChange(currentPage + 1);
-                      }}
-                      className="flex items-center rounded-full px-6 py-3 hover:bg-gray-100 transition-colors cursor-pointer bg-white shadow-sm"
-                    >
-                      Next
-                      <ChevronDown className="w-5 h-5 text-[#7691A4] -rotate-90 ml-2" strokeWidth={2} />
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Right Column - Job Details */}
-            <div 
-              className={`bg-white rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] ${!selectedJob ? 'invisible' : ''}`}
-              style={{
-                width: '705px',
-                position: 'sticky',
-                top: '2rem',
-                maxHeight: 'calc(100vh - 4rem)',
-                minHeight: '600px',
-                overflow: 'hidden'
-              }}
-            >
-              {selectedJob ? (
-                <div className="h-full flex flex-col" style={{ height: '100%' }}>
-                  {/* Header - Fixed */}
-                  <div className="p-6 border-b border-gray-200 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h2 className="text-[30px] font-black leading-[130%] text-[#2466D0] mb-3 font-avenir">
-                          {selectedJob.title}
-                        </h2>
-                        <p className="text-[16px] font-bold leading-[140%] text-[#01253F] font-avenir">
-                          {selectedJob.company}<br />
-                          {selectedJob.location}<br />
-                          {selectedJob.salary}
+                      <div className="border-t-2 border-[#8AADFC] pt-6">
+                        <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
+                          Overview
+                        </h3>
+                        <p className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir mb-6 break-words">
+                          {selectedJob.overview}
                         </p>
-                      </div>
-                      <button 
-                        onClick={() => {
-                          if (selectedJob?.url) {
-                            window.open(selectedJob.url, '_blank', 'noopener,noreferrer');
-                          } else {
-                            alert('Application URL not available for this job.');
-                          }
-                        }}
-                        className="bg-[#2CB3BF] text-white font-black text-[20px] py-3 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
-                      >
-                        Apply
-                      </button>
-                    </div>
-                    
-                    <div className="flex gap-3 flex-wrap">
-                      {selectedJob.tags.map((tag) => (
-                        <div key={tag.id} className={`flex items-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}>
-                          <span className="text-[14px] font-bold text-[#01253F] font-avenir">
-                            {tag.label}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
 
-                  {/* Content - Scrollable */}
-                  <div 
-                    className="flex-1 p-6" 
-                    style={{
-                      overflowY: 'auto',
-                      maxHeight: 'calc(100vh - 12rem)',
-                      scrollbarWidth: 'thin',
-                      scrollbarColor: '#cbd5e0 #f7fafc'
-                    }}
-                  >
-                    <div className="border-t-2 border-[#8AADFC] pt-6">
-                      <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
-                        Overview
-                      </h3>
-                      <p className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir mb-6 break-words">
-                        {selectedJob.overview}
-                      </p>
-
-                      {/* Job Description */}
-                      {selectedJob.description && (
-                        <div className="mb-6">
-                          <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
-                            Job Description
-                          </h3>
-                          <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
-                            {selectedJob.description
-                              .replace(/Skip to content/g, '')
-                              .replace(/Back to search/g, '')
-                              .replace(/EASY APPLY.*?Apply Now/g, '')
-                              .split(/\n+/)
-                              .filter(paragraph => paragraph.trim().length > 0)
-                              .map((paragraph, index) => (
-                                <p key={index} className="mb-3 last:mb-0 break-words whitespace-pre-wrap">
-                                  {paragraph.trim()}
-                                </p>
-                              ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Requirements */}
-                      {selectedJob.requirements && (
-                        <div className="mb-6">
-                          <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
-                            Requirements
-                          </h3>
-                          <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
-                            {Array.isArray(selectedJob.requirements) ? (
-                              <ul className="list-disc pl-5 space-y-2">
-                                {selectedJob.requirements.map((req, index) => (
-                                  <li key={index} className="break-words">{req}</li>
+                        {/* Job Description */}
+                        {selectedJob.description && (
+                          <div className="mb-6">
+                            <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
+                              Job Description
+                            </h3>
+                            <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
+                              {selectedJob.description
+                                .replace(/Skip to content/g, '')
+                                .replace(/Back to search/g, '')
+                                .replace(/EASY APPLY.*?Apply Now/g, '')
+                                .split(/\n+/)
+                                .filter(paragraph => paragraph.trim().length > 0)
+                                .map((paragraph, index) => (
+                                  <p key={index} className="mb-3 last:mb-0 break-words whitespace-pre-wrap">
+                                    {paragraph.trim()}
+                                  </p>
                                 ))}
-                              </ul>
-                            ) : (
-                              <p className="break-words whitespace-pre-wrap">{selectedJob.requirements}</p>
-                            )}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+
+                        {/* Requirements */}
+                        {selectedJob.requirements && (
+                          <div className="mb-6">
+                            <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-baloo">
+                              Requirements
+                            </h3>
+                            <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
+                              {Array.isArray(selectedJob.requirements) ? (
+                                <ul className="list-disc pl-5 space-y-2">
+                                  {selectedJob.requirements.map((req, index) => (
+                                    <li key={index} className="break-words">{req}</li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <p className="break-words whitespace-pre-wrap">{selectedJob.requirements}</p>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <div className="p-6 text-center text-gray-500 font-avenir">
-                  Select a job to view details
-                </div>
-              )}
+                ) : (
+                  <div className="p-6 text-center text-gray-500 font-avenir">
+                    Select a job to view details
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
