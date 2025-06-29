@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateJobDto } from './dto/update-job.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { JobQueryDto } from './dto/job-query.dto';
-import { contains } from 'class-validator';
-
 
 @Injectable()
 export class JobService {

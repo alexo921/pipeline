@@ -8,12 +8,12 @@ import { CandidateService } from '../candidate.service';
 
 @Module({
   controllers: [OnboardingController],
-  providers: [OnboardingService,EmailService,CandidateService],
+  providers: [OnboardingService, EmailService, CandidateService],
   imports: [
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: { expiresIn: '24h' },
       }),

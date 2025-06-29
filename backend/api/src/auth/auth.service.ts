@@ -15,8 +15,37 @@ import { ForgotPassDto } from './dto/forgot-password-dto';
 import { ResetPasswordDto } from './dto/Reset-password-Dto';
 import { ChangePasswordDto } from './dto/change-password-dto';
 import { EmailService } from 'src/email/email.service';
-import { UserWithCandidate } from 'src/types/user-with-candidate';
+import { users } from '@prisma/client';
 
+interface GoogleTokenResponse {
+  access_token: string;
+  expires_in: number;
+  refresh_token?: string;
+  scope: string;
+  token_type: string;
+  id_token?: string;
+}
+
+export interface GoogleUserInfo {
+  id: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  locale: string;
+}
+
+export interface JwtPayload {
+  sub: string;
+  email: string;
+  role: string;
+  candidateId?: string | null;
+  purpose?: string; // For password reset
+  iat?: number;
+  exp?: number;
+}
 
 @Injectable()
 export class AuthService {
@@ -32,7 +61,7 @@ export class AuthService {
     const clientSecret = this.configService.get<string>('GOOGLE_CLIENT_SECRET');
     const redirectUri = `${this.configService.get<string>('APP_URL')}${this.configService.get<string>('GOOGLE_CALLBACK_URL')}`;
 
-    const response = await axios.post(
+    const response = await axios.post<GoogleTokenResponse>(
       'https://oauth2.googleapis.com/token',
       null,
       {
@@ -52,8 +81,8 @@ export class AuthService {
     return response.data.access_token;
   }
 
-  async getGoogleUserInfo(token: string): Promise<any> {
-    const response = await axios.get(
+  async getGoogleUserInfo(token: string): Promise<GoogleUserInfo> {
+    const response = await axios.get<GoogleUserInfo>(
       'https://www.googleapis.com/oauth2/v2/userinfo',
       {
         headers: {
@@ -64,7 +93,7 @@ export class AuthService {
     return response.data;
   }
 
-  async findOrCreateUser(userInfo: any): Promise<any> {
+  async findOrCreateUser(userInfo: GoogleUserInfo): Promise<users> {
     const existingUser = await this.prismaService.users.findUnique({
       where: { email: userInfo.email },
     });
@@ -107,7 +136,7 @@ export class AuthService {
 
   async loginUser(loginDto: LoginDto) {
     const { email, password } = loginDto;
-    const user = await this.prismaService.users.findUnique({
+    const user = (await this.prismaService.users.findUnique({
       where: { email },
       include: {
         candidate: {
@@ -116,17 +145,22 @@ export class AuthService {
           },
         },
       },
-    }) as UserWithCandidate & { password: string };
-
-    console.log(user);
+    }));
 
     if (!user) throw new UnauthorizedException('Invalid credentials');
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) throw new UnauthorizedException('Invalid credentials');
 
-    const payload = { sub: user.id, email: user.email, role:user.role ,candidateId: user.candidate?.id || null };
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+      candidateId: user.candidate?.id || null,
+    };
     const token = this.jwtService.sign(payload);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...result } = user;
 
     return { token, result };
@@ -158,12 +192,13 @@ export class AuthService {
 
   async resetPass(resetPassDto: ResetPasswordDto) {
     const { token, newPassword } = resetPassDto;
-    let payload: any;
+    let payload: JwtPayload;
 
     const secret = this.configService.get<string>('JWT_SECRET');
 
     try {
-      payload = this.jwtService.verify(token, { secret });
+      payload = this.jwtService.verify<JwtPayload>(token, { secret });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');
     }
@@ -212,12 +247,13 @@ export class AuthService {
     return { message: 'Password changed successfully' };
   }
 
-  async getProfile(id: string) {
+  async getProfile(id: string): Promise<Partial<users>> {
     const user = await this.prismaService.users.findUnique({ where: { id } });
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...result } = user;
     return result;
   }

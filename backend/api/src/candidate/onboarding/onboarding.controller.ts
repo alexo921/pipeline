@@ -3,8 +3,6 @@ import {
   Body,
   Controller,
   Put,
-  Get,
-  Query,
   Post,
 } from '@nestjs/common';
 import { OnboardingService } from './onboarding.service';
