@@ -68,11 +68,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     router.push("/forgot-password");
   };
 
-  const handleSignup = () => {
-    handleClose();
-    router.push("/signup");
-  };
-
   const handleClose = () => {
     reset();
     setShowPassword(false);
