@@ -17,9 +17,9 @@ export class CandidateController {
     return this.candidateService.findOne(id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateDto: UpdateCandidateDto) {
-    console.log(id);
-    return this.candidateService.update(id, updateDto);
-  }
+  // @Put(':id')
+  // update(@Param('id') id: string, @Body() updateDto: UpdateCandidateDto) {
+  //   console.log(id);
+  //   return this.candidateService.update(id, updateDto);
+  // }
 }
