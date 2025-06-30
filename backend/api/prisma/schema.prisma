@@ -123,6 +123,7 @@ model users {
   tasks     tasks[]   @relation("UserTasks")
   candidate candidates?
   saved_jobs  saved_jobs[]
+  applied_jobs applied_jobs[]
 
   @@index([email])
   @@unique([email, role])
@@ -210,6 +211,7 @@ model jobs {
   companyId           String?      @default(uuid())
   company_details     companies?   @relation(fields: [companyId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   saved_by            saved_jobs[] 
+  applied_by          applied_jobs[]
 
   @@index([city, state])
 }
@@ -260,4 +262,22 @@ model saved_jobs {
   @@index([userId], name: "saved_jobs_user_id_index")
   @@index([jobId], name: "saved_jobs_job_id_index")
   @@index([status], name: "saved_jobs_status_index")
+}
+
+model applied_jobs {
+  id          String    @id @default(uuid())
+  userId      String    @default(uuid())
+  jobId       String    @default(uuid())
+  jobUrl      String?   
+  status      String    @default("applied")
+  appliedDate DateTime? @db.Date
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  user        users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job         jobs      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobId], name: "applied_jobs_user_job_unique")
+  @@index([userId], name: "applied_jobs_user_id_index")
+  @@index([jobId], name: "applied_jobs_job_id_index")
+  @@index([status], name: "applied_jobs_status_index")
 }
