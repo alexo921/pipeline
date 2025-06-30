@@ -17,12 +17,14 @@ import { signupStep3Schema, SignupStep3Schema } from "../schemas/AuthSchema";
 
 interface SignupStep3Props {
   onNext: (data: SignupStep3Schema) => void;
+  error?: string | null;
   isLoading?: boolean;
   userEmail?: string; // Add email prop to show in confirmation
 }
 
 const SignupStep3: React.FC<SignupStep3Props> = ({
   onNext,
+  error,
   isLoading = false,
   userEmail = "",
 }) => {
@@ -199,6 +201,11 @@ const SignupStep3: React.FC<SignupStep3Props> = ({
             <div className="bg-[#2CB3BF] h-2 rounded-full w-2/3 transition-all duration-300"></div>
           </div>
         </div>
+        {error && (
+          <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-sm">
+            {error}
+          </div>
+        )}
 
         <form
           onSubmit={handleSubmit(onSubmit)}

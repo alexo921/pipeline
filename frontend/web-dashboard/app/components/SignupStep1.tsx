@@ -9,9 +9,10 @@ import { useRouter } from "next/navigation";
 
 interface SignupStep1Props {
   onNext: (data: SignupStep1Schema) => void;
+  error?: string | null;
 }
 
-const SignupStep1: React.FC<SignupStep1Props> = ({ onNext }) => {
+const SignupStep1: React.FC<SignupStep1Props> = ({ onNext, error }) => {
   const {
     register,
     handleSubmit,
@@ -23,11 +24,9 @@ const SignupStep1: React.FC<SignupStep1Props> = ({ onNext }) => {
 
   const router = useRouter();
 
-
-
   const onSubmit = async (data: SignupStep1Schema) => {
     try {
-    //   await new Promise((resolve) => setTimeout(resolve, 1000));
+      //   await new Promise((resolve) => setTimeout(resolve, 1000));
       onNext(data);
       localStorage.setItem("signup_step", "2");
     } catch (error) {
@@ -72,6 +71,11 @@ const SignupStep1: React.FC<SignupStep1Props> = ({ onNext }) => {
             <div className="bg-[#2CB3BF] h-2 rounded-full w-2 transition-all duration-300"></div>
           </div>
         </div>
+        {error && (
+          <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-sm">
+            {error}
+          </div>
+        )}
 
         <form
           onSubmit={handleSubmit(onSubmit)}

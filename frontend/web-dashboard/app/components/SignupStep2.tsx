@@ -7,12 +7,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signupStep2Schema, SignupStep2Schema } from "../schemas/AuthSchema";
 import { useRouter } from "next/navigation";
 
-
 interface SignupStep2Props {
   onNext: (data: SignupStep2Schema) => void;
+  error?: string | null;
 }
 
-const SignupStep2: React.FC<SignupStep2Props> = ({ onNext }) => {
+const SignupStep2: React.FC<SignupStep2Props> = ({ onNext, error }) => {
   const {
     register,
     handleSubmit,
@@ -54,6 +54,11 @@ const SignupStep2: React.FC<SignupStep2Props> = ({ onNext }) => {
             <div className="bg-[#2CB3BF] h-2 rounded-full w-1/3 transition-all duration-300"></div>
           </div>
         </div>
+        {error && (
+          <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-sm">
+            {error}
+          </div>
+        )}
 
         <form
           onSubmit={handleSubmit(onSubmit)}

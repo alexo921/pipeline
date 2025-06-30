@@ -21,6 +21,7 @@ type FormData = SignupStep1Schema & SignupStep2Schema & SignupStep3Schema;
 
 const SignupPage = () => {
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,7 +33,7 @@ const SignupPage = () => {
       setCurrentStep(parseInt(savedStep, 10));
     }
     if (savedId) {
-      setFormData((prev) => ({ ...prev, id: savedId })); 
+      setFormData((prev) => ({ ...prev, id: savedId }));
     }
   }, []);
 
@@ -49,9 +50,8 @@ const SignupPage = () => {
         },
         body: JSON.stringify(payload),
       });
- 
+
       const result = await response.json();
-    
 
       if (!response.ok) {
         throw new Error(result.message || "Failed to submit step 1");
@@ -64,15 +64,17 @@ const SignupPage = () => {
       setCurrentStep(2);
       localStorage.setItem("signup_id", candidateData.id);
       localStorage.setItem("signup_step", "2");
+      setErrorMessage(null);
       window.scrollTo(0, 0);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Step 1 submission failed:", error);
-      // You can show a toast or error message here
+      setErrorMessage(error.message || "Something went wrong in Step 1");
+      localStorage.removeItem("signup_step");
+      localStorage.removeItem("signup_id");
     }
   };
 
   const handleStep2Complete = async (data: Step2Data) => {
-
     const payload = {
       ...formData,
       ...data,
@@ -90,7 +92,6 @@ const SignupPage = () => {
 
       const result = await response.json();
 
-
       if (!response.ok) {
         throw new Error(result.message || "Failed to submit step 2");
       }
@@ -98,15 +99,15 @@ const SignupPage = () => {
       setFormData((prev) => ({ ...prev, ...data }));
       setCurrentStep(3);
       localStorage.setItem("signup_step", "3");
+      setErrorMessage(null);
       window.scrollTo(0, 0);
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.message || "Step 2 submission failed");
       console.error("Step 2 submission failed:", error);
     }
   };
 
   const handleStep3Complete = async (data: Step3Data) => {
-
-
     const payload = {
       ...formData,
       ...data,
@@ -130,23 +131,29 @@ const SignupPage = () => {
 
       setFormData((prev) => ({ ...prev, ...data }));
       //   setCurrentStep(3);
+      setErrorMessage(null);
       window.scrollTo(0, 0);
-    } catch (error) {
-      console.error("Step 2 submission failed:", error);
+    } catch (error: any) {
+      setErrorMessage(error.message || "Step 3 submission failed");
+      console.error("Step 3 submission failed:", error);
     }
-
   };
 
   return (
     <div className="min-h-screen bg-white flex">
       <div className="flex-1 flex items-center justify-center overflow-y-auto">
         <div className="w-full max-w-md">
-          {currentStep === 1 && <SignupStep1 onNext={handleStep1Complete} />}
-          {currentStep === 2 && <SignupStep2 onNext={handleStep2Complete} />}
+          {currentStep === 1 && (
+            <SignupStep1 onNext={handleStep1Complete} error={errorMessage} />
+          )}
+          {currentStep === 2 && (
+            <SignupStep2 onNext={handleStep2Complete} error={errorMessage} />
+          )}
           {currentStep === 3 && (
             <SignupStep3
               onNext={handleStep3Complete}
               isLoading={isSubmitting}
+              error={errorMessage}
             />
           )}
         </div>
