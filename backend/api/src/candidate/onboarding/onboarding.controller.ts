@@ -15,6 +15,7 @@ import { InitialDetailsDto } from './dtos/initial-details.dto';
 import { LocationDetailsDto } from './dtos/location-details.dto';
 import { AvailabilityDetailsDto } from './dtos/availability-details.dto';
 import { SetPassword } from './dtos/set-password.dto';
+import { CandidateService } from '../candidate.service';
 
 function formatErrors(errors: ValidationError[]): string[] {
   return errors.flatMap((error) => Object.values(error.constraints || {}));
@@ -22,7 +23,10 @@ function formatErrors(errors: ValidationError[]): string[] {
 
 @Controller('candidate/onboarding')
 export class OnboardingController {
-  constructor(private readonly onboardingService: OnboardingService) {}
+  constructor(
+    private readonly onboardingService: OnboardingService,
+    private readonly candidateService: CandidateService,
+  ) {}
 
   @Put()
   async handleOnboarding(@Body() data: any) {
@@ -36,6 +40,13 @@ export class OnboardingController {
         const errors = await validate(dto);
         if (errors.length > 0) {
           throw new BadRequestException(formatErrors(errors));
+        }
+        const existingCandidate =
+          await this.candidateService.getCandidateByEmail(dto.email);
+        if (existingCandidate) {
+          throw new BadRequestException(
+            `User already exists with email ${dto.email}`,
+          );
         }
         return this.onboardingService.handleStepOne(dto);
       }
@@ -77,7 +88,7 @@ export class OnboardingController {
   }
 
   @Post('set-password')
-  setPassword(@Body() dto:SetPassword){
+  setPassword(@Body() dto: SetPassword) {
     return this.onboardingService.setPassword(dto);
   }
 }
