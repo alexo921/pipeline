@@ -68,6 +68,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
+  const handleSignup = () => {
+    handleClose(); // Close the modal first
+    router.push('/signup'); // Navigate to signup page
+  };
+
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       handleClose();
@@ -121,12 +126,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 <input
                   id="login-email"
                   type="email"
-                  {...register("email")}
-                  className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${
-                    errors.email
-                      ? "border-red-300 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-500"
-                  }`}
+                  {...register('email')}
+                  className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${errors.email
+                      ? 'border-red-300 focus:ring-red-500'
+                      : 'border-gray-300 focus:ring-blue-500'
+                    }`}
                   placeholder="Enter your email"
                   disabled={isLoading}
                 />
@@ -152,13 +156,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 />
                 <input
                   id="login-password"
-                  type={showPassword ? "text" : "password"}
-                  {...register("password")}
-                  className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${
-                    errors.password
-                      ? "border-red-300 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-500"
-                  }`}
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('password')}
+                  className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${errors.password
+                      ? 'border-red-300 focus:ring-red-500'
+                      : 'border-gray-300 focus:ring-blue-500'
+                    }`}
                   placeholder="Enter your password"
                   disabled={isLoading}
                 />
@@ -233,6 +236,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <p className="text-gray-600 text-sm">
               Don't have an account?
               <button
+                onClick={handleSignup}
                 className="ml-1 text-blue-600 hover:text-blue-700 font-medium transition-colors"
                 type="button"
                 disabled={isLoading}
