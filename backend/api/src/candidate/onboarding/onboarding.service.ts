@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { OnboardingStep } from 'src/common/enums/enums';
-import { JwtService } from '@nestjs/jwt';
+import { JsonWebTokenError, JwtService } from '@nestjs/jwt';
 import { AvailabilityDetailsDto } from './dtos/availability-details.dto';
 import { InitialDetailsDto } from './dtos/initial-details.dto';
 import { LocationDetailsDto } from './dtos/location-details.dto';
@@ -120,24 +120,31 @@ export class OnboardingService {
   }
 
   async verifyEmail(token: string) {
-    const payload: JwtPayload = this.jwtService.verify<JwtPayload>(token);
+    try {
+      const payload: JwtPayload = this.jwtService.verify<JwtPayload>(token);
 
-    if (payload.exp && Date.now() >= payload.exp * 1000) {
-      throw new BadRequestException('Token has expired');
+      if (payload.exp && Date.now() >= payload.exp * 1000) {
+        throw new BadRequestException('Token has expired');
+      }
+
+      const candidate = await this.candidateService.getCandidateByEmail(
+        payload.email,
+      );
+
+      if (!candidate) {
+        throw new BadRequestException('Invalid token');
+      }
+
+      return {
+        message: 'Email verified',
+        redirectUrl: `${process.env.FRONTEND_URL}/set-password?token=${token}`,
+      };
+    } catch (error) {
+      if (error instanceof JsonWebTokenError) {
+        throw new BadRequestException('Invalid token');
+      }
+      throw error;
     }
-
-    const candidate = await this.candidateService.getCandidateByEmail(
-      payload.email,
-    );
-
-    if (!candidate) {
-      throw new BadRequestException('Invalid token');
-    }
-
-    return {
-      message: 'Email verified',
-      redirectUrl: `${process.env.FRONTEND_URL}/set-password?token=${token}`,
-    };
   }
 
   async setPassword(dto: SetPassword) {
