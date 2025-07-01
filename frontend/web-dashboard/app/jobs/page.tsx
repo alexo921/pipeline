@@ -135,7 +135,6 @@ export default function JobsPage() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Tag[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
   const jobsPerPage = 18; // Show 18 jobs per page maximum
@@ -315,6 +314,41 @@ export default function JobsPage() {
       </div>
     );
   }
+
+  // Generate pagination numbers with ellipsis for large page counts
+  const generatePaginationNumbers = (current: number, total: number): (number | string)[] => {
+    const numbers: (number | string)[] = [];
+    const maxVisible = 5;
+    
+    if (total <= maxVisible) {
+      for (let i = 1; i <= total; i++) {
+        numbers.push(i);
+      }
+    } else {
+      numbers.push(1);
+      
+      if (current > 3) {
+        numbers.push('...');
+      }
+      
+      const start = Math.max(2, current - 1);
+      const end = Math.min(total - 1, current + 1);
+      
+      for (let i = start; i <= end; i++) {
+        if (i !== 1 && i !== total) {
+          numbers.push(i);
+        }
+      }
+      
+      if (current < total - 2) {
+        numbers.push('...');
+      }
+      
+      numbers.push(total);
+    }
+    
+    return numbers;
+  };
 
   let paginationNumbers: (number | string)[] = [];
   if (typeof window !== 'undefined' && totalPages > 1) {
