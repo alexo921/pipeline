@@ -12,22 +12,27 @@ import { JobService } from './job.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { JobQueryDto } from './dto/job-query.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Job')
 @Controller('job')
 export class JobController {
   constructor(private readonly jobService: JobService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new job' })
   dummyCreate() {
     return this.jobService.create();
   }
 
-  @Get('get-all-jobs')
+  @Get()
+  @ApiOperation({ summary: 'Get all jobs' })
   findAll(@Query() query: JobQueryDto) {
     return this.jobService.findAll(query);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get job by ID' })
   findOne(@Param('id') id: string) {
     return this.jobService.findOne(id);
   }

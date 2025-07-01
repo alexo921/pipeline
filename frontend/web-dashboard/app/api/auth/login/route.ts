@@ -7,11 +7,10 @@ export async function POST(request: NextRequest) {
     // Validation
     if (!email || !password) {
       return NextResponse.json(
-        { message: 'Email and password are required' },
+        { message: "Email and password are required" },
         { status: 400 }
       );
     }
-
 
     // Call backend API
     const backendRes = await fetch(
@@ -30,19 +29,18 @@ export async function POST(request: NextRequest) {
 
     if (!backendRes.ok) {
       return NextResponse.json(
-        { message: data.message || 'Login failed' },
+        { message: data.message || "Login failed" },
         { status: backendRes.status }
       );
     }
 
+    // Get the 'set-cookie' header from backend response
+    const setCookie = backendRes.headers.get("set-cookie");
+
     return NextResponse.json(data, {
       status: 200,
-      headers: {
-        // Pass cookies / tokens if needed
-        // Example: 'Set-Cookie': backendRes.headers.get('set-cookie') || ''
-      },
+      headers: setCookie ? { "set-cookie": setCookie } : undefined,
     });
-
   } catch (err: any) {
     console.error('Login route error:', err);
     return NextResponse.json(

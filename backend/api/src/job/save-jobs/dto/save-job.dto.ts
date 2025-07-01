@@ -5,8 +5,4 @@ export class SaveJobDto {
   @ApiProperty({ required: true })
   @IsString()
   jobId: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  userId: string;
 }
