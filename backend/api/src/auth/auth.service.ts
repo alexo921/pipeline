@@ -15,6 +15,8 @@ import { ForgotPassDto } from './dto/forgot-password-dto';
 import { ResetPasswordDto } from './dto/Reset-password-Dto';
 import { ChangePasswordDto } from './dto/change-password-dto';
 import { EmailService } from 'src/email/email.service';
+import { UserWithCandidate } from 'src/types/user-with-candidate';
+
 
 @Injectable()
 export class AuthService {
@@ -107,14 +109,23 @@ export class AuthService {
     const { email, password } = loginDto;
     const user = await this.prismaService.users.findUnique({
       where: { email },
-    });
+      include: {
+        candidate: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    }) as UserWithCandidate & { password: string };
+
+    console.log(user);
 
     if (!user) throw new UnauthorizedException('Invalid credentials');
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) throw new UnauthorizedException('Invalid credentials');
 
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.id, email: user.email, role:user.role ,candidateId: user.candidate?.id || null };
     const token = this.jwtService.sign(payload);
     const { password: _, ...result } = user;
 
