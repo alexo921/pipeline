@@ -135,10 +135,7 @@ export default function JobsPage() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Tag[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLocationOpen, setIsLocationOpen] = useState(false);
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [locationSearch, setLocationSearch] = useState('');
   const { user } = useAuth();
 
   const jobsPerPage = 18; // Show 18 jobs per page maximum
