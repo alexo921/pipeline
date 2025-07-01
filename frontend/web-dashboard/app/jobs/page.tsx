@@ -560,7 +560,7 @@ export default function JobsPage() {
                         e.stopPropagation();
                         handleJobClick(job);
                       }}
-                      className={`bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] p-6 lg:p-8 cursor-pointer hover:shadow-[6px_4px_15px_rgba(36,102,208,0.6)] transition-all duration-200 w-full overflow-hidden ${
+                      className={`bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] p-4 lg:p-6 cursor-pointer hover:shadow-[6px_4px_15px_rgba(36,102,208,0.6)] transition-all duration-200 w-full overflow-hidden ${
                         selectedJob?.id === job.id ? 'ring-2 ring-[#2466D0]' : ''
                       }`}
                       style={{
@@ -580,17 +580,17 @@ export default function JobsPage() {
                           </div>
                         </div>
                         {/* Tags - Display in rows of 2 */}
-                        <div className="flex flex-wrap gap-2 lg:gap-3" style={{ maxWidth: '220px' }}>
+                        <div className="flex flex-wrap gap-1.5 lg:gap-2" style={{ maxWidth: '200px' }}>
                           {job.tags.slice(0, 4).map((tag) => (
                             <div 
                               key={tag.id} 
-                              className={`flex items-center justify-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}
+                              className={`flex items-center ${getTagColor(tag.label)} rounded-full px-3 py-1`}
                               style={{ 
-                                width: 'calc(50% - 0.5rem)',
+                                width: 'calc(50% - 0.375rem)',
                                 minWidth: 'fit-content'
                               }}
                             >
-                              <span className="text-sm lg:text-[14px] font-bold text-[#01253F] font-avenir whitespace-nowrap truncate text-center">
+                              <span className="text-xs lg:text-[12px] font-bold text-[#01253F] font-avenir whitespace-nowrap truncate">
                                 {tag.label}
                               </span>
                             </div>
@@ -710,17 +710,17 @@ export default function JobsPage() {
                     </div>
                     
                     {/* Tags - Display in rows of 2 */}
-                    <div className="flex flex-wrap gap-4" style={{ maxWidth: '100%' }}>
+                    <div className="flex flex-wrap gap-3" style={{ maxWidth: '100%' }}>
                       {selectedJob.tags.map((tag) => (
                         <div 
                           key={tag.id} 
-                          className={`flex items-center justify-center ${getTagColor(tag.label)} rounded-full px-5 py-3`}
+                          className={`flex items-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}
                           style={{ 
-                            width: 'calc(50% - 1rem)',
+                            width: 'calc(50% - 0.75rem)',
                             minWidth: 'fit-content'
                           }}
                         >
-                          <span className="text-[16px] font-bold text-[#01253F] font-avenir truncate text-center">
+                          <span className="text-[14px] font-bold text-[#01253F] font-avenir truncate">
                             {tag.label}
                           </span>
                         </div>
