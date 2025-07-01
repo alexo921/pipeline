@@ -1,7 +1,6 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
-import Image from 'next/image';
-import Link from 'next/link';
+import { AuthProvider } from './contexts/AuthContext';
 
 // Import Baloo and configure a fallback for Avenir
 const baloo = Inter({ 
@@ -32,7 +31,9 @@ export default function RootLayout({
         />
       </head>
       <body className={baloo.className}>
+        <AuthProvider>
         <main>{children}</main>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import JobModal from '../components/JobModal';
 import { Job, Tag, TagType } from '../types/job';
 import { Search, MapPin, Filter, ChevronDown, X } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { env } from 'process';
 
 // Dynamic job data loader
 const loadJobData = async (): Promise<Job[]> => {
@@ -222,6 +224,7 @@ export default function JobsPage() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [locationSearch, setLocationSearch] = useState('');
+  const { user } = useAuth();
 
   const jobsPerPage = 18; // Show 18 jobs per page maximum
 
@@ -348,6 +351,26 @@ export default function JobsPage() {
     if (filterOptions.experience.includes(label)) return 'bg-[#FBDFF1]';
     return 'bg-gray-200';
   };
+
+  const handleApply = async () => {
+    if (user) {
+      if (selectedJob?.url) {
+        
+        await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/applied-jobs`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: user.id, jobId: selectedJob.id, jobUrl:selectedJob.url }),
+          credentials: "include",
+        });
+
+        window.open(selectedJob.url, '_blank', 'noopener,noreferrer');
+      } else {
+        alert('Application URL not available for this job.');
+      }
+    } 
+  }
 
   // Loading state
   if (loading) {
@@ -701,13 +724,7 @@ export default function JobsPage() {
                         </p>
                       </div>
                       <button 
-                        onClick={() => {
-                          if (selectedJob?.url) {
-                            window.open(selectedJob.url, '_blank', 'noopener,noreferrer');
-                          } else {
-                            alert('Application URL not available for this job.');
-                          }
-                        }}
+                        onClick={handleApply}
                         className="bg-[#2CB3BF] text-white font-black text-[20px] py-3 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
                       >
                         Apply

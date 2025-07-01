@@ -6,14 +6,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { changePasswordSchema } from "../schemas/ChangePasswordSchema";
 import { Eye, EyeOff, Lock, ArrowLeft, CheckCircle } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 
 type FormData = {
   newPassword: string;
   confirmPassword: string;
 };
 
-const ChangePasswordScreen: React.FC = () => {
+const SetPasswordScreen: React.FC = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -21,8 +20,6 @@ const ChangePasswordScreen: React.FC = () => {
     new: false,
     confirm: false,
   });
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
 
   const {
     register,
@@ -33,34 +30,37 @@ const ChangePasswordScreen: React.FC = () => {
   });
 
   const onSubmit = async (values: FormData) => {
-    if (!token) {
-      alert("invalid or missing token");
-      return;
-    }
     setIsLoading(true);
+
     try {
-      const response = await fetch("/api/auth/reset-password", {
+      const searchParams = new URLSearchParams(window.location.search);
+      const token = searchParams.get("token");
+
+      if (!token) {
+        throw new Error("Token not found in URL.");
+      }
+
+      const response = await fetch("/api/auth/set-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          password: values.newPassword,
           token,
-          newPassword: values.newPassword,
-          confirmPassword: values.confirmPassword,
         }),
       });
 
-      const data = await response.json();
+      const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Password reset failed");
+        throw new Error(result.message || "Failed to set password");
       }
 
       setIsSuccess(true);
-    } catch (error: any) {
-      console.error("Change password error:", error);
-      alert(error.message || "Something went wrong");
+    } catch (error) {
+      console.error("Set password error:", error);
+      // You can show toast or message here
     } finally {
       setIsLoading(false);
     }
@@ -76,18 +76,19 @@ const ChangePasswordScreen: React.FC = () => {
           disabled={isLoading}
         >
           <ArrowLeft size={20} className="mr-2" />
-          <span className="text-sm font-medium">Back to Home page</span>
+          <span className="text-sm font-medium">Back to Login</span>
         </button>
 
-                            {/* Password requirements */}
-                            <div className="p-4 bg-blue-50 rounded-lg text-xs text-blue-800 space-y-1">
-                                <p className="font-medium mb-2">Password Requirements:</p>
-                                <ul className="list-disc list-inside text-blue-700">
-                                    <li>At least 6 characters long</li>
-                                    <li>Contains uppercase and lowercase letters</li>
-                                    <li>Contains at least one number</li>
-                                </ul>
-                            </div>
+        {!isSuccess ? (
+          <>
+            <div className="text-center mb-8">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+                Set Your Password
+              </h1>
+              <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                Create a secure password to complete your account setup.
+              </p>
+            </div>
 
             <form
               onSubmit={handleSubmit(onSubmit)}
@@ -97,7 +98,7 @@ const ChangePasswordScreen: React.FC = () => {
               {/* New Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  New Password
+                  Create Password
                 </label>
                 <div className="relative">
                   <Lock
@@ -112,7 +113,7 @@ const ChangePasswordScreen: React.FC = () => {
                         ? "border-red-300 focus:ring-red-500"
                         : "border-gray-300 focus:ring-blue-500"
                     }`}
-                    placeholder="Enter your new password"
+                    placeholder="Enter your password"
                     disabled={isLoading}
                   />
                   <button
@@ -140,7 +141,7 @@ const ChangePasswordScreen: React.FC = () => {
               {/* Confirm Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Confirm New Password
+                  Confirm Password
                 </label>
                 <div className="relative">
                   <Lock
@@ -155,7 +156,7 @@ const ChangePasswordScreen: React.FC = () => {
                         ? "border-red-300 focus:ring-red-500"
                         : "border-gray-300 focus:ring-blue-500"
                     }`}
-                    placeholder="Confirm your new password"
+                    placeholder="Confirm your password"
                     disabled={isLoading}
                   />
                   <button
@@ -187,7 +188,7 @@ const ChangePasswordScreen: React.FC = () => {
               <div className="p-4 bg-blue-50 rounded-lg text-xs text-blue-800 space-y-1">
                 <p className="font-medium mb-2">Password Requirements:</p>
                 <ul className="list-disc list-inside text-blue-700">
-                  <li>At least 8 characters long</li>
+                  <li>At least 6 characters long</li>
                   <li>Contains uppercase and lowercase letters</li>
                   <li>Contains at least one number</li>
                 </ul>
@@ -198,7 +199,7 @@ const ChangePasswordScreen: React.FC = () => {
                 disabled={isLoading}
                 className="w-full bg-[#2CB3BF] text-white hover:bg-[#269aa5] py-3 px-4 rounded-lg font-medium text-sm disabled:opacity-50"
               >
-                {isLoading ? "Updating Password..." : "Update Password"}
+                {isLoading ? "Creating Password..." : "Set Password"}
               </button>
             </form>
           </>
@@ -208,16 +209,17 @@ const ChangePasswordScreen: React.FC = () => {
               <CheckCircle className="w-10 h-10 text-green-600" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-              Password Updated!
+              Password Set Successfully!
             </h1>
             <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-              Your password has been successfully updated.
+              Your password has been set. You can now access your account with
+              your new credentials.
             </p>
             <button
               onClick={() => router.push("/jobs")}
               className="w-full bg-[#2CB3BF] text-white hover:bg-[#269aa5] py-3 px-4 rounded-lg font-medium text-sm"
             >
-              Continue
+              Go to Login
             </button>
           </div>
         )}
@@ -226,4 +228,4 @@ const ChangePasswordScreen: React.FC = () => {
   );
 };
 
-export default ChangePasswordScreen;
+export default SetPasswordScreen;
