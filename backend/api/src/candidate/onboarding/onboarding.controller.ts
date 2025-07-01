@@ -67,7 +67,7 @@ export class OnboardingController {
 
       case OnboardingStep.AVAILABILITY_DETAILS: {
         if (!data.id) {
-          throw new BadRequestException('Client ID is required');
+          throw new BadRequestException('ID is required');
         }
         const dto = plainToInstance(AvailabilityDetailsDto, data);
         const errors = await validate(dto);
