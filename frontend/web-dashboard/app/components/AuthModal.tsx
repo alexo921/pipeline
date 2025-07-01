@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginSchema } from "../schemas/AuthSchema";
+import { useAuth } from "../contexts/AuthContext";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ interface AuthModalProps {
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
+  const { refreshUser } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,12 +48,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         throw new Error(result.message || "Login failed");
       }
 
-      localStorage.setItem("access_token", result.data.token);
+      await refreshUser();
 
       handleClose();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Login error:", error);
-      setLoginError(error.message || "login failed");
+      if (error instanceof Error) {
+        setLoginError(error.message || "login failed");
+      } else {
+        setLoginError("login failed");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -66,6 +72,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     reset();
     setShowPassword(false);
     onClose();
+  };
+
+  const handleSignup = () => {
+    handleClose(); // Close the modal first
+    router.push('/signup'); // Navigate to signup page
   };
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -121,12 +132,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 <input
                   id="login-email"
                   type="email"
-                  {...register("email")}
-                  className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${
-                    errors.email
-                      ? "border-red-300 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-500"
-                  }`}
+                  {...register('email')}
+                  className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${errors.email
+                      ? 'border-red-300 focus:ring-red-500'
+                      : 'border-gray-300 focus:ring-blue-500'
+                    }`}
                   placeholder="Enter your email"
                   disabled={isLoading}
                 />
@@ -152,13 +162,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 />
                 <input
                   id="login-password"
-                  type={showPassword ? "text" : "password"}
-                  {...register("password")}
-                  className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${
-                    errors.password
-                      ? "border-red-300 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-500"
-                  }`}
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('password')}
+                  className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${errors.password
+                      ? 'border-red-300 focus:ring-red-500'
+                      : 'border-gray-300 focus:ring-blue-500'
+                    }`}
                   placeholder="Enter your password"
                   disabled={isLoading}
                 />
@@ -231,8 +240,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
           <div className="mt-6 text-center">
             <p className="text-gray-600 text-sm">
-              Don't have an account?
+              Don&apos;t have an account?
               <button
+                onClick={handleSignup}
                 className="ml-1 text-blue-600 hover:text-blue-700 font-medium transition-colors"
                 type="button"
                 disabled={isLoading}
@@ -279,14 +289,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               </svg>
               <span className="ml-2 text-xs sm:text-sm">
                 {/* Continue with Google */}
-                <button
-                  onClick={() =>
-                    (window.location.href =
-                      "http://localhost:3001/api/auth/google")
-                  }
-                >
-                  continue with Google
-                </button>
+                continue with Google
               </span>
             </button>
           </div>
