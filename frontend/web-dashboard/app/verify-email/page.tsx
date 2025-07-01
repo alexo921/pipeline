@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const VerifyEmail = () => {
+const VerifyEmailContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -52,6 +52,14 @@ const VerifyEmail = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const VerifyEmail = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 };
 
