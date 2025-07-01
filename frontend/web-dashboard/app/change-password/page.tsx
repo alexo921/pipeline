@@ -79,16 +79,8 @@ const ChangePasswordContent: React.FC = () => {
           <span className="text-sm font-medium">Back to Home page</span>
         </button>
 
-                            {/* Password requirements */}
-                            <div className="p-4 bg-blue-50 rounded-lg text-xs text-blue-800 space-y-1">
-                                <p className="font-medium mb-2">Password Requirements:</p>
-                                <ul className="list-disc list-inside text-blue-700">
-                                    <li>At least 6 characters long</li>
-                                    <li>Contains uppercase and lowercase letters</li>
-                                    <li>Contains at least one number</li>
-                                </ul>
-                            </div>
-
+        {!isSuccess ? (
+          <>
             <form
               onSubmit={handleSubmit(onSubmit)}
               noValidate
