@@ -16,7 +16,9 @@ export default function JobModal({ job, onClose }: JobModalProps) {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      // Only close if clicking on the actual backdrop, not on any child elements
+      const target = event.target as Element;
+      if (target.classList.contains('modal-backdrop')) {
         onClose();
       }
     }
@@ -41,13 +43,23 @@ export default function JobModal({ job, onClose }: JobModalProps) {
     }
   }, [job]);
 
+  useEffect(() => {
+    console.log('JobModal rendered with job:', job);
+    console.log('Job URL:', job?.url);
+  }, [job]);
+
   if (!job) return null;
 
-  const handleApplyClick = () => {
+  const handleApplyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Apply button clicked, job URL:', job.url);
     if (job.url) {
-      window.open(job.url, '_blank');
+      console.log('Opening URL:', job.url);
+      window.open(job.url, '_blank', 'noopener,noreferrer');
     } else {
-      console.log('Apply clicked - no URL available');
+      console.log('No URL available, showing alert');
+      alert('Application URL not available for this job.');
     }
   };
 
@@ -76,18 +88,11 @@ export default function JobModal({ job, onClose }: JobModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50">
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black bg-opacity-25 transition-opacity"
-        onClick={onClose}
-      />
-
+    <div className="fixed inset-0 z-50 modal-backdrop">
       {/* Side Panel */}
       <div 
         ref={modalRef}
         className="fixed inset-y-0 right-0 w-full max-w-2xl bg-white shadow-xl transform transition-transform duration-300 ease-in-out"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className="h-full flex flex-col">
           {/* Header - Fixed */}
@@ -187,18 +192,34 @@ export default function JobModal({ job, onClose }: JobModalProps) {
 
           {/* Footer - Fixed */}
           <div className="p-6 border-t bg-white">
-            <button
-              onClick={handleApplyClick}
-              className="w-full bg-teal-500 text-white font-medium py-3 px-6 rounded-lg hover:bg-teal-600 transition-colors flex items-center justify-center gap-2"
-            >
-              Apply Now
-              {job.url && <ExternalLink className="h-4 w-4" />}
-            </button>
+            {job.url ? (
+              <a
+                href={job.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-teal-500 text-white font-medium py-3 px-6 rounded-lg hover:bg-teal-600 transition-colors flex items-center justify-center gap-2 no-underline"
+                onClick={() => console.log('Apply link clicked, URL:', job.url)}
+              >
+                Apply Now
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            ) : (
+              <button
+                disabled
+                className="w-full bg-gray-400 text-white font-medium py-3 px-6 rounded-lg cursor-not-allowed flex items-center justify-center gap-2"
+                type="button"
+              >
+                No Application URL Available
+              </button>
+            )}
           </div>
         </div>
       </div>
 
       <style jsx>{`
+        .modal-backdrop {
+          background: rgba(0, 0, 0, 0.25);
+        }
         .modal-content::-webkit-scrollbar {
           width: 6px;
         }
