@@ -136,6 +136,9 @@ export class AuthService {
 
   async loginUser(loginDto: LoginDto) {
     const { email, password } = loginDto;
+
+    if (!email || !password) throw new BadRequestException('Email and password are required');
+
     const user = (await this.prismaService.users.findUnique({
       where: { email },
       include: {
@@ -168,6 +171,11 @@ export class AuthService {
 
   async forgotPass(forgotPass: ForgotPassDto) {
     const email = forgotPass.email;
+
+    if (!email) {
+      throw new BadRequestException('Email is required');
+    }
+    
     const isUser = await this.prismaService.users.findUnique({
       where: { email },
     });
