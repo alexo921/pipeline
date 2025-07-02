@@ -47,8 +47,7 @@ describe('Candidate Onboarding', () => {
       where: {
         email: {
           in: [
-            'exists@example.com',
-            'newuser@example.com',
+            'candidate-user@example.com',
             'candidate@example.com',
           ],
         },
@@ -59,8 +58,7 @@ describe('Candidate Onboarding', () => {
       where: {
         email: {
           in: [
-            'exists@example.com',
-            'newuser@example.com',
+            'candidate-user@example.com',
             'candidate@example.com',
           ],
         },
@@ -91,7 +89,7 @@ describe('Candidate Onboarding', () => {
     it('should fail if candidate email already exists', async () => {
       candidateUser = await prismaService.users.create({
         data: {
-          email: 'exists@example.com',
+          email: 'candidate-user@example.com',
           password: '',
           name: 'Existing User',
         },
@@ -99,7 +97,7 @@ describe('Candidate Onboarding', () => {
 
       await prismaService.candidates.create({
         data: {
-          email: 'exists@example.com',
+          email: 'candidate-user@example.com',
           name: 'Existing User',
           healthcareRole: HealthcareRole.CNA,
           certificationStatus: CertificationStatus.Certified,
@@ -112,7 +110,7 @@ describe('Candidate Onboarding', () => {
         .put(apiEndpoint)
         .send({
           step: OnboardingStep.INITIAL_DETAILS,
-          email: 'exists@example.com',
+          email: 'candidate-user@example.com',
           name: 'Test User',
           healthcareRole: 'RN',
           certificationStatus: 'Certified',
@@ -120,7 +118,7 @@ describe('Candidate Onboarding', () => {
         .expect(400)
         .expect((res) => {
           expect(res.body.message).toContain(
-            'User already exists with email exists@example.com',
+            'User already exists with email candidate-user@example.com',
           );
         });
     });

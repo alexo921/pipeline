@@ -30,7 +30,7 @@ describe('Candidate Experience Controller ', () => {
 
     const user = await prisma.users.create({
       data: {
-        email: 'expuser@example.com',
+        email: 'candidate-for-experience@example.com',
         name: 'Exp User',
         password: '',
         role: 'CANDIDATE',
@@ -40,7 +40,7 @@ describe('Candidate Experience Controller ', () => {
     const candidate = await prisma.candidates.create({
       data: {
         name: 'Exp User',
-        email: 'expuser@example.com',
+        email: 'candidate-for-experience@example.com',
         userId: user.id,
         healthcareRole: 'CNA',
         certificationStatus: 'Certified',
@@ -70,7 +70,9 @@ describe('Candidate Experience Controller ', () => {
   afterAll(async () => {
     await prisma.experiences.deleteMany({ where: { candidateId } });
     await prisma.candidates.delete({ where: { id: candidateId } });
-    await prisma.users.delete({ where: { email: 'expuser@example.com' } });
+    await prisma.users.delete({
+      where: { email: 'candidate-for-experience@example.com' },
+    });
     await app.close();
   });
 
