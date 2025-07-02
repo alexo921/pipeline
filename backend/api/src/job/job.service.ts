@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { JobQueryDto } from './dto/job-query.dto';
 
@@ -86,7 +86,11 @@ export class JobService {
     const result = await this.prismaService.jobs.findUnique({
       where: { id },
     });
-    console.log('result =>', result);
+
+    if(!result){
+      throw new NotFoundException(`No job found with id: ${id}`)
+    }
+
     return result; // Optionally return the result if needed
   }
 
