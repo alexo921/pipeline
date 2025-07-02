@@ -27,7 +27,7 @@ describe('AuthController (e2e)', () => {
     const hashedPassword = await bcrypt.hash(rawPassword, 10);
     testUser = await prismaService.users.create({
       data: {
-        email: 'testuser@example.coms',
+        email: 'authuser@example.com',
         password: hashedPassword,
         name: 'Test User',
       },
