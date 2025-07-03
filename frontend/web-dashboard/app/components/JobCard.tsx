@@ -47,7 +47,7 @@ export default function JobCard({
             <span
               key={index}
               className={`
-                inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                inline-flex items-center px-4 py-2 rounded-full text-base font-medium
                 ${tag.type === 'primary' ? 'bg-blue-100 text-blue-800' : ''}
                 ${tag.type === 'secondary' ? 'bg-gray-100 text-gray-800' : ''}
                 ${tag.type === 'accent' ? 'bg-pink-100 text-pink-800' : ''}

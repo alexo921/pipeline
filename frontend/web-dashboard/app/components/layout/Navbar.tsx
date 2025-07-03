@@ -18,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick, onMobileMenuToggle }) => 
 
   return (
     <>
-      <nav className="w-full">
+      <nav className="w-full bg-[#F4F4F4]">
         <div className="max-w-[1400px] mx-auto px-8 py-6 flex items-center justify-between">
           {/* Pipeline Logo with rounded white background */}
           <Link href="/" className="flex items-center">
@@ -27,14 +27,14 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick, onMobileMenuToggle }) => 
               style={{
                 width: "200px",
                 height: "50px",
-                padding: "8px 20px",
+                padding: "6px 12px",
               }}
             >
               <Image
                 src="/logo-full-color.svg"
                 alt="Pipeline"
-                width={120}
-                height={32}
+                width={160}
+                height={38}
                 priority
               />
             </div>
@@ -45,33 +45,23 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick, onMobileMenuToggle }) => 
             <div className="flex items-center space-x-6 bg-white rounded-full px-6 py-3 shadow-lg border border-gray-200">
               <Link
                 href="/jobs"
-                className={`text-sm font-medium transition-colors px-4 py-2 rounded-full ${
+                className={`text-sm font-medium transition-colors px-4 py-2 rounded-full font-avenir ${
                   pathname === "/jobs"
                     ? "bg-[#01253F] text-white"
-                    : "text-slate-700 hover:text-blue-600"
+                    : "text-slate-700"
                 }`}
               >
                 Find Jobs
               </Link>
-              <Link
-                href="/post-job"
-                className={`text-sm font-medium transition-colors px-4 py-2 rounded-full ${
-                  pathname === "/post-job"
-                    ? "bg-[#01253F] text-white"
-                    : "text-slate-700 hover:text-blue-600"
-                }`}
-              >
-                Post a Job
-              </Link>
 
               {user ? (
-                <button className="text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 hover:text-blue-600">
+                <button className="text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 font-avenir">
                   Logout
                 </button>
               ) : (
                 <button
                   onClick={onLoginClick}
-                  className="text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 hover:text-blue-600"
+                  className="text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 font-avenir"
                 >
                   Login
                 </button>

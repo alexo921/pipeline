@@ -10,21 +10,49 @@ import { env } from 'process';
 // Load job data from JSON files
 const loadJobData = async (): Promise<Job[]> => {
   try {
-    // Try to load from the enhanced descriptions file first
-    const response = await fetch('/brightstar_ct_jobs_1000_20250625_002803_enhanced_descriptions.json');
-    if (response.ok) {
-      const data = await response.json();
-      return transformJobData(data);
+    const allJobs: Job[] = [];
+    
+    // Load from enhanced descriptions file
+    try {
+      const response1 = await fetch('/brightstar_ct_jobs_1000_20250625_002803_enhanced_descriptions.json');
+      if (response1.ok) {
+        const data1 = await response1.json();
+        allJobs.push(...transformJobData(data1));
+      }
+    } catch (error) {
+      console.log('Enhanced descriptions file not available, skipping...');
     }
     
-    // Fallback to the regular file
-    const fallbackResponse = await fetch('/brightstar_ct_jobs_1000_20250625_002803.json');
-    if (fallbackResponse.ok) {
-      const data = await fallbackResponse.json();
-      return transformJobData(data);
+    // Load from regular brightstar file
+    try {
+      const response2 = await fetch('/brightstar_ct_jobs_1000_20250625_002803.json');
+      if (response2.ok) {
+        const data2 = await response2.json();
+        allJobs.push(...transformJobData(data2));
+      }
+    } catch (error) {
+      console.log('Regular brightstar file not available, skipping...');
     }
     
-    throw new Error('Failed to load job data');
+    // Load from comprehensive healthcare jobs file
+    try {
+      const response3 = await fetch('/comprehensive_healthcare_jobs_256_20250701_221643_256_20250701_221643.json');
+      if (response3.ok) {
+        const data3 = await response3.json();
+        allJobs.push(...transformJobData(data3));
+      }
+    } catch (error) {
+      console.log('Comprehensive healthcare jobs file not available, skipping...');
+    }
+    
+    // Remove duplicates based on job ID
+    const uniqueJobs = allJobs.filter((job, index, self) => 
+      index === self.findIndex(j => j.id === job.id)
+    );
+    
+    console.log(`Loaded ${uniqueJobs.length} unique jobs from ${allJobs.length} total entries`);
+    return uniqueJobs;
+    
   } catch (error) {
     console.error('Error loading job data:', error);
     return [];
@@ -32,29 +60,39 @@ const loadJobData = async (): Promise<Job[]> => {
 };
 
 const transformJobData = (rawJobs: Record<string, unknown>[]): Job[] => {
-  console.log('Raw jobs data sample:', rawJobs.slice(0, 2)); // Debug log
-  
   return rawJobs.map((job, index) => {
     const title = (job.title as string) || 'Unknown Position';
     const description = (job.description as string) || '';
     const url = (job.url as string) || '';
     
-    // Debug log for first few jobs
-    if (index < 3) {
-      console.log(`Job ${index + 1}:`, { title, url });
+    // Handle both BrightStar format (salary_range) and comprehensive format (salary)
+    const salary = (job.salary_range as string) || (job.salary as string) || 'Salary not specified';
+    
+    // Use existing tags if available (comprehensive format), otherwise generate them (BrightStar format)
+    let tags: Tag[];
+    if (job.tags && Array.isArray(job.tags)) {
+      // Convert comprehensive format tags to our Tag interface
+      tags = (job.tags as any[]).map(tag => ({
+        id: tag.id || Date.now() + Math.random(),
+        label: tag.label,
+        type: tag.type as TagType
+      }));
+    } else {
+      // Generate tags for BrightStar format
+      tags = generateTags(title, description, job.category as string);
     }
     
     return {
-      id: index + 1,
+      id: (job.id as string) || `job_${index + 1}`,
       title,
       company: (job.company as string) || 'Unknown Company',
       location: (job.location as string) || 'Unknown Location',
-      salary: (job.salary_range as string) || 'Salary not specified',
+      salary,
       url,
       overview: (job.overview as string) || 'Community Focused. Care Driven.',
       description,
       requirements: (job.requirements as string[] | string) || [],
-      tags: generateTags(title, description, job.category as string)
+      tags
     };
   });
 };
@@ -135,7 +173,7 @@ export default function JobsPage() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Tag[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const { user } = useAuth();
+  const { user, showLoginModal } = useAuth();
 
   const jobsPerPage = 18; // Show 18 jobs per page maximum
 
@@ -228,7 +266,12 @@ export default function JobsPage() {
   };
 
   const handleLocationChange = (location: string) => {
-    setSelectedLocation(location);
+    // If clicking the same location (and it's not "All Locations"), toggle back to "All Locations"
+    if (location === selectedLocation && location !== 'All Locations') {
+      setSelectedLocation('All Locations');
+    } else {
+      setSelectedLocation(location);
+    }
     setIsLocationOpen(false);
     setLocationSearch(''); // Clear search when location is selected
   };
@@ -280,23 +323,47 @@ export default function JobsPage() {
   };
 
   const handleApply = async () => {
-    if (user) {
-      if (selectedJob?.url) {
-        
-        await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/applied-jobs`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId: user.id, jobId: selectedJob.id, jobUrl:selectedJob.url }),
-          credentials: "include",
-        });
+    if (!user) {
+      showLoginModal();
+      return;
+    }
 
-        window.open(selectedJob.url, '_blank', 'noopener,noreferrer');
-      } else {
-        alert('Application URL not available for this job.');
+    if (!selectedJob) {
+      alert('Please select a job to apply.');
+      return;
+    }
+
+    if (!selectedJob.url) {
+      alert('Application URL not available for this job.');
+      return;
+    }
+
+    try {
+      // Track the application
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/applied-jobs`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          userId: user.id, 
+          jobId: selectedJob.id, 
+          jobUrl: selectedJob.url 
+        }),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        console.error('Failed to track application:', response.status);
       }
-    } 
+
+      // Open the job application URL
+      window.open(selectedJob.url, '_blank', 'noopener,noreferrer');
+    } catch (error) {
+      console.error('Error applying for job:', error);
+      // Still open the URL even if tracking fails
+      window.open(selectedJob.url, '_blank', 'noopener,noreferrer');
+    }
   }
 
   // Loading state
@@ -350,20 +417,29 @@ export default function JobsPage() {
     return numbers;
   };
 
-  let paginationNumbers: (number | string)[] = [];
-  if (typeof window !== 'undefined' && totalPages > 1) {
-    paginationNumbers = generatePaginationNumbers(currentPage, totalPages);
-    console.log('Pagination numbers:', paginationNumbers);
-  }
+  // Always generate pagination numbers when there are filtered jobs
+  const paginationNumbers = filteredJobs.length > 0 ? generatePaginationNumbers(currentPage, totalPages) : [];
 
   return (
-    <div className="min-h-screen relative">
-      {/* Gradient blurs - responsive */}
-      <div className="absolute top-0 right-0 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 bg-gradient-to-bl from-blue-200/30 to-transparent rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 bg-gradient-to-tr from-purple-200/20 to-transparent rounded-full blur-3xl"></div>
+    <div className="min-h-screen relative bg-[#F4F4F4]">
+      {/* Radial blue blur positioned in upper right */}
+      <div 
+        className="absolute pointer-events-none"
+        style={{
+          top: '-5%',
+          right: '-10%',
+          width: '1522px',
+          height: '2585px',
+          backgroundImage: 'url(/blur.svg)',
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          zIndex: 0
+        }}
+      ></div>
       
       {/* Page Header - Mobile optimized */}
-      <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12">
+      <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[76px] font-black leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
             Job Board
@@ -372,10 +448,11 @@ export default function JobsPage() {
       </div>
 
       {/* Main Content Container - Mobile full width */}
-      <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12">
+      <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12" style={{ position: 'relative', minHeight: '100vh' }}>
         <div 
           className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative"
           onClick={handleContainerClick}
+          style={{ zIndex: 1 }}
         >
           {/* Search Bar - Mobile focused */}
           <div className="flex flex-col lg:flex-row gap-2 lg:gap-3 mb-4 lg:mb-6">
@@ -541,13 +618,13 @@ export default function JobsPage() {
 
           {/* Results Count */}
           <div className="mb-4 sm:mb-6">
-            <p className="text-base sm:text-lg md:text-xl lg:text-[20px] font-bold text-[#7691A4] font-avenir">
-              We&apos;ve found <span className="text-[#01253F]">{filteredJobs.length}</span> jobs!
+            <p className="text-base sm:text-lg md:text-xl lg:text-[18px] font-bold text-[#7691A4] font-avenir">
+              We&apos;ve found <span className="text-[#2466D0]">{filteredJobs.length}</span> jobs!
             </p>
           </div>
 
           {/* Responsive Layout - Mobile: full width, Desktop: 50/50 split */}
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 xl:gap-8 items-start w-full">
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 xl:gap-8 items-start w-full" style={{ alignItems: 'flex-start' }}>
             {/* Job Listings - Mobile full width, Desktop 50% */}
             <div className="w-full lg:flex-1 lg:min-w-0 job-listings">
               <div className="space-y-4">
@@ -560,7 +637,7 @@ export default function JobsPage() {
                         e.stopPropagation();
                         handleJobClick(job);
                       }}
-                      className={`bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] p-4 lg:p-6 cursor-pointer hover:shadow-[6px_4px_15px_rgba(36,102,208,0.6)] transition-all duration-200 w-full overflow-hidden ${
+                      className={`bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] p-6 lg:p-8 cursor-pointer hover:shadow-[6px_4px_15px_rgba(36,102,208,0.6)] transition-all duration-200 w-full overflow-hidden ${
                         selectedJob?.id === job.id ? 'ring-2 ring-[#2466D0]' : ''
                       }`}
                       style={{
@@ -580,17 +657,17 @@ export default function JobsPage() {
                           </div>
                         </div>
                         {/* Tags - Display in rows of 2 */}
-                        <div className="flex flex-wrap gap-1.5 lg:gap-2" style={{ maxWidth: '200px' }}>
+                        <div className="flex flex-wrap gap-3 lg:gap-4" style={{ maxWidth: '240px' }}>
                           {job.tags.slice(0, 4).map((tag) => (
                             <div 
                               key={tag.id} 
-                              className={`flex items-center ${getTagColor(tag.label)} rounded-full px-3 py-1`}
+                              className={`flex items-center justify-center text-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}
                               style={{ 
-                                width: 'calc(50% - 0.375rem)',
+                                width: 'calc(50% - 0.75rem)',
                                 minWidth: 'fit-content'
                               }}
                             >
-                              <span className="text-xs lg:text-[12px] font-bold text-[#01253F] font-avenir whitespace-nowrap truncate">
+                              <span className="text-sm font-bold text-[#01253F] font-avenir whitespace-nowrap truncate">
                                 {tag.label}
                               </span>
                             </div>
@@ -609,87 +686,21 @@ export default function JobsPage() {
               {currentJobs.length < 18 && (
                 <div style={{ height: `${(18 - currentJobs.length) * 228}px` }} className="pointer-events-none"></div>
               )}
-
-              {/* Pagination - Mobile optimized */}
-              {totalPages > 1 && (
-                <div className="flex justify-center items-center gap-3 mt-8 lg:mt-6" onClick={handlePaginationClick}>
-                  {/* Previous Button */}
-                  {currentPage > 1 && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handlePageChange(currentPage - 1);
-                      }}
-                      className="flex items-center rounded-full px-4 lg:px-6 py-2.5 lg:py-3 hover:bg-gray-100 transition-colors cursor-pointer bg-white shadow-sm text-sm lg:text-base font-avenir text-[#7691A4]"
-                    >
-                      <ChevronDown className="w-4 h-4 lg:w-5 lg:h-5 text-[#7691A4] rotate-90 mr-1 lg:mr-2" strokeWidth={2} />
-                      Prev
-                    </button>
-                  )}
-                  {/* Page Numbers with Smart Pagination */}
-                  {paginationNumbers.map((page, index) => (
-                    page === '...' ? (
-                      <span
-                        key={`ellipsis-${index}`}
-                        className="rounded-full w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center text-base lg:text-[20px] font-bold font-avenir text-[#7691A4]"
-                      >
-                        ...
-                      </span>
-                    ) : (
-                      <button
-                        key={`page-${page}`}
-                        type="button"
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                        }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handlePageChange(page as number);
-                        }}
-                        onPointerDown={(e) => {
-                          e.stopPropagation();
-                        }}
-                        className={`rounded-full w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center transition-colors cursor-pointer shadow-sm text-base lg:text-[20px] font-bold font-avenir ${
-                          currentPage === page
-                            ? 'bg-[#01253F] text-white'
-                            : 'bg-white text-[#01253F] hover:bg-gray-100'
-                        }`}
-                        style={{ zIndex: 10 }}
-                      >
-                        {page}
-                      </button>
-                    )
-                  ))}
-                  {/* Next Button */}
-                  {currentPage < totalPages && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handlePageChange(currentPage + 1);
-                      }}
-                      className="flex items-center rounded-full px-4 lg:px-6 py-2.5 lg:py-3 hover:bg-gray-100 transition-colors cursor-pointer bg-white shadow-sm text-sm lg:text-base font-avenir text-[#7691A4]"
-                    >
-                      Next
-                      <ChevronDown className="w-4 h-4 lg:w-5 lg:h-5 text-[#7691A4] -rotate-90 ml-1 lg:ml-2" strokeWidth={2} />
-                    </button>
-                  )}
-                </div>
-              )}
               </div>
             </div>
 
-            {/* Job Details Panel - Desktop 60% */}
-            <div className="hidden lg:block lg:flex-1 lg:min-w-0 job-details-panel" style={{ maxWidth: '60%', overflowWrap: 'break-word' }}>
+            {/* Job Details Panel - Desktop 55% */}
+            <div className="hidden lg:block lg:flex-1 lg:min-w-0 job-details-panel lg:sticky lg:top-8 lg:self-start" style={{ 
+              maxWidth: '55%', 
+              overflowWrap: 'break-word',
+              minHeight: '600px',
+              height: 'min(1000px, 90vh)',
+              maxHeight: '90vh'
+            }}>
               {selectedJob ? (
-                <div className="bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] h-full flex flex-col overflow-hidden" style={{ maxWidth: '100%' }}>
+                <div className="bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] h-full flex flex-col overflow-hidden" style={{ maxWidth: '100%', zIndex: 10 }}>
                   {/* Header - Fixed */}
-                  <div className="p-8 border-b border-gray-200 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                  <div className="p-8 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex-1 min-w-0 pr-4">
                         <h2 className="text-[26px] font-black leading-[130%] text-[#2466D0] mb-3 font-avenir break-all whitespace-pre-wrap max-w-full" style={{wordBreak: 'break-word'}}>
@@ -709,18 +720,17 @@ export default function JobsPage() {
                       </button>
                     </div>
                     
-                    {/* Tags - Display in rows of 2 */}
-                    <div className="flex flex-wrap gap-3" style={{ maxWidth: '100%' }}>
+                    {/* Tags - Display in single row */}
+                    <div className="flex flex-wrap gap-3 lg:gap-4">
                       {selectedJob.tags.map((tag) => (
                         <div 
                           key={tag.id} 
-                          className={`flex items-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}
+                          className={`flex items-center justify-center text-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}
                           style={{ 
-                            width: 'calc(50% - 0.75rem)',
                             minWidth: 'fit-content'
                           }}
                         >
-                          <span className="text-[14px] font-bold text-[#01253F] font-avenir truncate">
+                          <span className="text-sm font-bold text-[#01253F] font-avenir whitespace-nowrap truncate">
                             {tag.label}
                           </span>
                         </div>
@@ -728,18 +738,22 @@ export default function JobsPage() {
                     </div>
                   </div>
 
+                  {/* Blue Divider Line */}
+                  <div className="border-t-2 border-[#8AADFC] mx-8"></div>
+
                   {/* Content - Scrollable */}
                   <div 
                     className="flex-1 p-8 overflow-y-auto overflow-x-hidden" 
                     style={{
-                      maxHeight: 'calc(100vh - 320px)',
+                      minHeight: '400px',
+                      maxHeight: 'calc(90vh - 250px)',
                       scrollbarWidth: 'thin',
                       scrollbarColor: '#cbd5e0 #f7fafc',
                       maxWidth: '100%',
                       overflowWrap: 'break-word'
                     }}
                   >
-                    <div className="border-t-2 border-[#8AADFC] pt-6" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
+                    <div className="pt-6" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
                       <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir break-all">
                         Overview
                       </h3>
@@ -788,6 +802,9 @@ export default function JobsPage() {
                           </div>
                         </div>
                       )}
+                      
+                      {/* Extra scroll space */}
+                      <div className="h-24"></div>
                     </div>
                   </div>
                 </div>
@@ -798,6 +815,78 @@ export default function JobsPage() {
               )}
             </div>
           </div>
+
+          {/* Pagination - Positioned under job listings */}
+          {filteredJobs.length > 0 && (
+            <div className="flex justify-center items-center gap-3 mt-8 lg:mt-6 lg:justify-center lg:max-w-[45%]" onClick={handlePaginationClick}>
+              {/* Previous Button */}
+              {currentPage > 1 && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handlePageChange(currentPage - 1);
+                  }}
+                  className="flex items-center rounded-full px-4 lg:px-6 py-2.5 lg:py-3 hover:bg-gray-100 transition-colors cursor-pointer bg-white shadow-sm text-sm lg:text-base font-avenir text-[#7691A4]"
+                >
+                  <ChevronDown className="w-4 h-4 lg:w-5 lg:h-5 text-[#7691A4] rotate-90 mr-1 lg:mr-2" strokeWidth={2} />
+                  Prev
+                </button>
+              )}
+              {/* Page Numbers with Smart Pagination */}
+              {paginationNumbers.map((page, index) => (
+                page === '...' ? (
+                  <span
+                    key={`ellipsis-${index}`}
+                    className="rounded-full w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center text-base lg:text-[20px] font-bold font-avenir text-[#7691A4]"
+                  >
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    key={`page-${page}`}
+                    type="button"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handlePageChange(page as number);
+                    }}
+                    onPointerDown={(e) => {
+                      e.stopPropagation();
+                    }}
+                    className={`rounded-full w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center transition-colors cursor-pointer shadow-sm text-base lg:text-[20px] font-bold font-avenir ${
+                      currentPage === page
+                        ? 'bg-[#01253F] text-white'
+                        : 'bg-white text-[#01253F] hover:bg-gray-100'
+                    }`}
+                    style={{ zIndex: 10 }}
+                  >
+                    {page}
+                  </button>
+                )
+              ))}
+              {/* Next Button */}
+              {currentPage < totalPages && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handlePageChange(currentPage + 1);
+                  }}
+                  className="flex items-center rounded-full px-4 lg:px-6 py-2.5 lg:py-3 hover:bg-gray-100 transition-colors cursor-pointer bg-white shadow-sm text-sm lg:text-base font-avenir text-[#7691A4]"
+                >
+                  Next
+                  <ChevronDown className="w-4 h-4 lg:w-5 lg:h-5 text-[#7691A4] -rotate-90 ml-1 lg:ml-2" strokeWidth={2} />
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -825,20 +914,22 @@ export default function JobsPage() {
           background: #a0aec0;
         }
         
-        /* Ensure 40/60 split on desktop (reduced left by 10%, increased right by 10%) */
-        @media (min-width: 1024px) {
+        /* Ensure 45/55 split on desktop */
+        @media (min-width: 720px) {
           .job-details-panel {
-            flex: 1 1 60%;
+            flex: 1 1 55%;
             min-width: 0;
             position: sticky !important;
             top: 2rem !important;
+            bottom: 2rem !important;
             align-self: flex-start !important;
-            height: fit-content !important;
-            max-height: calc(100vh - 64px) !important;
+            min-height: 600px !important;
+            height: min(1000px, 90vh) !important;
+            max-height: 90vh !important;
           }
           
           .job-listings {
-            flex: 1 1 40%;
+            flex: 1 1 45%;
             min-width: 0;
           }
         }
@@ -846,37 +937,49 @@ export default function JobsPage() {
         /* Responsive adjustments for different screen sizes */
         @media (min-width: 1024px) and (max-width: 1279px) {
           .job-details-panel {
-            flex: 1 1 58%;
+            flex: 1 1 55%;
             position: sticky !important;
             top: 2rem !important;
+            bottom: 2rem !important;
+            min-height: 600px !important;
+            height: min(1000px, 90vh) !important;
+            max-height: 90vh !important;
           }
           
           .job-listings {
-            flex: 1 1 42%;
+            flex: 1 1 45%;
           }
         }
         
         @media (min-width: 1280px) and (max-width: 1535px) {
           .job-details-panel {
-            flex: 1 1 60%;
+            flex: 1 1 55%;
             position: sticky !important;
             top: 2rem !important;
+            bottom: 2rem !important;
+            min-height: 600px !important;
+            height: min(1000px, 90vh) !important;
+            max-height: 90vh !important;
           }
           
           .job-listings {
-            flex: 1 1 40%;
+            flex: 1 1 45%;
           }
         }
         
         @media (min-width: 1536px) {
           .job-details-panel {
-            flex: 1 1 60%;
+            flex: 1 1 55%;
             position: sticky !important;
             top: 2rem !important;
+            bottom: 2rem !important;
+            min-height: 600px !important;
+            height: min(1000px, 90vh) !important;
+            max-height: 90vh !important;
           }
           
           .job-listings {
-            flex: 1 1 40%;
+            flex: 1 1 45%;
           }
         }
       `}</style>
