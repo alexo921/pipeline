@@ -7,6 +7,7 @@ import AuthModal from "../AuthModal";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import BaseAuthModal from "../BaseAuthModal";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface BaseLayoutProps {
   children: React.ReactNode;
