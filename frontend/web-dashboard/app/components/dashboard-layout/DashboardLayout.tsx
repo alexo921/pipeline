@@ -1,12 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import MobileMenu from "./MobileMenu";
 import "../../styles/brand.css";
-import AuthModal from "../AuthModal";
-import Footer from "./Footer";
-import Navbar from "./Navbar";
-import BaseAuthModal from "../BaseAuthModal";
+import Navbar from "./CandidateNavbar";
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -15,7 +11,7 @@ interface BaseLayoutProps {
   customBackground?: string;
 }
 
-export default function BaseLayout({
+export default function DashboardLayout({
   children,
   showNav = true,
   showFooter = true,
@@ -41,30 +37,12 @@ export default function BaseLayout({
           onMobileMenuToggle={() => setIsMobileMenuOpen(true)}
         />
       )}
-      {/* Navbar navigation */}
-
-      {/* Mobile menu */}
-      <MobileMenu
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-      />
 
       {/* Main content */}
       <main className="flex-grow">{children}</main>
-      {/* Main content */}
 
       {/* Footer */}
-      {showFooter && <Footer />}
-      {/* Footer */}
-
-      {/* <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      /> */}
-      <BaseAuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
+      {/* {showFooter && <Footer />} */}
     </div>
   );
 }

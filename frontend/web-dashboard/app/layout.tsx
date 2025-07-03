@@ -1,6 +1,8 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from './contexts/AuthContext';
+import { Suspense } from 'react';
+import Loading from './components/Common/Loading';
 
 // Import Baloo and configure a fallback for Avenir
 const baloo = Inter({ 
@@ -32,7 +34,9 @@ export default function RootLayout({
       </head>
       <body className={baloo.className}>
         <AuthProvider>
+        <Suspense fallback={<Loading />}>
         <main>{children}</main>
+        </Suspense>
         </AuthProvider>
       </body>
     </html>

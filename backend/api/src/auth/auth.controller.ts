@@ -54,6 +54,18 @@ export class AuthController {
     return { token: response.token, user: response.result };
   }
 
+  @Post('logout')
+  @ApiOperation({ summary: 'Logout the user' })
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('access_token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
+
+    return { message: 'Logged out successfully' };
+  }
+
   @Post('forgot-password')
   @ApiOperation({ summary: 'Request password reset' })
   forgotPassword(@Body() forgotDto: ForgotPassDto) {
