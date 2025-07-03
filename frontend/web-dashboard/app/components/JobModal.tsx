@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { X, ExternalLink } from 'lucide-react';
 import { Job } from '../types/job';
+import { useAuth } from '../contexts/AuthContext';
 
 interface JobModalProps {
   job: Job | null;
@@ -13,6 +14,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const descriptionHeaderRef = useRef<HTMLHeadingElement>(null);
   const [isDescriptionSticky, setIsDescriptionSticky] = useState(false);
+  const { user, showLoginModal } = useAuth();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -44,8 +46,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
   }, [job]);
 
   useEffect(() => {
-    console.log('JobModal rendered with job:', job);
-    console.log('Job URL:', job?.url);
+    // Effect runs when job changes
   }, [job]);
 
   if (!job) return null;
@@ -53,14 +54,18 @@ export default function JobModal({ job, onClose }: JobModalProps) {
   const handleApplyClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('Apply button clicked, job URL:', job.url);
-    if (job.url) {
-      console.log('Opening URL:', job.url);
-      window.open(job.url, '_blank', 'noopener,noreferrer');
-    } else {
-      console.log('No URL available, showing alert');
-      alert('Application URL not available for this job.');
+    
+    if (!user) {
+      showLoginModal();
+      return;
     }
+
+    if (!job.url) {
+      alert('Application URL not available for this job.');
+      return;
+    }
+
+    window.open(job.url, '_blank', 'noopener,noreferrer');
   };
 
   const formatRequirements = (requirements: string[] | string | undefined) => {
@@ -119,7 +124,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
                   <span
                     key={index}
                     className={`
-                      inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                      inline-flex items-center px-4 py-2 rounded-full text-base font-medium
                       ${tag.type === 'category' ? 'bg-blue-100 text-blue-800' : ''}
                       ${tag.type === 'employment' ? 'bg-gray-100 text-gray-800' : ''}
                       ${tag.type === 'experience' ? 'bg-pink-100 text-pink-800' : ''}
@@ -192,26 +197,14 @@ export default function JobModal({ job, onClose }: JobModalProps) {
 
           {/* Footer - Fixed */}
           <div className="p-6 border-t bg-white">
-            {job.url ? (
-              <a
-                href={job.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-teal-500 text-white font-medium py-3 px-6 rounded-lg hover:bg-teal-600 transition-colors flex items-center justify-center gap-2 no-underline"
-                onClick={() => console.log('Apply link clicked, URL:', job.url)}
-              >
-                Apply Now
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            ) : (
-              <button
-                disabled
-                className="w-full bg-gray-400 text-white font-medium py-3 px-6 rounded-lg cursor-not-allowed flex items-center justify-center gap-2"
-                type="button"
-              >
-                No Application URL Available
-              </button>
-            )}
+            <button
+              onClick={handleApplyClick}
+              className="w-full bg-teal-500 text-white font-medium py-3 px-6 rounded-lg hover:bg-teal-600 transition-colors flex items-center justify-center gap-2"
+              type="button"
+            >
+              Apply Now
+              <ExternalLink className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-export type TagType = 'category' | 'employment' | 'experience';
+export type TagType = 'category' | 'employment' | 'experience' | 'care_setting' | 'shift' | 'flag';
 
 export interface Tag {
   id: number;
@@ -7,7 +7,7 @@ export interface Tag {
 }
 
 export interface Job {
-  id: number;
+  id: string | number;
   title: string;
   company: string;
   location: string;

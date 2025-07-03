@@ -26,8 +26,10 @@ body::before {
   right: -200px;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(59, 130, 246, 0.1) 50%, transparent 70%);
-  filter: blur(80px);
+  background-image: url(/blur.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   z-index: -1;
   pointer-events: none;
 }
@@ -40,8 +42,10 @@ body::after {
   left: -100px;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(168, 85, 247, 0.08) 50%, transparent 70%);
-  filter: blur(60px);
+  background-image: url(/blur.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   z-index: -1;
   pointer-events: none;
 }
