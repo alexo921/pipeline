@@ -8,4 +8,4 @@ import { ProjectsService } from './projects.service';
   providers: [ProjectsService],
   exports: [ProjectsService],
 })
-export class ProjectsModule {} 
+export class ProjectsModule {}
