@@ -16,7 +16,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Candidate Experience')
-@Controller('candidate/experience')
+@Controller('candidate-experience')
 export class ExperienceController {
   constructor(private readonly experienceService: ExperienceService) {}
 
@@ -32,7 +32,7 @@ export class ExperienceController {
   @ApiOperation({ summary: 'Get all experiences for a candidate' })
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
-  findAll(@Body() { candidateId }: any) {
+  findAll(@Body() { candidateId }: { candidateId: string }) {
     return this.experienceService.findAll(candidateId);
   }
 

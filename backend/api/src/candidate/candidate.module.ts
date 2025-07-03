@@ -8,6 +8,6 @@ import { CandidateController } from './candidate.controller';
 @Module({
   imports: [OnboardingModule, ExperienceModule],
   providers: [CandidateService, PrismaService],
-  controllers: [CandidateController]
+  controllers: [CandidateController],
 })
 export class CandidateModule {}

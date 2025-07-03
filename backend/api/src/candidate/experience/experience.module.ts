@@ -6,6 +6,6 @@ import { CandidateService } from '../candidate.service';
 
 @Module({
   controllers: [ExperienceController],
-  providers: [ExperienceService,PrismaService, CandidateService]
+  providers: [ExperienceService, PrismaService, CandidateService],
 })
 export class ExperienceModule {}
