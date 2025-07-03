@@ -1,0 +1,2 @@
+NAMES          IMAGE                    STATUS
+pipeline-web   pipeline_web-dashboard   Up 22 minutes

@@ -1,0 +1,7 @@
+NAMES               IMAGE                           STATUS
+pipeline-web        pipeline_web-dashboard:latest   Up 29 hours
+pipeline-api        pipeline_api                    Up 30 hours
+pipeline-scraper    pipeline_job-scraper            Restarting (0) 1 second ago
+pipeline-redis      redis:7-alpine                  Up 30 hours (healthy)
+pipeline-admin      pipeline_admin-panel            Up 30 hours
+pipeline-postgres   postgres:15                     Up 30 hours (healthy)
