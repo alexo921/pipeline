@@ -161,7 +161,7 @@ const getExperienceLevel = (title: string, description: string): string => {
   }
 };
 
-export default function JobsPage() {
+export default function JobsContent() {
   const [loading, setLoading] = useState(true);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
