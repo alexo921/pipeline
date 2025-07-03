@@ -1,4 +1,3 @@
-import { OnboardingStep } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsArray,

@@ -7,6 +7,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { User } from 'src/common/decorators/user.decorator';
 import { Role } from 'src/common/enums/enums';
+import { UserWithCandidate } from 'src/types/user-with-candidate';
 
 @Controller('users')
 export class UsersController {
@@ -48,15 +49,11 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete a user by ID' })
-  remove(@Param('id') id: string, @User() user: any) {
+  remove(@Param('id') id: string, @User() user: UserWithCandidate) {
     if (user.id === id) {
       throw new Error('You can`t delete your own account');
     }
-
-    if (user.role !== Role.ADMIN) {
-      throw new Error('Only admins can delete users');
-    }
-
+    
     return this.usersService.remove(id);
   }
 } 
