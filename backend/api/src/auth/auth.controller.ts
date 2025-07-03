@@ -20,6 +20,7 @@ import { ForgotPassDto } from './dto/forgot-password-dto';
 import { ResetPasswordDto } from './dto/Reset-password-Dto';
 import { ChangePasswordDto } from './dto/change-password-dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from 'src/common/decorators/user.decorator';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -82,8 +83,11 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   @Post('change-password')
   @ApiBearerAuth()
-  changePass(@Request() req, @Body() changePassDto: ChangePasswordDto) {
-    return this.authService.changePass(req.user.email, changePassDto);
+  changePass(
+    @User('email') email: string,
+    @Body() changePassDto: ChangePasswordDto,
+  ) {
+    return this.authService.changePass(email, changePassDto);
   }
 
   @Get('google')
@@ -122,13 +126,13 @@ export class AuthController {
 
       // return res.send({ token: jwt, user: userInfo });
       return res.redirect(
-        `http://localhost:3000/auth/callback?token=${jwt}&email=${user.email}`,
+        `${process.env.FRONTEND_URL}/auth/callback?token=${jwt}&email=${user.email}`,
       );
-    } catch (err) {
-      error('Google OAuth error', err.stack);
+    } catch (err: unknown) {
+      error('Google OAuth error', (err as Error).stack);
       return res.status(500).send({
         error: 'Google authentication failed',
-        details: err.message,
+        details: (err as Error).message,
       });
     }
   }
@@ -137,8 +141,7 @@ export class AuthController {
   @Get('profile')
   @ApiOperation({ summary: 'Get user profile' })
   @ApiBearerAuth()
-  getProfile(@Request() req) {
-    const id = req.user.userId;
-    return this.authService.getProfile(id);
+  getProfile(@User('userId') userId: string) {
+    return this.authService.getProfile(userId);
   }
 }

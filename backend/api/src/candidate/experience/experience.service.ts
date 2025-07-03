@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
@@ -8,30 +12,38 @@ import { CandidateService } from '../candidate.service';
 export class ExperienceService {
   constructor(
     private prismaService: PrismaService,
-    private candidateService: CandidateService
+    private candidateService: CandidateService,
   ) {}
 
-  
   async create(data: CreateExperienceDto) {
-    const candidate = await this.candidateService.getCandidateById(data.candidateId);
+    const candidate = await this.candidateService.getCandidateById(
+      data.candidateId,
+    );
 
     if (!candidate) {
       throw new BadRequestException('Invalid candidate ID');
     }
 
-    if(data.isCurrent == false && (data.endDate == '' || data.endDate == null) ){
-      throw new BadRequestException("End date field is required when isCurrent is false!");
+    if (
+      data.isCurrent == false &&
+      (data.endDate == '' || data.endDate == null)
+    ) {
+      throw new BadRequestException(
+        'End date field is required when isCurrent is false!',
+      );
     }
 
-    if(data.isCurrent == null && (data.endDate == '' || data.endDate == null) ){
-      throw new BadRequestException("End date field is required");
+    if (
+      data.isCurrent == null &&
+      (data.endDate == '' || data.endDate == null)
+    ) {
+      throw new BadRequestException('End date field is required');
     }
 
     return this.prismaService.experiences.create({ data });
   }
 
   async findAll(candidateId: string) {
-
     if (!candidateId) {
       throw new BadRequestException('candidate ID is required');
     }

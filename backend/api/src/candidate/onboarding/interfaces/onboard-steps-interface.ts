@@ -20,7 +20,7 @@ export interface OnboardingStepTwo {
 }
 
 export interface OnboardingStepThree {
-  workType: WorkType[]; 
-  shiftType: ShiftType[]; 
+  workType: WorkType[];
+  shiftType: ShiftType[];
   currentJobStatus: JobStatus;
 }
