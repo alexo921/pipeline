@@ -218,7 +218,6 @@ describe('Candidate Onboarding', () => {
       .send({ token: sentToken + 'i' })
       .expect(400)
       .expect((res) => {
-        console.log(res.body); // log response
         expect(res.body.message).toMatch(/invalid token/i);
       });
   });

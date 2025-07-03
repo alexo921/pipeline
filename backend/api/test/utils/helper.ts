@@ -16,7 +16,7 @@ export async function createCandidateUser(
 ) {
   const password = 'testpass123';
   const hashedPassword = await bcrypt.hash(password, 10);
-  const email = overrides.email || 'candidate-test-user@example.com';
+  const email = overrides.email || `candidate-test-${Date.now()}@example.com`;
 
   const user = await prisma.users.create({
     data: {

@@ -4,12 +4,14 @@ import * as request from 'supertest';
 import * as bcrypt from 'bcryptjs';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from 'src/common/prisma/prisma.service';
+import { EmailService } from 'src/email/email.service';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let prismaService: PrismaService;
   let testUser;
   let accessToken: string = '';
+  let sentToken: string;
 
   const rawPassword = 'testpass';
   const apiPrefix = '/auth';
@@ -17,7 +19,17 @@ describe('AuthController (e2e)', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(EmailService)
+      .useValue({
+        sendPasswordResetEmail: jest
+          .fn()
+          .mockImplementation((email: string, token: string) => {
+            sentToken = token;
+            return Promise.resolve();
+          }),
+      })
+      .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -27,7 +39,7 @@ describe('AuthController (e2e)', () => {
     const hashedPassword = await bcrypt.hash(rawPassword, 10);
     testUser = await prismaService.users.create({
       data: {
-        email: 'authuser@example.com',
+        email: `test-${Date.now()}@example.com`,
         password: hashedPassword,
         name: 'Test User',
       },
@@ -123,4 +135,21 @@ describe('AuthController (e2e)', () => {
         .expect(401);
     });
   });
+  
+  describe(`${apiPrefix}/reset-password (POST)`, () => {
+    it('should fail for missing newPassword and token', () => {
+      return request(app.getHttpServer())
+        .post(`${apiPrefix}/reset-password`)
+        .send({})
+        .expect(400);
+    });
+
+    it('should return 201 for valid email', () => {
+      return request(app.getHttpServer())
+        .post(`${apiPrefix}/reset-password`)
+        .send({ token: sentToken, newPassword: 'NewPassword123!' })
+        .expect(201);
+    });
+  });
+
 });

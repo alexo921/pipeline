@@ -20,7 +20,7 @@ describe('Job Controller ', () => {
     location: 'Melbourne, FL',
     description:
       'CompetitiveMelbourne,FL32940CNACHHAPart TimeDay ShiftWeekdayWeekendJOB DESCRIPTIONHome Health Aide / HHA...',
-    url: 'https://w.mjobs.com/job-listings/494251/home-health-aide-hha.html?searchId=1750101598.6548&page=1',
+    url: `https://w.mjobs.com/job-listings/494251/home-health-aide-hha.html?searchId=1750101598.${Date.now()}&page=1`,
     source: 'myCNAjobs',
     scrapedDate: new Date('2025-06-16'),
     postedDate: new Date('2025-05-15'),
