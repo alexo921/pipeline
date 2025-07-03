@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
@@ -14,6 +14,7 @@ type AuthContextType = {
   refreshUser: () => Promise<void>;
   showLoginModal: () => void;
   registerLoginModalTrigger: (trigger: () => void) => void;
+  logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -38,6 +39,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const logout = () => {
+    setUser(null);
+  };
+
   useEffect(() => {
     refreshUser();
   }, []);
@@ -53,13 +58,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      setUser, 
-      refreshUser, 
-      showLoginModal,
-      registerLoginModalTrigger 
-    }}>
+    <AuthContext.Provider value={{ user, setUser, refreshUser, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -67,6 +66,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };

@@ -69,7 +69,7 @@ export class CandidateService {
   }
 
   async update(candidateId: string, data: UpdateCandidateDto) {
-    let candidate = await this.getCandidateById(candidateId);
+    const candidate = await this.getCandidateById(candidateId);
 
     if (!candidate) {
       throw new NotFoundException(

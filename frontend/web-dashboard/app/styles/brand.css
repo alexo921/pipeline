@@ -1,79 +1,122 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400&display=swap");
+
+.baloo-number {
+  font-family: "Baloo 2", cursive;
+  font-weight: 700;
+  font-size: 75px;
+  line-height: 115%; /* ≈114.999...% */
+  letter-spacing: 0;
+}
+
+.dashboard-label {
+  display: inline-block; /* or flex */
+  white-space: nowrap; /* prevent line break */
+  font-family: "Avenir", sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 115%;
+  color: #01253f;
+}
+
+.logout-button-custom {
+  font-family: "Avenir", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 115%;
+  letter-spacing: 0%;
+  color: #01253f; /* Tailwind's slate-700 */
+  transition: color 0.2s;
+}
+
+.logout-button-custom:hover {
+  color: #0066ff; /* Tailwind's blue-600 */
+}
+
 /* Brand Colors */
 :root {
   /* Primary Colors */
-  --primary-blue: #0066FF;
-  --primary-dark: #1A1A1A;
-  --primary-light: #FFFFFF;
-  
+  --primary-blue: #0066ff;
+  --primary-dark: #1a1a1a;
+  --primary-light: #ffffff;
+
   /* Secondary Colors */
-  --secondary-blue: #00D1FF;
-  --secondary-purple: #7000FF;
-  --secondary-pink: #FF00E5;
-  
+  --secondary-blue: #00d1ff;
+  --secondary-purple: #7000ff;
+  --secondary-pink: #ff00e5;
+
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-  --gradient-secondary: linear-gradient(135deg, var(--secondary-purple) 0%, var(--secondary-pink) 100%);
-  
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--primary-blue) 0%,
+    var(--secondary-blue) 100%
+  );
+  --gradient-secondary: linear-gradient(
+    135deg,
+    var(--secondary-purple) 0%,
+    var(--secondary-pink) 100%
+  );
+
   /* Text Colors */
   --text-primary: var(--primary-dark);
-  --text-secondary: #4A4A4A;
+  --text-secondary: #4a4a4a;
   --text-tertiary: #717171;
   --text-light: var(--primary-light);
-  
+
   /* Background Colors */
   --bg-primary: var(--primary-light);
-  --bg-secondary: #F5F5F5;
-  --bg-tertiary: #FAFAFA;
-  
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #fafafa;
+
   /* Border Colors */
-  --border-light: #E5E5E5;
-  --border-medium: #D1D1D1;
-  
+  --border-light: #e5e5e5;
+  --border-medium: #d1d1d1;
+
   /* Status Colors */
-  --success: #00C853;
-  --warning: #FFB300;
-  --error: #FF3D00;
+  --success: #00c853;
+  --warning: #ffb300;
+  --error: #ff3d00;
   --info: var(--primary-blue);
 }
 
 /* Typography */
 @font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter-Regular.woff2') format('woff2');
+  font-family: "Inter";
+  src: url("/fonts/Inter-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter-Medium.woff2') format('woff2');
+  font-family: "Inter";
+  src: url("/fonts/Inter-Medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: url('/fonts/Inter-SemiBold.woff2') format('woff2');
+  font-family: "Inter";
+  src: url("/fonts/Inter-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
 :root {
-  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  
+  --font-primary:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
   /* Font Sizes */
-  --text-xs: 0.75rem;    /* 12px */
-  --text-sm: 0.875rem;   /* 14px */
-  --text-base: 1rem;     /* 16px */
-  --text-lg: 1.125rem;   /* 18px */
-  --text-xl: 1.25rem;    /* 20px */
-  --text-2xl: 1.5rem;    /* 24px */
-  --text-3xl: 1.875rem;  /* 30px */
-  --text-4xl: 2.25rem;   /* 36px */
-  
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
+
   /* Line Heights */
   --leading-none: 1;
   --leading-tight: 1.25;
@@ -91,18 +134,35 @@ body {
 }
 
 /* Headings */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 600;
   line-height: var(--leading-tight);
   margin-bottom: 1rem;
 }
 
-h1 { font-size: var(--text-4xl); }
-h2 { font-size: var(--text-3xl); }
-h3 { font-size: var(--text-2xl); }
-h4 { font-size: var(--text-xl); }
-h5 { font-size: var(--text-lg); }
-h6 { font-size: var(--text-base); }
+h1 {
+  font-size: var(--text-4xl);
+}
+h2 {
+  font-size: var(--text-3xl);
+}
+h3 {
+  font-size: var(--text-2xl);
+}
+h4 {
+  font-size: var(--text-xl);
+}
+h5 {
+  font-size: var(--text-lg);
+}
+h6 {
+  font-size: var(--text-base);
+}
 
 /* Common Components */
 .card {
@@ -187,10 +247,18 @@ h6 { font-size: var(--text-base); }
   gap: 1.5rem;
 }
 
-.grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
-.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-cols-1 {
+  grid-template-columns: repeat(1, 1fr);
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
 
 @media (max-width: 768px) {
   .grid-cols-2,
@@ -219,4 +287,4 @@ h6 { font-size: var(--text-base); }
 .bg-page-gradient {
   /* Remove the old full-page gradient */
   background: transparent;
-} 
+}

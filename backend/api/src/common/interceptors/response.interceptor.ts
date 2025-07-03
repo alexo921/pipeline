@@ -27,7 +27,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
       map((data) => ({
         statusCode: 'ok',
         data: data || {},
-        message: data?.message ||'Operation completed successfully',
+        message: data?.message || 'Operation completed successfully',
         errors: [],
         isSuccess: true,
       })),
@@ -43,7 +43,9 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
           status = error.getStatus();
           if (status === HttpStatus.BAD_REQUEST) {
             statusCode = 'validation_error';
-            errors = Array.isArray(response['message'])? response['message'] : [];
+            errors = Array.isArray(response['message'])
+              ? response['message']
+              : [];
           }
         } else if (error instanceof Error) {
           message = error.message;
