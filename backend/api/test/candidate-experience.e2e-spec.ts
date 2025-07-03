@@ -18,6 +18,7 @@ describe('Candidate Experience Controller ', () => {
   let accessToken: string;
   let candidateId: string;
   let experienceId: string;
+  let testEmail: string = `candidate-for-experience-${Date.now()}@example.com`;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -30,7 +31,7 @@ describe('Candidate Experience Controller ', () => {
 
     const user = await prisma.users.create({
       data: {
-        email: 'candidate-for-experience@example.com',
+        email: testEmail,
         name: 'Exp User',
         password: '',
         role: 'CANDIDATE',
@@ -40,7 +41,7 @@ describe('Candidate Experience Controller ', () => {
     const candidate = await prisma.candidates.create({
       data: {
         name: 'Exp User',
-        email: 'candidate-for-experience@example.com',
+        email: testEmail,
         userId: user.id,
         healthcareRole: 'CNA',
         certificationStatus: 'Certified',
@@ -71,7 +72,7 @@ describe('Candidate Experience Controller ', () => {
     await prisma.experiences.deleteMany({ where: { candidateId } });
     await prisma.candidates.delete({ where: { id: candidateId } });
     await prisma.users.delete({
-      where: { email: 'candidate-for-experience@example.com' },
+      where: { email: testEmail },
     });
     await app.close();
   });

@@ -208,11 +208,11 @@ export class AuthService {
       payload = this.jwtService.verify<JwtPayload>(token, { secret });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      throw new UnauthorizedException('Invalid or expired token');
+      throw new BadRequestException('Invalid or expired token');
     }
 
     if (payload.purpose !== 'reset-password') {
-      throw new UnauthorizedException('Invalid token purpose');
+      throw new BadRequestException('Invalid token purpose');
     }
 
     const user = await this.prismaService.users.findUnique({
