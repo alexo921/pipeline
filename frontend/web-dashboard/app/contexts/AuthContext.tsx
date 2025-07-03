@@ -58,7 +58,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, refreshUser, logout }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      setUser, 
+      refreshUser, 
+      logout,
+      showLoginModal,
+      registerLoginModalTrigger
+    }}>
       {children}
     </AuthContext.Provider>
   );
@@ -68,4 +75,14 @@ export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
+};
+
+// Default values for server-side rendering
+export const defaultAuthContext: AuthContextType = {
+  user: null,
+  setUser: () => {},
+  refreshUser: async () => {},
+  showLoginModal: () => {},
+  registerLoginModalTrigger: () => {},
+  logout: () => {}
 };
