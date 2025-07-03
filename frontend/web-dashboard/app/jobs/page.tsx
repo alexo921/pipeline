@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import JobModal from '../components/JobModal';
 import { Job, Tag, TagType } from '../types/job';
 import { Search, MapPin, Filter, ChevronDown, X } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
 import { env } from 'process';
+import ApplyButton from '../components/ApplyButton';
 
 // Load job data from JSON files
 const loadJobData = async (): Promise<Job[]> => {
@@ -173,8 +173,6 @@ export default function JobsPage() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Tag[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const { user, showLoginModal } = useAuth();
-
   const jobsPerPage = 18; // Show 18 jobs per page maximum
 
   // Load job data
@@ -322,49 +320,7 @@ export default function JobsPage() {
     return 'bg-gray-200';
   };
 
-  const handleApply = async () => {
-    if (!user) {
-      showLoginModal();
-      return;
-    }
 
-    if (!selectedJob) {
-      alert('Please select a job to apply.');
-      return;
-    }
-
-    if (!selectedJob.url) {
-      alert('Application URL not available for this job.');
-      return;
-    }
-
-    try {
-      // Track the application
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/applied-jobs`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ 
-          userId: user.id, 
-          jobId: selectedJob.id, 
-          jobUrl: selectedJob.url 
-        }),
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        console.error('Failed to track application:', response.status);
-      }
-
-      // Open the job application URL
-      window.open(selectedJob.url, '_blank', 'noopener,noreferrer');
-    } catch (error) {
-      console.error('Error applying for job:', error);
-      // Still open the URL even if tracking fails
-      window.open(selectedJob.url, '_blank', 'noopener,noreferrer');
-    }
-  }
 
   // Loading state
   if (loading) {
@@ -712,12 +668,7 @@ export default function JobsPage() {
                           <p>{selectedJob.salary}</p>
                         </div>
                       </div>
-                      <button 
-                        onClick={handleApply}
-                        className="bg-[#2CB3BF] text-white font-black text-[20px] py-3 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
-                      >
-                        Apply
-                      </button>
+                                             <ApplyButton jobId={selectedJob.id} jobUrl={selectedJob.url} />
                     </div>
                     
                     {/* Tags - Display in single row */}
