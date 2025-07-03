@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
 type User = {
   id: string;
@@ -12,12 +12,15 @@ type AuthContextType = {
   user: User | null;
   setUser: (user: User | null) => void;
   refreshUser: () => Promise<void>;
+  showLoginModal: () => void;
+  registerLoginModalTrigger: (trigger: () => void) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loginModalTrigger, setLoginModalTrigger] = useState<(() => void) | null>(null);
 
   const refreshUser = async () => {
     try {
@@ -39,8 +42,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     refreshUser();
   }, []);
 
+  const showLoginModal = useCallback(() => {
+    if (loginModalTrigger) {
+      loginModalTrigger();
+    }
+  }, [loginModalTrigger]);
+
+  const registerLoginModalTrigger = useCallback((trigger: () => void) => {
+    setLoginModalTrigger(() => trigger);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, setUser, refreshUser }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      setUser, 
+      refreshUser, 
+      showLoginModal,
+      registerLoginModalTrigger 
+    }}>
       {children}
     </AuthContext.Provider>
   );
