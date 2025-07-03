@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/app/contexts/AuthContext";
 import "../../styles/brand.css";
+import { useRouter } from "next/navigation";
 
 type NavbarProps = {
   onLoginClick: () => void;
@@ -15,8 +16,18 @@ const Navbar: React.FC<NavbarProps> = ({
   onLoginClick,
   onMobileMenuToggle,
 }) => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const router = useRouter();
+  async function onLogoutClick() {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+    });
 
+    logout();
+    localStorage.removeItem("user");
+
+    router.push("/");
+  }
   return (
     <nav className="w-full">
       <div className="max-w-[1400px] mx-auto px-8 py-6 flex items-center justify-between">
@@ -47,7 +58,9 @@ const Navbar: React.FC<NavbarProps> = ({
               </span>
 
               {/* Logout Button */}
-              <button className="logout-button-custom">Logout</button>
+              <button onClick={onLogoutClick} className="logout-button-custom">
+                Logout
+              </button>
             </div>
           </div>
         ) : null}
