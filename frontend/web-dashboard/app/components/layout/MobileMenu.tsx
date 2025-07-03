@@ -25,7 +25,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           {/* Header */}
           <div className="px-4 py-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Menu</h2>
+              <h2 className="text-lg font-semibold font-avenir">Menu</h2>
               <button
                 onClick={onClose}
                 className="p-2 -mr-2 text-gray-500 hover:text-gray-600"
@@ -51,36 +51,26 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           <nav className="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
             <Link
               href="/jobs"
-              className="block text-base font-medium text-gray-900 hover:text-blue-600"
+              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
               onClick={onClose}
             >
               Jobs
             </Link>
             <Link
               href="/saved"
-              className="block text-base font-medium text-gray-900 hover:text-blue-600"
+              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
               onClick={onClose}
             >
               Saved
             </Link>
             <Link
               href="/profile"
-              className="block text-base font-medium text-gray-900 hover:text-blue-600"
+              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
               onClick={onClose}
             >
               Profile
             </Link>
           </nav>
-
-          {/* Footer */}
-          <div className="px-4 py-6 border-t border-gray-200">
-            <button
-              className="w-full button button-primary"
-              onClick={onClose}
-            >
-              Post a Job
-            </button>
-          </div>
         </div>
       </div>
     </div>

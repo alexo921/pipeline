@@ -44,7 +44,7 @@ export default function JobSearch({ onSearch, activeTags, onTagToggle }: JobSear
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Job Board</h1>
+      <h1 className="text-[20px] font-bold text-gray-900 mb-6">Job Board</h1>
       
       <div className="bg-gray-50 rounded-xl p-4">
         <div className="flex flex-col md:flex-row gap-4">
@@ -170,7 +170,7 @@ export default function JobSearch({ onSearch, activeTags, onTagToggle }: JobSear
               <span
                 key={index}
                 className={`
-                  inline-flex items-center px-3 py-1 rounded-full text-sm font-medium cursor-pointer
+                  inline-flex items-center px-4 py-2 rounded-full text-base font-medium cursor-pointer
                   ${tag.type === 'primary' ? 'bg-blue-100 text-blue-800' : ''}
                   ${tag.type === 'secondary' ? 'bg-gray-100 text-gray-800' : ''}
                   ${tag.type === 'accent' ? 'bg-pink-100 text-pink-800' : ''}
