@@ -34,7 +34,7 @@ export class AuthController {
   @Post('signup')
   @ApiOperation({ summary: 'Register a new user' })
   signup(@Body() signUpDto: SignUpDto) {
-    return this.authService.create(signUpDto);
+    return this.authService.signup(signUpDto);
   }
 
   @Post('login')

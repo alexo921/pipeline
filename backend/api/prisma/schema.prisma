@@ -117,6 +117,8 @@ model users {
   email     String   @unique
   password  String
   role      Role     @default(CANDIDATE)
+  isVerified Boolean @default(false)
+  isActive  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -134,8 +136,8 @@ model candidates {
   name                  String
   email                 String   @unique
   userId                String   @unique
-  healthcareRole        HealthcareRole
-  certificationStatus   CertificationStatus
+  healthcareRole        HealthcareRole?
+  certificationStatus   CertificationStatus?
   zipCode               String?  // nullable
   address               String?  // nullable
   maxTravelDistance     Int?     // stored in minutes; nullable

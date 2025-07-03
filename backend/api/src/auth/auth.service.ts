@@ -16,6 +16,7 @@ import { ResetPasswordDto } from './dto/Reset-password-Dto';
 import { ChangePasswordDto } from './dto/change-password-dto';
 import { EmailService } from 'src/email/email.service';
 import { users } from '@prisma/client';
+import { OnboardingStep, Role } from 'src/common/enums/enums';
 
 interface GoogleTokenResponse {
   access_token: string;
@@ -113,7 +114,7 @@ export class AuthService {
     return newUser;
   }
 
-  async create(signUpDto: SignUpDto) {
+  async signup(signUpDto: SignUpDto) {
     const { email, password, name } = signUpDto;
     const isUser = await this.prismaService.users.findUnique({
       where: { email },
@@ -131,7 +132,29 @@ export class AuthService {
         password: hashPassword,
       },
     });
-    return user;
+
+    const candidate = await this.prismaService.candidates.create({
+      data: {
+        name,
+        email,
+        userId: user.id,
+        step: OnboardingStep.INITIAL_DETAILS,
+      },
+    });
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+      candidateId: candidate.id,
+    };
+
+    const token = this.jwtService.sign(payload);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...result } = user;
+
+    return { token, result };
   }
 
   async loginUser(loginDto: LoginDto) {
