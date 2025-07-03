@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { MapPin, Home, Navigation } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,25 +8,30 @@ import { signupStep2Schema, SignupStep2Schema } from "../schemas/AuthSchema";
 import { useRouter } from "next/navigation";
 
 interface SignupStep2Props {
-  onNext: (data: SignupStep2Schema) => void;
+  onNext: (data: SignupStep2Schema) => Promise<void> | void;
   error?: string | null;
 }
 
 const SignupStep2: React.FC<SignupStep2Props> = ({ onNext, error }) => {
+  const [loading, setLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignupStep2Schema>({
     resolver: zodResolver(signupStep2Schema),
   });
 
   const onSubmit = async (data: SignupStep2Schema) => {
+    setLoading(true);
     try {
       await onNext(data);
       localStorage.setItem("signup_step", "3");
     } catch (error) {
       console.error("Step 2 error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,6 +59,7 @@ const SignupStep2: React.FC<SignupStep2Props> = ({ onNext, error }) => {
             <div className="bg-[#2CB3BF] h-2 rounded-full w-1/3 transition-all duration-300"></div>
           </div>
         </div>
+
         {error && (
           <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-sm">
             {error}
@@ -82,9 +88,13 @@ const SignupStep2: React.FC<SignupStep2Props> = ({ onNext, error }) => {
                 id="signup-zipcode"
                 type="text"
                 {...register("zipCode")}
-                className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${errors.zipCode ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
+                className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${
+                  errors.zipCode
+                    ? "border-red-300 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-blue-500"
+                }`}
                 placeholder="Enter your ZIP code"
-                disabled={isSubmitting}
+                disabled={loading}
               />
             </div>
             {errors.zipCode && (
@@ -108,9 +118,13 @@ const SignupStep2: React.FC<SignupStep2Props> = ({ onNext, error }) => {
                 id="signup-address"
                 {...register("address")}
                 rows={3}
-                className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm resize-none ${errors.address ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
+                className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm resize-none ${
+                  errors.address
+                    ? "border-red-300 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-blue-500"
+                }`}
                 placeholder="Enter your full address"
-                disabled={isSubmitting}
+                disabled={loading}
               />
             </div>
             {errors.address && (
@@ -139,9 +153,13 @@ const SignupStep2: React.FC<SignupStep2Props> = ({ onNext, error }) => {
                 min="1"
                 max="100"
                 {...register("maxTravelDistance", { valueAsNumber: true })}
-                className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${errors.maxTravelDistance ? "border-red-300 focus:ring-red-500" : "border-gray-300 focus:ring-blue-500"}`}
+                className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:border-transparent transition-all outline-none text-sm ${
+                  errors.maxTravelDistance
+                    ? "border-red-300 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-blue-500"
+                }`}
                 placeholder="e.g. 10"
-                disabled={isSubmitting}
+                disabled={loading}
               />
             </div>
             {errors.maxTravelDistance && (
@@ -158,10 +176,10 @@ const SignupStep2: React.FC<SignupStep2Props> = ({ onNext, error }) => {
           <div className="pt-2">
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={loading}
               className="w-full bg-[#2CB3BF] text-white hover:bg-[#269aa5] py-2 px-4 rounded-lg font-medium transition-all duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? (
+              {loading ? (
                 <span className="flex items-center justify-center">
                   <svg
                     className="animate-spin -ml-1 mr-3 h-4 w-4 text-white"
@@ -198,7 +216,7 @@ const SignupStep2: React.FC<SignupStep2Props> = ({ onNext, error }) => {
             <button
               className="ml-1 text-blue-600 hover:text-blue-700 font-medium transition-colors"
               type="button"
-              disabled={isSubmitting}
+              disabled={loading}
               onClick={() => router.push("/jobs")}
             >
               Sign in

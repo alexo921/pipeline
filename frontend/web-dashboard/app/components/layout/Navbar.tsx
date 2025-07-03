@@ -5,16 +5,32 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { LogOut } from "lucide-react";
 
 type NavbarProps = {
   onLoginClick: () => void;
   onMobileMenuToggle: () => void; // Optional prop for mobile menu toggle
 };
 
-
-const Navbar: React.FC<NavbarProps> = ({ onLoginClick, onMobileMenuToggle }) => {
+const Navbar: React.FC<NavbarProps> = ({
+  onLoginClick,
+  onMobileMenuToggle,
+}) => {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const router = useRouter();
+
+  async function onLogoutClick() {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+    });
+
+    logout();
+    localStorage.removeItem("user");
+
+    router.push("/");
+  }
 
   return (
     <>
@@ -65,7 +81,10 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick, onMobileMenuToggle }) => 
               </Link>
 
               {user ? (
-                <button className="text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 hover:text-blue-600">
+                <button
+                  onClick={onLogoutClick}
+                  className="text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 hover:text-blue-600"
+                >
                   Logout
                 </button>
               ) : (
@@ -81,7 +100,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick, onMobileMenuToggle }) => 
             {/* Profile icon */}
             {user ? (
               <Link
-                href="/profile"
+                href="/dashboard"
                 className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"
               >
                 <svg
@@ -104,10 +123,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick, onMobileMenuToggle }) => 
           </div>
 
           {/* Mobile menu button */}
-          <button
-            className="md:hidden p-2"
-            onClick={onMobileMenuToggle}
-          >
+          <button className="md:hidden p-2" onClick={onMobileMenuToggle}>
             <svg
               className="h-6 w-6"
               fill="none"
