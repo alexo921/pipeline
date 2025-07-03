@@ -6,6 +6,7 @@ import "../../styles/brand.css";
 import AuthModal from "../AuthModal";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
+import BaseAuthModal from "../BaseAuthModal";
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -56,7 +57,11 @@ export default function BaseLayout({
       {showFooter && <Footer />}
       {/* Footer */}
 
-      <AuthModal
+      {/* <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      /> */}
+      <BaseAuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
       />
