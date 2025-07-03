@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { User, Mail, Briefcase, Award } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,16 +8,16 @@ import { SignupStep1Schema, signupStep1Schema } from "../schemas/AuthSchema";
 import { useRouter } from "next/navigation";
 
 interface SignupStep1Props {
-  onNext: (data: SignupStep1Schema) => void;
+  onNext: (data: SignupStep1Schema) => Promise<void> | void;
   error?: string | null;
 }
 
 const SignupStep1: React.FC<SignupStep1Props> = ({ onNext, error }) => {
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignupStep1Schema>({
     resolver: zodResolver(signupStep1Schema),
   });
@@ -25,12 +25,13 @@ const SignupStep1: React.FC<SignupStep1Props> = ({ onNext, error }) => {
   const router = useRouter();
 
   const onSubmit = async (data: SignupStep1Schema) => {
+    setLoading(true);
     try {
-      //   await new Promise((resolve) => setTimeout(resolve, 1000));
-      onNext(data);
-      localStorage.setItem("signup_step", "2");
+      await onNext(data); // Await this to make sure loader stays
     } catch (error) {
       console.error("Step 1 error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,6 +72,7 @@ const SignupStep1: React.FC<SignupStep1Props> = ({ onNext, error }) => {
             <div className="bg-[#2CB3BF] h-2 rounded-full w-2 transition-all duration-300"></div>
           </div>
         </div>
+
         {error && (
           <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-sm">
             {error}
@@ -105,7 +107,7 @@ const SignupStep1: React.FC<SignupStep1Props> = ({ onNext, error }) => {
                     : "border-gray-300 focus:ring-blue-500"
                 }`}
                 placeholder="Enter your full name"
-                disabled={isSubmitting}
+                disabled={loading}
               />
             </div>
             {errors.name && (
@@ -136,7 +138,7 @@ const SignupStep1: React.FC<SignupStep1Props> = ({ onNext, error }) => {
                     : "border-gray-300 focus:ring-blue-500"
                 }`}
                 placeholder="Enter your email address"
-                disabled={isSubmitting}
+                disabled={loading}
               />
             </div>
             {errors.email && (
@@ -167,7 +169,7 @@ const SignupStep1: React.FC<SignupStep1Props> = ({ onNext, error }) => {
                     ? "border-red-300 focus:ring-red-500"
                     : "border-gray-300 focus:ring-blue-500"
                 }`}
-                disabled={isSubmitting}
+                disabled={loading}
               >
                 <option value="">Select your healthcare role</option>
                 {healthcareRoles.map((role) => (
@@ -220,7 +222,7 @@ const SignupStep1: React.FC<SignupStep1Props> = ({ onNext, error }) => {
                     ? "border-red-300 focus:ring-red-500"
                     : "border-gray-300 focus:ring-blue-500"
                 }`}
-                disabled={isSubmitting}
+                disabled={loading}
               >
                 <option value="">Select certification status</option>
                 {certificationStatuses.map((status) => (
@@ -252,12 +254,13 @@ const SignupStep1: React.FC<SignupStep1Props> = ({ onNext, error }) => {
             )}
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={loading}
             className="w-full bg-[#2CB3BF] text-white hover:bg-[#269aa5] py-2 px-4 rounded-lg font-medium transition-all duration-200 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? (
+            {loading ? (
               <span className="flex items-center justify-center">
                 <svg
                   className="animate-spin -ml-1 mr-3 h-4 w-4 text-white"
@@ -272,12 +275,12 @@ const SignupStep1: React.FC<SignupStep1Props> = ({ onNext, error }) => {
                     r="10"
                     stroke="currentColor"
                     strokeWidth="4"
-                  ></circle>
+                  />
                   <path
                     className="opacity-75"
                     fill="currentColor"
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
+                  />
                 </svg>
                 Processing...
               </span>
@@ -293,7 +296,7 @@ const SignupStep1: React.FC<SignupStep1Props> = ({ onNext, error }) => {
             <button
               className="ml-1 text-blue-600 hover:text-blue-700 font-medium transition-colors"
               type="button"
-              disabled={isSubmitting}
+              disabled={loading}
               onClick={() => router.push("/jobs")}
             >
               Sign in
