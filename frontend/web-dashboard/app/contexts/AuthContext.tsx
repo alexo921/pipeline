@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       refreshUser, 
       logout,
       showLoginModal,
-      registerLoginModalTrigger
+      registerLoginModalTrigger 
     }}>
       {children}
     </AuthContext.Provider>
