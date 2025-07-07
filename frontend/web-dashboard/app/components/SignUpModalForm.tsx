@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../contexts/AuthContext";
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -29,6 +30,7 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
   onClose,
   openAuthModal,
 }) => {
+  const { setUser,refreshUser } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,10 +59,11 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
       if (!res.ok) {
         throw new Error(result.message || "Signup failed");
       }
-
+      setUser(result.user);
+      await refreshUser();
       reset();
       onClose();
-      router.push("/verify-email"); // Or redirect as needed
+      router.push("/jobs");
     } catch (error: any) {
       setSignupError(error.message || "Signup failed");
     } finally {

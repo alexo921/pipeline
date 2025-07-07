@@ -20,6 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const pathname = usePathname();
   const { user, logout } = useAuth();
   const router = useRouter();
+  console.log("Navbar rendered, user:", user);
 
   async function onLogoutClick() {
     await fetch("/api/auth/logout", {
