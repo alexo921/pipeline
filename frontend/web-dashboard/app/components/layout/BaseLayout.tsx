@@ -8,6 +8,7 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import BaseAuthModal from "../BaseAuthModal";
 import { useAuth } from "../../contexts/AuthContext";
+import SignUpModal from "../BaseSignUpModal";
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -29,6 +30,7 @@ export default function BaseLayout({
   useEffect(() => {
     registerLoginModalTrigger(() => setIsAuthModalOpen(true));
   }, [registerLoginModalTrigger]);
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
 
   const backgroundStyle = customBackground
     ? { background: customBackground }
@@ -89,6 +91,19 @@ export default function BaseLayout({
       <BaseAuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
+        openSignUpModal={() => {
+          setIsAuthModalOpen(false);
+          setIsSignUpModalOpen(true);
+        }}
+      />
+
+      <SignUpModal
+        isOpen={isSignUpModalOpen}
+        onClose={() => setIsSignUpModalOpen(false)}
+        openAuthModal={() => {
+          setIsSignUpModalOpen(false); // 👈 Close signup
+          setIsAuthModalOpen(true); // 👈 Open login
+        }}
       />
     </div>
   );

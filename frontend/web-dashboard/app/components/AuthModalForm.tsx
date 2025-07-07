@@ -1,25 +1,26 @@
-import React, { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { useAuth } from '../contexts/AuthContext';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useAuth } from "../contexts/AuthContext";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface BaseAuthModalFormProps {
-    onClose: () => void;
+  onClose: () => void;
+  openSignUpModal: () => void;
 }
 
 // Define the schema for form validation
 const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type LoginSchema = z.infer<typeof loginSchema>;
 
-const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose }) => {
+const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose,openSignUpModal }) => {
   const { refreshUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -85,7 +86,10 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose }) => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       {/* Email Field */}
       <div>
-        <label htmlFor="email" className="text-sm font-medium text-black mb-1 block">
+        <label
+          htmlFor="email"
+          className="text-sm font-medium text-black mb-1 block"
+        >
           Email address
         </label>
         <div className="relative">
@@ -96,12 +100,13 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose }) => {
           <input
             id="email"
             type="email"
-            {...register('email')}
+            {...register("email")}
             placeholder="Enter your email"
-            className={`w-full pl-10 pr-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent text-sm ${errors.email
-              ? 'border-red-300 focus:ring-red-500'
-              : 'border-gray-300 focus:ring-blue-500'
-              }`}
+            className={`w-full pl-10 pr-4 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent text-sm ${
+              errors.email
+                ? "border-red-300 focus:ring-red-500"
+                : "border-gray-300 focus:ring-blue-500"
+            }`}
             disabled={isLoading}
           />
         </div>
@@ -112,7 +117,10 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose }) => {
 
       {/* Password Field */}
       <div>
-        <label htmlFor="password" className="text-sm font-medium text-black mb-1 block">
+        <label
+          htmlFor="password"
+          className="text-sm font-medium text-black mb-1 block"
+        >
           Password
         </label>
         <div className="relative">
@@ -122,13 +130,14 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose }) => {
           />
           <input
             id="password"
-            type={showPassword ? 'text' : 'password'}
-            {...register('password')}
+            type={showPassword ? "text" : "password"}
+            {...register("password")}
             placeholder="Enter your password"
-            className={`w-full pl-10 pr-10 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent text-sm ${errors.password
-              ? 'border-red-300 focus:ring-red-500'
-              : 'border-gray-300 focus:ring-blue-500'
-              }`}
+            className={`w-full pl-10 pr-10 py-2.5 border rounded-xl focus:outline-none focus:ring-2 focus:border-transparent text-sm ${
+              errors.password
+                ? "border-red-300 focus:ring-red-500"
+                : "border-gray-300 focus:ring-blue-500"
+            }`}
             disabled={isLoading}
           />
           <button
@@ -172,7 +181,7 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose }) => {
         disabled={isLoading}
         className="w-full bg-[#2CB3BF] hover:bg-[#289ea8] text-white transition font-semibold py-2.5 rounded-xl shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isLoading ? 'Signing In...' : 'Sign In'}
+        {isLoading ? "Signing In..." : "Sign In"}
       </button>
 
       {loginError && (
@@ -195,10 +204,12 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose }) => {
           className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 rounded-xl hover:bg-gray-100 transition disabled:opacity-50"
         >
           <Image src="/google-logo.svg" alt="Google" width={20} height={20} />
-          <span className="text-sm text-black font-medium" onClick={() =>
-          (window.location.href =
-            "http://localhost:3001/api/auth/google")
-          }>
+          <span
+            className="text-sm text-black font-medium"
+            onClick={() =>
+              (window.location.href = "http://localhost:3001/api/auth/google")
+            }
+          >
             Sign in with Google
           </span>
         </button>
@@ -210,17 +221,23 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose }) => {
           className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 rounded-xl hover:bg-gray-100 transition disabled:opacity-50"
         >
           <Image src="/apple-logo.svg" alt="Apple" width={20} height={20} />
-          <span className="text-sm text-black font-medium">Sign in with Apple</span>
+          <span className="text-sm text-black font-medium">
+            Sign in with Apple
+          </span>
         </button>
       </div>
 
       {/* Account Prompt */}
       <div className="text-center">
         <p className="text-sm text-black">
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <button
             type="button"
             className="text-blue-600 font-medium hover:underline"
+            onClick={() => {
+              onClose(); // Close login modal
+              openSignUpModal(); // Open signup modal
+            }}
           >
             Sign Up
           </button>
