@@ -6,6 +6,9 @@ type User = {
   id: string;
   name: string;
   email: string;
+  postSignUpModalShown: boolean;
+  candidateId?: string;
+  role?: string;
 };
 
 type AuthContextType = {

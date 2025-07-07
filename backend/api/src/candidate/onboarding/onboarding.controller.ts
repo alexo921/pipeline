@@ -15,6 +15,7 @@ import { AvailabilityDetailsDto } from './dtos/availability-details.dto';
 import { SetPassword } from './dtos/set-password.dto';
 import { CandidateService } from '../candidate.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CompleteProfile } from './dtos/complete-profile.dto';
 
 function formatErrors(errors: ValidationError[]): string[] {
   return errors.flatMap((error) => Object.values(error.constraints || {}));
@@ -93,5 +94,11 @@ export class OnboardingController {
   @ApiOperation({ summary: 'Set user password' })
   setPassword(@Body() dto: SetPassword) {
     return this.onboardingService.setPassword(dto);
+  }
+
+  @Put('complete-profile')
+  @ApiOperation({summary:'Complete remaning profile'})
+  completeProfile(@Body() dto:CompleteProfile){
+    return this.onboardingService.createProile(dto);
   }
 }

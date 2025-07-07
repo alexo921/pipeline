@@ -14,6 +14,7 @@ import { SetPassword } from './dtos/set-password.dto';
 import * as bcrypt from 'bcryptjs';
 import { CandidateService } from '../candidate.service';
 import { JwtPayload } from 'src/auth/auth.service';
+import { CompleteProfile } from './dtos/complete-profile.dto';
 
 @Injectable()
 export class OnboardingService {
@@ -174,5 +175,23 @@ export class OnboardingService {
     return {
       message: 'Password set successfully and onboarding completed',
     };
+  }
+
+  async createProile(dto: CompleteProfile) {
+    const { email, ...rest } = dto;
+    const candidate = await this.candidateService.getCandidateByEmail(email);
+    if (!candidate) {
+      throw new BadRequestException(`Candidate with email ${email} not found`);
+    }
+    return this.prismaService.candidates.update({
+      where: { email },
+      data: {
+        healthcareRole: rest.healthcareRole,
+        preferredSetting: rest.preferredSetting,
+        workType: rest.workType,
+        postSignUpModalShown: true,
+        updatedAt: new Date(),
+      },
+    });
   }
 }

@@ -139,6 +139,7 @@ export class AuthService {
         email,
         userId: user.id,
         step: OnboardingStep.INITIAL_DETAILS,
+        postSignUpModalShown: false,
       },
     });
 
@@ -147,6 +148,7 @@ export class AuthService {
       email: user.email,
       role: user.role,
       candidateId: candidate.id,
+      postSignUpModalShown: candidate.postSignUpModalShown,
     };
 
     const token = this.jwtService.sign(payload);
@@ -160,18 +162,20 @@ export class AuthService {
   async loginUser(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
-    if (!email || !password) throw new BadRequestException('Email and password are required');
+    if (!email || !password)
+      throw new BadRequestException('Email and password are required');
 
-    const user = (await this.prismaService.users.findUnique({
+    const user = await this.prismaService.users.findUnique({
       where: { email },
       include: {
         candidate: {
           select: {
+            postSignUpModalShown: true,
             id: true,
           },
         },
       },
-    }));
+    });
 
     if (!user) throw new UnauthorizedException('Invalid credentials');
     const isMatch = await bcrypt.compare(password, user.password);
@@ -183,13 +187,22 @@ export class AuthService {
       email: user.email,
       role: user.role,
       candidateId: user.candidate?.id || null,
+      postSignUpModalShown: user.candidate?.postSignUpModalShown ?? false,
     };
     const token = this.jwtService.sign(payload);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...result } = user;
 
-    return { token, result };
+    // return { token, result };
+    return {
+      token,
+      user: {
+        ...result,
+        candidateId: user.candidate?.id || null,
+        postSignUpModalShown: user.candidate?.postSignUpModalShown || false, // ✅ ADD THIS
+      },
+    };
   }
 
   async forgotPass(forgotPass: ForgotPassDto) {
@@ -198,7 +211,7 @@ export class AuthService {
     if (!email) {
       throw new BadRequestException('Email is required');
     }
-    
+
     const isUser = await this.prismaService.users.findUnique({
       where: { email },
     });
@@ -278,14 +291,29 @@ export class AuthService {
     return { message: 'Password changed successfully' };
   }
 
-  async getProfile(id: string): Promise<Partial<users>> {
-    const user = await this.prismaService.users.findUnique({ where: { id } });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+  async getProfile(userId: string) {
+    const user = await this.prismaService.users.findUnique({
+      where: { id: userId },
+      include: {
+        candidate: {
+          select: {
+            id: true,
+            postSignUpModalShown: true,
+          },
+        },
+      },
+    });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...result } = user;
-    return result;
+    if (!user) throw new Error('User not found');
+
+    const { password, ...rest } = user;
+
+    return {
+      data: {
+        ...rest,
+        candidateId: user.candidate?.id || null,
+        postSignUpModalShown: user.candidate?.postSignUpModalShown ?? false,
+      },
+    };
   }
 }
