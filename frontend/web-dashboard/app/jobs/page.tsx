@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import JobModal from '../components/JobModal';
-import { Job, Tag, TagType } from '../types/job';
-import { Search, MapPin, Filter, ChevronDown, X } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { env } from 'process';
+import { useState, useEffect } from "react";
+import JobModal from "../components/JobModal";
+import { Job, Tag, TagType } from "../types/job";
+import { Search, MapPin, Filter, ChevronDown, X } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { env } from "process";
+import BasePostSignUpStepModal from "../components/BasePostSignUpStepModal";
 
 // Load job data from JSON files
 const loadJobData = async (): Promise<Job[]> => {
@@ -54,7 +55,7 @@ const loadJobData = async (): Promise<Job[]> => {
     return uniqueJobs;
     
   } catch (error) {
-    console.error('Error loading job data:', error);
+    console.error("Error loading job data:", error);
     return [];
   }
 };
@@ -81,83 +82,115 @@ const transformJobData = (rawJobs: Record<string, unknown>[]): Job[] => {
       // Generate tags for BrightStar format
       tags = generateTags(title, description, job.category as string);
     }
-    
+
     return {
       id: (job.id as string) || `job_${index + 1}`,
       title,
-      company: (job.company as string) || 'Unknown Company',
-      location: (job.location as string) || 'Unknown Location',
-      salary,
+      company: (job.company as string) || "Unknown Company",
+      location: (job.location as string) || "Unknown Location",
+      salary: (job.salary_range as string) || "Salary not specified",
       url,
-      overview: (job.overview as string) || 'Community Focused. Care Driven.',
+      overview: (job.overview as string) || "Community Focused. Care Driven.",
       description,
       requirements: (job.requirements as string[] | string) || [],
-      tags
+      tags: generateTags(title, description, job.category as string),
     };
   });
 };
 
 // Generate tags for a job based on title, description, and category
-const generateTags = (title: string, description: string, category?: string): Tag[] => {
+const generateTags = (
+  title: string,
+  description: string,
+  category?: string
+): Tag[] => {
   const tags: Tag[] = [];
-  
+
   // Category tag
   const jobCategory = getJobCategory(title, category);
-  tags.push({ id: Date.now() + 1, label: jobCategory, type: 'category' });
-  
+  tags.push({ id: Date.now() + 1, label: jobCategory, type: "category" });
+
   // Employment type tag
   const employmentType = getEmploymentType(title, description);
-  tags.push({ id: Date.now() + 2, label: employmentType, type: 'employment' });
-  
+  tags.push({ id: Date.now() + 2, label: employmentType, type: "employment" });
+
   // Experience level tag
   const experienceLevel = getExperienceLevel(title, description);
-  tags.push({ id: Date.now() + 3, label: experienceLevel, type: 'experience' });
-  
+  tags.push({ id: Date.now() + 3, label: experienceLevel, type: "experience" });
+
   return tags;
 };
 
 const getJobCategory = (title: string, category?: string): string => {
   if (category) return category;
-  
+
   const titleLower = title.toLowerCase();
-  if (titleLower.includes('nurse') || titleLower.includes('rn') || titleLower.includes('lpn')) {
-    return 'Nursing';
-  } else if (titleLower.includes('caregiver') || titleLower.includes('care') || titleLower.includes('home health')) {
-    return 'Caregiving';
-  } else if (titleLower.includes('therapist') || titleLower.includes('therapy')) {
-    return 'Therapy';
-  } else if (titleLower.includes('manager') || titleLower.includes('supervisor')) {
-    return 'Management';
-  } else if (titleLower.includes('coordinator') || titleLower.includes('specialist')) {
-    return 'Coordination';
+  if (
+    titleLower.includes("nurse") ||
+    titleLower.includes("rn") ||
+    titleLower.includes("lpn")
+  ) {
+    return "Nursing";
+  } else if (
+    titleLower.includes("caregiver") ||
+    titleLower.includes("care") ||
+    titleLower.includes("home health")
+  ) {
+    return "Caregiving";
+  } else if (
+    titleLower.includes("therapist") ||
+    titleLower.includes("therapy")
+  ) {
+    return "Therapy";
+  } else if (
+    titleLower.includes("manager") ||
+    titleLower.includes("supervisor")
+  ) {
+    return "Management";
+  } else if (
+    titleLower.includes("coordinator") ||
+    titleLower.includes("specialist")
+  ) {
+    return "Coordination";
   } else {
-    return 'Healthcare';
+    return "Healthcare";
   }
 };
 
 const getEmploymentType = (title: string, description: string): string => {
-  const text = (title + ' ' + description).toLowerCase();
-  if (text.includes('part-time') || text.includes('part time')) {
-    return 'Part-Time';
-  } else if (text.includes('per diem') || text.includes('per diem')) {
-    return 'Per Diem';
-  } else if (text.includes('contract') || text.includes('temporary')) {
-    return 'Contract';
+  const text = (title + " " + description).toLowerCase();
+  if (text.includes("part-time") || text.includes("part time")) {
+    return "Part-Time";
+  } else if (text.includes("per diem") || text.includes("per diem")) {
+    return "Per Diem";
+  } else if (text.includes("contract") || text.includes("temporary")) {
+    return "Contract";
   } else {
-    return 'Full-Time';
+    return "Full-Time";
   }
 };
 
 const getExperienceLevel = (title: string, description: string): string => {
-  const text = (title + ' ' + description).toLowerCase();
-  if (text.includes('senior') || text.includes('lead') || text.includes('manager')) {
-    return 'Senior';
-  } else if (text.includes('entry') || text.includes('new grad') || text.includes('recent graduate')) {
-    return 'Entry Level';
-  } else if (text.includes('experienced') || text.includes('years experience')) {
-    return 'Experienced';
+  const text = (title + " " + description).toLowerCase();
+  if (
+    text.includes("senior") ||
+    text.includes("lead") ||
+    text.includes("manager")
+  ) {
+    return "Senior";
+  } else if (
+    text.includes("entry") ||
+    text.includes("new grad") ||
+    text.includes("recent graduate")
+  ) {
+    return "Entry Level";
+  } else if (
+    text.includes("experienced") ||
+    text.includes("years experience")
+  ) {
+    return "Experienced";
   } else {
-    return 'Mid Level';
+    return "Mid Level";
   }
 };
 
@@ -166,14 +199,15 @@ export default function JobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('All Locations');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("All Locations");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
-  const [locationSearch, setLocationSearch] = useState('');
+  const [locationSearch, setLocationSearch] = useState("");
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Tag[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { user, showLoginModal } = useAuth();
+  const [showPostSignupModal, setShowPostSignupModal] = useState(false);
 
   const jobsPerPage = 18; // Show 18 jobs per page maximum
 
@@ -186,7 +220,7 @@ export default function JobsPage() {
         setFilteredJobs(jobData);
         setCurrentPage(1); // Reset to first page when data loads
       } catch (err) {
-        console.error('Failed to load jobs:', err);
+        console.error("Failed to load jobs:", err);
       } finally {
         setLoading(false);
       }
@@ -202,45 +236,81 @@ export default function JobsPage() {
     };
 
     handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    console.log("Loaded user:", user);
+    if (user?.data?.postSignUpModalShown === false) {
+      console.log("Setting modal to show");
+      setShowPostSignupModal(true);
+    }
+  }, [user]);
 
   // Available filter options - dynamically generated from loaded data
   const filterOptions = {
-    categories: Array.from(new Set(jobs.flatMap(job => job.tags.filter(tag => tag.type === 'category').map(tag => tag.label)))),
-    employment: Array.from(new Set(jobs.flatMap(job => job.tags.filter(tag => tag.type === 'employment').map(tag => tag.label)))),
-    experience: Array.from(new Set(jobs.flatMap(job => job.tags.filter(tag => tag.type === 'experience').map(tag => tag.label))))
+    categories: Array.from(
+      new Set(
+        jobs.flatMap((job) =>
+          job.tags
+            .filter((tag) => tag.type === "category")
+            .map((tag) => tag.label)
+        )
+      )
+    ),
+    employment: Array.from(
+      new Set(
+        jobs.flatMap((job) =>
+          job.tags
+            .filter((tag) => tag.type === "employment")
+            .map((tag) => tag.label)
+        )
+      )
+    ),
+    experience: Array.from(
+      new Set(
+        jobs.flatMap((job) =>
+          job.tags
+            .filter((tag) => tag.type === "experience")
+            .map((tag) => tag.label)
+        )
+      )
+    ),
   };
 
   // Available locations - dynamically generated from loaded data
   const allLocations = [
     "All Locations",
-    ...Array.from(new Set(jobs.map(job => job.location))).sort()
+    ...Array.from(new Set(jobs.map((job) => job.location))).sort(),
   ];
 
   // Filtered locations based on search
-  const filteredLocations = allLocations.filter(location => 
+  const filteredLocations = allLocations.filter((location) =>
     location.toLowerCase().includes(locationSearch.toLowerCase())
   );
 
   // Filter jobs based on search, location, and active filters
   useEffect(() => {
-    const filtered = jobs.filter(job => {
-      const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           job.location.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesLocation = selectedLocation === 'All Locations' || job.location === selectedLocation;
-      
-      const matchesFilters = activeFilters.length === 0 || 
-                            activeFilters.some(filter => 
-                              job.tags.some(tag => tag.label === filter.label)
-                            );
-      
+    const filtered = jobs.filter((job) => {
+      const matchesSearch =
+        job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.location.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesLocation =
+        selectedLocation === "All Locations" ||
+        job.location === selectedLocation;
+
+      const matchesFilters =
+        activeFilters.length === 0 ||
+        activeFilters.some((filter) =>
+          job.tags.some((tag) => tag.label === filter.label)
+        );
+
       return matchesSearch && matchesLocation && matchesFilters;
     });
-    
+
     setFilteredJobs(filtered);
     setCurrentPage(1); // Reset to first page when filters change
   }, [jobs, searchTerm, selectedLocation, activeFilters]);
@@ -273,25 +343,25 @@ export default function JobsPage() {
       setSelectedLocation(location);
     }
     setIsLocationOpen(false);
-    setLocationSearch(''); // Clear search when location is selected
+    setLocationSearch(""); // Clear search when location is selected
   };
 
   const handleFilterToggle = (filter: { label: string; type: TagType }) => {
-    const newFilter: Tag = { 
-      id: Date.now() + Math.random(), 
-      label: filter.label, 
-      type: filter.type 
+    const newFilter: Tag = {
+      id: Date.now() + Math.random(),
+      label: filter.label,
+      type: filter.type,
     };
-    
-    setActiveFilters(prev => 
-      prev.some(f => f.label === filter.label)
-        ? prev.filter(f => f.label !== filter.label)
+
+    setActiveFilters((prev) =>
+      prev.some((f) => f.label === filter.label)
+        ? prev.filter((f) => f.label !== filter.label)
         : [...prev, newFilter]
     );
   };
 
   const removeFilter = (filter: Tag) => {
-    setActiveFilters(prev => prev.filter(f => f.label !== filter.label));
+    setActiveFilters((prev) => prev.filter((f) => f.label !== filter.label));
   };
 
   const handleJobClick = (job: Job) => {
@@ -299,7 +369,7 @@ export default function JobsPage() {
   };
 
   const handleContainerClick = () => {
-        // Only close the modal if no job is selected
+    // Only close the modal if no job is selected
     if (!selectedJob) {
       setSelectedJob(null);
     }
@@ -316,10 +386,10 @@ export default function JobsPage() {
   };
 
   const getTagColor = (label: string) => {
-    if (filterOptions.categories.includes(label)) return 'bg-[#C9C7FB]';
-    if (filterOptions.employment.includes(label)) return 'bg-[#8AADFC]';
-    if (filterOptions.experience.includes(label)) return 'bg-[#FBDFF1]';
-    return 'bg-gray-200';
+    if (filterOptions.categories.includes(label)) return "bg-[#C9C7FB]";
+    if (filterOptions.employment.includes(label)) return "bg-[#8AADFC]";
+    if (filterOptions.experience.includes(label)) return "bg-[#FBDFF1]";
+    return "bg-gray-200";
   };
 
   const handleApply = async () => {
@@ -383,37 +453,40 @@ export default function JobsPage() {
   }
 
   // Generate pagination numbers with ellipsis for large page counts
-  const generatePaginationNumbers = (current: number, total: number): (number | string)[] => {
+  const generatePaginationNumbers = (
+    current: number,
+    total: number
+  ): (number | string)[] => {
     const numbers: (number | string)[] = [];
     const maxVisible = 5;
-    
+
     if (total <= maxVisible) {
       for (let i = 1; i <= total; i++) {
         numbers.push(i);
       }
     } else {
       numbers.push(1);
-      
+
       if (current > 3) {
-        numbers.push('...');
+        numbers.push("...");
       }
-      
+
       const start = Math.max(2, current - 1);
       const end = Math.min(total - 1, current + 1);
-      
+
       for (let i = start; i <= end; i++) {
         if (i !== 1 && i !== total) {
           numbers.push(i);
         }
       }
-      
+
       if (current < total - 2) {
-        numbers.push('...');
+        numbers.push("...");
       }
-      
+
       numbers.push(total);
     }
-    
+
     return numbers;
   };
 
@@ -459,7 +532,10 @@ export default function JobsPage() {
             {/* Search Input */}
             <div className="flex-1 relative">
               <div className="flex items-center bg-white rounded-full px-4 lg:px-6 py-3 lg:py-3 shadow-sm">
-                <Search className="w-5 h-5 lg:w-6 lg:h-6 text-[#7691A4] mr-3 flex-shrink-0" strokeWidth={2} />
+                <Search
+                  className="w-5 h-5 lg:w-6 lg:h-6 text-[#7691A4] mr-3 flex-shrink-0"
+                  strokeWidth={2}
+                />
                 <input
                   type="text"
                   placeholder="Search jobs..."
@@ -477,14 +553,22 @@ export default function JobsPage() {
                 className="flex items-center bg-white rounded-full px-4 lg:px-6 py-3 lg:py-3 shadow-sm w-full lg:min-w-[180px] justify-between"
               >
                 <div className="flex items-center min-w-0 flex-1">
-                  <MapPin className="w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] mr-2 flex-shrink-0" strokeWidth={2} />
+                  <MapPin
+                    className="w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] mr-2 flex-shrink-0"
+                    strokeWidth={2}
+                  />
                   <span className="text-base lg:text-[20px] font-bold text-[#7691A4] font-avenir truncate">
-                    {selectedLocation === 'All Locations' ? 'Location' : selectedLocation.split(',')[0]}
+                    {selectedLocation === "All Locations"
+                      ? "Location"
+                      : selectedLocation.split(",")[0]}
                   </span>
                 </div>
-                <ChevronDown className={`w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] transition-transform flex-shrink-0 ml-1 ${isLocationOpen ? 'rotate-180' : 'rotate-90'}`} strokeWidth={2} />
+                <ChevronDown
+                  className={`w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] transition-transform flex-shrink-0 ml-1 ${isLocationOpen ? "rotate-180" : "rotate-90"}`}
+                  strokeWidth={2}
+                />
               </button>
-              
+
               {isLocationOpen && (
                 <div className="absolute top-full mt-2 left-0 bg-white rounded-2xl shadow-lg border border-gray-200 min-w-[250px] z-10">
                   {/* Search input */}
@@ -498,7 +582,7 @@ export default function JobsPage() {
                       onClick={(e) => e.stopPropagation()}
                     />
                   </div>
-                  
+
                   {/* Location list */}
                   <div className="max-h-48 overflow-y-auto">
                     {filteredLocations.length > 0 ? (
@@ -507,7 +591,9 @@ export default function JobsPage() {
                           key={location}
                           onClick={() => handleLocationChange(location)}
                           className={`w-full text-left px-4 py-3 hover:bg-gray-50 first:rounded-t-2xl last:rounded-b-2xl font-avenir ${
-                            selectedLocation === location ? 'bg-blue-50 text-[#2466D0] font-bold' : 'text-[#7691A4]'
+                            selectedLocation === location
+                              ? "bg-blue-50 text-[#2466D0] font-bold"
+                              : "text-[#7691A4]"
                           }`}
                         >
                           {location}
@@ -530,63 +616,103 @@ export default function JobsPage() {
                 className="flex items-center bg-white rounded-full px-4 lg:px-6 py-3 lg:py-3 shadow-sm w-full lg:min-w-[160px] justify-between"
               >
                 <div className="flex items-center min-w-0 flex-1">
-                  <Filter className="w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] mr-2 flex-shrink-0" strokeWidth={2} />
+                  <Filter
+                    className="w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] mr-2 flex-shrink-0"
+                    strokeWidth={2}
+                  />
                   <span className="text-base lg:text-[20px] font-bold text-[#7691A4] font-avenir">
-                    Filters {activeFilters.length > 0 && `(${activeFilters.length})`}
+                    Filters{" "}
+                    {activeFilters.length > 0 && `(${activeFilters.length})`}
                   </span>
                 </div>
-                <ChevronDown className={`w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] transition-transform flex-shrink-0 ml-1 ${isFiltersOpen ? 'rotate-180' : 'rotate-90'}`} strokeWidth={2} />
+                <ChevronDown
+                  className={`w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] transition-transform flex-shrink-0 ml-1 ${isFiltersOpen ? "rotate-180" : "rotate-90"}`}
+                  strokeWidth={2}
+                />
               </button>
-              
+
               {isFiltersOpen && (
                 <div className="absolute top-full mt-2 right-0 bg-white rounded-2xl shadow-lg border border-gray-200 min-w-[250px] z-10 p-4">
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Category</h4>
+                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">
+                        Category
+                      </h4>
                       <div className="space-y-2">
                         {filterOptions.categories.map((category) => (
                           <label key={category} className="flex items-center">
                             <input
                               type="checkbox"
-                              checked={activeFilters.some(f => f.label === category)}
-                              onChange={() => handleFilterToggle({ label: category, type: "category" as TagType })}
+                              checked={activeFilters.some(
+                                (f) => f.label === category
+                              )}
+                              onChange={() =>
+                                handleFilterToggle({
+                                  label: category,
+                                  type: "category" as TagType,
+                                })
+                              }
                               className="mr-2 accent-[#2466D0]"
                             />
-                            <span className="text-[#7691A4] font-avenir">{category}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Employment Type</h4>
-                      <div className="space-y-2">
-                        {filterOptions.employment.map((type) => (
-                          <label key={type} className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={activeFilters.some(f => f.label === type)}
-                              onChange={() => handleFilterToggle({ label: type, type: "employment" as TagType })}
-                              className="mr-2 accent-[#2466D0]"
-                            />
-                            <span className="text-[#7691A4] font-avenir">{type}</span>
+                            <span className="text-[#7691A4] font-avenir">
+                              {category}
+                            </span>
                           </label>
                         ))}
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Experience Level</h4>
+                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">
+                        Employment Type
+                      </h4>
+                      <div className="space-y-2">
+                        {filterOptions.employment.map((type) => (
+                          <label key={type} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={activeFilters.some(
+                                (f) => f.label === type
+                              )}
+                              onChange={() =>
+                                handleFilterToggle({
+                                  label: type,
+                                  type: "employment" as TagType,
+                                })
+                              }
+                              className="mr-2 accent-[#2466D0]"
+                            />
+                            <span className="text-[#7691A4] font-avenir">
+                              {type}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">
+                        Experience Level
+                      </h4>
                       <div className="space-y-2">
                         {filterOptions.experience.map((level) => (
                           <label key={level} className="flex items-center">
                             <input
                               type="checkbox"
-                              checked={activeFilters.some(f => f.label === level)}
-                              onChange={() => handleFilterToggle({ label: level, type: "experience" as TagType })}
+                              checked={activeFilters.some(
+                                (f) => f.label === level
+                              )}
+                              onChange={() =>
+                                handleFilterToggle({
+                                  label: level,
+                                  type: "experience" as TagType,
+                                })
+                              }
                               className="mr-2 accent-[#2466D0]"
                             />
-                            <span className="text-[#7691A4] font-avenir">{level}</span>
+                            <span className="text-[#7691A4] font-avenir">
+                              {level}
+                            </span>
                           </label>
                         ))}
                       </div>
@@ -601,7 +727,10 @@ export default function JobsPage() {
           {activeFilters.length > 0 && (
             <div className="flex gap-3 mb-6 flex-wrap">
               {activeFilters.map((filter) => (
-                <div key={filter.label} className={`flex items-center ${getTagColor(filter.label)} rounded-full px-4 py-2`}>
+                <div
+                  key={filter.label}
+                  className={`flex items-center ${getTagColor(filter.label)} rounded-full px-4 py-2`}
+                >
                   <button
                     onClick={() => removeFilter(filter)}
                     className="w-6 h-6 bg-[#01253F] rounded-full mr-2 flex items-center justify-center cursor-pointer hover:bg-[#012a4a] transition-colors"
@@ -630,7 +759,7 @@ export default function JobsPage() {
               <div className="space-y-4">
                 {currentJobs.length > 0 ? (
                   currentJobs.map((job) => (
-                    <div 
+                    <div
                       key={job.id}
                       onClick={(e) => {
                         e.preventDefault();
@@ -641,8 +770,8 @@ export default function JobsPage() {
                         selectedJob?.id === job.id ? 'ring-2 ring-[#2466D0]' : ''
                       }`}
                       style={{
-                        minHeight: '140px',
-                        height: 'auto'
+                        minHeight: "140px",
+                        height: "auto",
                       }}
                     >
                       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start h-full">
@@ -678,7 +807,9 @@ export default function JobsPage() {
                   ))
                 ) : (
                   <div className="text-center py-12">
-                    <p className="text-lg lg:text-[20px] text-[#7691A4] font-avenir">No jobs match your current filters.</p>
+                    <p className="text-lg lg:text-[20px] text-[#7691A4] font-avenir">
+                      No jobs match your current filters.
+                    </p>
                   </div>
                 )}
               
@@ -703,16 +834,22 @@ export default function JobsPage() {
                   <div className="p-8 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex-1 min-w-0 pr-4">
-                        <h2 className="text-[26px] font-black leading-[130%] text-[#2466D0] mb-3 font-avenir break-all whitespace-pre-wrap max-w-full" style={{wordBreak: 'break-word'}}>
+                        <h2
+                          className="text-[26px] font-black leading-[130%] text-[#2466D0] mb-3 font-avenir break-all whitespace-pre-wrap max-w-full"
+                          style={{ wordBreak: "break-word" }}
+                        >
                           {selectedJob.title}
                         </h2>
-                        <div className="text-[16px] leading-[140%] text-[#01253F] font-avenir break-all whitespace-pre-wrap max-w-full" style={{wordBreak: 'break-word'}}>
+                        <div
+                          className="text-[16px] leading-[140%] text-[#01253F] font-avenir break-all whitespace-pre-wrap max-w-full"
+                          style={{ wordBreak: "break-word" }}
+                        >
                           <p className="font-bold">{selectedJob.company}</p>
                           <p>{selectedJob.location}</p>
                           <p>{selectedJob.salary}</p>
                         </div>
                       </div>
-                      <button 
+                      <button
                         onClick={handleApply}
                         className="bg-[#2CB3BF] text-white font-black text-[20px] py-3 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
                       >
@@ -742,8 +879,8 @@ export default function JobsPage() {
                   <div className="border-t-2 border-[#8AADFC] mx-8"></div>
 
                   {/* Content - Scrollable */}
-                  <div 
-                    className="flex-1 p-8 overflow-y-auto overflow-x-hidden" 
+                  <div
+                    className="flex-1 p-8 overflow-y-auto overflow-x-hidden"
                     style={{
                       minHeight: '400px',
                       maxHeight: 'calc(90vh - 250px)',
@@ -763,29 +900,44 @@ export default function JobsPage() {
 
                       {/* Job Description */}
                       {selectedJob.description && (
-                        <div className="mb-6" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
+                        <div
+                          className="mb-6"
+                          style={{
+                            maxWidth: "100%",
+                            overflowWrap: "break-word",
+                          }}
+                        >
                           <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir break-all">
                             Job Description
                           </h3>
-                          <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir break-words overflow-hidden whitespace-normal" style={{ 
-                            wordBreak: 'break-word', 
-                            maxWidth: '100%',
-                            overflowWrap: 'break-word',
-                            whiteSpace: 'pre-wrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis'
-                          }}>
+                          <div
+                            className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir break-words overflow-hidden whitespace-normal"
+                            style={{
+                              wordBreak: "break-word",
+                              maxWidth: "100%",
+                              overflowWrap: "break-word",
+                              whiteSpace: "pre-wrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
                             {selectedJob.description
-                              .replace(/Skip to content/g, '')
-                              .replace(/Back to search/g, '')
-                              .replace(/EASY APPLY.*?Apply Now/g, '')}
+                              .replace(/Skip to content/g, "")
+                              .replace(/Back to search/g, "")
+                              .replace(/EASY APPLY.*?Apply Now/g, "")}
                           </div>
                         </div>
                       )}
 
                       {/* Requirements */}
                       {selectedJob.requirements && (
-                        <div className="mb-6" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
+                        <div
+                          className="mb-6"
+                          style={{
+                            maxWidth: "100%",
+                            overflowWrap: "break-word",
+                          }}
+                        >
                           <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir break-all">
                             Requirements
                           </h3>
@@ -793,11 +945,22 @@ export default function JobsPage() {
                             {Array.isArray(selectedJob.requirements) ? (
                               <ul className="list-disc pl-5 space-y-2">
                                 {selectedJob.requirements.map((req, index) => (
-                                  <li key={index} className="break-all whitespace-pre-wrap max-w-full" style={{wordBreak: 'break-word'}}>{req}</li>
+                                  <li
+                                    key={index}
+                                    className="break-all whitespace-pre-wrap max-w-full"
+                                    style={{ wordBreak: "break-word" }}
+                                  >
+                                    {req}
+                                  </li>
                                 ))}
                               </ul>
                             ) : (
-                              <p className="break-all whitespace-pre-wrap max-w-full" style={{wordBreak: 'break-word'}}>{selectedJob.requirements}</p>
+                              <p
+                                className="break-all whitespace-pre-wrap max-w-full"
+                                style={{ wordBreak: "break-word" }}
+                              >
+                                {selectedJob.requirements}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -927,13 +1090,13 @@ export default function JobsPage() {
             height: min(1000px, 90vh) !important;
             max-height: 90vh !important;
           }
-          
+
           .job-listings {
             flex: 1 1 45%;
             min-width: 0;
           }
         }
-        
+
         /* Responsive adjustments for different screen sizes */
         @media (min-width: 1024px) and (max-width: 1279px) {
           .job-details-panel {
@@ -945,12 +1108,12 @@ export default function JobsPage() {
             height: min(1000px, 90vh) !important;
             max-height: 90vh !important;
           }
-          
+
           .job-listings {
             flex: 1 1 45%;
           }
         }
-        
+
         @media (min-width: 1280px) and (max-width: 1535px) {
           .job-details-panel {
             flex: 1 1 55%;
@@ -961,12 +1124,12 @@ export default function JobsPage() {
             height: min(1000px, 90vh) !important;
             max-height: 90vh !important;
           }
-          
+
           .job-listings {
             flex: 1 1 45%;
           }
         }
-        
+
         @media (min-width: 1536px) {
           .job-details-panel {
             flex: 1 1 55%;
@@ -977,12 +1140,24 @@ export default function JobsPage() {
             height: min(1000px, 90vh) !important;
             max-height: 90vh !important;
           }
-          
+
           .job-listings {
             flex: 1 1 45%;
           }
         }
       `}</style>
+
+      {showPostSignupModal && user?.data.email && (
+        // console.log("email is there",user?.data.email);
+
+        <BasePostSignUpStepModal
+          isOpen={showPostSignupModal}
+          onClose={() => setShowPostSignupModal(false)}
+          openAuthModal={() => {}}
+          onComplete={() => setShowPostSignupModal(false)}
+          email={user.data.email}
+        />
+      )}
     </div>
   );
-} 
+}

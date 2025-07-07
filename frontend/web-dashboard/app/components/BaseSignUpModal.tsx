@@ -1,18 +1,18 @@
 import React from "react";
 import { X } from "lucide-react";
-import AuthModalForm from "./AuthModalForm";
 import Image from "next/image";
+import SignUpModalForm from "./SignUpModalForm";
 
-interface BaseAuthModalProps {
+interface SignUpModalProps {
   isOpen: boolean;
   onClose: () => void;
-  openSignUpModal: () => void;
+  openAuthModal: () => void;
 }
 
-const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
+const SignUpModal: React.FC<SignUpModalProps> = ({
   isOpen,
   onClose,
-  openSignUpModal,
+  openAuthModal,
 }) => {
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -28,21 +28,21 @@ const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
       onClick={handleOverlayClick}
     >
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl mx-4 overflow-hidden relative">
-        {/* Close button */}
+        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-black bg-gray-200 p-1 rounded-full transition-colors z-10"
         >
           <X size={20} />
         </button>
+
         <div className="py-8 lg:pb-14 lg:pt-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl text-center font-bold text-blue-600 mb-5 sm:mb-7 lg:mb-10">
-            Welcome Back!
+            Create an Account
           </h2>
           <div className="flex items-center justify-between px-8 lg:px-10">
-            {/* Left Section (Image + Illustration) */}
+            {/* Left Illustration */}
             <div className="w-1/2 relative hidden md:flex items-center justify-center mr-8 lg:mr-10">
-              {/* Gradient Circle */}
               <Image
                 src="/circle.svg"
                 alt="Circle background"
@@ -50,7 +50,6 @@ const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
                 height={300}
                 className="absolute object-contain"
               />
-              {/* Nurse Illustration */}
               <Image
                 src="/nurse.svg"
                 alt="Nurse illustration"
@@ -60,11 +59,11 @@ const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
               />
             </div>
 
-            {/* Right Section (Form) */}
+            {/* Right Form */}
             <div className="w-full md:w-1/2">
-              <AuthModalForm
+              <SignUpModalForm
                 onClose={onClose}
-                openSignUpModal={openSignUpModal}
+                openAuthModal={openAuthModal}
               />
             </div>
           </div>
@@ -74,4 +73,4 @@ const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
   );
 };
 
-export default BaseAuthModal;
+export default SignUpModal;

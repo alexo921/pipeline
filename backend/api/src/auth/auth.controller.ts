@@ -33,8 +33,23 @@ export class AuthController {
 
   @Post('signup')
   @ApiOperation({ summary: 'Register a new user' })
-  signup(@Body() signUpDto: SignUpDto) {
-    return this.authService.create(signUpDto);
+  async signup(
+    @Body() signUpDto: SignUpDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const response = await this.authService.signup(signUpDto);
+
+    res.cookie('access_token', response.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24,
+    });
+
+    return {
+      message: 'User registered successfully',
+      user: response.result,
+    };
   }
 
   @Post('login')
@@ -52,7 +67,7 @@ export class AuthController {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
     });
 
-    return { token: response.token, user: response.result };
+    return { token: response.token, user: response.user };
   }
 
   @Post('logout')
