@@ -167,9 +167,8 @@ export default function JobsPage() {
   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('All Locations');
-  const [isLocationOpen, setIsLocationOpen] = useState(false);
-  const [locationSearch, setLocationSearch] = useState('');
+  const [locationInput, setLocationInput] = useState(''); // Changed from selectedLocation
+  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false); // Changed from isLocationOpen
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Tag[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -214,15 +213,13 @@ export default function JobsPage() {
   };
 
   // Available locations - dynamically generated from loaded data
-  const allLocations = [
-    "All Locations",
-    ...Array.from(new Set(jobs.map(job => job.location))).sort()
-  ];
+  const allLocations = Array.from(new Set(jobs.map(job => job.location))).sort();
 
-  // Filtered locations based on search
-  const filteredLocations = allLocations.filter(location => 
-    location.toLowerCase().includes(locationSearch.toLowerCase())
-  );
+  // Filtered location suggestions based on input
+  const locationSuggestions = allLocations.filter(location => 
+    location.toLowerCase().includes(locationInput.toLowerCase()) && 
+    location.toLowerCase() !== locationInput.toLowerCase() // Don't show exact matches
+  ).slice(0, 5); // Limit to 5 suggestions
 
   // Filter jobs based on search, location, and active filters
   useEffect(() => {
@@ -231,7 +228,9 @@ export default function JobsPage() {
                            job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            job.location.toLowerCase().includes(searchTerm.toLowerCase());
       
-      const matchesLocation = selectedLocation === 'All Locations' || job.location === selectedLocation;
+      // Show all jobs when no location is entered, otherwise filter by location
+      const matchesLocation = locationInput === '' || 
+                             job.location.toLowerCase().includes(locationInput.toLowerCase());
       
       const matchesFilters = activeFilters.length === 0 || 
                             activeFilters.some(filter => 
@@ -243,7 +242,7 @@ export default function JobsPage() {
     
     setFilteredJobs(filtered);
     setCurrentPage(1); // Reset to first page when filters change
-  }, [jobs, searchTerm, selectedLocation, activeFilters]);
+  }, [jobs, searchTerm, locationInput, activeFilters]);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
@@ -255,26 +254,39 @@ export default function JobsPage() {
     setSearchTerm(term);
   };
 
-  const handleLocationToggle = () => {
-    setIsLocationOpen(!isLocationOpen);
+  const handleLocationInputChange = (value: string) => {
+    setLocationInput(value);
+    // Update suggestions based on the new value
+    const newSuggestions = allLocations.filter(location => 
+      location.toLowerCase().includes(value.toLowerCase()) && 
+      location.toLowerCase() !== value.toLowerCase()
+    ).slice(0, 5);
+    setShowLocationSuggestions(value.length > 0 && newSuggestions.length > 0);
     setIsFiltersOpen(false); // Close filters dropdown
+  };
+
+  const handleLocationSuggestionClick = (location: string) => {
+    setLocationInput(location);
+    setShowLocationSuggestions(false);
+  };
+
+  const handleLocationInputFocus = () => {
+    if (locationInput.length > 0 && locationSuggestions.length > 0) {
+      setShowLocationSuggestions(true);
+    }
+  };
+
+  const handleLocationInputBlur = () => {
+    // Delay hiding suggestions to allow for clicks
+    setTimeout(() => setShowLocationSuggestions(false), 200);
   };
 
   const handleFiltersToggle = () => {
     setIsFiltersOpen(!isFiltersOpen);
-    setIsLocationOpen(false); // Close location dropdown
+    setShowLocationSuggestions(false); // Close location suggestions
   };
 
-  const handleLocationChange = (location: string) => {
-    // If clicking the same location (and it's not "All Locations"), toggle back to "All Locations"
-    if (location === selectedLocation && location !== 'All Locations') {
-      setSelectedLocation('All Locations');
-    } else {
-      setSelectedLocation(location);
-    }
-    setIsLocationOpen(false);
-    setLocationSearch(''); // Clear search when location is selected
-  };
+
 
   const handleFilterToggle = (filter: { label: string; type: TagType }) => {
     const newFilter: Tag = { 
@@ -424,7 +436,7 @@ export default function JobsPage() {
     <div className="min-h-screen relative bg-[#F4F4F4]">
       {/* Radial blue blur positioned in upper right */}
       <div 
-        className="absolute pointer-events-none"
+        className="absolute pointer-events-none hidden md:block"
         style={{
           top: '-5%',
           right: '-10%',
@@ -435,6 +447,28 @@ export default function JobsPage() {
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
           zIndex: 0
+        }}
+      ></div>
+      
+      {/* Mobile-only blur effect - smaller and properly contained */}
+      <div 
+        className="absolute pointer-events-none md:hidden"
+        style={{
+          top: '0',
+          right: '0',
+          width: '150px',
+          height: '200px',
+          background: `
+            radial-gradient(
+              ellipse at center,
+              rgba(36, 102, 208, 0.1) 0%,
+              rgba(36, 102, 208, 0.05) 40%,
+              transparent 70%
+            )
+          `,
+          filter: 'blur(30px)',
+          zIndex: 0,
+          overflow: 'hidden'
         }}
       ></div>
       
@@ -470,55 +504,42 @@ export default function JobsPage() {
               </div>
             </div>
 
-            {/* Location Dropdown */}
+            {/* Location Autocomplete */}
             <div className="relative">
-              <button
-                onClick={handleLocationToggle}
-                className="flex items-center bg-white rounded-full px-4 lg:px-6 py-3 lg:py-3 shadow-sm w-full lg:min-w-[180px] justify-between"
-              >
-                <div className="flex items-center min-w-0 flex-1">
-                  <MapPin className="w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] mr-2 flex-shrink-0" strokeWidth={2} />
-                  <span className="text-base lg:text-[20px] font-bold text-[#7691A4] font-avenir truncate">
-                    {selectedLocation === 'All Locations' ? 'Location' : selectedLocation.split(',')[0]}
-                  </span>
-                </div>
-                <ChevronDown className={`w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] transition-transform flex-shrink-0 ml-1 ${isLocationOpen ? 'rotate-180' : 'rotate-90'}`} strokeWidth={2} />
-              </button>
+              <div className="flex items-center bg-white rounded-full px-4 lg:px-6 py-3 lg:py-3 shadow-sm w-full lg:min-w-[180px]">
+                <MapPin className="w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] mr-2 flex-shrink-0" strokeWidth={2} />
+                <input
+                  type="text"
+                  placeholder="Enter location..."
+                  value={locationInput}
+                  onChange={(e) => handleLocationInputChange(e.target.value)}
+                  onFocus={handleLocationInputFocus}
+                  onBlur={handleLocationInputBlur}
+                  className="flex-1 text-base lg:text-[20px] font-bold text-[#7691A4] placeholder-[#7691A4] bg-transparent outline-none font-avenir"
+                />
+                {locationInput && (
+                  <button
+                    onClick={() => handleLocationInputChange('')}
+                    className="ml-2 text-[#7691A4] hover:text-[#2466D0] flex-shrink-0"
+                  >
+                    <X className="w-4 h-4" strokeWidth={2} />
+                  </button>
+                )}
+              </div>
               
-              {isLocationOpen && (
+              {showLocationSuggestions && locationSuggestions.length > 0 && (
                 <div className="absolute top-full mt-2 left-0 bg-white rounded-2xl shadow-lg border border-gray-200 min-w-[250px] z-10">
-                  {/* Search input */}
-                  <div className="p-3 border-b border-gray-200">
-                    <input
-                      type="text"
-                      placeholder="Search locations..."
-                      value={locationSearch}
-                      onChange={(e) => setLocationSearch(e.target.value)}
-                      className="w-full px-3 py-2 text-[16px] text-[#7691A4] placeholder-[#7691A4] border border-gray-300 rounded-lg outline-none focus:border-[#2466D0] font-avenir"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </div>
-                  
-                  {/* Location list */}
-                  <div className="max-h-48 overflow-y-auto">
-                    {filteredLocations.length > 0 ? (
-                      filteredLocations.map((location) => (
-                        <button
-                          key={location}
-                          onClick={() => handleLocationChange(location)}
-                          className={`w-full text-left px-4 py-3 hover:bg-gray-50 first:rounded-t-2xl last:rounded-b-2xl font-avenir ${
-                            selectedLocation === location ? 'bg-blue-50 text-[#2466D0] font-bold' : 'text-[#7691A4]'
-                          }`}
-                        >
-                          {location}
-                        </button>
-                      ))
-                    ) : (
-                      <div className="px-4 py-3 text-[#7691A4] font-avenir text-center">
-                        No locations found
-                      </div>
-                    )}
-                  </div>
+                  <ul className="max-h-48 overflow-y-auto">
+                    {locationSuggestions.map((location) => (
+                      <li
+                        key={location}
+                        onClick={() => handleLocationSuggestionClick(location)}
+                        className="px-4 py-3 hover:bg-gray-50 cursor-pointer font-avenir text-[#7691A4] first:rounded-t-2xl last:rounded-b-2xl"
+                      >
+                        {location}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>

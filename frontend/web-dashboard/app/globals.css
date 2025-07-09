@@ -18,6 +18,19 @@ body {
   @apply bg-page-gradient;
 }
 
+/* Prevent horizontal overflow specifically on mobile only */
+@media (max-width: 767px) {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  /* Prevent any element from causing horizontal overflow on mobile */
+  .min-h-screen {
+    overflow-x: hidden;
+  }
+}
+
 /* Gradient blur in top-right corner */
 body::before {
   content: '';
