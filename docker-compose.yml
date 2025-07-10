@@ -62,6 +62,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./backend/api/uploads:/app/uploads  # If you have file uploads
+      - ./backend/api/tokens:/app/tokens    # Gmail OAuth tokens persistence
 
   web-dashboard:
     build:

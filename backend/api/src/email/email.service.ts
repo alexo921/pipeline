@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import path from 'path';
-import fs from 'fs';
+import * as path from 'path';
+import * as fs from 'fs';
 import axios from 'axios';
 
 interface GmailTokens {
@@ -16,6 +16,8 @@ interface GmailTokens {
 @Injectable()
 export class EmailService {
   private gmailTokens: GmailTokens | null = null;
+  private readonly tokenFilePath = path.join(process.cwd(), 'tokens', 'gmail-tokens.json');
+  
   private transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: Number(process.env.EMAIL_PORT),
@@ -25,6 +27,43 @@ export class EmailService {
       pass: process.env.EMAIL_PASS,
     },
   });
+
+  constructor() {
+    // Load tokens from file on service initialization
+    this.loadGmailTokensFromFile();
+  }
+
+  // Load tokens from file
+  private loadGmailTokensFromFile(): void {
+    try {
+      // Ensure tokens directory exists
+      const tokensDir = path.dirname(this.tokenFilePath);
+      if (!fs.existsSync(tokensDir)) {
+        fs.mkdirSync(tokensDir, { recursive: true });
+      }
+      
+      if (fs.existsSync(this.tokenFilePath)) {
+        const tokenData = fs.readFileSync(this.tokenFilePath, 'utf8');
+        this.gmailTokens = JSON.parse(tokenData);
+        console.log('Gmail tokens loaded from file');
+      }
+    } catch (error) {
+      console.error('Failed to load Gmail tokens from file:', error);
+      this.gmailTokens = null;
+    }
+  }
+
+  // Save tokens to file
+  private saveGmailTokensToFile(): void {
+    try {
+      if (this.gmailTokens) {
+        fs.writeFileSync(this.tokenFilePath, JSON.stringify(this.gmailTokens, null, 2));
+        console.log('Gmail tokens saved to file');
+      }
+    } catch (error) {
+      console.error('Failed to save Gmail tokens to file:', error);
+    }
+  }
 
   htmlTemplate(name: string, message: string) {
     return `
@@ -146,7 +185,9 @@ export class EmailService {
       ...tokens,
       received_at: Date.now()
     };
-    console.log('Gmail tokens stored successfully');
+    // Save to file for persistence
+    this.saveGmailTokensToFile();
+    console.log('Gmail tokens stored and persisted successfully');
   }
 
   isGmailAuthorized(): boolean {
@@ -154,7 +195,49 @@ export class EmailService {
     
     // Check if token is expired (expires_in is in seconds)
     const expiresAt = this.gmailTokens.received_at + (this.gmailTokens.expires_in * 1000);
-    return Date.now() < expiresAt;
+    const isValid = Date.now() < expiresAt;
+    
+    if (!isValid) {
+      console.log('Gmail token expired, attempting refresh...');
+      // Try to refresh the token if we have a refresh token
+      if (this.gmailTokens.refresh_token) {
+        this.refreshGmailToken().catch(error => {
+          console.error('Failed to refresh Gmail token:', error);
+        });
+      }
+    }
+    
+    return isValid;
+  }
+
+  // Refresh Gmail token using refresh token
+  private async refreshGmailToken(): Promise<void> {
+    if (!this.gmailTokens?.refresh_token) {
+      throw new Error('No refresh token available');
+    }
+
+    try {
+      const response = await axios.post('https://oauth2.googleapis.com/token', {
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        refresh_token: this.gmailTokens.refresh_token,
+        grant_type: 'refresh_token'
+      });
+
+      const newTokens = {
+        ...this.gmailTokens,
+        access_token: response.data.access_token,
+        expires_in: response.data.expires_in,
+        received_at: Date.now()
+      };
+
+      this.gmailTokens = newTokens;
+      this.saveGmailTokensToFile();
+      console.log('Gmail token refreshed successfully');
+    } catch (error) {
+      console.error('Failed to refresh Gmail token:', error);
+      throw error;
+    }
   }
 
   getGmailTokens(): GmailTokens | null {
@@ -194,6 +277,19 @@ export class EmailService {
       return response.data;
     } catch (error) {
       console.error('Gmail API send failed:', error);
+      
+      // If it's an auth error, try to refresh the token
+      if (error.response?.status === 401 && this.gmailTokens?.refresh_token) {
+        console.log('Attempting to refresh expired token...');
+        try {
+          await this.refreshGmailToken();
+          // Retry the email send with the new token
+          return this.sendEmailViaGmailAPI(to, subject, htmlContent);
+        } catch (refreshError) {
+          console.error('Token refresh failed:', refreshError);
+        }
+      }
+      
       throw new Error('Failed to send email via Gmail API');
     }
   }
