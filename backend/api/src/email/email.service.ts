@@ -2,9 +2,20 @@ import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import path from 'path';
 import fs from 'fs';
+import axios from 'axios';
+
+interface GmailTokens {
+  access_token: string;
+  refresh_token?: string;
+  expires_in: number;
+  token_type: string;
+  scope: string;
+  received_at: number;
+}
 
 @Injectable()
 export class EmailService {
+  private gmailTokens: GmailTokens | null = null;
   private transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: Number(process.env.EMAIL_PORT),
@@ -97,6 +108,96 @@ export class EmailService {
     } catch (error) {
       console.error('Failed to send verification email:', error);
       throw new Error('Failed to send verification email');
+    }
+  }
+
+  // Gmail OAuth Token Management
+  storeGmailTokens(tokens: any) {
+    this.gmailTokens = {
+      ...tokens,
+      received_at: Date.now()
+    };
+    console.log('Gmail tokens stored successfully');
+  }
+
+  isGmailAuthorized(): boolean {
+    if (!this.gmailTokens) return false;
+    
+    // Check if token is expired (expires_in is in seconds)
+    const expiresAt = this.gmailTokens.received_at + (this.gmailTokens.expires_in * 1000);
+    return Date.now() < expiresAt;
+  }
+
+  getGmailTokens(): GmailTokens | null {
+    return this.gmailTokens;
+  }
+
+  // Gmail API Email Sending
+  async sendEmailViaGmailAPI(to: string, subject: string, htmlContent: string): Promise<any> {
+    if (!this.isGmailAuthorized()) {
+      throw new Error('Gmail not authorized or token expired');
+    }
+
+    const emailContent = [
+      `To: ${to}`,
+      `Subject: ${subject}`,
+      'Content-Type: text/html; charset=utf-8',
+      '',
+      htmlContent
+    ].join('\n');
+
+    const encodedEmail = Buffer.from(emailContent).toString('base64');
+
+    try {
+      const response = await axios.post(
+        'https://gmail.googleapis.com/gmail/v1/users/me/messages/send',
+        {
+          raw: encodedEmail
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${this.gmailTokens!.access_token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error('Gmail API send failed:', error);
+      throw new Error('Failed to send email via Gmail API');
+    }
+  }
+
+  // Enhanced send method with Gmail API fallback
+  async sendMailWithGmailFallback(to: string, subject: string, name: string, message: string) {
+    const html = this.htmlTemplate(name, message);
+
+    // Try Gmail API first if available
+    if (this.isGmailAuthorized()) {
+      try {
+        const result = await this.sendEmailViaGmailAPI(to, subject, html);
+        return { 
+          result, 
+          method: 'gmail-api',
+          success: true 
+        };
+      } catch (error) {
+        console.log('Gmail API failed, falling back to SMTP:', error.message);
+      }
+    }
+
+    // Fallback to SMTP
+    try {
+      const result = await this.sendMail(to, subject, name, message);
+      return { 
+        result, 
+        method: 'smtp',
+        success: true 
+      };
+    } catch (error) {
+      console.error('Both Gmail API and SMTP failed:', error);
+      throw new Error('Failed to send email via both Gmail API and SMTP');
     }
   }
 }

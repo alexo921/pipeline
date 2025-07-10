@@ -21,6 +21,7 @@ import { ResetPasswordDto } from './dto/Reset-password-Dto';
 import { ChangePasswordDto } from './dto/change-password-dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/common/decorators/user.decorator';
+import { EmailService } from 'src/email/email.service';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -29,6 +30,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
   ) {}
 
   @Post('signup')
@@ -175,7 +177,8 @@ export class AuthController {
 
       const tokens = await this.authService.exchangeGmailCode(code);
       
-      // Store tokens in email service (you might want to store in database for production)
+      // Store tokens in email service
+      this.emailService.storeGmailTokens(tokens);
       
       return res.redirect(
         `${this.configService.get<string>('FRONTEND_URL')}/admin?gmail_setup=success`
@@ -191,22 +194,41 @@ export class AuthController {
   @Get('gmail/status')
   @ApiOperation({ summary: 'Check Gmail OAuth status' })
   async getGmailStatus() {
-    // You can implement status checking logic here
+    const isAuthorized = this.emailService.isGmailAuthorized();
+    
     return {
-      authorized: false, // Replace with actual status check
+      authorized: isAuthorized,
       setupUrl: `${this.configService.get<string>('APP_URL')}/auth/gmail`,
-      message: 'Gmail OAuth not configured. Visit setupUrl to authorize.'
+      message: isAuthorized 
+        ? 'Gmail OAuth configured successfully. Emails will be sent via Gmail API.'
+        : 'Gmail OAuth not configured. Visit setupUrl to authorize.'
     };
   }
 
   @Post('test-email')
   @ApiOperation({ summary: 'Test email sending (Gmail API or SMTP fallback)' })
   async testEmail(@Body() body: { email: string }) {
-    // This would typically call your email service
-    return {
-      success: true,
-      message: `Test email would be sent to ${body.email}`,
-      method: 'smtp' // or 'gmail-api' when OAuth is working
-    };
+    try {
+      const result = await this.emailService.sendMailWithGmailFallback(
+        body.email,
+        'Test Email from Pipeline',
+        'Test User',
+        'This is a test email to verify your email configuration is working correctly.'
+      );
+      
+      return {
+        success: true,
+        message: `Test email sent successfully to ${body.email}`,
+        method: result.method,
+        details: `Email sent via ${result.method.toUpperCase()}`
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: `Failed to send test email to ${body.email}`,
+        method: 'none',
+        error: error.message
+      };
+    }
   }
 }
