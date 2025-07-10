@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finish Your Profile - Pipeline</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        .subject {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        .preheader {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+        .content {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #374151;
+            margin-bottom: 30px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+        .emoji {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        .closing {
+            margin-top: 30px;
+            font-size: 16px;
+            color: #374151;
+        }
+        .signature {
+            font-weight: 600;
+            color: #1f2937;
+            margin-top: 10px;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Pipeline</div>
+        </div>
+        
+        <div class="subject">Just one step to unlock great jobs <span class="emoji">💼</span></div>
+        <div class="preheader">Finish your profile and start getting matched.</div>
+        
+        <div class="greeting">Hi {{firstName}},</div>
+        
+        <div class="content">
+            <p>You started your Pipeline account—now let's get it working for you.</p>
+            
+            <p>We've got thousands of long-term care and home care jobs across the country. Finishing your profile helps us send better-fitting roles—by license, shift, and schedule. And soon, we'll match even smarter.</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{profileUrl}}" class="cta-button">
+                    <span class="emoji">👉</span> Finish My Profile
+                </a>
+            </div>
+            
+            <p>No long forms. No junk. Just real roles that work for you.</p>
+        </div>
+        
+        <div class="closing">
+            With care,<br>
+            <div class="signature">The Pipeline Team</div>
+        </div>
+        
+        <div class="footer">
+            <p>Pipeline - Connecting healthcare professionals with meaningful opportunities</p>
+        </div>
+    </div>
+</body>
+</html> 

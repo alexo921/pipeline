@@ -179,6 +179,116 @@ export class EmailService {
     }
   }
 
+  async sendPartialSignupReminder(email: string, firstName: string) {
+    try {
+      const templatePath = path.join(
+        process.cwd(),
+        'src/templates/partial-signup-reminder.html',
+      );
+      let emailTemplate = fs.readFileSync(templatePath, 'utf8');
+
+      // Replace placeholders
+      emailTemplate = emailTemplate.replace('{{firstName}}', firstName);
+      emailTemplate = emailTemplate.replace('{{profileUrl}}', `${process.env.FRONTEND_URL}/dashboard`);
+
+      const mailOptions = {
+        from: `"Pipeline" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'Just one step to unlock great jobs 💼',
+        html: emailTemplate,
+      };
+
+      const info = await this.transporter.sendMail(mailOptions);
+      return info;
+    } catch (error) {
+      console.error('Failed to send partial signup reminder:', error);
+      throw new Error('Failed to send partial signup reminder');
+    }
+  }
+
+  async sendApplyNudgeEmail(email: string, firstName: string) {
+    try {
+      const templatePath = path.join(
+        process.cwd(),
+        'src/templates/apply-nudge-email.html',
+      );
+      let emailTemplate = fs.readFileSync(templatePath, 'utf8');
+
+      // Replace placeholders
+      emailTemplate = emailTemplate.replace('{{firstName}}', firstName);
+      emailTemplate = emailTemplate.replace('{{jobsUrl}}', `${process.env.FRONTEND_URL}/jobs`);
+
+      const mailOptions = {
+        from: `"Pipeline" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'Did you apply yet?',
+        html: emailTemplate,
+      };
+
+      const info = await this.transporter.sendMail(mailOptions);
+      return info;
+    } catch (error) {
+      console.error('Failed to send apply nudge email:', error);
+      throw new Error('Failed to send apply nudge email');
+    }
+  }
+
+  async sendLocalJobAlert(email: string, firstName: string, city: string, jobCount: number) {
+    try {
+      const templatePath = path.join(
+        process.cwd(),
+        'src/templates/local-job-alert.html',
+      );
+      let emailTemplate = fs.readFileSync(templatePath, 'utf8');
+
+      // Replace placeholders
+      emailTemplate = emailTemplate.replace(/{{firstName}}/g, firstName);
+      emailTemplate = emailTemplate.replace(/{{city}}/g, city);
+      emailTemplate = emailTemplate.replace(/{{jobCount}}/g, jobCount.toString());
+      emailTemplate = emailTemplate.replace('{{cityJobsUrl}}', `${process.env.FRONTEND_URL}/jobs?city=${encodeURIComponent(city)}`);
+
+      const mailOptions = {
+        from: `"Pipeline" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: `${jobCount} caregiver jobs hiring near ${city} 🩺`,
+        html: emailTemplate,
+      };
+
+      const info = await this.transporter.sendMail(mailOptions);
+      return info;
+    } catch (error) {
+      console.error('Failed to send local job alert:', error);
+      throw new Error('Failed to send local job alert');
+    }
+  }
+
+  async sendLaunchEmail(email: string, firstName: string) {
+    try {
+      const templatePath = path.join(
+        process.cwd(),
+        'src/templates/launch-email.html',
+      );
+      let emailTemplate = fs.readFileSync(templatePath, 'utf8');
+
+      // Replace placeholders
+      emailTemplate = emailTemplate.replace('{{firstName}}', firstName);
+      emailTemplate = emailTemplate.replace('{{jobsUrl}}', `${process.env.FRONTEND_URL}/jobs`);
+
+      const mailOptions = {
+        from: `"Pipeline" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'You\'re up first. Pipeline is now live 🎉',
+        html: emailTemplate,
+      };
+
+      const info = await this.transporter.sendMail(mailOptions);
+      return info;
+    } catch (error) {
+      console.error('Failed to send launch email:', error);
+      throw new Error('Failed to send launch email');
+    }
+  }
+
   // Gmail OAuth Token Management
   storeGmailTokens(tokens: any) {
     this.gmailTokens = {

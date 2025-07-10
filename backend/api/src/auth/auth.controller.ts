@@ -234,8 +234,8 @@ export class AuthController {
 
   @Post('test-email-templates')
   @ApiOperation({ summary: 'Test all email templates' })
-  async testEmailTemplates(@Body() body: { email: string; firstName?: string }) {
-    const { email, firstName = 'Test User' } = body;
+  async testEmailTemplates(@Body() body: { email: string; firstName?: string; city?: string; jobCount?: number }) {
+    const { email, firstName = 'Test User', city = 'New York', jobCount = 18 } = body;
     const results: Array<{
       template: string;
       success: boolean;
@@ -273,6 +273,38 @@ export class AuthController {
       results.push({ template: 'welcome', success: true, message: 'Welcome email sent' });
     } catch (error) {
       results.push({ template: 'welcome', success: false, error: error.message });
+    }
+
+    // Test partial signup reminder
+    try {
+      await this.emailService.sendPartialSignupReminder(email, firstName);
+      results.push({ template: 'partial-signup-reminder', success: true, message: 'Partial signup reminder sent' });
+    } catch (error) {
+      results.push({ template: 'partial-signup-reminder', success: false, error: error.message });
+    }
+
+    // Test apply nudge email
+    try {
+      await this.emailService.sendApplyNudgeEmail(email, firstName);
+      results.push({ template: 'apply-nudge', success: true, message: 'Apply nudge email sent' });
+    } catch (error) {
+      results.push({ template: 'apply-nudge', success: false, error: error.message });
+    }
+
+    // Test local job alert
+    try {
+      await this.emailService.sendLocalJobAlert(email, firstName, city, jobCount);
+      results.push({ template: 'local-job-alert', success: true, message: 'Local job alert sent' });
+    } catch (error) {
+      results.push({ template: 'local-job-alert', success: false, error: error.message });
+    }
+
+    // Test launch email
+    try {
+      await this.emailService.sendLaunchEmail(email, firstName);
+      results.push({ template: 'launch-email', success: true, message: 'Launch email sent' });
+    } catch (error) {
+      results.push({ template: 'launch-email', success: false, error: error.message });
     }
 
     return {
