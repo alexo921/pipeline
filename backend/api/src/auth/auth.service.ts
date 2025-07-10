@@ -265,4 +265,28 @@ export class AuthService {
     const { password, ...result } = user;
     return result;
   }
+
+  async exchangeGmailCode(code: string): Promise<GoogleTokenResponse> {
+    const clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
+    const clientSecret = this.configService.get<string>('GOOGLE_CLIENT_SECRET');
+    const redirectUri = `${this.configService.get<string>('APP_URL')}/auth/gmail/callback`;
+
+    const response = await axios.post<GoogleTokenResponse>(
+      'https://oauth2.googleapis.com/token',
+      {
+        code,
+        client_id: clientId,
+        client_secret: clientSecret,
+        redirect_uri: redirectUri,
+        grant_type: 'authorization_code',
+      },
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      },
+    );
+
+    return response.data;
+  }
 }

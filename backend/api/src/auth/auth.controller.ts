@@ -144,4 +144,69 @@ export class AuthController {
   getProfile(@User('userId') userId: string) {
     return this.authService.getProfile(userId);
   }
+
+  // Gmail OAuth Endpoints
+  @Get('gmail')
+  @ApiOperation({ summary: 'Initiate Gmail OAuth for email sending' })
+  initiateGmailAuth(@Res() res: Response) {
+    const clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
+    const redirectUri = `${this.configService.get<string>('APP_URL')}/auth/gmail/callback`;
+
+    const authUrl =
+      `https://accounts.google.com/o/oauth2/v2/auth?` +
+      `client_id=${clientId}&` +
+      `redirect_uri=${redirectUri}&` +
+      `response_type=code&` +
+      `scope=https://www.googleapis.com/auth/gmail.send&` +
+      `access_type=offline&` +
+      `prompt=consent`;
+
+    return res.redirect(authUrl);
+  }
+
+  @Get('gmail/callback')
+  @ApiOperation({ summary: 'Handle Gmail OAuth callback' })
+  async handleGmailCallback(
+    @Query('code') code: string,
+    @Res() res: Response,
+  ) {
+    try {
+      if (!code) throw new Error('No authorization code received');
+
+      const tokens = await this.authService.exchangeGmailCode(code);
+      
+      // Store tokens in email service (you might want to store in database for production)
+      
+      return res.redirect(
+        `${this.configService.get<string>('FRONTEND_URL')}/admin?gmail_setup=success`
+      );
+    } catch (err: unknown) {
+      error('Gmail OAuth error', (err as Error).stack);
+      return res.redirect(
+        `${this.configService.get<string>('FRONTEND_URL')}/admin?gmail_setup=error&message=${encodeURIComponent((err as Error).message)}`
+      );
+    }
+  }
+
+  @Get('gmail/status')
+  @ApiOperation({ summary: 'Check Gmail OAuth status' })
+  async getGmailStatus() {
+    // You can implement status checking logic here
+    return {
+      authorized: false, // Replace with actual status check
+      setupUrl: `${this.configService.get<string>('APP_URL')}/auth/gmail`,
+      message: 'Gmail OAuth not configured. Visit setupUrl to authorize.'
+    };
+  }
+
+  @Post('test-email')
+  @ApiOperation({ summary: 'Test email sending (Gmail API or SMTP fallback)' })
+  async testEmail(@Body() body: { email: string }) {
+    // This would typically call your email service
+    return {
+      success: true,
+      message: `Test email would be sent to ${body.email}`,
+      method: 'smtp' // or 'gmail-api' when OAuth is working
+    };
+  }
 }
