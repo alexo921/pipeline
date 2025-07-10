@@ -231,4 +231,58 @@ export class AuthController {
       };
     }
   }
+
+  @Post('test-email-templates')
+  @ApiOperation({ summary: 'Test all email templates' })
+  async testEmailTemplates(@Body() body: { email: string; firstName?: string }) {
+    const { email, firstName = 'Test User' } = body;
+    const results: Array<{
+      template: string;
+      success: boolean;
+      message?: string;
+      error?: string;
+    }> = [];
+
+    // Test verification email
+    try {
+      const verificationToken = this.jwtService.sign(
+        { email, purpose: 'email-verification' },
+        { expiresIn: '24h' }
+      );
+      await this.emailService.sendVerificationEmail(email, verificationToken);
+      results.push({ template: 'verification', success: true, message: 'Verification email sent' });
+    } catch (error) {
+      results.push({ template: 'verification', success: false, error: error.message });
+    }
+
+    // Test password reset email
+    try {
+      const resetToken = this.jwtService.sign(
+        { email, purpose: 'password-reset' },
+        { expiresIn: '15m' }
+      );
+      await this.emailService.sendPasswordResetEmail(email, resetToken, firstName);
+      results.push({ template: 'password-reset', success: true, message: 'Password reset email sent' });
+    } catch (error) {
+      results.push({ template: 'password-reset', success: false, error: error.message });
+    }
+
+    // Test welcome email
+    try {
+      await this.emailService.sendWelcomeEmail(email, firstName);
+      results.push({ template: 'welcome', success: true, message: 'Welcome email sent' });
+    } catch (error) {
+      results.push({ template: 'welcome', success: false, error: error.message });
+    }
+
+    return {
+      message: `Email template tests completed for ${email}`,
+      results,
+      summary: {
+        total: results.length,
+        successful: results.filter(r => r.success).length,
+        failed: results.filter(r => !r.success).length
+      }
+    };
+  }
 }

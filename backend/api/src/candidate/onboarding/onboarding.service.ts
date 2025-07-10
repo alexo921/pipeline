@@ -26,7 +26,7 @@ export class OnboardingService {
 
   // setting up onboarding data
   async handleStepOne(data: InitialDetailsDto) {
-    const { name, email, healthcareRole, certificationStatus } = data;
+    const { firstName, lastName, email, healthcareRole, certificationStatus } = data;
 
     const existingCandidate =
       await this.candidateService.getCandidateByEmail(email);
@@ -44,7 +44,8 @@ export class OnboardingService {
       // creating user for candidate
       const user = await this.prismaService.users.create({
         data: {
-          name,
+          firstName,
+          lastName,
           email,
           password: '',
         },
@@ -53,7 +54,8 @@ export class OnboardingService {
       // create candidate record
       const candidate = await this.prismaService.candidates.create({
         data: {
-          name: name,
+          firstName,
+          lastName,
           email: email,
           healthcareRole: healthcareRole,
           certificationStatus: certificationStatus,
@@ -157,6 +159,12 @@ export class OnboardingService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Get candidate info before updating
+    const candidate = await this.candidateService.getCandidateByEmail(payload.email);
+    if (!candidate) {
+      throw new BadRequestException('Candidate not found');
+    }
+
     await this.prismaService.$transaction([
       this.prismaService.users.update({
         where: { email: payload.email },
@@ -170,6 +178,14 @@ export class OnboardingService {
         },
       }),
     ]);
+
+    // Send welcome email after successful onboarding
+    try {
+      await this.emailService.sendWelcomeEmail(candidate.email, candidate.firstName);
+    } catch (error) {
+      console.error('Failed to send welcome email:', error);
+      // Don't throw error here - onboarding was successful, email is just a nice-to-have
+    }
 
     return {
       message: 'Password set successfully and onboarding completed',

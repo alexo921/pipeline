@@ -111,6 +111,35 @@ export class EmailService {
     }
   }
 
+  async sendWelcomeEmail(email: string, firstName: string) {
+    try {
+      // Read the welcome HTML template
+      const templatePath = path.join(
+        process.cwd(),
+        'src/templates/welcome-email.html',
+      );
+      let emailTemplate = fs.readFileSync(templatePath, 'utf8');
+
+      // Replace placeholders
+      emailTemplate = emailTemplate.replace('{{firstName}}', firstName);
+      emailTemplate = emailTemplate.replace('{{jobsUrl}}', `${process.env.FRONTEND_URL}/jobs`);
+
+      // Send the email
+      const mailOptions = {
+        from: `"Pipeline" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'Welcome to Pipeline 👋',
+        html: emailTemplate,
+      };
+
+      const info = await this.transporter.sendMail(mailOptions);
+      return info;
+    } catch (error) {
+      console.error('Failed to send welcome email:', error);
+      throw new Error('Failed to send welcome email');
+    }
+  }
+
   // Gmail OAuth Token Management
   storeGmailTokens(tokens: any) {
     this.gmailTokens = {
@@ -190,7 +219,7 @@ export class EmailService {
     // Fallback to SMTP
     try {
       const result = await this.sendMail(to, subject, name, message);
-      return { 
+      return {
         result, 
         method: 'smtp',
         success: true 
