@@ -1,29 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { ApplyJobDto } from './dto/apply-job-dto';
+import { ConflictException } from '@nestjs/common';
 
 @Injectable()
 export class AppliedJobsService {
   constructor(private prisma: PrismaService) {}
 
-  async setAppliedJob({ userId, jobId, jobUrl }: ApplyJobDto): Promise<any> {
+  async applyForJob(userId: string, jobId: string) {
     const existingJob = await this.prisma.applied_jobs.findFirst({
       where: {
-        userId: userId,
-        jobId: jobId,
+        userId,
+        jobId,
       },
     });
 
     if (existingJob) {
-      return existingJob;
+      throw new ConflictException('You have already applied for this job');
     }
 
     return await this.prisma.applied_jobs.create({
       data: {
         userId,
         jobId,
-        appliedDate: new Date(),
-        jobUrl,
       },
     });
   }

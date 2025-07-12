@@ -14,7 +14,8 @@ export type LoginSchema = z.infer<typeof loginSchema>;
 
 // Signup Schemas
 export const signupStep1Schema = z.object({
-  name: z.string().min(2, 'Full name must be at least 2 characters'),
+  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
   healthcareRole: z.string().min(1, 'Please select your healthcare role')
     .refine(
@@ -26,6 +27,13 @@ export const signupStep1Schema = z.object({
       (val) => ['Certified', 'NotCertified', 'Pending', 'Inprogress'].includes(val),
       { message: 'Please select a valid certification status' }
     ),
+});
+
+export const signupBasicSchema = z.object({
+  firstName: z.string().min(2, 'First name must be at least 2 characters'),
+  lastName: z.string().min(2, 'Last name must be at least 2 characters'),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
 

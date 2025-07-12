@@ -7,7 +7,8 @@ import {
 } from 'src/common/enums/enums';
 
 export interface OnboardingStepOne {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   healthcareRole: HealthcareRole;
   certificationStatus: CertificationStatus;

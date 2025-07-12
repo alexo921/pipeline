@@ -189,8 +189,8 @@ class FinalHealthcareScraper:
                             if len(line) > 3 and len(line) < 100:  # Reasonable title length
                                 title = line
                                 break
-                except:
-                    pass
+        except:
+            pass
             
             # Extract location
             for selector in self.universal_selectors['job_locations']:
@@ -216,26 +216,26 @@ class FinalHealthcareScraper:
                 pass
             
             # Skip if no meaningful title found
-            if not title or len(title.strip()) < 3:
-                return None
-            
+        if not title or len(title.strip()) < 3:
+            return None
+        
             # Parse location for city/state
             city, state = self._parse_location(location or container.text)
             
             # Create job data
             job_data = {
                 'id': f"{config['source_site']}_{abs(hash(job_url or title))}",
-                'title': title.strip(),
+            'title': title.strip(),
                 'company': config['source_site'],
-                'location': location or f"{city}, {state}" if city and state else state if state else 'Location not specified',
-                'city': city,
-                'state': state,
-                'url': job_url,
+            'location': location or f"{city}, {state}" if city and state else state if state else 'Location not specified',
+            'city': city,
+            'state': state,
+            'url': job_url,
                 'source': config['source_site'],
                 'source_url': config['search_url'],
-                'scraped_at': datetime.now().isoformat(),
+            'scraped_at': datetime.now().isoformat(),
                 'description': container.text.strip()[:300] + '...' if len(container.text) > 300 else container.text.strip()
-            }
+        }
             
             return job_data
             
@@ -438,8 +438,8 @@ class FinalHealthcareScraper:
                 
                 # Random delay between pages
                 time.sleep(random.uniform(1, 3))
-            
-        except Exception as e:
+                
+            except Exception as e:
             self._log(f"  ❌ Error: {e}")
         
         self._log(f"✅ Completed {config['source_site']}: {len(all_jobs)} jobs from {page_count} pages")
@@ -472,7 +472,7 @@ class FinalHealthcareScraper:
                     if i < total_sites:
                         delay = random.uniform(2, 5)
                         time.sleep(delay)
-                        
+                    
                 except Exception as e:
                     self._log(f"❌ Error processing {config['source_site']}: {e}")
                     continue

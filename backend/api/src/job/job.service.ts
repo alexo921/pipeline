@@ -13,27 +13,10 @@ export class JobService {
       location: 'Melbourne, FL',
       description:
         'CompetitiveMelbourne,FL32940CNACHHAPart TimeDay ShiftWeekdayWeekendJOB DESCRIPTIONHome Health Aide / HHA...',
-      url: 'https://www.mycnajobs.com/job-listings/4194251/home-health-aide-hha.html?searchId=1750101598.6548&page=1',
-      source: 'myCNAjobs',
-      scrapedDate: new Date('2025-06-16'),
-      postedDate: new Date('2025-05-15'),
-      jobType: 'Part Time',
-      duties: [
-        'Provide client care according to approved Plan of Care',
-        'Assist clients with personal care and hygiene',
-        'Provide transportation as required',
-        'Assist in providing a safe environment for client',
-        'Comply with all documentation and record keeping',
-      ],
-      requirements: [
-        'Weekly pay Live-in opportunities Private home environment Each independently owned BrightStar location makes more possible for the community it serves.',
-      ],
-      benefits: [
-        'Weekly pay Live-in opportunities Private home environment Each independently owned BrightStar location makes more possible for the community it serves.',
-      ],
-      shift: 'Day Shift, Weekday, Weekend',
-      city: 'Melbourne',
-      state: 'FL',
+      salary: 'Competitive',
+      requirements: 'Weekly pay Live-in opportunities Private home environment Each independently owned BrightStar location makes more possible for the community it serves.',
+      benefits: 'Weekly pay Live-in opportunities Private home environment Each independently owned BrightStar location makes more possible for the community it serves.',
+      status: 'active',
     };
 
     return await this.prismaService.jobs.create({ data: jobData });
@@ -57,7 +40,6 @@ export class JobService {
         orderBy: { createdAt: 'desc' },
         skip,
         take: limit,
-        include: { company_details: true },
       }),
       this.prismaService.jobs.count({
         where: query.search

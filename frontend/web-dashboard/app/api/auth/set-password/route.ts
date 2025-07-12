@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/candidate/onboarding/set-password`,
+      `${process.env.NEXT_PUBLIC_API_URL}/candidate/onboarding/set-password`,
       {
         method: "POST",
         headers: {

@@ -1,0 +1,97 @@
+[
+  {
+    "site_name": "CareListings",
+    "url": "https://www.carelistings.com/jobs/CNA/connecticut",
+    "status": "success",
+    "method": "mobile",
+    "job_links_found": 345,
+    "job_containers": [
+      {
+        "selector": "mobile_extraction",
+        "count": 345
+      }
+    ],
+    "html_selectors": {
+      "job_containers": [
+        ".nav-primary__item",
+        ".mb3",
+        ".specialeffects-new",
+        ".submissions__field-home",
+        ".specialeffects-blue",
+        ".pr2",
+        ".avatar__vacancy-shadow",
+        ".lazy",
+        ".specialeffects-navy",
+        ".large--p2",
+        ".color-white",
+        ".btn",
+        ".block",
+        ".px4",
+        ".bg-white--light",
+        ".avatar__bg-blue",
+        ".btn--blue--blue-dark",
+        ".py1",
+        ".weight-700",
+        ".larger",
+        ".small",
+        "#link_id_mobile"
+      ],
+      "description_selectors": [
+        ".weight-700",
+        ".specialeffects-blue"
+      ],
+      "requirements_selectors": [],
+      "date_selectors": [],
+      "salary_selectors": [
+        ".color-blue--dark",
+        ".bg-blue--superlight",
+        ".large--p2"
+      ],
+      "location_selectors": [
+        ".color-blue--dark",
+        ".submissions__field-home",
+        ".large--p2",
+        ".bg-blue--superlight",
+        ".bg-white--light"
+      ]
+    },
+    "content_analysis": {
+      "job_links_found": 345,
+      "job_titles_found": 106,
+      "job_descriptions_found": 38,
+      "job_requirements_found": 0,
+      "avg_description_length": 252.52631578947367,
+      "avg_requirements_length": 0.0
+    },
+    "sample_jobs": [
+      {
+        "title": "41 Certified Nursing Assistant (CNA) Job Listings near CT",
+        "description": "\"Agency seeking CNA in the new Preston, CT area. Please call us at 203-872-9092\"",
+        "requirements": "",
+        "method": "mobile_regex"
+      },
+      {
+        "title": "Are you an experienced CNA near CT?",
+        "description": "\"Cna position available for a case in Wallingford, CT. Please email resumes to compassioncarellc@yahoo.com or call 203-872-9092\"",
+        "requirements": "",
+        "method": "mobile_regex"
+      },
+      {
+        "title": "Nursing and Caregiver Jobs near CT",
+        "description": "\"We are actively looking for a dependable Certified Nurse&#x27;s Aide for Hamden &amp; the surrounding areas. This is a Per Diem position. Must have own reliable car. We have excellent mileage reimbursement rat...\"",
+        "requirements": "",
+        "method": "mobile_regex"
+      }
+    ],
+    "anti_bot_type": "none",
+    "retry_attempt": 1
+  },
+  {
+    "site_name": "RydersHealth",
+    "url": "https://www.rydershealth.com/jobs/",
+    "status": "error",
+    "reason": "batch_timeout",
+    "anti_bot_type": "none",
+    "error": "Batch processing timeout"
+  }
+]

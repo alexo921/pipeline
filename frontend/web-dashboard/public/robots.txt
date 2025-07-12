@@ -1,0 +1,23 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Allow: /jobs
+Allow: /about
+Allow: /contact
+Allow: /blog
+Allow: /resources
+Allow: /sitemap.xml
+
+# Disallow admin and sensitive routes
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /auth/
+Disallow: /settings
+Disallow: /*?*
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://pipelineworkforce.com/sitemap.xml 

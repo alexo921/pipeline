@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UseGuards, Param } from '@nestjs/common';
 import { SaveJobsService } from './save-jobs.service';
 import { SaveJobDto } from './dto/save-job.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -18,15 +18,10 @@ export class SaveJobsController {
     return this.saveJobsService.getSavedJobs(userId);
   }
 
-  @Delete()
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Delete a saved job for a user' })
-  async deleteSavedJob(
-    @Body() { jobId }: SaveJobDto,
-    @User('userId') userId: string,
-  ): Promise<any> {
-    return this.saveJobsService.deleteSavedJob(userId, jobId);
+  @Delete(':jobId')
+  async removeSavedJob(@Param('jobId') jobId: string, @Body() body: { userId: string }) {
+    const { userId } = body;
+    return this.saveJobsService.removeSavedJob(userId, jobId);
   }
 
   @Post()

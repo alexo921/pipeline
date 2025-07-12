@@ -1,0 +1,14 @@
+# Gmail OAuth 2.0 Email Dependencies
+# Required for secure email sending (replacing "less secure apps")
+
+google-auth>=2.23.0
+google-auth-oauthlib>=1.1.0
+google-auth-httplib2>=0.1.1
+google-api-python-client>=2.100.0
+
+# For email handling
+email-validator>=2.0.0
+
+# Already included in main requirements
+requests>=2.31.0
+python-dotenv>=1.0.0 

@@ -1,0 +1,139 @@
+{
+  "total_jobs": 1558,
+  "unique_companies": 94,
+  "unique_locations": 1025,
+  "salary_analysis": {
+    "total_with_salary": 109,
+    "competitive_count": 25,
+    "salary_coverage": 6.996148908857509,
+    "hourly": {
+      "count": 51,
+      "min_range": 2,
+      "max_range": 88,
+      "avg_min": 22.11764705882353,
+      "avg_max": 22.745098039215687
+    },
+    "annual": {
+      "count": 41,
+      "min_range": 1,
+      "max_range": 84,
+      "avg_min": 20.585365853658537,
+      "avg_max": 20.75609756097561
+    }
+  },
+  "job_categories": {
+    "categories": {
+      "caregiving": 102,
+      "nursing": 757,
+      "other": 383,
+      "support": 93,
+      "therapy": 100,
+      "administration": 106,
+      "medical": 17
+    },
+    "seniority_levels": {
+      "senior": 211,
+      "entry": 1157,
+      "executive": 182,
+      "mid": 8
+    },
+    "remote_jobs": 88,
+    "remote_percentage": 5.648267008985879
+  },
+  "data_quality": {
+    "average_completeness": 79.5683568677792,
+    "missing_fields": {
+      "url": 110
+    },
+    "high_quality_jobs": 643,
+    "low_quality_jobs": 0
+  },
+  "platforms": {
+    "custom": 1156,
+    "icims": 7,
+    "apploi": 30,
+    "intelycare": 64,
+    "homeinstead": 2,
+    "adp": 3,
+    "onshift": 48,
+    "hireology": 83,
+    "ultipro": 141,
+    "smartrecruiters": 24
+  },
+  "requirements": {
+    "education": {
+      "licensed": 201,
+      "certified": 195,
+      "associate": 22,
+      "license": 21,
+      "certification": 7,
+      "diploma": 3,
+      "high school diploma": 3,
+      "degree": 2,
+      "certificate": 1,
+      "doctorate": 1
+    },
+    "experience": {
+      "senior": 123,
+      "experienced": 9,
+      "entry level": 4,
+      "25 years experience": 2,
+      "2 years experience": 2,
+      "5 years experience": 1
+    },
+    "certifications": {
+      "lpn": 240,
+      "cna": 219,
+      "licensed": 201,
+      "certified": 195,
+      "registered nurse": 186,
+      "licensed practical nurse": 174,
+      "certified nursing assistant": 145,
+      "license": 21,
+      "certification": 7
+    },
+    "skills": {
+      "flexible": 57,
+      "compassionate": 36,
+      "medication": 19,
+      "patient care": 14,
+      "dependable": 3,
+      "reliable": 3,
+      "documentation": 3,
+      "communication skills": 2,
+      "computer skills": 2
+    }
+  },
+  "locations": {
+    "states": {
+      "CT": 202,
+      "MA": 176,
+      "NU": 52,
+      "NY": 52,
+      "CA": 46,
+      "AS": 45,
+      "FL": 39,
+      "IN": 32,
+      "CO": 31,
+      "ID": 28
+    },
+    "cities": {
+      "TX": 18,
+      "Local Agency\nBrightStar Care of": 17,
+      "Registered": 16,
+      "FL": 16,
+      "Licensed Practical": 15,
+      "Certified Nursing": 14,
+      "New Britain": 14,
+      "Norwalk": 14,
+      "Bridgeport": 12,
+      "IL": 12
+    },
+    "jobs_with_location": 1554
+  },
+  "scraping_metadata": {
+    "sites_processed": 194,
+    "scraped_at": "2025-07-11T23:32:20.141850",
+    "version": "2.0_enhanced"
+  }
+}

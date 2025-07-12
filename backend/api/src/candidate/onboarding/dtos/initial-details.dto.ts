@@ -5,11 +5,18 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class InitialDetailsDto {
   @ApiProperty({
-    example: 'Brian Lewis',
-    description: 'Full name of the candidate',
+    example: 'Brian',
+    description: 'First name of the candidate',
   })
   @IsString()
-  name: string;
+  firstName: string;
+
+  @ApiProperty({
+    example: 'Lewis',
+    description: 'Last name of the candidate',
+  })
+  @IsString()
+  lastName: string;
 
   @ApiProperty({
     example: 'brian@example.com',

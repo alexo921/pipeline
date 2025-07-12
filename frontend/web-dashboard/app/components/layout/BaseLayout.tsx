@@ -40,25 +40,6 @@ export default function BaseLayout({
 
   return (
     <div className={`${backgroundClass} relative`} style={backgroundStyle}>
-      {/* Bottom Blur Effect */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          bottom: '0%',
-          left: '45%',
-          transform: 'translateX(-50%)',
-          width: '1200px',
-          height: '550px',
-          background: `linear-gradient(to top,
-            rgba(36, 102, 208, 0.4) 0%, 
-            rgba(36, 102, 208, 0.25) 30%, 
-            rgba(36, 102, 208, 0.1) 60%, 
-            transparent 100%)`,
-          filter: 'blur(40px)',
-          zIndex: 5,
-        }}
-      />
-      
       {/* Navbar navigation */}
       {showNav && (
         <Navbar
@@ -79,7 +60,61 @@ export default function BaseLayout({
       {/* Main content */}
 
       {/* Footer */}
-      {showFooter && <div className="relative z-10"><Footer /></div>}
+      {showFooter && (
+        <div className="relative z-10">
+          {/* Pink/Blue Sun Radial Blur Effect - Desktop */}
+          <div
+            className="absolute pointer-events-none hidden md:block"
+            style={{
+              bottom: '0',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '1400px',
+              height: '400px',
+              background: `
+                radial-gradient(
+                  ellipse at center bottom,
+                  rgba(36, 102, 208, 0.5) 0%,
+                  rgba(36, 102, 208, 0.4) 15%,
+                  rgba(36, 102, 208, 0.3) 30%,
+                  rgba(36, 102, 208, 0.2) 45%,
+                  rgba(36, 102, 208, 0.1) 60%,
+                  rgba(255, 0, 229, 0.08) 75%,
+                  transparent 90%
+                )
+              `,
+              filter: 'blur(80px)',
+              zIndex: -1,
+            }}
+          />
+          
+          {/* Pink/Blue Sun Radial Blur Effect - Mobile */}
+          <div
+            className="absolute pointer-events-none md:hidden"
+            style={{
+              bottom: '0',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '500px',
+              height: '400px',
+              background: `
+                radial-gradient(
+                  ellipse at center bottom,
+                  rgba(36, 102, 208, 0.45) 0%,
+                  rgba(36, 102, 208, 0.35) 20%,
+                  rgba(36, 102, 208, 0.25) 40%,
+                  rgba(36, 102, 208, 0.15) 60%,
+                  rgba(255, 0, 229, 0.06) 80%,
+                  transparent 95%
+                )
+              `,
+              filter: 'blur(60px)',
+              zIndex: -1,
+            }}
+          />
+          <Footer />
+        </div>
+      )}
       {/* Footer */}
 
       {/* <AuthModal

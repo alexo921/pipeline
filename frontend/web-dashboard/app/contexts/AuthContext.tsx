@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const refreshUser = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/profile`,
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/profile`,
         {
           credentials: "include",
         }

@@ -102,9 +102,15 @@ export class AuthService {
       return existingUser;
     }
 
+    // Split the name from Google into first and last name
+    const nameParts = userInfo.name.split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
     const newUser = await this.prismaService.users.create({
       data: {
-        name: userInfo.name,
+        firstName,
+        lastName,
         email: userInfo.email,
         password: '',
       },
@@ -114,7 +120,7 @@ export class AuthService {
   }
 
   async create(signUpDto: SignUpDto) {
-    const { email, password, name } = signUpDto;
+    const { email, password, firstName, lastName } = signUpDto;
     const isUser = await this.prismaService.users.findUnique({
       where: { email },
     });
@@ -126,7 +132,8 @@ export class AuthService {
     const hashPassword = await bcrypt.hash(password, 10);
     const user = await this.prismaService.users.create({
       data: {
-        name,
+        firstName,
+        lastName,
         email,
         password: hashPassword,
       },
@@ -169,33 +176,27 @@ export class AuthService {
     return { token, result };
   }
 
-  async forgotPass(forgotPass: ForgotPassDto) {
-    const email = forgotPass.email;
+  async forgotPass(forgotPassDto: ForgotPassDto) {
+    const { email } = forgotPassDto;
 
-    if (!email) {
-      throw new BadRequestException('Email is required');
-    }
-    
     const isUser = await this.prismaService.users.findUnique({
       where: { email },
     });
+
     if (!isUser) {
-      throw new NotFoundException('User not found with that email');
+      throw new NotFoundException('User not found');
     }
 
-    const secret = this.configService.get<string>('JWT_SECRET');
     const token = this.jwtService.sign(
-      { email, purpose: 'reset-password' },
-      {
-        secret,
-        expiresIn: '15m',
-      },
+      { userId: isUser.id, purpose: 'reset-password' },
+      { expiresIn: '15m' },
     );
 
-    await this.emailService.sendPasswordResetEmail(email, token, isUser.name);
-    return {
-      message: 'A password reset link has been sent to your email.',
-    };
+    // Combine firstName and lastName for the email
+    const fullName = `${isUser.firstName} ${isUser.lastName}`;
+    await this.emailService.sendPasswordResetEmail(email, token, fullName);
+
+    return { message: 'Password reset email sent' };
   }
 
   async resetPass(resetPassDto: ResetPasswordDto) {

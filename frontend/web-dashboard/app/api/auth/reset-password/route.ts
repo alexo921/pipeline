@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     }
 
     const backendRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/reset-password`,
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`,
       {
         method: "POST",
         headers: {

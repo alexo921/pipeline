@@ -10,10 +10,7 @@ export class AppliedJobsController {
   constructor(private readonly appliedJobsService: AppliedJobsService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Apply for a job' })
-  async applyForJob(@Body() applyDto: ApplyJobDto): Promise<any> {
-    return await this.appliedJobsService.setAppliedJob(applyDto);
+  async applyForJob(@Body() applyDto: ApplyJobDto) {
+    return await this.appliedJobsService.applyForJob(applyDto.userId, applyDto.jobId);
   }
 }

@@ -22,19 +22,21 @@ export class SaveJobsService {
     });
   }
 
-  async deleteSavedJob(userId: string, jobId: string) {
-    // Check if the job is saved for the user
-    const savedJob = await this.getSavedJobByJobId(userId, jobId);
+  async removeSavedJob(userId: string, jobId: string) {
+    const savedJob = await this.prisma.saved_jobs.findFirst({
+      where: {
+        userId,
+        jobId,
+      },
+    });
 
     if (!savedJob) {
       throw new Error('Saved job not found');
     }
+
     return this.prisma.saved_jobs.delete({
       where: {
-        saved_jobs_user_job_unique: {
-          jobId,
-          userId,
-        },
+        id: savedJob.id,
       },
     });
   }

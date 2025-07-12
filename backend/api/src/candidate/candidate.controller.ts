@@ -11,7 +11,7 @@ export class CandidateController {
   @Get()
   @ApiOperation({ summary: 'Get all candidates' })
   findAll(@Query() query: CandidateQueryDto) {
-    return this.candidateService.findAll(query);
+    return this.candidateService.getCandidates(query);
   }
 
   @Get(':id')

@@ -1,0 +1,984 @@
+{
+  "analysis_summary": {
+    "total_sites_analyzed": 194,
+    "accessible_sites": 34,
+    "blocked_sites": 159,
+    "error_sites": 1,
+    "success_rate": 0.17525773195876287
+  },
+  "selector_effectiveness": {
+    "job_containers": [
+      [
+        "a[href*=\"job\"]",
+        19
+      ],
+      [
+        "[class*=\"job\"]",
+        7
+      ],
+      [
+        "a[href*=\"career\"]",
+        1
+      ]
+    ],
+    "job_descriptions": [
+      [
+        "div",
+        6
+      ],
+      [
+        "[class*=\"content\"]",
+        5
+      ],
+      [
+        "p",
+        1
+      ]
+    ],
+    "job_dates": [
+      [
+        "span",
+        15
+      ],
+      [
+        "[class*=\"date\"]",
+        5
+      ]
+    ]
+  },
+  "successful_sites": [
+    {
+      "name": "National Healthcare Associates",
+      "url": "https://careers-nathealthcare.icims.com/jobs/search?ss=1&searchRelation=keyword_all"
+    },
+    {
+      "name": "Apple Rehab",
+      "url": "https://jobs.apploi.com/profile/apple-rehab?utm_campaign=truman&utm_medium=&utm_source=false"
+    },
+    {
+      "name": "Aveanna",
+      "url": "https://jobs.aveanna.com/jobs/?search_term="
+    },
+    {
+      "name": "Northbridge Communities",
+      "url": "https://jobs.jobvite.com/northbridgecompanies/search?t=&c=&l="
+    },
+    {
+      "name": "FALL RIVER HEALTHCARE",
+      "url": "https://fallriver.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "CareOne Senior Living",
+      "url": "https://fa-eqgc-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2/jobs?mode=location"
+    },
+    {
+      "name": "FITCHBURG HEALTHCARE",
+      "url": "https://fitchburg.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "GARDEN PLACE HEALTHCARE",
+      "url": "https://gardenplace.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "LEE HEALTHCARE",
+      "url": "https://lee.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "MELROSE HEALTHCARE",
+      "url": "https://melrose.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "NORWOOD HEALTHCARE",
+      "url": "https://norwood.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "OAKHILL HEALTHCARE",
+      "url": "https://oakhill.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "ELMHURST HEALTHCARE (THE)",
+      "url": "https://elmhurst.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "PLYMOUTH HARBORSIDE HEALTHCARE",
+      "url": "https://plymouth.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "HERMITAGE HEALTHCARE (THE)",
+      "url": "https://the-hermitage.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "The Landing at Laurel Lake",
+      "url": "https://laurellake.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "WEDGEMERE HEALTHCARE",
+      "url": "https://wedgemere.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "WEST NEWTON HEALTHCARE",
+      "url": "https://westnewton.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "WESTBOROUGH HEALTHCARE",
+      "url": "https://westborough.employ.onshift.com/job_positions/browse"
+    },
+    {
+      "name": "Mozaic Senior Services",
+      "url": "https://mozaicsl.applicantpool.com/jobs/"
+    },
+    {
+      "name": "VNA Care",
+      "url": "https://careers.vnacare.org/jobs.aspx"
+    },
+    {
+      "name": "Westview Health Care Center",
+      "url": "https://westviewhcc.com/careers.html"
+    },
+    {
+      "name": "Harbor Chase",
+      "url": "https://recruiting.ultipro.com/HAR1012/JobBoard/c8658d95-b2fe-7c84-9ea4-273644487cd4/?q=&o=postedDateDesc"
+    },
+    {
+      "name": "The Arbors & The Ivy",
+      "url": "https://sites.hireology.com/thearborsassistedlivingresidentialcommunities/jobs.html"
+    },
+    {
+      "name": "Brookdale",
+      "url": "https://careers.brookdale.com/en/jobs.html#/search?page=1"
+    },
+    {
+      "name": "Artis Senior Living",
+      "url": "https://recruiting.ultipro.com/ART1008ARTH/JobBoard/dc78aa87-cca0-413e-a32b-450fecf2bffb/?q=&o=postedDateDesc&w=&wc=&we=&wpst="
+    },
+    {
+      "name": "Maplewood Senior Living",
+      "url": "https://recruiting.ultipro.com/MAP1003/JobBoard/51997001-de38-2b3c-51f7-8dfc3b02a5dd/?q=&o=postedDateDesc&w=&wc=&we=&wpst="
+    },
+    {
+      "name": "Aaron Manor Nursing and Rehabilitation Center",
+      "url": "https://aaronmanor.com/Careers.aspx"
+    },
+    {
+      "name": "Southcoast Health",
+      "url": "https://careers-southcoast.icims.com/jobs/search?ss=1&searchRelation=keyword_all&searchCategory=47355"
+    },
+    {
+      "name": "Southcoast Health",
+      "url": "https://careers-southcoast.icims.com/jobs/search?ss=1&searchRelation=keyword_all&searchCategory=47350"
+    },
+    {
+      "name": "Southcoast Health",
+      "url": "https://careers-southcoast.icims.com/jobs/search?ss=1&searchRelation=keyword_all&searchCategory=47351"
+    },
+    {
+      "name": "Integritus Healthcare",
+      "url": "https://recruiting.ultipro.com/BER1002BHCS/JobBoard/ab6dd2ae-e2f4-4e5a-9d54-ba5e47b6291f/?q=&o=postedDateDesc"
+    },
+    {
+      "name": "FiveStar Nursing",
+      "url": "https://jobs.apploi.com/profile/fivestarnusing"
+    },
+    {
+      "name": "MJHS Health System",
+      "url": "https://mjhs.jobs/jobs/"
+    }
+  ],
+  "blocked_sites": [
+    {
+      "name": "RydersHealth",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "CareListings",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "New Haven Center for Nursing & Rehab",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Southport Center for Nursing & Rehab",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Waterbury Center for Nursing & Rehab",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Torrington Center for Nursing & Reha",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "West Haven Center for Nursing & Reha",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Atlas Healthcare",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "iCare Health Network",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Athena Health Care Systems",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Complete Care at Glendale Center LLC",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Genesis",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Fox Hill",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Complete Care at Groton Regency LLC",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Complete Care at Meriden Center LLC",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Complete Care at Harrington Court LL",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Kimberly Hall South Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Kimberly Hall North",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Autumn Lake Bucks Hill",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Autumn Lake",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Autumn Lake Cromwell",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Autumn Lake New Britain",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Advanced Center for Nursing & Rehabilitation",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Masonicare",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Amberwoods of Farmington",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Ascension",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Affinity Home Care",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "SYNERGY Home Care",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Brightstar",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Home Instead",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Salmon Health and Retirement",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "AdviniaCare",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Colonial Health & Rehab Center of Plainfield, LLC",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Wingate",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Connecticut Baptist Homes",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Elim Park Baptist Home",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Gladeview Health Care Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Grimes Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "EPOCH",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Benchmark",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "McLean Health Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Mary Wade Home, Inc., The",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Whitney Rehabilitation Care Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "The Villa at Stamford",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Meriden Health and Rehab",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Seabury Health Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Beechwood Post-Acute & Transitional Care",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Nathaniel Witherell",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Noble Horizons",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Notre Dame Conv. Home, Inc.",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Orange Health Care Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Covenant Living",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Saint Joseph's Living Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Skyview Rehab and Nursing",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Whispering Pines Rehabilitation and Nursing Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "LCB Senior Living",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Oak Hill",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Hallkeen",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "The Retreat Assisted Living",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "ProMedica",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Watermark Retirement Communities",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "IntelyCare - StaffDNA",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Sunrise Senior Living",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "ECHN Visiting Nurse & Health Services of CT",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Atria",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Senior Living Communities",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Monarch Communities",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Duncaster Retirement Community",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "ALDEN COURT NURSING CARE & REHABILITATION CENTER",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Alliance Health",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "BaneCare",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Always Best Care",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "UniversaCare",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "CenterWell",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "enhabit",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "LHC Group",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Right at Home",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Amedisys",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "All Ways Caring",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Bristol Health",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Charter Senior Living",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Trinity Health at Home",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Elara Caring",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Brightview Senior Living",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "accentCare",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Senior Lifestyle",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "PathWell",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Encompass Health",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Always Best Care",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Aspen Hill",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Healogics",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "SCA Health",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Hathorne Hill Rehab & Healthcare Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Guardian Angel Senior Services",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Seniors Helping Seniors",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "A Place At Home",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Briarwood Rehab & Healthcare Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Hebrew Senior Life",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Associated Home Care",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Honor Health Network",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Honor Health Network",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Gardenview Home Care",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Bond Health Staffing",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "DRIFT Services",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Fine Care Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Tandym Group",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "The Jewish Home",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Sapphire Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Allendale Rehabilitation & Healthcare Center",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Compassion Home Care",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    },
+    {
+      "name": "Laconia Nursing Home",
+      "reason": "anti_bot",
+      "anti_bot_type": "captcha"
+    },
+    {
+      "name": "Hometown Nannies",
+      "reason": "anti_bot",
+      "anti_bot_type": "unknown_protection"
+    },
+    {
+      "name": "Endurance Home Care",
+      "reason": "anti_bot",
+      "anti_bot_type": "cloudflare"
+    }
+  ]
+}

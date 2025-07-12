@@ -23,7 +23,7 @@ export default function ApplyButton({ jobId, jobUrl }: ApplyButtonProps) {
 
     try {
       // Track the application
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/applied-jobs`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applied-jobs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

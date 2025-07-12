@@ -19,48 +19,37 @@ export class CandidateService {
     });
   }
 
-  async findAll(query: CandidateQueryDto) {
-    const page = Number(query.page) || 1;
-    const limit = Number(query.limit) || 10;
+  async getCandidates(query: CandidateQueryDto) {
+    const { page = 1, limit = 10, search } = query;
     const skip = (page - 1) * limit;
 
-    const [candidates, total] = await Promise.all([
+    const whereClause = search
+      ? {
+          OR: [
+            { firstName: { contains: search, mode: 'insensitive' as const } },
+            { lastName: { contains: search, mode: 'insensitive' as const } },
+            { email: { contains: search, mode: 'insensitive' as const } },
+          ],
+        }
+      : {};
+
+    const [candidates, totalCount] = await Promise.all([
       this.prismaService.candidates.findMany({
-        where: query.search
-          ? {
-              OR: [
-                { name: { contains: query.search, mode: 'insensitive' } },
-                { email: { contains: query.search, mode: 'insensitive' } },
-              ],
-            }
-          : {},
-        orderBy: { createdAt: 'desc' },
+        where: whereClause,
         skip,
         take: limit,
-        include: {
-          experience: true,
-        },
+        orderBy: { createdAt: 'desc' },
       }),
       this.prismaService.candidates.count({
-        where: query.search
-          ? {
-              OR: [
-                { name: { contains: query.search, mode: 'insensitive' } },
-                { email: { contains: query.search, mode: 'insensitive' } },
-              ],
-            }
-          : {},
+        where: whereClause,
       }),
     ]);
 
     return {
       candidates,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
+      totalCount,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
     };
   }
 

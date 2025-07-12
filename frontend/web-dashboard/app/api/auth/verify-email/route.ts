@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
     const { token } = await req.json();
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/candidate/onboarding/verify-email`,
+      `${process.env.NEXT_PUBLIC_API_URL}/candidate/onboarding/verify-email`,
       {
         method: "POST",
         headers: {

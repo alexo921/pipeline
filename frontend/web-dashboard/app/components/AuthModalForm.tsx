@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 
 interface BaseAuthModalFormProps {
     onClose: () => void;
+    onSwitchToSignup?: () => void;
 }
 
 // Define the schema for form validation
@@ -19,7 +20,7 @@ const loginSchema = z.object({
 
 type LoginSchema = z.infer<typeof loginSchema>;
 
-const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose }) => {
+const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose, onSwitchToSignup }) => {
   const { refreshUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -220,7 +221,9 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose }) => {
           Don't have an account?{' '}
           <button
             type="button"
+            onClick={onSwitchToSignup}
             className="text-blue-600 font-medium hover:underline"
+            disabled={isLoading}
           >
             Sign Up
           </button>

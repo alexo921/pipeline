@@ -1,0 +1,765 @@
+{
+  "summary": {
+    "total_jobs": 15,
+    "unique_companies": 1,
+    "unique_locations": 2,
+    "salary_analysis": {
+      "total_with_salary": 0,
+      "competitive_count": 0
+    },
+    "job_categories": {
+      "categories": {
+        "nursing": 7,
+        "support": 3,
+        "therapy": 3,
+        "other": 2
+      },
+      "seniority_levels": {
+        "entry": 13,
+        "senior": 1,
+        "executive": 1
+      },
+      "remote_jobs": 0,
+      "remote_percentage": 0.0
+    },
+    "data_quality": {
+      "average_completeness": 59.5,
+      "missing_fields": {
+        "url": 15
+      },
+      "high_quality_jobs": 0,
+      "low_quality_jobs": 0
+    },
+    "platforms": {
+      "custom": 15
+    },
+    "requirements": {
+      "education": {},
+      "experience": {},
+      "certifications": {
+        "lpn": 3,
+        "cna": 1
+      },
+      "skills": {}
+    },
+    "locations": {
+      "states": {
+        "LORD CHAMBERLAIN": 1
+      },
+      "cities": {
+        "Douglas Manor": 1
+      },
+      "jobs_with_location": 1
+    },
+    "scraping_metadata": {
+      "sites_processed": 194,
+      "scraped_at": "2025-07-11T17:43:07.788061",
+      "version": "2.0_enhanced"
+    }
+  },
+  "jobs": [
+    {
+      "id": "RydersHealth_6553121629570446803",
+      "title": "Infection Preventionist / Staff Development Nurse",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:36.780266",
+      "description": "Infection Preventionist / Staff Development Nurse\nRyders Health Management Our family taking care of yours",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [],
+        "skills": []
+      },
+      "benefits": "development",
+      "application_url": "",
+      "job_category": "nursing",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 1,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.25,
+        "overall": 0.6349999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_2268759726937281636",
+      "title": "RN Supervisor (night shift)",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:37.640930",
+      "description": "RN Supervisor (night shift)\nDouglas Manor",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "night shift",
+      "requirements": "RN",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "nursing",
+      "seniority_level": "senior",
+      "is_remote": false,
+      "classification_confidence": 1,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.5,
+        "overall": 0.71
+      }
+    },
+    {
+      "id": "RydersHealth_857275712364947770",
+      "title": "Dietary Aide",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:39.514674",
+      "description": "Dietary Aide\nMystic Healthcare",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "support",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 1,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.0,
+        "overall": 0.5599999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_6780569340879632897",
+      "title": "RN/LPN",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:40.508116",
+      "description": "RN/LPN\nMystic Healthcare",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "RN, LPN",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [
+          "lpn"
+        ],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "nursing",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 2,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.25,
+        "overall": 0.6349999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_5293303586984321793",
+      "title": "MDS Reimbursement Manager",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:41.342486",
+      "description": "MDS Reimbursement Manager\nLord Chamberlain Nursing and Rehabilitation",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "nursing",
+      "seniority_level": "executive",
+      "is_remote": false,
+      "classification_confidence": 1,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.0,
+        "overall": 0.5599999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_4797754527910835273",
+      "title": "Front Desk Receptionist",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:42.689468",
+      "description": "Front Desk Receptionist\nBel-Air Manor Our family taking care of yours",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "support",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 1,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.0,
+        "overall": 0.5599999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_7947497781221594932",
+      "title": "Occupational Therapist",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:43.692321",
+      "description": "Occupational Therapist\nMystic Healthcare",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "therapy",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 2,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.0,
+        "overall": 0.5599999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_399353988574458104",
+      "title": "Physical Therapist",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:44.891751",
+      "description": "Physical Therapist\nGreentree Manor",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "therapy",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 2,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.0,
+        "overall": 0.5599999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_1592439456320130756",
+      "title": "Physical Therapy Assistant",
+      "company": "RydersHealth",
+      "location": "Douglas Manor, LORD CHAMBERLAIN",
+      "city": "Douglas Manor",
+      "state": "LORD CHAMBERLAIN",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:45.919208",
+      "description": "Physical Therapy Assistant\nGreentree Manor, Douglas Manor, Lord Chamberlain",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "therapy",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 1,
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.0,
+        "overall": 0.5599999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_3552290532422796403",
+      "title": "CNA",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:47.267083",
+      "description": "CNA\nCheshire House",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "CNA",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [
+          "cna"
+        ],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "nursing",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 1,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.25,
+        "overall": 0.6349999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_3601702860914201875",
+      "title": "RN / LPN",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:48.309554",
+      "description": "RN / LPN\nCheshire House",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "RN, LPN",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [
+          "lpn"
+        ],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "nursing",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 2,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.25,
+        "overall": 0.6349999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_2284019229952944357",
+      "title": "Rehabilitation Aide",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:49.297913",
+      "description": "Rehabilitation Aide\nAaron Manor",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "support",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 1,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.0,
+        "overall": 0.5599999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_4631093898827534665",
+      "title": "LPN Wing Nurse",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:51.189955",
+      "description": "LPN Wing Nurse\nGreentree Manor",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "LPN",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [
+          "lpn"
+        ],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "nursing",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 2,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.25,
+        "overall": 0.6349999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_8942511166683351759",
+      "title": "Housekeeper",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:54.065081",
+      "description": "Housekeeper\nAaron Manor",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "other",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 0,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.0,
+        "overall": 0.5599999999999999
+      }
+    },
+    {
+      "id": "RydersHealth_5590304815792690177",
+      "title": "Cook",
+      "company": "RydersHealth",
+      "location": "Location not specified",
+      "city": "",
+      "state": "",
+      "zip_code": "",
+      "url": "",
+      "source": "RydersHealth",
+      "source_url": "https://www.rydershealth.com/jobs/",
+      "scraped_at": "2025-07-11T17:42:54.833698",
+      "description": "Cook\nBel-Air Manor",
+      "platform": "custom",
+      "salary": "",
+      "salary_parsed": {
+        "min": null,
+        "max": null,
+        "type": null,
+        "raw": "",
+        "is_competitive": false
+      },
+      "shift_type": "",
+      "requirements": "",
+      "requirements_structured": {
+        "education": [],
+        "experience": [],
+        "certifications": [],
+        "skills": []
+      },
+      "benefits": "",
+      "application_url": "",
+      "job_category": "other",
+      "seniority_level": "entry",
+      "is_remote": false,
+      "classification_confidence": 0,
+      "location_warning": "Missing location information",
+      "missing_fields": [
+        "url"
+      ],
+      "completeness_score": {
+        "required": 0.8,
+        "optional": 0.0,
+        "overall": 0.5599999999999999
+      }
+    }
+  ],
+  "metadata": {
+    "total_jobs": 15,
+    "scraped_at": "2025-07-11T17:43:07.788076",
+    "sites_processed": 194,
+    "version": "2.0_enhanced"
+  }
+}

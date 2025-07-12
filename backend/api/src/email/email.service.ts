@@ -105,6 +105,17 @@ export class EmailService {
       emailTemplate = emailTemplate.replace('{{name}}', name);
       emailTemplate = emailTemplate.replace('{{resetLink}}', resetLink);
 
+      // Try Gmail API first if available
+      if (this.isGmailAuthorized()) {
+        try {
+          const result = await this.sendEmailViaGmailAPI(email, 'Reset Your Password', emailTemplate);
+          return result;
+        } catch (error) {
+          console.log('Gmail API failed for password reset, falling back to SMTP:', error.message);
+        }
+      }
+
+      // Fallback to SMTP
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
         to: email,
@@ -134,7 +145,17 @@ export class EmailService {
       // Replace placeholder(s)
       emailTemplate = emailTemplate.replace('{{url}}', url);
 
-      // Send the email
+      // Try Gmail API first if available
+      if (this.isGmailAuthorized()) {
+        try {
+          const result = await this.sendEmailViaGmailAPI(email, 'Confirm Your Email', emailTemplate);
+          return result;
+        } catch (error) {
+          console.log('Gmail API failed for verification, falling back to SMTP:', error.message);
+        }
+      }
+
+      // Fallback to SMTP
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
         to: email,
@@ -163,11 +184,21 @@ export class EmailService {
       emailTemplate = emailTemplate.replace('{{firstName}}', firstName);
       emailTemplate = emailTemplate.replace('{{jobsUrl}}', `${process.env.FRONTEND_URL}/jobs`);
 
-      // Send the email
+      // Try Gmail API first if available
+      if (this.isGmailAuthorized()) {
+        try {
+          const result = await this.sendEmailViaGmailAPI(email, 'Welcome to Pipeline', emailTemplate);
+          return result;
+        } catch (error) {
+          console.log('Gmail API failed for welcome email, falling back to SMTP:', error.message);
+        }
+      }
+
+      // Fallback to SMTP
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: 'Welcome to Pipeline 👋',
+        subject: 'Welcome to Pipeline',
         html: emailTemplate,
       };
 
@@ -191,10 +222,21 @@ export class EmailService {
       emailTemplate = emailTemplate.replace('{{firstName}}', firstName);
       emailTemplate = emailTemplate.replace('{{profileUrl}}', `${process.env.FRONTEND_URL}/dashboard`);
 
+      // Try Gmail API first if available
+      if (this.isGmailAuthorized()) {
+        try {
+          const result = await this.sendEmailViaGmailAPI(email, 'Just one step to unlock great jobs', emailTemplate);
+          return result;
+        } catch (error) {
+          console.log('Gmail API failed for partial signup reminder, falling back to SMTP:', error.message);
+        }
+      }
+
+      // Fallback to SMTP
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: 'Just one step to unlock great jobs 💼',
+        subject: 'Just one step to unlock great jobs',
         html: emailTemplate,
       };
 
@@ -218,6 +260,17 @@ export class EmailService {
       emailTemplate = emailTemplate.replace('{{firstName}}', firstName);
       emailTemplate = emailTemplate.replace('{{jobsUrl}}', `${process.env.FRONTEND_URL}/jobs`);
 
+      // Try Gmail API first if available
+      if (this.isGmailAuthorized()) {
+        try {
+          const result = await this.sendEmailViaGmailAPI(email, 'Did you apply yet?', emailTemplate);
+          return result;
+        } catch (error) {
+          console.log('Gmail API failed for apply nudge, falling back to SMTP:', error.message);
+        }
+      }
+
+      // Fallback to SMTP
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
         to: email,
@@ -247,10 +300,21 @@ export class EmailService {
       emailTemplate = emailTemplate.replace(/{{jobCount}}/g, jobCount.toString());
       emailTemplate = emailTemplate.replace('{{cityJobsUrl}}', `${process.env.FRONTEND_URL}/jobs?city=${encodeURIComponent(city)}`);
 
+      // Try Gmail API first if available
+      if (this.isGmailAuthorized()) {
+        try {
+          const result = await this.sendEmailViaGmailAPI(email, `${jobCount} caregiver jobs hiring near ${city}`, emailTemplate);
+          return result;
+        } catch (error) {
+          console.log('Gmail API failed for local job alert, falling back to SMTP:', error.message);
+        }
+      }
+
+      // Fallback to SMTP
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: `${jobCount} caregiver jobs hiring near ${city} 🩺`,
+        subject: `${jobCount} caregiver jobs hiring near ${city}`,
         html: emailTemplate,
       };
 
@@ -274,10 +338,21 @@ export class EmailService {
       emailTemplate = emailTemplate.replace('{{firstName}}', firstName);
       emailTemplate = emailTemplate.replace('{{jobsUrl}}', `${process.env.FRONTEND_URL}/jobs`);
 
+      // Try Gmail API first if available
+      if (this.isGmailAuthorized()) {
+        try {
+          const result = await this.sendEmailViaGmailAPI(email, 'You\'re up first. Pipeline is now live', emailTemplate);
+          return result;
+        } catch (error) {
+          console.log('Gmail API failed for launch email, falling back to SMTP:', error.message);
+        }
+      }
+
+      // Fallback to SMTP
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
         to: email,
-        subject: 'You\'re up first. Pipeline is now live 🎉',
+        subject: 'You\'re up first. Pipeline is now live',
         html: emailTemplate,
       };
 

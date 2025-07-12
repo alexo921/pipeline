@@ -7,6 +7,141 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model projects {
+  id          String    @id @default(uuid())
+  name        String    @db.VarChar
+  description String?   @db.VarChar
+  status      String    @default("active") @db.VarChar
+  startDate   DateTime? @db.Date
+  endDate     DateTime? @db.Date
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @default(now()) @db.Timestamp(6)
+  tasks       tasks[]
+}
+
+model tasks {
+  id           String    @id @default(uuid())
+  title        String
+  description  String?
+  status       String    @default("pending")
+  dueDate      DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  projectId    String?
+  assignedToId String?
+  assignedTo   users?    @relation("UserTasks", fields: [assignedToId], references: [id])
+  projects     projects? @relation(fields: [projectId], references: [id])
+}
+
+model users {
+  id           String         @id @default(uuid())
+  email        String         @unique
+  password     String
+  role         Role           @default(CANDIDATE)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  firstName    String
+  lastName     String
+  applied_jobs applied_jobs[]
+  candidate    candidates?
+  saved_jobs   saved_jobs[]
+  tasks        tasks[]        @relation("UserTasks")
+
+  @@unique([email, role])
+  @@index([email])
+}
+
+model candidates {
+  id                    String                  @id @default(uuid())
+  email                 String                  @unique
+  userId                String                  @unique
+  healthcareRole        HealthcareRole
+  certificationStatus   CertificationStatus
+  zipCode               String?
+  address               String?
+  maxTravelDistance     Int?
+  workType              WorkType[]
+  shiftType             ShiftType[]
+  currentJobStatus      JobStatus?
+  step                  OnboardingStep
+  isOnboarded           Boolean                 @default(false)
+  isActive              Boolean                 @default(false)
+  hourlyRate            Int?
+  yearlySalary          Int?
+  payLocationBased      Boolean                 @default(false)
+  workSettingExperience WorkSettingExperience[]
+  preferredSetting      PreferredSetting[]
+  thrivingFactors       ThrivingFactor[]
+  jobFrustationNotes    String?
+  referredBy            String?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  firstName             String
+  lastName              String
+  user                  users                   @relation(fields: [userId], references: [id])
+  experience            experiences[]
+
+  @@unique([email, userId])
+  @@index([email, firstName, lastName])
+}
+
+model experiences {
+  id          String     @id @default(uuid())
+  candidateId String
+  employer    String
+  role        String
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  candidate   candidates @relation(fields: [candidateId], references: [id])
+
+  @@index([candidateId])
+}
+
+model jobs {
+  id           String         @id @default(uuid())
+  title        String
+  description  String?
+  location     String?
+  company      String?
+  salary       String?
+  requirements String?
+  benefits     String?
+  status       String         @default("active")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  applied_jobs applied_jobs[]
+  saved_jobs   saved_jobs[]
+}
+
+model applied_jobs {
+  id        String   @id @default(uuid())
+  userId    String
+  jobId     String
+  appliedAt DateTime @default(now())
+  job       jobs     @relation(fields: [jobId], references: [id])
+  user      users    @relation(fields: [userId], references: [id])
+
+  @@unique([userId, jobId])
+  @@index([userId])
+  @@index([jobId])
+}
+
+model saved_jobs {
+  id      String   @id @default(uuid())
+  userId  String
+  jobId   String
+  savedAt DateTime @default(now())
+  job     jobs     @relation(fields: [jobId], references: [id])
+  user    users    @relation(fields: [userId], references: [id])
+
+  @@unique([userId, jobId])
+  @@index([userId])
+  @@index([jobId])
+}
+
 enum Role {
   CANDIDATE
   EMPLOYER
@@ -81,203 +216,4 @@ enum ThrivingFactor {
   HigherPay
   ManageableLoad
   CareerGrowth
-}
-
-model projects {
-  id          String    @id() @default(uuid())
-  name        String    @db.VarChar
-  description String?   @db.VarChar
-  status      String    @default("active") @db.VarChar
-  startDate   DateTime? @db.Date
-  endDate     DateTime? @db.Date
-  createdAt   DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime  @default(now()) @db.Timestamp(6)
-  tasks       tasks[]
-}
-
-model tasks {
-  id           String   @id @default(uuid())
-  title        String
-  description  String?
-  status       String   @default("pending")
-  dueDate      DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  projectId    String?
-  assignedToId String?
-
-  assignedTo   users?     @relation("UserTasks", fields: [assignedToId], references: [id])
-  projects     projects?  @relation(fields: [projectId], references: [id])
-}
-
-model users {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(CANDIDATE)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  tasks     tasks[]   @relation("UserTasks")
-  candidate candidates?
-  saved_jobs  saved_jobs[]
-  applied_jobs applied_jobs[]
-
-  @@index([email])
-  @@unique([email, role])
-}
-
-model candidates {
-  id                    String   @id @default(uuid())
-  name                  String
-  email                 String   @unique
-  userId                String   @unique
-  healthcareRole        HealthcareRole
-  certificationStatus   CertificationStatus
-  zipCode               String?  // nullable
-  address               String?  // nullable
-  maxTravelDistance     Int?     // stored in minutes; nullable
-  workType              WorkType[]        // multiple select
-  shiftType             ShiftType[]       // multiple select
-  currentJobStatus      JobStatus?
-  step                  OnboardingStep
-  isOnboarded           Boolean  @default(false)
-  isActive              Boolean  @default(false)
-  hourlyRate            Int?
-  yearlySalary          Int?
-  payLocationBased      Boolean @default(false)
-  workSettingExperience WorkSettingExperience[]
-  preferredSetting      PreferredSetting[]
-  thrivingFactors       ThrivingFactor[]
-  jobFrustationNotes    String?
-  referredBy            String?
-
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-
-  // relation
-  user                  users    @relation(fields: [userId], references: [id])
-  experience            experiences[]
-
-  @@index([email,name])
-  @@unique([email,userId])
-}
-
-model experiences {
-  id                    String   @id @default(uuid())
-  candidateId           String   
-  employer              String
-  role                  String
-  startDate             DateTime
-  endDate               DateTime?
-  isCurrent             Boolean  @default(false)
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-
-  candidate             candidates @relation(fields: [candidateId], references: [id])
-
-  @@index([candidateId])
-}
-
-
-model jobs {
-  id                   String       @id @default(uuid())
-  title                String       @db.VarChar
-  company              String       @db.VarChar
-  location             String?      @db.VarChar
-  description          String?      @db.Text
-  url                  String       @unique @db.VarChar
-  source               String       @db.VarChar
-  scrapedDate          DateTime     @db.Date
-  postedDate           DateTime?    @db.Date
-  jobType              String?      @db.VarChar
-  requirements         String[]     @db.VarChar
-  benefits             String[]     @db.VarChar
-  duties               String[]     @db.VarChar
-  shift                String?      @db.VarChar
-  experienceRequired   String?      @db.VarChar
-  certificationsRequired String[]  @db.VarChar
-  salaryMin           Float?       @db.Real
-  salaryMax           Float?       @db.Real
-  salaryPeriod        String?      @db.VarChar
-  city                String?      @db.VarChar
-  state               String?      @db.VarChar
-  zipCode             String?      @db.VarChar
-  status              String       @default("active") @db.VarChar
-  createdAt           DateTime     @default(now()) @db.Timestamp(6)
-  updatedAt           DateTime     @default(now()) @db.Timestamp(6)
-  companyId           String?      @default(uuid())
-  company_details     companies?   @relation(fields: [companyId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  saved_by            saved_jobs[] 
-  applied_by          applied_jobs[]
-
-  @@index([city, state])
-}
-
-model companies {
-  id          String    @id @default(uuid())
-  name        String    @unique @db.VarChar
-  website     String?   @db.VarChar
-  description String?   @db.Text
-  industry    String?   @db.VarChar
-  size        String?   @db.VarChar
-  founded     Int?      @db.Integer
-  headquarters String?  @db.VarChar
-  createdAt   DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime  @default(now()) @db.Timestamp(6)
-  jobs        jobs[]    
-
-  @@index([name])
-}
-
-model scraping_runs {
-  id          String    @id @default(uuid())
-  source      String    @db.VarChar
-  startTime   DateTime  @db.Timestamp(6)
-  endTime     DateTime? @db.Timestamp(6)
-  status      String    @default("running") @db.VarChar
-  totalJobs   Int       @default(0) @db.Integer
-  newJobs     Int       @default(0) @db.Integer
-  updatedJobs Int       @default(0) @db.Integer
-  errors      String[]  @db.Text
-  createdAt   DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime  @default(now()) @db.Timestamp(6)
-}
-
-model saved_jobs {
-  id          String    @id @default(uuid())
-  userId      String    @default(uuid())
-  jobId       String    @default(uuid())
-  notes       String?   @db.Text
-  status      String    @default("saved") @db.VarChar
-  appliedDate DateTime? @db.Date
-  createdAt   DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime  @default(now()) @db.Timestamp(6)
-  user        users     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  job         jobs      @relation(fields: [jobId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, jobId], name: "saved_jobs_user_job_unique")
-  @@index([userId], name: "saved_jobs_user_id_index")
-  @@index([jobId], name: "saved_jobs_job_id_index")
-  @@index([status], name: "saved_jobs_status_index")
-}
-
-model applied_jobs {
-  id          String    @id @default(uuid())
-  userId      String    @default(uuid())
-  jobId       String    @default(uuid())
-  jobUrl      String?   
-  status      String    @default("applied")
-  appliedDate DateTime? @db.Date
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
-  user        users     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  job         jobs      @relation(fields: [jobId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, jobId], name: "applied_jobs_user_job_unique")
-  @@index([userId], name: "applied_jobs_user_id_index")
-  @@index([jobId], name: "applied_jobs_job_id_index")
-  @@index([status], name: "applied_jobs_status_index")
 }
