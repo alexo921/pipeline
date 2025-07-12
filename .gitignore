@@ -79,3 +79,4 @@ coverage.xml
 .dmypy.json
 dmypy.json 
 backend/job-scraper/google-chrome-stable_current_amd64.deb
+backend/credentials.json
