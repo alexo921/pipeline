@@ -46,10 +46,19 @@ const Navbar: React.FC<NavbarProps> = ({
                 padding: "6px 12px",
               }}
             >
+              {/* Combined logo: P icon + wordmark */}
               <Image
-                src="/logo-full-color.svg"
-                alt="Pipeline"
-                width={160}
+                src="/pipeline_logo_p.png"
+                alt="Pipeline P"
+                width={38}
+                height={38}
+                style={{ marginRight: 12 }}
+                priority
+              />
+              <Image
+                src="/pipeline_logo.png"
+                alt="Pipeline Wordmark"
+                width={120}
                 height={38}
                 priority
               />
