@@ -234,8 +234,30 @@ export class AuthController {
 
   @Post('test-email-templates')
   @ApiOperation({ summary: 'Test all email templates' })
-  async testEmailTemplates(@Body() body: { email: string; firstName?: string; city?: string; jobCount?: number }) {
-    const { email, firstName = 'Test User', city = 'New York', jobCount = 18 } = body;
+  async testEmailTemplates(@Body() body: { 
+    email: string; 
+    firstName?: string; 
+    lastName?: string;
+    city?: string; 
+    jobCount?: number;
+    jobTitle?: string;
+    company?: string;
+    profileUrl?: string;
+    jobsUrl?: string;
+  }) {
+    // Enhanced mock data with realistic values
+    const { 
+      email, 
+      firstName = 'Sarah', 
+      lastName = 'Johnson',
+      city = 'Austin', 
+      jobCount = 23,
+      jobTitle = 'Registered Nurse',
+      company = 'Austin Medical Center',
+      profileUrl = `${process.env.FRONTEND_URL}/dashboard/profile`,
+      jobsUrl = `${process.env.FRONTEND_URL}/jobs`
+    } = body;
+
     const results: Array<{
       template: string;
       success: boolean;
@@ -249,6 +271,7 @@ export class AuthController {
         { email, purpose: 'email-verification' },
         { expiresIn: '24h' }
       );
+      const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
       await this.emailService.sendVerificationEmail(email, verificationToken);
       results.push({ template: 'verification', success: true, message: 'Verification email sent' });
     } catch (error) {
@@ -307,8 +330,37 @@ export class AuthController {
       results.push({ template: 'launch-email', success: false, error: error.message });
     }
 
+    // Test top 10 jobs weekly digest
+    try {
+      await this.emailService.sendTemplateMail(
+        email,
+        'Top 10 Jobs This Week',
+        'top_10_jobs_this_week',
+        {
+          firstName,
+          jobsUrl
+        }
+      );
+      results.push({ template: 'top_10_jobs_this_week', success: true, message: 'Top 10 jobs weekly digest sent' });
+    } catch (error) {
+      results.push({ template: 'top_10_jobs_this_week', success: false, error: error.message });
+    }
+
     return {
       message: `Email template tests completed for ${email}`,
+      mockData: {
+        firstName,
+        lastName,
+        city,
+        jobCount,
+        jobTitle,
+        company,
+        profileUrl,
+        jobsUrl,
+        verificationUrl: `${process.env.FRONTEND_URL}/verify-email?token=test-token`,
+        resetUrl: `${process.env.FRONTEND_URL}/change-password?token=test-token`,
+        cityJobsUrl: `${process.env.FRONTEND_URL}/jobs?city=${encodeURIComponent(city)}`
+      },
       results,
       summary: {
         total: results.length,

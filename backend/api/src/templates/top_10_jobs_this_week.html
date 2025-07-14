@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 10 Jobs This Week - Pipeline</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .subject {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        .preheader {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+        .content {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #374151;
+            margin-bottom: 30px;
+        }
+        .job-list {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .job-item {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 15px 0;
+        }
+        .job-item:last-child {
+            border-bottom: none;
+        }
+        .job-title {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .job-company {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .job-location {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white !important;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+        .emoji {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+        .closing {
+            margin-top: 30px;
+            font-size: 16px;
+            color: #374151;
+        }
+        .signature {
+            font-weight: 600;
+            color: #1f2937;
+            margin-top: 10px;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="text-align: center; margin-bottom: 32px;">
+                <img src="https://pipelineworkforce.com/images/pipeline_logo.png" alt="Pipeline" style="height: 40px; width: auto; max-width: 200px;">
+            </div>
+        </div>
+        
+        <div class="subject">Top 10 Jobs This Week <span class="emoji">📋</span></div>
+        <div class="preheader">Handpicked opportunities for healthcare professionals like you.</div>
+        
+        <div class="greeting">Hi {{firstName}},</div>
+        
+        <div class="content">
+            <p>Here are this week's top healthcare opportunities, carefully selected based on your profile and preferences.</p>
+            
+            <div class="job-list">
+                <div class="job-item">
+                    <div class="job-title">Registered Nurse - ICU</div>
+                    <div class="job-company">Austin Medical Center</div>
+                    <div class="job-location">Austin, TX • $75,000 - $95,000</div>
+                </div>
+                <div class="job-item">
+                    <div class="job-title">Certified Nursing Assistant</div>
+                    <div class="job-company">Sunrise Senior Living</div>
+                    <div class="job-location">Austin, TX • $18 - $22/hr</div>
+                </div>
+                <div class="job-item">
+                    <div class="job-title">Licensed Practical Nurse</div>
+                    <div class="job-company">Texas Health Resources</div>
+                    <div class="job-location">Austin, TX • $55,000 - $70,000</div>
+                </div>
+                <div class="job-item">
+                    <div class="job-title">Home Health Aide</div>
+                    <div class="job-company">Comfort Keepers</div>
+                    <div class="job-location">Austin, TX • $16 - $20/hr</div>
+                </div>
+                <div class="job-item">
+                    <div class="job-title">Medical Assistant</div>
+                    <div class="job-company">Austin Regional Clinic</div>
+                    <div class="job-location">Austin, TX • $40,000 - $50,000</div>
+                </div>
+                <div class="job-item">
+                    <div class="job-title">Patient Care Technician</div>
+                    <div class="job-company">St. David's Medical Center</div>
+                    <div class="job-location">Austin, TX • $35,000 - $45,000</div>
+                </div>
+                <div class="job-item">
+                    <div class="job-title">Caregiver - Memory Care</div>
+                    <div class="job-company">Brookdale Senior Living</div>
+                    <div class="job-location">Austin, TX • $15 - $19/hr</div>
+                </div>
+                <div class="job-item">
+                    <div class="job-title">Dialysis Technician</div>
+                    <div class="job-company">Fresenius Medical Care</div>
+                    <div class="job-location">Austin, TX • $45,000 - $60,000</div>
+                </div>
+                <div class="job-item">
+                    <div class="job-title">Phlebotomist</div>
+                    <div class="job-company">Quest Diagnostics</div>
+                    <div class="job-location">Austin, TX • $35,000 - $45,000</div>
+                </div>
+                <div class="job-item">
+                    <div class="job-title">Physical Therapy Assistant</div>
+                    <div class="job-company">ATI Physical Therapy</div>
+                    <div class="job-location">Austin, TX • $50,000 - $65,000</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{jobsUrl}}" class="cta-button" style="color: white !important;">
+                    <span class="emoji">👉</span> View All Jobs
+                </a>
+            </div>
+            
+            <p>New opportunities are added daily. Keep your profile updated to get the best matches!</p>
+        </div>
+        
+        <div class="closing">
+            With care,<br>
+            <div class="signature">The Pipeline Team</div>
+        </div>
+        
+        <div class="footer">
+            <p>Pipeline - Connecting healthcare professionals with meaningful opportunities</p>
+        </div>
+    </div>
+</body>
+</html> 

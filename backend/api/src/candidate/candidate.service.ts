@@ -2,10 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 import { UpdateCandidateDto } from './dto/update-candidate.dto';
 import { CandidateQueryDto } from './dto/candidate-list-query.dto';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import {
+  IntakeCompleteEvent,
+  JobApplyClickedNoConfirmEvent
+} from '../events/user-events';
 
 @Injectable()
 export class CandidateService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService, private eventEmitter: EventEmitter2) {}
 
   async getCandidateById(id: string) {
     return this.prismaService.candidates.findUnique({
@@ -72,5 +77,14 @@ export class CandidateService {
     });
 
     return { updatedCandidate };
+  }
+
+  async completeIntake(userId: string) {
+    // ... intake completion logic ...
+    this.eventEmitter.emit('intake_complete', new IntakeCompleteEvent(userId));
+  }
+
+  async jobApplyClickedNoConfirm(userId: string, jobId: string) {
+    this.eventEmitter.emit('job.apply_clicked_no_confirm', new JobApplyClickedNoConfirmEvent(userId, jobId));
   }
 }

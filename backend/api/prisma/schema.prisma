@@ -105,6 +105,7 @@ model jobs {
   title        String
   description  String?
   location     String?
+  zipCode      String?
   company      String?
   salary       String?
   requirements String?
@@ -114,6 +115,8 @@ model jobs {
   updatedAt    DateTime       @updatedAt
   applied_jobs applied_jobs[]
   saved_jobs   saved_jobs[]
+
+  @@index([zipCode])
 }
 
 model applied_jobs {
