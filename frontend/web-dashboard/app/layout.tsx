@@ -31,7 +31,8 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" 
           rel="stylesheet" 
         />
-        <link rel="icon" type="image/svg+xml" href="/pipeline_logo_p.png" />
+        <link rel="icon" type="image/svg+xml" href="/pipeline_logo.svg" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
       </head>
       <body className={baloo.className}>
         <AuthProvider>
