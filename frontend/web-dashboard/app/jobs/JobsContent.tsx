@@ -49,6 +49,32 @@ const loadJobData = async (): Promise<Job[]> => {
   }
 };
 
+// Utility to extract city, state from a full address
+const extractCityState = (location: string): string | null => {
+  if (!location) return null;
+  // Try to match: ... City, ST ...
+  const match = location.match(/([A-Za-z .'-]+),\s*([A-Z]{2})(?:\s|,|$)/);
+  if (match) {
+    return `${match[1].trim()}, ${match[2].trim()}`;
+  }
+  return null;
+};
+
+// Utility to check if a string is a monetary value
+const isMonetary = (value: string): boolean => {
+  if (!value) return false;
+  // Match $12,000, $12/hr, 12000 USD, etc.
+  return /\$\s?\d|\d+\s?(USD|usd|dollars|per\s?hour|\/hr|hourly|annually|per\s?year)/.test(value);
+};
+
+// Utility to extract salary from description
+const extractSalaryFromDescription = (desc: string): string | null => {
+  if (!desc) return null;
+  const match = desc.match(/\$\s?\d{2,3}(,\d{3})*(\.\d{2})?(\s?(per|\/)?\s?(hour|hr|year|annum|week|month))?/i);
+  if (match) return match[0];
+  return null;
+};
+
 const transformJobData = (rawJobs: Record<string, unknown>[]): Job[] => {
   return rawJobs
     .map((job, index) => {
@@ -56,25 +82,32 @@ const transformJobData = (rawJobs: Record<string, unknown>[]): Job[] => {
       const description = (job.description as string) || '';
       const url = (job.url as string) || '';
       const company = (job.company as string) || '';
-      const location = (job.location as string) || '';
-      
-      // Handle both BrightStar format (salary_range) and comprehensive format (salary)
-      const salary = (job.salary_range as string) || (job.salary as string) || '';
-      
+      let location = (job.location as string) || '';
+      // Extract city, state from location
+      const cityState = extractCityState(location);
+      location = cityState || '';
+      // If not parseable, hide location
+      if (!cityState) location = '';
+      // Salary logic
+      let salary = (job.salary_range as string) || (job.salary as string) || '';
+      if (!isMonetary(salary)) {
+        // Try to extract from description
+        const extracted = extractSalaryFromDescription(description);
+        salary = extracted || '';
+      }
+      // If still not monetary, hide
+      if (!isMonetary(salary)) salary = '';
       // Use existing tags if available (comprehensive format), otherwise generate them (BrightStar format)
       let tags: Tag[];
       if (job.tags && Array.isArray(job.tags)) {
-        // Convert comprehensive format tags to our Tag interface
         tags = (job.tags as any[]).map(tag => ({
           id: tag.id || Date.now() + Math.random(),
           label: tag.label,
           type: tag.type as TagType
         }));
       } else {
-        // Generate tags for BrightStar format
         tags = generateTags(title, description, job.category as string);
       }
-      
       return {
         id: (job.id as string) || `job_${index + 1}`,
         title,
