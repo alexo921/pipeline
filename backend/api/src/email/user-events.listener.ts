@@ -1,8 +1,8 @@
 import { OnEvent } from '@nestjs/event-emitter';
 import { Injectable } from '@nestjs/common';
 import { EmailService } from './email.service';
-import { SchedulerRegistry } from '@nestjs/schedule';
 import { PrismaService } from 'src/common/prisma/prisma.service';
+import { QueueService } from '../queue/queue.service';
 import {
   AccountCreatedEvent,
   JobApplyClickedNoConfirmEvent,
@@ -15,8 +15,8 @@ import {
 export class UserEventsListener {
   constructor(
     private readonly emailService: EmailService,
-    private readonly schedulerRegistry: SchedulerRegistry,
     private readonly prisma: PrismaService,
+    private readonly queueService: QueueService,
   ) {}
 
   private async getUserEmail(userId: string): Promise<string> {
@@ -43,85 +43,34 @@ export class UserEventsListener {
     const userEmail = await this.getUserEmail(event.userId);
     const user = await this.prisma.users.findUnique({ where: { id: event.userId } });
     // Use existing welcome-email.html with proper data
-    await this.emailService.sendTemplateMail(
-      userEmail,
-      'Welcome to Pipeline',
-      'welcome-email',
-      {
+    await this.queueService.addEmailJob({
+      to: userEmail,
+      subject: 'Welcome to Pipeline',
+      template: 'welcome-email',
+      context: {
         firstName: user?.firstName || 'there',
         jobsUrl: `${process.env.FRONTEND_URL}/jobs`
       }
-    );
-    this.scheduleNoTier2Followups(event.userId, userEmail);
+    });
+    await this.queueService.scheduleTier2Followups(event.userId, userEmail);
   }
 
-  private scheduleNoTier2Followups(userId: string, userEmail: string) {
-    // +1 hour
-    const timeout1 = setTimeout(async () => {
-      if (!(await this.hasTier2(userId))) {
-        // Use partial-signup-reminder.html
-        await this.emailService.sendTemplateMail(
-          userEmail,
-          'Finish Your Setup',
-          'partial-signup-reminder',
-          {
-            firstName: 'there',
-            profileUrl: `${process.env.FRONTEND_URL}/dashboard/profile`
-          }
-        );
-      }
-    }, 60 * 60 * 1000);
-    this.schedulerRegistry.addTimeout(`no-tier2-1h-${userId}`, timeout1);
 
-    // +24 hours
-    const timeout2 = setTimeout(async () => {
-      if (!(await this.hasTier2(userId))) {
-        // Use partial-signup-reminder.html
-        await this.emailService.sendTemplateMail(
-          userEmail,
-          'Help Us Help You',
-          'partial-signup-reminder',
-          {
-            firstName: 'there',
-            profileUrl: `${process.env.FRONTEND_URL}/dashboard/profile`
-          }
-        );
-      }
-    }, 24 * 60 * 60 * 1000);
-    this.schedulerRegistry.addTimeout(`no-tier2-24h-${userId}`, timeout2);
-
-    // +3 days
-    const timeout3 = setTimeout(async () => {
-      if (!(await this.hasTier2(userId))) {
-        // Use partial-signup-reminder.html
-        await this.emailService.sendTemplateMail(
-          userEmail,
-          'Jobs Are Waiting Near You',
-          'partial-signup-reminder',
-          {
-            firstName: 'there',
-            profileUrl: `${process.env.FRONTEND_URL}/dashboard/profile`
-          }
-        );
-      }
-    }, 3 * 24 * 60 * 60 * 1000);
-    this.schedulerRegistry.addTimeout(`no-tier2-3d-${userId}`, timeout3);
-  }
 
   @OnEvent('job.apply_clicked_no_confirm')
   async handleJobApplyClickedNoConfirm(event: JobApplyClickedNoConfirmEvent) {
     const userEmail = await this.getUserEmail(event.userId);
     const user = await this.prisma.users.findUnique({ where: { id: event.userId } });
     // Use apply-nudge-email.html
-    await this.emailService.sendTemplateMail(
-      userEmail,
-      'Did You Apply to This Job?',
-      'apply-nudge-email',
-      { 
+    await this.queueService.addEmailJob({
+      to: userEmail,
+      subject: 'Did You Apply to This Job?',
+      template: 'apply-nudge-email',
+      context: { 
         firstName: user?.firstName || 'there',
         jobsUrl: `${process.env.FRONTEND_URL}/jobs`
       }
-    );
+    });
   }
 
   @OnEvent('new_job_posted_near_zip')
@@ -130,11 +79,11 @@ export class UserEventsListener {
     const user = await this.prisma.users.findUnique({ where: { id: event.userId } });
     const jobDetails = await this.getJobDetails(event.jobId);
     // Use local-job-alert.html
-    await this.emailService.sendTemplateMail(
-      userEmail,
-      'New Job in Your Area',
-      'local-job-alert',
-      { 
+    await this.queueService.addEmailJob({
+      to: userEmail,
+      subject: 'New Job in Your Area',
+      template: 'local-job-alert',
+      context: { 
         firstName: user?.firstName || 'there',
         city: jobDetails.location || 'your area',
         jobCount: 1,
@@ -142,7 +91,7 @@ export class UserEventsListener {
         jobTitle: jobDetails.jobTitle,
         jobLink: jobDetails.jobLink
       }
-    );
+    });
   }
 
   @OnEvent('intake_complete')
@@ -150,15 +99,15 @@ export class UserEventsListener {
     const userEmail = await this.getUserEmail(event.userId);
     const user = await this.prisma.users.findUnique({ where: { id: event.userId } });
     // Use top_10_jobs_this_week.html for weekly digest
-    await this.emailService.sendTemplateMail(
-      userEmail,
-      'Top 10 Jobs This Week',
-      'top_10_jobs_this_week',
-      {
+    await this.queueService.addEmailJob({
+      to: userEmail,
+      subject: 'Top 10 Jobs This Week',
+      template: 'top_10_jobs_this_week',
+      context: {
         firstName: user?.firstName || 'there',
         jobsUrl: `${process.env.FRONTEND_URL}/jobs`
       }
-    );
+    });
   }
 
   @OnEvent('reactivated_user_login')
@@ -166,14 +115,14 @@ export class UserEventsListener {
     const userEmail = await this.getUserEmail(event.userId);
     const user = await this.prisma.users.findUnique({ where: { id: event.userId } });
     // Use welcome-email.html for reactivation as a fallback
-    await this.emailService.sendTemplateMail(
-      userEmail,
-      'Welcome Back',
-      'welcome-email',
-      {
+    await this.queueService.addEmailJob({
+      to: userEmail,
+      subject: 'Welcome Back',
+      template: 'welcome-email',
+      context: {
         firstName: user?.firstName || 'there',
         jobsUrl: `${process.env.FRONTEND_URL}/jobs`
       }
-    );
+    });
   }
 } 

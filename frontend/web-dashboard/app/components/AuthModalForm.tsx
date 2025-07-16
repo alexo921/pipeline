@@ -203,16 +203,6 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose, onSwitchToSi
             Sign in with Google
           </span>
         </button>
-
-        {/* Apple */}
-        <button
-          type="button"
-          disabled={isLoading}
-          className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 rounded-xl hover:bg-gray-100 transition disabled:opacity-50"
-        >
-          <Image src="/apple-logo.svg" alt="Apple" width={20} height={20} />
-          <span className="text-sm text-black font-medium">Sign in with Apple</span>
-        </button>
       </div>
 
       {/* Account Prompt */}

@@ -487,27 +487,68 @@ export class EmailService {
     if (this.isGmailAuthorized()) {
       try {
         const result = await this.sendEmailViaGmailAPI(to, subject, html);
-        return { 
-          result, 
-          method: 'gmail-api',
-          success: true 
-        };
+        return result;
       } catch (error) {
         console.log('Gmail API failed, falling back to SMTP:', error.message);
       }
     }
 
     // Fallback to SMTP
+    const mailOptions = {
+      from: `"Pipeline" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      html,
+    };
+
+    const info = await this.transporter.sendMail(mailOptions);
+    return info;
+  }
+
+  async sendTemplateMail(to: string, subject: string, templateName: string, data: any = {}) {
     try {
-      const result = await this.sendMail(to, subject, name, message);
-      return {
-        result, 
-        method: 'smtp',
-        success: true 
+      // Read the HTML template
+      const templatePath = path.join(
+        process.cwd(),
+        'src/templates',
+        `${templateName}.html`,
+      );
+      
+      if (!fs.existsSync(templatePath)) {
+        throw new Error(`Template not found: ${templatePath}`);
+      }
+      
+      let emailTemplate = fs.readFileSync(templatePath, 'utf8');
+
+      // Replace placeholders in the template
+      Object.keys(data).forEach(key => {
+        const placeholder = `{{${key}}}`;
+        emailTemplate = emailTemplate.replace(new RegExp(placeholder, 'g'), data[key]);
+      });
+
+      // Try Gmail API first if available
+      if (this.isGmailAuthorized()) {
+        try {
+          const result = await this.sendEmailViaGmailAPI(to, subject, emailTemplate);
+          return result;
+        } catch (error) {
+          console.log(`Gmail API failed for ${templateName}, falling back to SMTP:`, error.message);
+        }
+      }
+
+      // Fallback to SMTP
+      const mailOptions = {
+        from: `"Pipeline" <${process.env.EMAIL_USER}>`,
+        to,
+        subject,
+        html: emailTemplate,
       };
+
+      const info = await this.transporter.sendMail(mailOptions);
+      return info;
     } catch (error) {
-      console.error('Both Gmail API and SMTP failed:', error);
-      throw new Error('Failed to send email via both Gmail API and SMTP');
+      console.error(`Failed to send ${templateName} email:`, error);
+      throw new Error(`Failed to send ${templateName} email`);
     }
   }
 }

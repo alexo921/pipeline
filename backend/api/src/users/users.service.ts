@@ -6,10 +6,12 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/common/prisma/prisma.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { AccountCreatedEvent, ReactivatedUserLoginEvent } from '../events/user-events';
 
 @Injectable()
 export class UsersService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private prismaService: PrismaService, private eventEmitter: EventEmitter2) {}
 
   async create(createUserDto: CreateUserDto) {
     const existingUser = await this.prismaService.users.findUnique({
@@ -20,9 +22,12 @@ export class UsersService {
       throw new BadRequestException('A user with this email already exists');
     }
 
-    return this.prismaService.users.create({
+    const user = await this.prismaService.users.create({
       data: createUserDto,
     });
+    // Emit account created event
+    this.eventEmitter.emit('account.created', new AccountCreatedEvent(user.id));
+    return user;
   }
 
   findAll() {
@@ -54,5 +59,9 @@ export class UsersService {
     return this.prismaService.users.delete({
       where: { id },
     });
+  }
+
+  async handleReactivatedLogin(userId: string) {
+    this.eventEmitter.emit('reactivated_user_login', new ReactivatedUserLoginEvent(userId));
   }
 }

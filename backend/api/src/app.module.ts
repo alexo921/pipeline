@@ -8,11 +8,11 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { CandidateModule } from './candidate/candidate.module';
 import { JobModule } from './job/job.module';
-import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { EmailService } from './email/email.service';
 import { UserEventsListener } from './email/user-events.listener';
 import { JobsService } from './email/jobs.service';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -35,7 +35,7 @@ import { JobsService } from './email/jobs.service';
     PrismaModule,
     CandidateModule,
     JobModule,
-    ScheduleModule.forRoot(),
+    QueueModule,
     EventEmitterModule.forRoot(),
   ],
   providers: [EmailService, UserEventsListener, JobsService],

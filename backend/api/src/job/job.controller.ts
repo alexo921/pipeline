@@ -11,7 +11,18 @@ export class JobController {
   @Post()
   @ApiOperation({ summary: 'Create a new job' })
   dummyCreate() {
-    return this.jobService.create();
+    // Create a dummy job for testing
+    const dummyJobData = {
+      title: 'Test Job',
+      description: 'This is a test job',
+      location: 'Austin, TX 78701',
+      zipCode: '78701',
+      company: 'Test Company',
+      salary: '$50,000 - $60,000',
+      requirements: 'Some requirements',
+      benefits: 'Some benefits'
+    };
+    return this.jobService.create(dummyJobData);
   }
 
   @Get()
