@@ -10,6 +10,8 @@ cd "$PROJECT_DIR"
 
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
 NC='\033[0m'
 
 log() {
@@ -18,6 +20,14 @@ log() {
 
 info() {
     echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[ERROR]${NC} $1"
 }
 
 show_help() {
@@ -59,7 +69,19 @@ update_jobs() {
 
 hotfix() {
     log "Performing hotfix deployment (no rebuild)..."
-    ./deploy.sh --no-build frontend
+    
+    # Try to deploy without build first
+    if ./deploy.sh --no-build frontend; then
+        log "Hotfix deployment completed successfully"
+    else
+        warning "Hotfix deployment failed, trying with rebuild..."
+        if ./deploy.sh frontend; then
+            log "Hotfix deployment with rebuild completed successfully"
+        else
+            error "Hotfix deployment failed completely"
+            return 1
+        fi
+    fi
 }
 
 new_jobs() {

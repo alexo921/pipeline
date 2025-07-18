@@ -17,11 +17,36 @@ For most common scenarios, use the quick deployment script:
 ./quick-deploy.sh check
 ```
 
-## Full Deployment Script
+## Fixed Deployment Scripts
 
-The main deployment script (`./deploy.sh`) provides comprehensive deployment options with safety features:
+### Simple Deployment Script (Recommended)
 
-### Basic Usage
+The new `simple-deploy.sh` script fixes common issues and provides better error handling:
+
+```bash
+# Deploy everything (recommended)
+./simple-deploy.sh
+
+# Deploy only specific components
+./simple-deploy.sh frontend
+./simple-deploy.sh backend
+./simple-deploy.sh admin
+./simple-deploy.sh scraper
+
+# Check deployment status
+./simple-deploy.sh check
+```
+
+**Key improvements:**
+- ✅ Fixed database backup (uses correct `pipeline_admin` user)
+- ✅ Handles Prisma checksum issues automatically
+- ✅ Better error handling and logging
+- ✅ Stops and removes containers before rebuilding
+- ✅ Automatically copies updated .env files to containers
+
+### Full Deployment Script
+
+The main deployment script (`./deploy.sh`) has been updated with fixes:
 
 ```bash
 # Deploy everything (frontend, backend, admin, scraper)
@@ -69,6 +94,28 @@ The main deployment script (`./deploy.sh`) provides comprehensive deployment opt
 ./deploy.sh backend
 ```
 
+## Recent Fixes
+
+### Database Backup Issues
+- **Problem**: Script was using `postgres` user instead of `pipeline_admin`
+- **Fix**: Updated to use correct database user and added error handling
+- **Result**: Database backups now work correctly
+
+### Prisma Build Issues
+- **Problem**: Prisma checksum validation failing during builds
+- **Fix**: Added `PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1` environment variable
+- **Result**: Backend builds complete successfully
+
+### Docker Container Issues
+- **Problem**: Container config errors during rebuilds
+- **Fix**: Stop and remove containers before rebuilding
+- **Result**: Clean rebuilds without container conflicts
+
+### Environment Variable Updates
+- **Problem**: .env changes not reflected in running containers
+- **Fix**: Automatic copying of .env files to containers
+- **Result**: Configuration changes apply immediately
+
 ## Components
 
 ### Frontend (web-dashboard)
@@ -98,7 +145,7 @@ The main deployment script (`./deploy.sh`) provides comprehensive deployment opt
 
 ### Automatic Backups
 Every deployment creates a timestamped backup:
-- Database dump
+- Database dump (with proper error handling)
 - Git commit hash
 - Docker container states
 - Nginx configuration
@@ -125,6 +172,8 @@ This restores:
 
 ### Check System Status
 ```bash
+./simple-deploy.sh check
+# or
 ./quick-deploy.sh check
 ```
 
@@ -155,6 +204,10 @@ docker-compose up -d --build web-dashboard
 #### "Container Config Error"
 If you get Docker Compose container config errors:
 ```bash
+# Use the simple deploy script (handles this automatically)
+./simple-deploy.sh frontend
+
+# Or manually clean up
 docker container prune -f
 ./deploy.sh
 ```
@@ -173,13 +226,20 @@ docker-compose up -d postgres
 ./deploy.sh migrations
 ```
 
+#### "Prisma Build Failed"
+The simple deploy script handles this automatically, but if using the old script:
+```bash
+PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1 docker-compose build api
+```
+
 ## File Structure
 
 ```
 pipeline/
-├── deploy.sh              # Main deployment script
-├── quick-deploy.sh         # Quick deployment scenarios
-├── deployment.log          # Deployment history
+├── deploy.sh              # Main deployment script (fixed)
+├── simple-deploy.sh       # New simplified deployment script (recommended)
+├── quick-deploy.sh        # Quick deployment scenarios (fixed)
+├── deployment.log         # Deployment history
 ├── backups/               # Automatic backups
 ├── docker-compose.yml     # Service definitions
 ├── frontend/
@@ -196,40 +256,4 @@ The deployment script automatically manages nginx routing:
 - `/` → Frontend (port 3000)
 - `/api/jobs` → Frontend API (port 3000)
 - `/api/*` → Backend API (port 3001)
-- `/admin/` → Admin panel (port 3002)
-
-## Environment Variables
-
-Key environment variables are managed through Docker Compose:
-- Database credentials
-- API keys
-- SSL certificates
-- Port configurations
-
-## Best Practices
-
-1. **Always test first**: Use `--dry-run` for important deployments
-2. **Deploy incrementally**: Update one component at a time for easier debugging
-3. **Monitor logs**: Check `deployment.log` after deployments
-4. **Keep backups**: The script automatically manages this, but verify backups exist
-5. **Use quick-deploy**: For routine updates like new job data
-
-## Monitoring
-
-### Health Check URLs
-- Website: https://pipelineworkforce.com
-- Jobs API: https://pipelineworkforce.com/api/jobs
-- Admin: https://pipelineworkforce.com/admin
-
-### Log Locations
-- Deployment logs: `./deployment.log`
-- Container logs: `docker-compose logs [service]`
-- Nginx logs: `/var/log/nginx/`
-
-## Support
-
-If you encounter issues:
-1. Check `./quick-deploy.sh check` for system status
-2. Review `deployment.log` for recent errors
-3. Use `./deploy.sh --rollback` if needed
-4. Check individual container logs with `docker-compose logs [service]` 
+- `/admin/` → Admin panel (port 3002) 
