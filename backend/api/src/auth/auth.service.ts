@@ -59,7 +59,7 @@ export class AuthService {
   async exchangeGoogleCode(code: string): Promise<string> {
     const clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
     const clientSecret = this.configService.get<string>('GOOGLE_CLIENT_SECRET');
-    const redirectUri = `${this.configService.get<string>('APP_URL')}${this.configService.get<string>('GOOGLE_CALLBACK_URL')}`;
+    const redirectUri = this.configService.get<string>('GOOGLE_CALLBACK_URL');
 
     const response = await axios.post<GoogleTokenResponse>(
       'https://oauth2.googleapis.com/token',

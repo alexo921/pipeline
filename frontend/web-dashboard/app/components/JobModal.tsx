@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X, ExternalLink } from 'lucide-react';
 import { Job } from '../types/job';
 import { useAuth } from '../contexts/AuthContext';
@@ -12,8 +12,6 @@ interface JobModalProps {
 
 export default function JobModal({ job, onClose }: JobModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const descriptionHeaderRef = useRef<HTMLHeadingElement>(null);
-  const [isDescriptionSticky, setIsDescriptionSticky] = useState(false);
   const { user, showLoginModal } = useAuth();
 
   useEffect(() => {
@@ -28,26 +26,6 @@ export default function JobModal({ job, onClose }: JobModalProps) {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (descriptionHeaderRef.current) {
-        const rect = descriptionHeaderRef.current.getBoundingClientRect();
-        const headerHeight = 100; // Approximate height of the modal header
-        setIsDescriptionSticky(rect.top <= headerHeight);
-      }
-    };
-
-    const modalContent = modalRef.current?.querySelector('.modal-content');
-    if (modalContent) {
-      modalContent.addEventListener('scroll', handleScroll);
-      return () => modalContent.removeEventListener('scroll', handleScroll);
-    }
-  }, [job]);
-
-  useEffect(() => {
-    // Effect runs when job changes
-  }, [job]);
 
   if (!job) return null;
 
@@ -92,20 +70,38 @@ export default function JobModal({ job, onClose }: JobModalProps) {
       .trim();
   };
 
+  // Tag color function to match main page
+  const getTagColor = (label: string) => {
+    // Check tag type based on common patterns
+    if (['Nursing Home', 'Assisted Living Facility', 'Home Care'].includes(label)) {
+      return 'bg-purple-200'; // Purple for Job Setting
+    } else if (['Full-Time', 'Part-Time', 'Per-Diem', 'Temp-To-Perm', 'Local Contract'].includes(label)) {
+      return 'bg-[#8AADFC]'; // Blue for Employment Type
+    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM'].includes(label)) {
+      return 'bg-pink-200'; // Pink for Shift
+    }
+    return 'bg-gray-200';
+  };
+
   return (
-    <div className="fixed inset-0 z-50 modal-backdrop">
-      {/* Side Panel */}
+    <div className="fixed inset-0 z-50 modal-backdrop bg-black bg-opacity-50">
+      {/* Full Screen Modal */}
       <div 
         ref={modalRef}
-        className="fixed inset-y-0 right-0 w-full max-w-2xl bg-white shadow-xl transform transition-transform duration-300 ease-in-out"
+        className="fixed inset-0 bg-white overflow-y-auto"
       >
-        <div className="h-full flex flex-col">
-          {/* Header - Fixed */}
-          <div className="flex items-center justify-between p-6 border-b bg-white z-10">
+        {/* Header - Not sticky, scrolls with content */}
+        <div className="p-6 border-b bg-white">
+          <div className="flex items-center justify-between mb-4">
             <div className="flex-1 min-w-0">
-              <h2 className="text-2xl font-semibold text-blue-600 truncate">{job.title}</h2>
-              <p className="text-gray-600 truncate">{job.company}</p>
-              <p className="text-sm text-gray-500">{job.location} • {job.salary}</p>
+              <h2 className="text-2xl font-black text-[#2466D0] font-avenir leading-[130%] mb-2">{job.title}</h2>
+              <p className="text-[16px] font-bold text-[#01253F] font-avenir">{job.company}</p>
+              {job.location && job.location.trim() !== '' && job.location.trim().toLowerCase() !== 'unknown location' && (
+                <p className="text-[16px] text-[#01253F] font-avenir">{job.location}</p>
+              )}
+              {job.salary && job.salary.trim() !== '' && job.salary.trim().toLowerCase() !== 'salary not specified' && (
+                <p className="text-[16px] text-[#01253F] font-avenir">{job.salary}</p>
+              )}
             </div>
             <button
               onClick={onClose}
@@ -114,119 +110,77 @@ export default function JobModal({ job, onClose }: JobModalProps) {
               <X className="h-6 w-6 text-gray-400" />
             </button>
           </div>
+          
+          {/* Tags */}
+          <div className="flex flex-wrap gap-3 mb-4">
+            {(job.tags || []).map((tag) => (
+              <div 
+                key={tag.id} 
+                className={`flex items-center justify-center text-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}
+                style={{ 
+                  minWidth: 'fit-content'
+                }}
+              >
+                <span className="text-sm font-bold text-[#01253F] font-avenir whitespace-nowrap truncate">
+                  {tag.label}
+                </span>
+              </div>
+            ))}
+          </div>
 
-          {/* Content - Scrollable */}
-          <div className="flex-1 overflow-y-auto modal-content" style={{ scrollBehavior: 'smooth' }}>
-            <div className="p-6 space-y-6">
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2">
-                {job.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className={`
-                      inline-flex items-center px-4 py-2 rounded-full text-base font-medium
-                      ${tag.type === 'category' ? 'bg-blue-100 text-blue-800' : ''}
-                      ${tag.type === 'employment' ? 'bg-gray-100 text-gray-800' : ''}
-                      ${tag.type === 'experience' ? 'bg-pink-100 text-pink-800' : ''}
-                    `}
-                  >
-                    {tag.label}
-                  </span>
+          {/* Apply Button */}
+          <button
+            onClick={handleApplyClick}
+            className="w-full bg-[#2CB3BF] text-white font-black text-[20px] py-3 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
+          >
+            Apply
+          </button>
+        </div>
+
+        {/* Content - Single scroll, no dual scroll */}
+        <div className="p-6 space-y-6">
+          {/* Job Description */}
+          {job.description && (
+            <div>
+              <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir">
+                Job Description
+              </h3>
+              <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
+                {formatDescription(job.description).split('\n').map((paragraph, index) => (
+                  paragraph.trim() && (
+                    <p key={index} className="mb-3 last:mb-0 leading-relaxed">
+                      {paragraph.trim()}
+                    </p>
+                  )
                 ))}
               </div>
+            </div>
+          )}
 
-              {/* Overview */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3 text-gray-900">Overview</h3>
-                <p className="text-gray-700 leading-relaxed">
-                  {job.overview || "Community Focused. Care Driven."}
-                </p>
-              </div>
-
-              {/* Job Description - This will become sticky */}
-              {job.description && (
-                <div className="relative">
-                  <h3 
-                    ref={descriptionHeaderRef}
-                    className={`text-lg font-semibold mb-3 text-gray-900 transition-all duration-200 ${
-                      isDescriptionSticky 
-                        ? 'sticky top-0 bg-white py-3 border-b shadow-sm z-10' 
-                        : ''
-                    }`}
-                  >
-                    Job Description
-                  </h3>
-                  <div 
-                    className={`bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto ${
-                      isDescriptionSticky ? 'border border-gray-200' : ''
-                    }`}
-                    style={{ 
-                      scrollbarWidth: 'thin',
-                      scrollbarColor: '#cbd5e0 #f7fafc'
-                    }}
-                  >
-                    <div className="prose prose-sm max-w-none text-gray-700">
-                      {formatDescription(job.description).split('\n').map((paragraph, index) => (
-                        paragraph.trim() && (
-                          <p key={index} className="mb-3 last:mb-0 leading-relaxed">
-                            {paragraph.trim()}
-                          </p>
-                        )
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Requirements */}
-              {job.requirements && (
-                <div>
-                  <h3 className="text-lg font-semibold mb-3 text-gray-900">Requirements</h3>
-                  <ul className="list-disc pl-5 text-gray-700 space-y-2">
+          {/* Requirements */}
+          {job.requirements && (
+            <div>
+              <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir">
+                Requirements
+              </h3>
+              <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
+                {Array.isArray(job.requirements) ? (
+                  <ul className="list-disc pl-5 space-y-2">
                     {formatRequirements(job.requirements).map((req, index) => (
                       <li key={index} className="leading-relaxed">{req}</li>
                     ))}
                   </ul>
-                </div>
-              )}
-
-              {/* Additional spacing for sticky behavior */}
-              <div className="h-8"></div>
+                ) : (
+                  <p className="leading-relaxed">{job.requirements}</p>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Footer - Fixed */}
-          <div className="p-6 border-t bg-white">
-            <button
-              onClick={handleApplyClick}
-              className="w-full bg-teal-500 text-white font-medium py-3 px-6 rounded-lg hover:bg-teal-600 transition-colors flex items-center justify-center gap-2"
-              type="button"
-            >
-              Apply Now
-              <ExternalLink className="h-4 w-4" />
-            </button>
-          </div>
+          {/* Extra spacing at bottom */}
+          <div className="h-24"></div>
         </div>
       </div>
-
-      <style jsx>{`
-        .modal-backdrop {
-          background: rgba(0, 0, 0, 0.25);
-        }
-        .modal-content::-webkit-scrollbar {
-          width: 6px;
-        }
-        .modal-content::-webkit-scrollbar-track {
-          background: #f7fafc;
-        }
-        .modal-content::-webkit-scrollbar-thumb {
-          background: #cbd5e0;
-          border-radius: 3px;
-        }
-        .modal-content::-webkit-scrollbar-thumb:hover {
-          background: #a0aec0;
-        }
-      `}</style>
     </div>
   );
 } 

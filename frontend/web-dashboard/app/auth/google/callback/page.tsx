@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, Suspense } from "react";
+import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const GoogleCallbackContent = () => {
+export default function GoogleCallbackPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -11,13 +11,17 @@ const GoogleCallbackContent = () => {
     const token = searchParams.get("token");
     const email = searchParams.get("email");
 
-    if (token) {
-      localStorage.setItem("user_email", email || "");
+    if (token && email) {
+      // Store email for display purposes only
+      localStorage.setItem("user_email", email);
+      
+      // Redirect to homepage - the backend will handle authentication via cookies
       router.push("/");
     } else {
+      // If no token, redirect to homepage
       router.push("/");
     }
-  }, []);
+  }, [router, searchParams]);
 
   return (
     <div className="min-h-screen bg-[#F4F4F4] font-baloo flex items-center justify-center flex-col">
@@ -25,14 +29,4 @@ const GoogleCallbackContent = () => {
       <p className="text-[#7691A4] text-lg">Logging you in...</p>
     </div>
   );
-};
-
-const GoogleCallbackPage = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <GoogleCallbackContent />
-    </Suspense>
-  );
-};
-
-export default GoogleCallbackPage;
+} 

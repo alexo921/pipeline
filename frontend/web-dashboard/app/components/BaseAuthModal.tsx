@@ -14,6 +14,7 @@ const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
     onClose,
 }) => {
     const [isSignupMode, setIsSignupMode] = useState(false);
+    const [isIntakeStep, setIsIntakeStep] = useState(false);
     
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
@@ -28,10 +29,16 @@ const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
 
     const switchToSignup = () => {
         setIsSignupMode(true);
+        setIsIntakeStep(false);
     };
 
     const switchToLogin = () => {
         setIsSignupMode(false);
+        setIsIntakeStep(false);
+    };
+
+    const handleStep2 = () => {
+        setIsIntakeStep(true);
     };
 
     if (!isOpen) return null;
@@ -61,10 +68,10 @@ const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
                                 height={300} 
                                 className="absolute object-contain"
                             />
-                            {/* Nurse Illustration */}
+                            {/* Illustration */}
                             <Image
-                                src="/nurse.svg"
-                                alt="Nurse illustration"
+                                src={isSignupMode && isIntakeStep ? "/Ellipse 3.png" : "/nurse.svg"}
+                                alt={isSignupMode && isIntakeStep ? "Ellipse illustration" : "Nurse illustration"}
                                 width={250}
                                 height={250} 
                                 className="relative object-contain z-10"
@@ -77,6 +84,7 @@ const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
                                 <SignupModalForm 
                                     onClose={handleClose}
                                     onSwitchToLogin={switchToLogin}
+                                    onStep2={handleStep2}
                                 />
                             ) : (
                                 <AuthModalForm 

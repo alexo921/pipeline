@@ -96,7 +96,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Initiate Google OAuth' })
   initiateGoogleAuth(@Res() res: Response) {
     const clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
-    const redirectUri = `${this.configService.get<string>('APP_URL')}${this.configService.get<string>('GOOGLE_CALLBACK_URL')}`;
+    const redirectUri = this.configService.get<string>('GOOGLE_CALLBACK_URL');
 
     const authUrl =
       `https://accounts.google.com/o/oauth2/v2/auth?` +
@@ -126,9 +126,9 @@ export class AuthController {
         email: user.email,
       });
 
-      // return res.send({ token: jwt, user: userInfo });
+      // Redirect directly to homepage with token in URL params
       return res.redirect(
-        `${process.env.FRONTEND_URL}/auth/callback?token=${jwt}&email=${user.email}`,
+        `${process.env.FRONTEND_URL}/?token=${jwt}&email=${user.email}`,
       );
     } catch (err: unknown) {
       error('Google OAuth error', (err as Error).stack);

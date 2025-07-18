@@ -7,57 +7,187 @@ import { Search, MapPin, Filter, ChevronDown, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { env } from 'process';
 
-// Load job data from live_data.json
-const loadJobData = async (): Promise<Job[]> => {
+// Load job data from multiple enhanced JSON files
+const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
   try {
-    const allJobs: Job[] = [];
+    const allJobs: Record<string, unknown>[] = [];
     
-    // Load from live_data.json
-    try {
-      const response = await fetch('/live_data.json');
-      if (response.ok) {
-        const data = await response.json();
-        allJobs.push(...transformJobData(data));
+    // List of all enhanced JSON files to load
+    const jsonFiles = [
+      '/live_data.json',
+      '/site_Athena_Health_Care_Systems_20250716_221638_enhanced.json',
+      '/site_National_Healthcare_Associates_20250716_204858_enhanced.json',
+      '/site_Genesis_20250716_222027_enhanced.json',
+      '/site_iCare_Health_Network_20250716_204824_enhanced.json',
+      '/site_RydersHealth_20250716_181012_enhanced.json'
+    ];
+    
+    // Load data from each file
+    for (const file of jsonFiles) {
+      try {
+        const response = await fetch(file);
+        if (response.ok) {
+          const jobs = await response.json();
+          if (Array.isArray(jobs)) {
+            allJobs.push(...jobs);
+            console.log(`Loaded ${jobs.length} jobs from ${file}`);
+          }
+        }
+      } catch (error) {
+        console.warn(`Failed to load ${file}:`, error);
       }
-    } catch (error) {
-      console.error('Error loading live_data.json:', error);
     }
     
-    // Filter jobs to only include healthcare-related positions
-    const healthcareJobs = allJobs.filter(job => {
-      const text = (job.title + ' ' + job.description + ' ' + job.company).toLowerCase();
-      const healthcareKeywords = [
-        'nurse', 'nursing', 'cna', 'lpn', 'rn', 'caregiver', 'care', 'health', 'medical',
-        'homecare', 'home care', 'home health', 'assisted living', 'nursing home',
-        'skilled nursing', 'memory care', 'rehabilitation', 'therapy', 'dietary',
-        'housekeeping', 'maintenance', 'activities', 'social work', 'case manager'
-      ];
-      return healthcareKeywords.some(keyword => text.includes(keyword));
-    });
+    console.log(`Total jobs loaded: ${allJobs.length}`);
     
-    // Remove duplicates based on job ID
-    const uniqueJobs = healthcareJobs.filter((job, index, self) => 
-      index === self.findIndex(j => j.id === job.id)
-    );
+    // Transform the raw job data to generate tags and clean up the data
+    const transformedJobs = transformJobData(allJobs, shouldShuffle);
+    console.log(`Total jobs after transformation: ${transformedJobs.length}`);
     
-    console.log(`Loaded ${uniqueJobs.length} unique healthcare jobs from ${allJobs.length} total entries`);
-    return uniqueJobs;
-    
+    return transformedJobs;
   } catch (error) {
     console.error('Error loading job data:', error);
     return [];
   }
 };
 
-// Utility to extract city, state from a full address
-const extractCityState = (location: string): string | null => {
-  if (!location) return null;
-  // Try to match: ... City, ST ...
-  const match = location.match(/([A-Za-z .'-]+),\s*([A-Z]{2})(?:\s|,|$)/);
-  if (match) {
-    return `${match[1].trim()}, ${match[2].trim()}`;
+// Utility to clean and truncate long content for job cards
+const cleanJobCardContent = (text: string, maxLength: number = 100): string => {
+  if (!text) return '';
+  
+  // Remove common unwanted patterns that shouldn't be in job cards
+  let cleaned = text
+    .replace(/Your web browser.*?update your browser/gi, '') // Remove browser warnings
+    .replace(/Chrome \d+.*?vulnerability/gi, '') // Remove security warnings
+    .replace(/Please take a minute.*?browser/gi, '') // Remove update prompts
+    .replace(/Update browser/gi, '') // Remove update browser text
+    .replace(/\b(?:Click here|Apply now|Learn more|Read more)\b/gi, '') // Remove action prompts
+    .replace(/\b(?:www\.|https?:\/\/)\S+/gi, '') // Remove URLs
+    .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '') // Remove email addresses
+    .replace(/By checking this box.*?Privacy Policy/gi, '') // Remove terms and conditions
+    .replace(/Continue/gi, '') // Remove continue text
+    .replace(/Job Type\s*:\s*[A-Za-z\s-]+/gi, '') // Remove job type labels
+    .replace(/DESCRIPTION/gi, '') // Remove description headers
+    .replace(/POSITION SUMMARY/gi, '') // Remove position summary headers
+    .replace(/POSITION REQUIREMENTS/gi, '') // Remove requirements headers
+    .replace(/Working Conditions/gi, '') // Remove working conditions headers
+    .replace(/Physical Requirements/gi, '') // Remove physical requirements headers
+    .replace(/Behavioral Competencies/gi, '') // Remove behavioral competencies headers
+    .replace(/\$[\d,]+ sign-on bonus.*?(?=\s|$)/gi, '') // Remove sign-on bonus text
+    .replace(/Registered Nurse licensed.*?(?=\s|$)/gi, '') // Remove license requirements
+    .replace(/Minimum of.*?(?=\s|$)/gi, '') // Remove minimum requirements
+    .replace(/CPR certified.*?(?=\s|$)/gi, '') // Remove CPR requirements
+    .replace(/Ability to.*?(?=\s|$)/gi, '') // Remove ability requirements
+    .replace(/Works in.*?(?=\s|$)/gi, '') // Remove working conditions
+    .replace(/Physical.*?(?=\s|$)/gi, '') // Remove physical requirements
+    .replace(/Accountability.*?(?=\s|$)/gi, '') // Remove accountability text
+    // More aggressive cleaning for long-form content
+    .replace(/We are hiring.*?team/gi, '') // Remove hiring announcements
+    .replace(/Working with our team.*?life/gi, '') // Remove team descriptions
+    .replace(/Here at.*?company/gi, '') // Remove company descriptions
+    .replace(/As a.*?resident/gi, '') // Remove job role descriptions
+    .replace(/Experience & Education.*?required/gi, '') // Remove experience sections
+    .replace(/Duties & Responsibilities.*?team/gi, '') // Remove duties sections
+    .replace(/Specific Requirements.*?public/gi, '') // Remove requirements sections
+    .replace(/About.*?England/gi, '') // Remove about sections
+    .replace(/Athena's Benefits.*?apply/gi, '') // Remove benefits sections
+    .replace(/We are an equal.*?law/gi, '') // Remove EEO statements
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .trim();
+  
+  // If still too long, truncate with ellipsis
+  if (cleaned.length > maxLength) {
+    return cleaned.substring(0, maxLength - 3) + '...';
   }
-  return null;
+  
+  return cleaned;
+};
+
+// Utility to extract city, state from a full address
+const extractCityState = (location: string): { cityState: string | null; stateOnly: string | null } => {
+  if (!location) return { cityState: null, stateOnly: null };
+  
+  // State name to code mapping
+  const stateNameToCode: Record<string, string> = {
+    'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
+    'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
+    'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
+    'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
+    'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
+    'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
+    'new mexico': 'NM', 'new york': 'NY', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
+    'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
+    'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
+    'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY'
+  };
+  
+  // Clean the location string - remove common unwanted patterns
+  let cleanLocation = location
+    .replace(/\d{5}(-\d{4})?/g, '') // Remove ZIP codes
+    .replace(/\d+\s+[A-Za-z\s]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Place|Pl|Court|Ct|Way|Terrace|Ter)/gi, '') // Remove street addresses
+    .replace(/\b(?:United States|USA|US)\b/gi, '') // Remove country names
+    .replace(/,\s*,/g, ',') // Remove double commas
+    .replace(/^\s*,\s*|\s*,\s*$/g, '') // Remove leading/trailing commas
+    .trim();
+  
+  // Try to match: ... City, ST ...
+  const cityStateMatch = cleanLocation.match(/([A-Za-z .'-]+),\s*([A-Z]{2})(?:\s|,|$)/);
+  if (cityStateMatch) {
+    return { 
+      cityState: `${cityStateMatch[1].trim()}, ${cityStateMatch[2].trim()}`,
+      stateOnly: null
+    };
+  }
+  
+  // Try to match: ... City, State ...
+  const cityFullStateMatch = cleanLocation.match(/([A-Za-z .'-]+),\s*([A-Za-z\s]+)(?:\s|,|$)/);
+  if (cityFullStateMatch) {
+    const city = cityFullStateMatch[1].trim();
+    const fullState = cityFullStateMatch[2].trim();
+    const stateCode = stateNameToCode[fullState.toLowerCase()];
+    if (stateCode) {
+      return { 
+        cityState: `${city}, ${stateCode}`,
+        stateOnly: null
+      };
+    }
+  }
+  
+  // Try to extract just state if no city, state pattern found
+  const stateMatch = cleanLocation.match(/\b([A-Z]{2})\b/);
+  if (stateMatch) {
+    return { cityState: null, stateOnly: stateMatch[1] };
+  }
+  
+  // Try to match full state names and convert to codes
+  const locationLower = cleanLocation.toLowerCase().trim();
+  for (const [stateName, stateCode] of Object.entries(stateNameToCode)) {
+    if (locationLower === stateName || locationLower.includes(stateName)) {
+      return { cityState: null, stateOnly: stateCode };
+    }
+  }
+  
+  // If we have a long location string, try to extract just the last part as city
+  if (cleanLocation.length > 30) {
+    const parts = cleanLocation.split(',').map(part => part.trim()).filter(part => part.length > 0);
+    if (parts.length >= 2) {
+      const lastPart = parts[parts.length - 1];
+      const secondLastPart = parts[parts.length - 2];
+      
+      // Check if last part is a state code
+      if (/^[A-Z]{2}$/i.test(lastPart)) {
+        return { cityState: `${secondLastPart}, ${lastPart.toUpperCase()}`, stateOnly: null };
+      }
+      
+      // Check if last part is a full state name
+      const stateCode = stateNameToCode[lastPart.toLowerCase()];
+      if (stateCode) {
+        return { cityState: `${secondLastPart}, ${stateCode}`, stateOnly: null };
+      }
+    }
+  }
+  
+  return { cityState: null, stateOnly: null };
 };
 
 // Utility to check if a string is a monetary value
@@ -67,16 +197,278 @@ const isMonetary = (value: string): boolean => {
   return /\$\s?\d|\d+\s?(USD|usd|dollars|per\s?hour|\/hr|hourly|annually|per\s?year)/.test(value);
 };
 
-// Utility to extract salary from description
-const extractSalaryFromDescription = (desc: string): string | null => {
-  if (!desc) return null;
-  const match = desc.match(/\$\s?\d{2,3}(,\d{3})*(\.\d{2})?(\s?(per|\/)?\s?(hour|hr|year|annum|week|month))?/i);
-  if (match) return match[0];
+wrong// Utility to check if text contains sign-on bonus or other non-salary monetary values
+const isSignOnBonus = (text: string): boolean => {
+  if (!text) return false;
+  const lowerText = text.toLowerCase();
+  return lowerText.includes('sign-on bonus') || 
+         lowerText.includes('sign on bonus') || 
+         lowerText.includes('signing bonus') ||
+         lowerText.includes('bonus') ||
+         lowerText.includes('incentive') ||
+         lowerText.includes('referral bonus') ||
+         lowerText.includes('retention bonus');
+};
+
+// Utility to extract and validate salary from text
+const extractValidSalary = (text: string): string | null => {
+  if (!text) return null;
+  
+  const textLower = text.toLowerCase();
+  
+  // Skip if it's a sign-on bonus or other non-salary monetary value
+  if (isSignOnBonus(text)) {
+    return null;
+  }
+  
+  // Look for clear hourly indicators
+  const hourlyPatterns = [
+    /\$\s*(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)\s*(?:per\s+hour|\/hour|\/hr|hourly)/i,
+    /(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)\s*(?:per\s+hour|\/hour|\/hr|hourly)/i
+  ];
+  
+  for (const pattern of hourlyPatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      const numValue = parseInt(match[1].replace(/,/g, ''));
+      return `$${numValue} per hour`;
+    }
+  }
+  
+  // Look for clear annual indicators
+  const annualPatterns = [
+    /\$\s*(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)\s*(?:per\s+year|annually|annual)/i,
+    /(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)\s*(?:per\s+year|annually|annual)/i
+  ];
+  
+  for (const pattern of annualPatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      const numValue = parseInt(match[1].replace(/,/g, ''));
+      return `$${numValue} per year`;
+    }
+  }
+  
+  // Look for per diem indicators
+  const perDiemPatterns = [
+    /\$\s*(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)\s*(?:per\s+diem)/i,
+    /(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)\s*(?:per\s+diem)/i
+  ];
+  
+  for (const pattern of perDiemPatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      const numValue = parseInt(match[1].replace(/,/g, ''));
+      return `$${numValue} per diem`;
+    }
+  }
+  
+  // Handle malformed entries like "$025 - $07" and fix them
+  const malformedMatch = text.match(/\$(\d{3})-\$(\d{2})/);
+  if (malformedMatch) {
+    const firstNum = parseInt(malformedMatch[1]);
+    const secondNum = parseInt(malformedMatch[2]);
+    return `$${firstNum}-${secondNum} per hour`;
+  }
+  
   return null;
 };
 
-const transformJobData = (rawJobs: Record<string, unknown>[]): Job[] => {
-  return rawJobs
+// Utility to format salary with proper units
+const formatSalary = (salary: string): string => {
+  if (!salary) return '';
+  
+  // Filter out malformed salary entries that look like dates (e.g., "$05-$07")
+  if (salary.match(/\$\d{2}-\$\d{2}/) || salary.match(/\$\d{2}\/\$\d{2}/)) {
+    return '';
+  }
+  
+  // Skip if it's a sign-on bonus
+  if (isSignOnBonus(salary)) {
+    return '';
+  }
+  
+  const salaryLower = salary.toLowerCase();
+  
+  // Handle malformed salary entries like "$025 - $07" by fixing the format
+  if (salary.match(/\$\d{3}-\$\d{2}/)) {
+    const match = salary.match(/\$(\d{3})-\$(\d{2})/);
+    if (match) {
+      const firstNum = parseInt(match[1]).toString();
+      const secondNum = parseInt(match[2]).toString();
+      return `$${firstNum}-${secondNum} per hour`;
+    }
+  }
+  
+  // Check for hourly rates (including /hour format from data)
+  if (salaryLower.includes('/hr') || salaryLower.includes('/hour') || salaryLower.includes('per hour') || salaryLower.includes('hourly')) {
+    // Extract the number and format as hourly
+    const match = salary.match(/\$?\s*(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/);
+    if (match) {
+      // Remove leading zeros and format properly
+      const numValue = parseInt(match[1].replace(/,/g, ''));
+      return `$${numValue} per hour`;
+    }
+  }
+  
+  // Check for annual salaries
+  if (salaryLower.includes('per year') || salaryLower.includes('annually') || salaryLower.includes('annual')) {
+    // Extract the number and format as annual
+    const match = salary.match(/\$?\s*(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/);
+    if (match) {
+      const numValue = parseInt(match[1].replace(/,/g, ''));
+      return `$${numValue} per year`;
+    }
+  }
+  
+  // Check for per diem rates
+  if (salaryLower.includes('per diem')) {
+    const match = salary.match(/\$?\s*(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/);
+    if (match) {
+      const numValue = parseInt(match[1].replace(/,/g, ''));
+      return `$${numValue} per diem`;
+    }
+  }
+  
+  // If it's just a number with $, be more conservative - only show if we're confident
+  const simpleMatch = salary.match(/\$?\s*(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)/);
+  if (simpleMatch && !salaryLower.includes('/')) {
+    const numValue = parseInt(simpleMatch[1].replace(/,/g, ''));
+    // Only show if it's clearly a reasonable salary range
+    if (numValue >= 10 && numValue <= 200) {
+      return `$${numValue} per hour`;
+    }
+  }
+  
+  // Return empty if no clear pattern matches
+  return '';
+};
+
+// Utility to extract salary from description
+const extractSalaryFromDescription = (desc: string): string | null => {
+  if (!desc) return null;
+  
+  // First try to extract valid salary using the new function
+  const validSalary = extractValidSalary(desc);
+  if (validSalary) {
+    return validSalary;
+  }
+  
+  // Fallback to old pattern if no clear indicators found
+  const match = desc.match(/\$\s?\d{2,3}(,\d{3})*(\.\d{2})?(\s?(per|\/)?\s?(hour|hr|year|annum|week|month))?/i);
+  if (match) {
+    // Only return if it's not a sign-on bonus
+    if (!isSignOnBonus(match[0])) {
+      return match[0];
+    }
+  }
+  return null;
+};
+
+// Utility to clean salary field - only keep monetary values
+const cleanSalaryField = (salary: string): { cleanSalary: string; movedToDescription: string } => {
+  if (!salary) return { cleanSalary: '', movedToDescription: '' };
+  
+  // Check if it's a monetary value
+  if (isMonetary(salary)) {
+    return { cleanSalary: salary, movedToDescription: '' };
+  }
+  
+  // If it's not monetary, it might be a description that should be moved
+  // Check if it's a long description (more than 50 characters)
+  if (salary.length > 50) {
+    return { cleanSalary: '', movedToDescription: salary };
+  }
+  
+  // For short non-monetary values, just clear the salary field
+  return { cleanSalary: '', movedToDescription: '' };
+};
+
+// Utility to truncate long titles
+const truncateTitle = (title: string, maxLength: number = 80): string => {
+  if (!title || title.length <= maxLength) return title;
+  return title.substring(0, maxLength - 3) + '...';
+};
+
+const extractRequirementsFromDescription = (desc: string): string[] => {
+  if (!desc) return [];
+  
+  const requirements: string[] = [];
+  const descLower = desc.toLowerCase();
+  
+  // Common requirement section headers
+  const requirementHeaders = [
+    /requirements?:/i,
+    /qualifications?:/i,
+    /requirements & qualifications?:/i,
+    /minimum requirements?:/i,
+    /required qualifications?:/i,
+    /education & experience?:/i,
+    /education and experience?:/i,
+    /licenses & certifications?:/i,
+    /licenses and certifications?:/i,
+    /skills required?:/i,
+    /required skills?:/i,
+    /experience required?:/i,
+    /required experience?:/i
+  ];
+  
+  // Find requirement sections
+  for (const header of requirementHeaders) {
+    const match = desc.match(header);
+    if (match) {
+      const startIndex = match.index! + match[0].length;
+      const remainingText = desc.substring(startIndex);
+      
+      // Extract content until next major section or end
+      const nextSectionMatch = remainingText.match(/\n\s*(?:benefits|responsibilities|duties|overview|about|compensation|salary|schedule|shift|location|contact|apply|application)/i);
+      const endIndex = nextSectionMatch ? nextSectionMatch.index! : remainingText.length;
+      const requirementSection = remainingText.substring(0, endIndex).trim();
+      
+      if (requirementSection) {
+        // Split by common delimiters and clean up
+        const items = requirementSection
+          .split(/[•\n\r]/)
+          .map(item => item.trim())
+          .filter(item => item.length > 10 && item.length < 500) // Filter out too short or too long items
+          .filter(item => !item.toLowerCase().includes('apply now') && !item.toLowerCase().includes('click here'));
+        
+        requirements.push(...items);
+      }
+    }
+  }
+  
+  // If no structured requirements found, look for bullet points or numbered lists
+  if (requirements.length === 0) {
+    const bulletMatches = desc.match(/[•·]\s*([^•·\n]+)/g);
+    if (bulletMatches) {
+      const items = bulletMatches
+        .map(item => item.replace(/^[•·]\s*/, '').trim())
+        .filter(item => item.length > 10 && item.length < 500)
+        .filter(item => {
+          const itemLower = item.toLowerCase();
+          return !itemLower.includes('apply now') && 
+                 !itemLower.includes('click here') &&
+                 !itemLower.includes('contact us') &&
+                 (itemLower.includes('experience') || 
+                  itemLower.includes('education') || 
+                  itemLower.includes('license') || 
+                  itemLower.includes('certification') ||
+                  itemLower.includes('degree') ||
+                  itemLower.includes('required') ||
+                  itemLower.includes('must') ||
+                  itemLower.includes('should'));
+        });
+      requirements.push(...items);
+    }
+  }
+  
+  // Remove duplicates and return
+  return [...new Set(requirements)].slice(0, 10); // Limit to 10 requirements max
+};
+
+const transformJobData = (rawJobs: Record<string, unknown>[], shouldShuffle: boolean = true): Job[] => {
+  const transformedJobs = rawJobs
     .map((job, index) => {
       const title = (job.title as string) || 'Unknown Position';
       const description = (job.description as string) || '';
@@ -84,19 +476,47 @@ const transformJobData = (rawJobs: Record<string, unknown>[]): Job[] => {
       const company = (job.company as string) || '';
       let location = (job.location as string) || '';
       // Extract city, state from location
-      const cityState = extractCityState(location);
-      location = cityState || '';
+      const { cityState, stateOnly } = extractCityState(location);
+      location = cityState || stateOnly || '';
       // If not parseable, hide location
-      if (!cityState) location = '';
-      // Salary logic
+      if (!cityState && !stateOnly) location = '';
+      // Enhanced salary logic - check both title and description
       let salary = (job.salary_range as string) || (job.salary as string) || '';
-      if (!isMonetary(salary)) {
-        // Try to extract from description
-        const extracted = extractSalaryFromDescription(description);
-        salary = extracted || '';
+      
+      // First try to extract valid salary from title
+      if (!salary || isSignOnBonus(salary)) {
+        const titleSalary = extractValidSalary(title);
+        if (titleSalary) {
+          salary = titleSalary;
+        }
       }
-      // If still not monetary, hide
-      if (!isMonetary(salary)) salary = '';
+      
+      // If no valid salary from title, try description
+      if (!salary || isSignOnBonus(salary)) {
+        const descSalary = extractValidSalary(description);
+        if (descSalary) {
+          salary = descSalary;
+        }
+      }
+      
+      // If still no valid salary, try the old extraction method as fallback
+      if (!salary || isSignOnBonus(salary)) {
+        const extracted = extractSalaryFromDescription(description);
+        if (extracted && !isSignOnBonus(extracted)) {
+          salary = extracted;
+        }
+      }
+      
+      // Format the salary with proper units
+      salary = formatSalary(salary);
+      
+      // Clean salary field and move non-salary content to description
+      const { cleanSalary, movedToDescription } = cleanSalaryField(salary);
+      salary = cleanSalary;
+
+      // Truncate title if it's too long
+      const truncatedTitle = truncateTitle(title);
+
       // Use existing tags if available (comprehensive format), otherwise generate them (BrightStar format)
       let tags: Tag[];
       if (job.tags && Array.isArray(job.tags)) {
@@ -106,18 +526,28 @@ const transformJobData = (rawJobs: Record<string, unknown>[]): Job[] => {
           type: tag.type as TagType
         }));
       } else {
-        tags = generateTags(title, description, job.category as string);
+        tags = generateTags(truncatedTitle, description, job.category as string, company);
       }
+      
+      // Extract requirements from description if not already present
+      let requirements = (job.requirements as string[] | string) || [];
+      if (!requirements || (Array.isArray(requirements) && requirements.length === 0)) {
+        const extractedRequirements = extractRequirementsFromDescription(description);
+        if (extractedRequirements.length > 0) {
+          requirements = extractedRequirements;
+        }
+      }
+      
       return {
         id: (job.id as string) || `job_${index + 1}`,
-        title,
-        company,
-        location,
-        salary,
+        title: truncatedTitle,
+        company: cleanJobCardContent(company, 50),
+        location: cleanJobCardContent(location, 30),
+        salary: cleanJobCardContent(salary, 20),
         url,
-        overview: (job.overview as string) || 'Community Focused. Care Driven.',
-        description,
-        requirements: (job.requirements as string[] | string) || [],
+        overview: cleanJobCardContent((job.overview as string) || 'Community Focused. Care Driven.', 50),
+        description: description + (movedToDescription ? `\n\n${movedToDescription}` : ''), // Append moved description to description
+        requirements,
         tags
       };
     })
@@ -130,14 +560,26 @@ const transformJobData = (rawJobs: Record<string, unknown>[]): Job[] => {
              company !== 'n/a' &&
              company !== 'na';
     });
+
+  // Shuffle the jobs randomly for better distribution (only if no filters are applied)
+  if (shouldShuffle) {
+    const shuffledJobs = [...transformedJobs];
+    for (let i = shuffledJobs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledJobs[i], shuffledJobs[j]] = [shuffledJobs[j], shuffledJobs[i]];
+    }
+    return shuffledJobs;
+  }
+  
+  return transformedJobs;
 };
 
 // Generate tags for a job based on title, description, and category
-const generateTags = (title: string, description: string, category?: string): Tag[] => {
+const generateTags = (title: string, description: string, category?: string, company?: string): Tag[] => {
   const tags: Tag[] = [];
   
   // Job Setting tag (Purple)
-  const jobSetting = getJobSetting(title, description);
+  const jobSetting = getJobSetting(title, description, company);
   tags.push({ id: Date.now() + 1, label: jobSetting, type: 'job_setting' });
   
   // Employment Type tag (Blue)
@@ -151,9 +593,41 @@ const generateTags = (title: string, description: string, category?: string): Ta
   return tags;
 };
 
-const getJobSetting = (title: string, description: string): string => {
+const getJobSetting = (title: string, description: string, company?: string): string => {
   const text = (title + ' ' + description).toLowerCase();
-  if (text.includes('nursing home') || text.includes('skilled nursing') || text.includes('ltc')) {
+  const companyText = (company || '').toLowerCase();
+  
+  // Check for nursing home indicators in company name first
+  const nursingHomeCompanyPatterns = [
+    'rehabilitation and healthcare center',
+    'rehabilitation & healthcare center',
+    'rehabilitation center',
+    'healthcare center',
+    'nursing home',
+    'skilled nursing',
+    'skilled nursing facility',
+    'long term care',
+    'ltc',
+    'convalescent home',
+    'care center',
+    'health center',
+    'medical center',
+    'rehab center',
+    'rehabilitation facility',
+    'healthcare facility',
+    'nursing facility',
+    'care facility'
+  ];
+  
+  for (const pattern of nursingHomeCompanyPatterns) {
+    if (companyText.includes(pattern)) {
+      return 'Nursing Home';
+    }
+  }
+  
+  // Check for nursing home indicators in title and description
+  if (text.includes('nursing home') || text.includes('skilled nursing') || text.includes('ltc') || 
+      text.includes('long term care') || text.includes('convalescent') || text.includes('rehabilitation')) {
     return 'Nursing Home';
   } else if (text.includes('assisted living') || text.includes('alf') || text.includes('memory care')) {
     return 'Assisted Living Facility';
@@ -185,102 +659,133 @@ const getShift = (title: string, description: string): string => {
   const descText = description.toLowerCase();
   const combinedText = titleText + ' ' + descText;
   
-  // Check description first as it often contains more detailed shift information
-  const textToCheck = descText || combinedText;
-  
-  // First check for specific time patterns and return the exact time range
-  const specificTimePatterns = [
-    // Common healthcare shift patterns with exact times
-    { pattern: /7\s*am\s*[-to]\s*3\s*(:00)?\s*pm/i, shift: '7AM-3PM' },
-    { pattern: /3\s*pm\s*[-to]\s*11\s*(:00)?\s*pm/i, shift: '3PM-11PM' },
-    { pattern: /11\s*pm\s*[-to]\s*7\s*(:00)?\s*am/i, shift: '11PM-7AM' },
-    { pattern: /6\s*am\s*[-to]\s*2\s*(:00)?\s*pm/i, shift: '6AM-2PM' },
-    { pattern: /2\s*pm\s*[-to]\s*10\s*(:00)?\s*pm/i, shift: '2PM-10PM' },
-    { pattern: /10\s*pm\s*[-to]\s*6\s*(:00)?\s*am/i, shift: '10PM-6AM' },
-    { pattern: /8\s*am\s*[-to]\s*4\s*(:00)?\s*pm/i, shift: '8AM-4PM' },
-    { pattern: /4\s*pm\s*[-to]\s*12\s*(:00)?\s*(am|midnight)/i, shift: '4PM-12AM' },
-    { pattern: /12\s*(am|midnight)\s*[-to]\s*8\s*(:00)?\s*am/i, shift: '12AM-8AM' },
+  // Helper function to check text for patterns
+  const checkTextForPatterns = (text: string) => {
+    // First check for specific time patterns and return the exact time range
+    const specificTimePatterns = [
+      // 12-hour shift patterns (common in healthcare)
+      { pattern: /7\s*(?:am|a)?\s*[-to]\s*7\s*(?:pm|p)?/i, shift: '7AM-7PM' },
+      { pattern: /7\s*(?:pm|p)?\s*[-to]\s*7\s*(?:am|a)?/i, shift: '7PM-7AM' },
+      { pattern: /6\s*(?:am|a)?\s*[-to]\s*6\s*(?:pm|p)?/i, shift: '6AM-6PM' },
+      { pattern: /6\s*(?:pm|p)?\s*[-to]\s*6\s*(?:am|a)?/i, shift: '6PM-6AM' },
+      { pattern: /8\s*(?:am|a)?\s*[-to]\s*8\s*(?:pm|p)?/i, shift: '8AM-8PM' },
+      { pattern: /8\s*(?:pm|p)?\s*[-to]\s*8\s*(?:am|a)?/i, shift: '8PM-8AM' },
+      
+      // 8-hour shift patterns (standard healthcare shifts)
+      { pattern: /7\s*(?:am|a)?\s*[-to]\s*3\s*(?:pm|p)?/i, shift: '7AM-3PM' },
+      { pattern: /3\s*(?:pm|p)?\s*[-to]\s*11\s*(?:pm|p)?/i, shift: '3PM-11PM' },
+      { pattern: /11\s*(?:pm|p)?\s*[-to]\s*7\s*(?:am|a)?/i, shift: '11PM-7AM' },
+      { pattern: /6\s*(?:am|a)?\s*[-to]\s*2\s*(?:pm|p)?/i, shift: '6AM-2PM' },
+      { pattern: /2\s*(?:pm|p)?\s*[-to]\s*10\s*(?:pm|p)?/i, shift: '2PM-10PM' },
+      { pattern: /10\s*(?:pm|p)?\s*[-to]\s*6\s*(?:am|a)?/i, shift: '10PM-6AM' },
+      { pattern: /8\s*(?:am|a)?\s*[-to]\s*4\s*(?:pm|p)?/i, shift: '8AM-4PM' },
+      { pattern: /4\s*(?:pm|p)?\s*[-to]\s*12\s*(?:am|a|midnight)?/i, shift: '4PM-12AM' },
+      { pattern: /12\s*(?:am|a|midnight)?\s*[-to]\s*8\s*(?:am|a)?/i, shift: '12AM-8AM' },
+      { pattern: /9\s*(?:am|a)?\s*[-to]\s*5\s*(?:pm|p)?/i, shift: '9AM-5PM' },
+      { pattern: /5\s*(?:pm|p)?\s*[-to]\s*1\s*(?:am|a)?/i, shift: '5PM-1AM' },
+      { pattern: /1\s*(?:am|a)?\s*[-to]\s*9\s*(?:am|a)?/i, shift: '1AM-9AM' },
+      
+      // More flexible patterns for common ranges with liberal time formats
+      { pattern: /(7|8)\s*(?:am|a)?\s*[-to]\s*(3|4)\s*(?:pm|p)?/i, shift: '7AM-3PM' },
+      { pattern: /(3|4)\s*(?:pm|p)?\s*[-to]\s*(11|12)\s*(?:pm|p|am|a)?/i, shift: '3PM-11PM' },
+      { pattern: /(11|12)\s*(?:pm|p|am|a)?\s*[-to]\s*(7|8)\s*(?:am|a)?/i, shift: '11PM-7AM' },
+      
+      // Very liberal patterns for common healthcare shifts
+      { pattern: /(7|8)\s*[-to]\s*(3|4)/i, shift: '7AM-3PM' },
+      { pattern: /(3|4)\s*[-to]\s*(11|12)/i, shift: '3PM-11PM' },
+      { pattern: /(11|12)\s*[-to]\s*(7|8)/i, shift: '11PM-7AM' },
+    ];
     
-    // More flexible patterns for common ranges
-    { pattern: /(7|8)\s*(:?\d{0,2})?\s*am\s*[-to]\s*(3|4)\s*(:?\d{0,2})?\s*pm/i, shift: '7AM-3PM' },
-    { pattern: /(3|4)\s*(:?\d{0,2})?\s*pm\s*[-to]\s*(11|12)\s*(:?\d{0,2})?\s*(pm|am)/i, shift: '3PM-11PM' },
-    { pattern: /(11|12)\s*(:?\d{0,2})?\s*(pm|am)\s*[-to]\s*(7|8)\s*(:?\d{0,2})?\s*am/i, shift: '11PM-7AM' },
-  ];
-  
-  for (const { pattern, shift } of specificTimePatterns) {
-    if (pattern.test(textToCheck)) {
-      return shift;
+    for (const { pattern, shift } of specificTimePatterns) {
+      if (pattern.test(text)) {
+        return shift;
+      }
     }
-  }
-  
-  // Check for explicit shift keywords (only if no specific times found)
-  if (textToCheck.includes('overnight shift') || textToCheck.includes('night shift') || textToCheck.includes('graveyard shift')) {
-    return 'Overnight';
-  } else if (textToCheck.includes('morning shift') || textToCheck.includes('early morning')) {
-    return 'Morning';
-  } else if (textToCheck.includes('afternoon shift') || textToCheck.includes('midday')) {
-    return 'Afternoon';
-  } else if (textToCheck.includes('evening shift') || textToCheck.includes('late afternoon')) {
-    return 'Evening';
-  } else if (textToCheck.includes('night') || textToCheck.includes('overnight')) {
-    return 'Night';
-  }
-  
-  // Check for other time patterns and categorize by time
-  const timePatterns = [
-    // Overnight patterns (10pm-6am, 11pm-7am, 12am-8am, etc.)
-    { pattern: /(10|11|12)(:?\d{0,2})?\s*(pm|am)\s*[-to]\s*(6|7|8)(:?\d{0,2})?\s*(am)/i, shift: 'Overnight' },
-    { pattern: /(12|1|2|3|4|5)(:?\d{0,2})?\s*(am)\s*[-to]\s*(6|7|8|9|10)(:?\d{0,2})?\s*(am)/i, shift: 'Overnight' },
     
-    // Morning patterns (5am-1pm, 6am-2pm, 7am-3pm, 8am-4pm, etc.)
-    { pattern: /(5|6|7|8)(:?\d{0,2})?\s*(am)\s*[-to]\s*(1|2|3|4)(:?\d{0,2})?\s*(pm)/i, shift: 'Morning' },
-    { pattern: /(5|6|7|8)(:?\d{0,2})?\s*(am)\s*[-to]\s*(12|1|2|3|4)(:?\d{0,2})?\s*(pm)/i, shift: 'Morning' },
-    
-    // Afternoon patterns (12pm-8pm, 1pm-9pm, 2pm-10pm, etc.)
-    { pattern: /(12|1|2)(:?\d{0,2})?\s*(pm)\s*[-to]\s*(8|9|10)(:?\d{0,2})?\s*(pm)/i, shift: 'Afternoon' },
-    
-    // Evening patterns (3pm-11pm, 4pm-12am, 5pm-1am, etc.)
-    { pattern: /(3|4|5)(:?\d{0,2})?\s*(pm)\s*[-to]\s*(11|12)(:?\d{0,2})?\s*(pm|am)/i, shift: 'Evening' },
-    { pattern: /(3|4|5)(:?\d{0,2})?\s*(pm)\s*[-to]\s*(1|2)(:?\d{0,2})?\s*(am)/i, shift: 'Evening' },
-  ];
-  
-  for (const { pattern, shift } of timePatterns) {
-    if (pattern.test(textToCheck)) {
-      return shift;
+    // Check for explicit shift duration keywords (only if no specific time pattern was found)
+    if (text.includes('12 hour shift') || text.includes('12-hour shift') || text.includes('12 hr shift')) {
+      return '12-Hour Shift';
+    } else if (text.includes('8 hour shift') || text.includes('8-hour shift') || text.includes('8 hr shift')) {
+      return '8-Hour Shift';
+    } else if (text.includes('10 hour shift') || text.includes('10-hour shift') || text.includes('10 hr shift')) {
+      return '10-Hour Shift';
+    } else if (text.includes('16 hour shift') || text.includes('16-hour shift') || text.includes('16 hr shift')) {
+      return '16-Hour Shift';
     }
-  }
-  
-  // Check for short shifts (3-4 hours) and categorize by time
-  const shortShiftPatterns = [
-    { pattern: /(5|6|7|8|9)(:?\d{0,2})?\s*(am)\s*[-to]\s*(8|9|10|11)(:?\d{0,2})?\s*(am)/i, shift: 'Morning' },
-    { pattern: /(10|11|12)(:?\d{0,2})?\s*(am)\s*[-to]\s*(1|2|3)(:?\d{0,2})?\s*(pm)/i, shift: 'Morning' },
-    { pattern: /(12|1|2)(:?\d{0,2})?\s*(pm)\s*[-to]\s*(4|5|6)(:?\d{0,2})?\s*(pm)/i, shift: 'Afternoon' },
-    { pattern: /(3|4|5)(:?\d{0,2})?\s*(pm)\s*[-to]\s*(7|8|9)(:?\d{0,2})?\s*(pm)/i, shift: 'Afternoon' },
-    { pattern: /(6|7|8)(:?\d{0,2})?\s*(pm)\s*[-to]\s*(10|11|12)(:?\d{0,2})?\s*(pm|am)/i, shift: 'Evening' },
-    { pattern: /(9|10|11)(:?\d{0,2})?\s*(pm)\s*[-to]\s*(12|1|2)(:?\d{0,2})?\s*(am)/i, shift: 'Night' },
-  ];
-  
-  for (const { pattern, shift } of shortShiftPatterns) {
-    if (pattern.test(textToCheck)) {
-      return shift;
-    }
-  }
-  
-  // If no patterns found in description, check title as fallback
-  if (descText && descText !== titleText) {
-    // Check title for any missed patterns
-    if (titleText.includes('overnight shift') || titleText.includes('night shift') || titleText.includes('graveyard shift')) {
+    
+    // Check for explicit shift keywords
+    if (text.includes('overnight shift') || text.includes('night shift') || text.includes('graveyard shift')) {
       return 'Overnight';
-    } else if (titleText.includes('morning shift') || titleText.includes('early morning')) {
+    } else if (text.includes('morning shift') || text.includes('early morning')) {
       return 'Morning';
-    } else if (titleText.includes('afternoon shift') || titleText.includes('midday')) {
+    } else if (text.includes('afternoon shift') || text.includes('midday')) {
       return 'Afternoon';
-    } else if (titleText.includes('evening shift') || titleText.includes('late afternoon')) {
+    } else if (text.includes('evening shift') || text.includes('late afternoon')) {
       return 'Evening';
-    } else if (titleText.includes('night') || titleText.includes('overnight')) {
+    } else if (text.includes('night') || text.includes('overnight')) {
       return 'Night';
+    } else if (text.includes('day shift') || text.includes('daytime')) {
+      return 'Morning';
     }
-  }
+    
+    // Check for other time patterns and categorize by time
+    const timePatterns = [
+      // 12-hour shift patterns (more flexible)
+      { pattern: /(6|7|8)\s*(?:am|a)?\s*[-to]\s*(6|7|8)\s*(?:pm|p)?/i, shift: '12-Hour Day' },
+      { pattern: /(6|7|8)\s*(?:pm|p)?\s*[-to]\s*(6|7|8)\s*(?:am|a)?/i, shift: '12-Hour Night' },
+      
+      // Overnight patterns (10pm-6am, 11pm-7am, 12am-8am, etc.)
+      { pattern: /(10|11|12)\s*(?:pm|p|am|a)?\s*[-to]\s*(6|7|8)\s*(?:am|a)?/i, shift: 'Overnight' },
+      { pattern: /(12|1|2|3|4|5)\s*(?:am|a)?\s*[-to]\s*(6|7|8|9|10)\s*(?:am|a)?/i, shift: 'Overnight' },
+      
+      // Morning patterns (5am-1pm, 6am-2pm, 7am-3pm, 8am-4pm, etc.)
+      { pattern: /(5|6|7|8)\s*(?:am|a)?\s*[-to]\s*(1|2|3|4)\s*(?:pm|p)?/i, shift: 'Morning' },
+      { pattern: /(5|6|7|8)\s*(?:am|a)?\s*[-to]\s*(12|1|2|3|4)\s*(?:pm|p)?/i, shift: 'Morning' },
+      
+      // Afternoon patterns (12pm-8pm, 1pm-9pm, 2pm-10pm, etc.)
+      { pattern: /(12|1|2)\s*(?:pm|p)?\s*[-to]\s*(8|9|10)\s*(?:pm|p)?/i, shift: 'Afternoon' },
+      
+      // Evening patterns (3pm-11pm, 4pm-12am, 5pm-1am, etc.)
+      { pattern: /(3|4|5)\s*(?:pm|p)?\s*[-to]\s*(11|12)\s*(?:pm|p|am|a)?/i, shift: 'Evening' },
+      { pattern: /(3|4|5)\s*(?:pm|p)?\s*[-to]\s*(1|2)\s*(?:am|a)?/i, shift: 'Evening' },
+    ];
+    
+    for (const { pattern, shift } of timePatterns) {
+      if (pattern.test(text)) {
+        return shift;
+      }
+    }
+    
+    // Check for short shifts (3-4 hours) and categorize by time
+    const shortShiftPatterns = [
+      { pattern: /(5|6|7|8|9)\s*(?:am|a)?\s*[-to]\s*(8|9|10|11)\s*(?:am|a)?/i, shift: 'Morning' },
+      { pattern: /(10|11|12)\s*(?:am|a)?\s*[-to]\s*(1|2|3)\s*(?:pm|p)?/i, shift: 'Morning' },
+      { pattern: /(12|1|2)\s*(?:pm|p)?\s*[-to]\s*(4|5|6)\s*(?:pm|p)?/i, shift: 'Afternoon' },
+      { pattern: /(3|4|5)\s*(?:pm|p)?\s*[-to]\s*(7|8|9)\s*(?:pm|p)?/i, shift: 'Afternoon' },
+      { pattern: /(6|7|8)\s*(?:pm|p)?\s*[-to]\s*(10|11|12)\s*(?:pm|p|am|a)?/i, shift: 'Evening' },
+      { pattern: /(9|10|11)\s*(?:pm|p)?\s*[-to]\s*(12|1|2)\s*(?:am|a)?/i, shift: 'Night' },
+    ];
+    
+    for (const { pattern, shift } of shortShiftPatterns) {
+      if (pattern.test(text)) {
+        return shift;
+      }
+    }
+    
+    return null;
+  };
+  
+  // Check description first as it often contains more detailed shift information
+  let result = checkTextForPatterns(descText);
+  if (result) return result;
+  
+  // Check title if description didn't yield results
+  result = checkTextForPatterns(titleText);
+  if (result) return result;
+  
+  // Check combined text as fallback
+  result = checkTextForPatterns(combinedText);
+  if (result) return result;
   
   // Default based on common healthcare patterns
   if (combinedText.includes('day shift') || combinedText.includes('daytime')) {
@@ -342,9 +847,9 @@ export default function JobsPage() {
 
   // Available filter options - dynamically generated from loaded data
   const filterOptions = {
-    job_settings: Array.from(new Set(jobs.flatMap(job => job.tags.filter(tag => tag.type === 'job_setting').map(tag => tag.label)))),
-    employment_types: Array.from(new Set(jobs.flatMap(job => job.tags.filter(tag => tag.type === 'employment_type').map(tag => tag.label)))),
-    shifts: Array.from(new Set(jobs.flatMap(job => job.tags.filter(tag => tag.type === 'shift').map(tag => tag.label))))
+    job_settings: Array.from(new Set(jobs.flatMap(job => (job.tags || []).filter(tag => tag.type === 'job_setting').map(tag => tag.label)))),
+    employment_types: Array.from(new Set(jobs.flatMap(job => (job.tags || []).filter(tag => tag.type === 'employment_type').map(tag => tag.label)))),
+    shifts: Array.from(new Set(jobs.flatMap(job => (job.tags || []).filter(tag => tag.type === 'shift').map(tag => tag.label))))
   };
 
   // Available locations - dynamically generated from loaded data
@@ -361,15 +866,61 @@ export default function JobsPage() {
   // Filter jobs based on search, location, and active filters
   useEffect(() => {
     const filtered = jobs.filter(job => {
-      const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           job.location.toLowerCase().includes(searchTerm.toLowerCase());
+      // Enhanced search functionality - search across all relevant fields
+      const searchLower = searchTerm.toLowerCase();
+      const matchesSearch = searchTerm === '' || 
+                           job.title.toLowerCase().includes(searchLower) ||
+                           job.company.toLowerCase().includes(searchLower) ||
+                           job.location.toLowerCase().includes(searchLower) ||
+                           (job.description && job.description.toLowerCase().includes(searchLower)) ||
+                           (job.requirements && Array.isArray(job.requirements) && 
+                            job.requirements.some(req => req.toLowerCase().includes(searchLower))) ||
+                           (job.requirements && typeof job.requirements === 'string' && 
+                            job.requirements.toLowerCase().includes(searchLower)) ||
+                           (job.tags && job.tags.some(tag => tag.label.toLowerCase().includes(searchLower)));
       
-      const matchesLocation = selectedLocation === 'All Locations' || job.location === selectedLocation;
+      // Enhanced location filtering - handle state-based filtering
+      let matchesLocation = true;
+      if (selectedLocation !== 'All Locations') {
+        const inputLower = selectedLocation.toLowerCase().trim();
+        
+        // Check if input is a state code or state name
+        const stateNameToCode: Record<string, string> = {
+          'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
+          'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
+          'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
+          'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
+          'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
+          'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
+          'new mexico': 'NM', 'new york': 'NY', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
+          'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
+          'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
+          'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY'
+        };
+        
+        // Check if input is a state code (2 letters)
+        const isStateCode = /^[A-Z]{2}$/i.test(inputLower);
+        
+        // Check if input is a state name
+        const isStateName = stateNameToCode[inputLower];
+        
+        if (isStateCode || isStateName) {
+          // State-based filtering - show all jobs in that state
+          const targetState = isStateCode ? inputLower.toUpperCase() : isStateName;
+          const jobLocation = job.location.toLowerCase();
+          
+          // Check if job location contains the state code or state name
+          matchesLocation = jobLocation.includes(targetState.toLowerCase()) ||
+                           jobLocation.includes(inputLower);
+        } else {
+          // Regular location filtering for cities or other locations
+          matchesLocation = job.location.toLowerCase().includes(inputLower);
+        }
+      }
       
       const matchesFilters = activeFilters.length === 0 || 
                             activeFilters.some(filter => 
-                              job.tags.some(tag => tag.label === filter.label)
+                              (job.tags || []).some(tag => tag.label === filter.label)
                             );
       
       return matchesSearch && matchesLocation && matchesFilters;
@@ -447,12 +998,19 @@ export default function JobsPage() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    // Scroll to top of the page when changing pages
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const getTagColor = (label: string) => {
-    if (filterOptions.job_settings.includes(label)) return 'bg-purple-200'; // Purple for Job Setting
-    if (filterOptions.employment_types.includes(label)) return 'bg-[#8AADFC]'; // Blue for Employment Type
-    if (filterOptions.shifts.includes(label)) return 'bg-pink-200'; // Pink for Shift
+    // Check tag type based on common patterns
+    if (['Nursing Home', 'Assisted Living Facility', 'Home Care'].includes(label)) {
+      return 'bg-purple-200'; // Purple for Job Setting
+    } else if (['Full-Time', 'Part-Time', 'Per-Diem', 'Temp-To-Perm', 'Local Contract'].includes(label)) {
+      return 'bg-[#8AADFC]'; // Blue for Employment Type
+    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night'].includes(label)) {
+      return 'bg-pink-200'; // Pink for Shift
+    }
     return 'bg-gray-200';
   };
 
@@ -596,7 +1154,7 @@ export default function JobsPage() {
                 <Search className="w-5 h-5 lg:w-6 lg:h-6 text-[#7691A4] mr-3 flex-shrink-0" strokeWidth={2} />
                 <input
                   type="text"
-                  placeholder="Search jobs..."
+                  placeholder="Search"
                   value={searchTerm}
                   onChange={(e) => handleSearch(e.target.value)}
                   className="flex-1 text-base lg:text-[20px] font-bold text-[#7691A4] placeholder-[#7691A4] bg-transparent outline-none font-avenir"
@@ -780,8 +1338,8 @@ export default function JobsPage() {
                       }}
                     >
                       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start h-full">
-                        <div className="flex-1 min-w-0 lg:pr-4 mb-3 lg:mb-0">
-                          <h3 className="text-lg lg:text-[20px] font-black leading-[130%] text-[#2466D0] mb-2 font-avenir line-clamp-2">
+                        <div className="flex-1 min-w-0 lg:pr-4 mb-4 lg:mb-0">
+                          <h3 className="text-lg lg:text-[20px] font-black leading-[130%] text-[#2466D0] mb-3 font-avenir line-clamp-2">
                             {job.title}
                           </h3>
                           <div className="text-sm lg:text-[14px] leading-[140%] text-[#01253F] font-avenir space-y-0.5">
@@ -796,7 +1354,7 @@ export default function JobsPage() {
                         </div>
                         {/* Tags - Display in rows of 2 */}
                         <div className="flex flex-wrap gap-3 lg:gap-4" style={{ maxWidth: '240px' }}>
-                          {job.tags.slice(0, 4).map((tag) => (
+                          {(job.tags || []).slice(0, 4).map((tag) => (
                             <div 
                               key={tag.id} 
                               className={`flex items-center justify-center text-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}
@@ -931,7 +1489,7 @@ export default function JobsPage() {
                     
                     {/* Tags - Display in single row */}
                     <div className="flex flex-wrap gap-3 lg:gap-4">
-                      {selectedJob.tags.map((tag) => (
+                      {(selectedJob.tags || []).map((tag) => (
                         <div 
                           key={tag.id} 
                           className={`flex items-center justify-center text-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}
@@ -963,13 +1521,6 @@ export default function JobsPage() {
                     }}
                   >
                     <div className="pt-6" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
-                      <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir break-all">
-                        Overview
-                      </h3>
-                      <p className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir mb-6 break-all">
-                        {selectedJob.overview}
-                      </p>
-
                       {/* Job Description */}
                       {selectedJob.description && (
                         <div className="mb-6" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
