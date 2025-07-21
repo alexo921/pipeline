@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 
 type NavbarProps = {
   onLoginClick: () => void;
@@ -82,9 +82,9 @@ const Navbar: React.FC<NavbarProps> = ({
               {user ? (
                 <button
                   onClick={onLogoutClick}
-                  className="text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 hover:text-blue-600"
+                  className="text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 hover:text-blue-600 font-avenir"
                 >
-                  Logout
+                  Sign Out
                 </button>
               ) : (
                 <button
@@ -96,29 +96,28 @@ const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Profile icon */}
+            {/* Enhanced Profile icon with user indicator */}
             {user ? (
-              <Link
-                href="/dashboard"
-                className="flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"
-              >
-                <svg
-                  className="w-5 h-5 text-[#01253F]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+              <div className="flex items-center space-x-3">
+                {/* User indicator text */}
+                <span className="text-sm text-slate-700 font-medium font-avenir">
+                  {user.name || user.email || "User"}
+                </span>
+                
+                {/* Profile icon with online indicator */}
+                <Link
+                  href="/dashboard"
+                  className="relative flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                  <User
+                    className="w-6 h-6 text-[#01253F]"
                     strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                   />
-                </svg>
-              </Link>
-            ) : (
-              false
-            )}
+                  {/* Online indicator dot */}
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                </Link>
+              </div>
+            ) : null}
           </div>
 
           {/* Mobile menu button */}

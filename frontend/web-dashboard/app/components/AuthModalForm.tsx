@@ -193,13 +193,13 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose, onSwitchToSi
         <button
           type="button"
           disabled={isLoading}
+          onClick={() => {
+            window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+          }}
           className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 rounded-xl hover:bg-gray-100 transition disabled:opacity-50"
         >
           <Image src="/google-logo.svg" alt="Google" width={20} height={20} />
-          <span className="text-sm text-black font-medium" onClick={() =>
-          (window.location.href =
-            "http://localhost:3001/api/auth/google")
-          }>
+          <span className="text-sm text-black font-medium">
             Sign in with Google
           </span>
         </button>

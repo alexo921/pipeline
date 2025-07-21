@@ -77,7 +77,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
       return 'bg-purple-200'; // Purple for Job Setting
     } else if (['Full-Time', 'Part-Time', 'Per-Diem', 'Temp-To-Perm', 'Local Contract'].includes(label)) {
       return 'bg-[#8AADFC]'; // Blue for Employment Type
-    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM'].includes(label)) {
+    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night', '7a-3p', '3p-11p', '11p-7a', '6a-2p', '2p-10p', '10p-6a', '8a-4p', '4p-12a', '12a-8a', '9a-5p', '5p-1a', '1a-9a', '7a-7p', '7p-7a', '6a-6p', '6p-6a', '8a-8p', '8p-8a'].includes(label)) {
       return 'bg-pink-200'; // Pink for Shift
     }
     return 'bg-gray-200';

@@ -664,36 +664,36 @@ const getShift = (title: string, description: string): string => {
     // First check for specific time patterns and return the exact time range
     const specificTimePatterns = [
       // 12-hour shift patterns (common in healthcare)
-      { pattern: /7\s*(?:am|a)?\s*[-to]\s*7\s*(?:pm|p)?/i, shift: '7AM-7PM' },
-      { pattern: /7\s*(?:pm|p)?\s*[-to]\s*7\s*(?:am|a)?/i, shift: '7PM-7AM' },
-      { pattern: /6\s*(?:am|a)?\s*[-to]\s*6\s*(?:pm|p)?/i, shift: '6AM-6PM' },
-      { pattern: /6\s*(?:pm|p)?\s*[-to]\s*6\s*(?:am|a)?/i, shift: '6PM-6AM' },
-      { pattern: /8\s*(?:am|a)?\s*[-to]\s*8\s*(?:pm|p)?/i, shift: '8AM-8PM' },
-      { pattern: /8\s*(?:pm|p)?\s*[-to]\s*8\s*(?:am|a)?/i, shift: '8PM-8AM' },
+      { pattern: /7\s*(?:am|a)?\s*[-to]\s*7\s*(?:pm|p)?/i, shift: '7a-7p' },
+      { pattern: /7\s*(?:pm|p)?\s*[-to]\s*7\s*(?:am|a)?/i, shift: '7p-7a' },
+      { pattern: /6\s*(?:am|a)?\s*[-to]\s*6\s*(?:pm|p)?/i, shift: '6a-6p' },
+      { pattern: /6\s*(?:pm|p)?\s*[-to]\s*6\s*(?:am|a)?/i, shift: '6p-6a' },
+      { pattern: /8\s*(?:am|a)?\s*[-to]\s*8\s*(?:pm|p)?/i, shift: '8a-8p' },
+      { pattern: /8\s*(?:pm|p)?\s*[-to]\s*8\s*(?:am|a)?/i, shift: '8p-8a' },
       
       // 8-hour shift patterns (standard healthcare shifts)
-      { pattern: /7\s*(?:am|a)?\s*[-to]\s*3\s*(?:pm|p)?/i, shift: '7AM-3PM' },
-      { pattern: /3\s*(?:pm|p)?\s*[-to]\s*11\s*(?:pm|p)?/i, shift: '3PM-11PM' },
-      { pattern: /11\s*(?:pm|p)?\s*[-to]\s*7\s*(?:am|a)?/i, shift: '11PM-7AM' },
-      { pattern: /6\s*(?:am|a)?\s*[-to]\s*2\s*(?:pm|p)?/i, shift: '6AM-2PM' },
-      { pattern: /2\s*(?:pm|p)?\s*[-to]\s*10\s*(?:pm|p)?/i, shift: '2PM-10PM' },
-      { pattern: /10\s*(?:pm|p)?\s*[-to]\s*6\s*(?:am|a)?/i, shift: '10PM-6AM' },
-      { pattern: /8\s*(?:am|a)?\s*[-to]\s*4\s*(?:pm|p)?/i, shift: '8AM-4PM' },
-      { pattern: /4\s*(?:pm|p)?\s*[-to]\s*12\s*(?:am|a|midnight)?/i, shift: '4PM-12AM' },
-      { pattern: /12\s*(?:am|a|midnight)?\s*[-to]\s*8\s*(?:am|a)?/i, shift: '12AM-8AM' },
-      { pattern: /9\s*(?:am|a)?\s*[-to]\s*5\s*(?:pm|p)?/i, shift: '9AM-5PM' },
-      { pattern: /5\s*(?:pm|p)?\s*[-to]\s*1\s*(?:am|a)?/i, shift: '5PM-1AM' },
-      { pattern: /1\s*(?:am|a)?\s*[-to]\s*9\s*(?:am|a)?/i, shift: '1AM-9AM' },
+      { pattern: /7\s*(?:am|a)?\s*[-to]\s*3\s*(?:pm|p)?/i, shift: '7a-3p' },
+      { pattern: /3\s*(?:pm|p)?\s*[-to]\s*11\s*(?:pm|p)?/i, shift: '3p-11p' },
+      { pattern: /11\s*(?:pm|p)?\s*[-to]\s*7\s*(?:am|a)?/i, shift: '11p-7a' },
+      { pattern: /6\s*(?:am|a)?\s*[-to]\s*2\s*(?:pm|p)?/i, shift: '6a-2p' },
+      { pattern: /2\s*(?:pm|p)?\s*[-to]\s*10\s*(?:pm|p)?/i, shift: '2p-10p' },
+      { pattern: /10\s*(?:pm|p)?\s*[-to]\s*6\s*(?:am|a)?/i, shift: '10p-6a' },
+      { pattern: /8\s*(?:am|a)?\s*[-to]\s*4\s*(?:pm|p)?/i, shift: '8a-4p' },
+      { pattern: /4\s*(?:pm|p)?\s*[-to]\s*12\s*(?:am|a|midnight)?/i, shift: '4p-12a' },
+      { pattern: /12\s*(?:am|a|midnight)?\s*[-to]\s*8\s*(?:am|a)?/i, shift: '12a-8a' },
+      { pattern: /9\s*(?:am|a)?\s*[-to]\s*5\s*(?:pm|p)?/i, shift: '9a-5p' },
+      { pattern: /5\s*(?:pm|p)?\s*[-to]\s*1\s*(?:am|a)?/i, shift: '5p-1a' },
+      { pattern: /1\s*(?:am|a)?\s*[-to]\s*9\s*(?:am|a)?/i, shift: '1a-9a' },
       
       // More flexible patterns for common ranges with liberal time formats
-      { pattern: /(7|8)\s*(?:am|a)?\s*[-to]\s*(3|4)\s*(?:pm|p)?/i, shift: '7AM-3PM' },
-      { pattern: /(3|4)\s*(?:pm|p)?\s*[-to]\s*(11|12)\s*(?:pm|p|am|a)?/i, shift: '3PM-11PM' },
-      { pattern: /(11|12)\s*(?:pm|p|am|a)?\s*[-to]\s*(7|8)\s*(?:am|a)?/i, shift: '11PM-7AM' },
+      { pattern: /(7|8)\s*(?:am|a)?\s*[-to]\s*(3|4)\s*(?:pm|p)?/i, shift: '7a-3p' },
+      { pattern: /(3|4)\s*(?:pm|p)?\s*[-to]\s*(11|12)\s*(?:pm|p|am|a)?/i, shift: '3p-11p' },
+      { pattern: /(11|12)\s*(?:pm|p|am|a)?\s*[-to]\s*(7|8)\s*(?:am|a)?/i, shift: '11p-7a' },
       
       // Very liberal patterns for common healthcare shifts
-      { pattern: /(7|8)\s*[-to]\s*(3|4)/i, shift: '7AM-3PM' },
-      { pattern: /(3|4)\s*[-to]\s*(11|12)/i, shift: '3PM-11PM' },
-      { pattern: /(11|12)\s*[-to]\s*(7|8)/i, shift: '11PM-7AM' },
+      { pattern: /(7|8)\s*[-to]\s*(3|4)/i, shift: '7a-3p' },
+      { pattern: /(3|4)\s*[-to]\s*(11|12)/i, shift: '3p-11p' },
+      { pattern: /(11|12)\s*[-to]\s*(7|8)/i, shift: '11p-7a' },
     ];
     
     for (const { pattern, shift } of specificTimePatterns) {
@@ -885,18 +885,12 @@ export default function JobsPage() {
   // Filter jobs based on search, location, and active filters
   useEffect(() => {
     const filtered = jobs.filter(job => {
-      // Enhanced search functionality - search across all relevant fields
-      const searchLower = searchTerm.toLowerCase();
+      // Search functionality - search job descriptions only, split words
+      const searchTerms = searchTerm.toLowerCase().split(/\s+/).filter(term => term.length > 0);
       const matchesSearch = searchTerm === '' || 
-                           job.title.toLowerCase().includes(searchLower) ||
-                           job.company.toLowerCase().includes(searchLower) ||
-                           job.location.toLowerCase().includes(searchLower) ||
-                           (job.description && job.description.toLowerCase().includes(searchLower)) ||
-                           (job.requirements && Array.isArray(job.requirements) && 
-                            job.requirements.some(req => req.toLowerCase().includes(searchLower))) ||
-                           (job.requirements && typeof job.requirements === 'string' && 
-                            job.requirements.toLowerCase().includes(searchLower)) ||
-                           (job.tags && job.tags.some(tag => tag.label.toLowerCase().includes(searchLower)));
+                           (job.description && searchTerms.length > 0 && searchTerms.every(term => 
+                             job.description!.toLowerCase().includes(term)
+                           ));
       
       // Enhanced location filtering - handle state-based filtering
       let matchesLocation = true;
@@ -1107,7 +1101,7 @@ export default function JobsPage() {
       return 'bg-purple-200'; // Purple for Job Setting
     } else if (['Full-Time', 'Part-Time', 'Per-Diem', 'Temp-To-Perm', 'Local Contract'].includes(label)) {
       return 'bg-[#8AADFC]'; // Blue for Employment Type
-    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night'].includes(label)) {
+    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night', '7a-3p', '3p-11p', '11p-7a', '6a-2p', '2p-10p', '10p-6a', '8a-4p', '4p-12a', '12a-8a', '9a-5p', '5p-1a', '1a-9a', '7a-7p', '7p-7a', '6a-6p', '6p-6a', '8a-8p', '8p-8a'].includes(label)) {
       return 'bg-pink-200'; // Pink for Shift
     }
     return 'bg-gray-200';
@@ -1275,7 +1269,7 @@ export default function JobsPage() {
                 <Search className="w-5 h-5 lg:w-6 lg:h-6 text-[#7691A4] mr-3 flex-shrink-0" strokeWidth={2} />
                 <input
                   type="text"
-                  placeholder="Search"
+                  placeholder="Search job descriptions..."
                   value={searchTerm}
                   onChange={(e) => handleSearch(e.target.value)}
                   className="flex-1 text-base lg:text-[20px] font-bold text-[#7691A4] placeholder-[#7691A4] bg-transparent outline-none font-avenir"
@@ -1283,43 +1277,56 @@ export default function JobsPage() {
               </div>
             </div>
 
-            {/* Location Autocomplete */}
+            {/* Location Dropdown */}
             <div className="relative">
-              <div className="flex items-center bg-white rounded-full px-4 lg:px-6 py-3 lg:py-3 shadow-sm w-full lg:min-w-[180px]">
-                <MapPin className="w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] mr-2 flex-shrink-0" strokeWidth={2} />
-                <input
-                  type="text"
-                  placeholder="Location"
-                  value={locationInput}
-                  onChange={(e) => handleLocationInputChange(e.target.value)}
-                  onFocus={handleLocationInputFocus}
-                  onBlur={handleLocationInputBlur}
-                  onKeyPress={handleLocationKeyPress}
-                  className="flex-1 text-base lg:text-[20px] font-bold text-[#7691A4] placeholder-[#7691A4] bg-transparent outline-none font-avenir"
-                />
-                {locationInput && (
-                  <button
-                    onClick={() => handleLocationInputChange('')}
-                    className="ml-2 text-[#7691A4] hover:text-[#2466D0] flex-shrink-0"
-                  >
-                    <X className="w-4 h-4" strokeWidth={2} />
-                  </button>
-                )}
-              </div>
+              <button
+                onClick={() => setShowLocationSuggestions(!showLocationSuggestions)}
+                className="flex items-center bg-white rounded-full px-4 lg:px-6 py-3 lg:py-3 shadow-sm w-full lg:min-w-[180px] justify-between"
+              >
+                <div className="flex items-center min-w-0 flex-1">
+                  <MapPin className="w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] mr-2 flex-shrink-0" strokeWidth={2} />
+                  <span className="text-base lg:text-[20px] font-bold text-[#7691A4] font-avenir truncate">
+                    {locationInput === '' ? 'Location' : locationInput.split(',')[0]}
+                  </span>
+                </div>
+                <ChevronDown className={`w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] transition-transform flex-shrink-0 ml-1 ${showLocationSuggestions ? 'rotate-180' : 'rotate-90'}`} strokeWidth={2} />
+              </button>
               
-              {showLocationSuggestions && locationSuggestions.length > 0 && (
+              {showLocationSuggestions && (
                 <div className="absolute top-full mt-2 left-0 bg-white rounded-2xl shadow-lg border border-gray-200 min-w-[250px] z-10">
-                  <ul className="max-h-48 overflow-y-auto">
-                    {locationSuggestions.map((location) => (
-                      <li
-                        key={location}
-                        onClick={() => handleLocationSuggestionClick(location)}
-                        className="px-4 py-3 hover:bg-gray-50 cursor-pointer font-avenir text-[#7691A4] first:rounded-t-2xl last:rounded-b-2xl"
-                      >
-                        {location}
-                      </li>
-                    ))}
-                  </ul>
+                  {/* Search input */}
+                  <div className="p-3 border-b border-gray-200">
+                    <input
+                      type="text"
+                      placeholder="Search locations..."
+                      value={locationInput}
+                      onChange={(e) => handleLocationInputChange(e.target.value)}
+                      onFocus={handleLocationInputFocus}
+                      onBlur={handleLocationInputBlur}
+                      onKeyPress={handleLocationKeyPress}
+                      className="w-full px-3 py-2 text-[16px] text-[#7691A4] placeholder-[#7691A4] border border-gray-300 rounded-lg outline-none focus:border-[#2466D0] font-avenir"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                  
+                  {/* Location list */}
+                  <div className="max-h-48 overflow-y-auto">
+                    {locationSuggestions.length > 0 ? (
+                      locationSuggestions.map((location) => (
+                        <button
+                          key={location}
+                          onClick={() => handleLocationSuggestionClick(location)}
+                          className="w-full text-left px-4 py-3 hover:bg-gray-50 first:rounded-t-2xl last:rounded-b-2xl font-avenir text-[#7691A4]"
+                        >
+                          {location}
+                        </button>
+                      ))
+                    ) : (
+                      <div className="px-4 py-3 text-[#7691A4] font-avenir text-center">
+                        No locations found
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

@@ -53,6 +53,7 @@ export default function BaseLayout({
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
+        onLoginClick={() => setIsAuthModalOpen(true)}
       />
 
       {/* Main content */}

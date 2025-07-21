@@ -5,9 +5,11 @@ import { EmailQueueProcessor } from './processors/email-queue.processor';
 import { ScheduledJobsProcessor } from './processors/scheduled-jobs.processor';
 import { QueueService } from './queue.service';
 import { QueueController } from './queue.controller';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   imports: [
+    EmailModule,
     BullModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
