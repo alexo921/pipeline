@@ -105,17 +105,17 @@ const Navbar: React.FC<NavbarProps> = ({
                 </span>
                 
                 {/* Profile icon with online indicator */}
-                <Link
-                  href="/dashboard"
+              <Link
+                href="/dashboard"
                   className="relative flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"
-                >
+              >
                   <User
                     className="w-6 h-6 text-[#01253F]"
                     strokeWidth={2}
                   />
                   {/* Online indicator dot */}
                   <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                </Link>
+              </Link>
               </div>
             ) : null}
           </div>

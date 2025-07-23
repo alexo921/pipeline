@@ -981,6 +981,14 @@ export default function JobsPage() {
 
   const handleJobClick = (job: Job) => {
     setSelectedJob(job);
+    
+    // Scroll desktop job details to top when switching jobs
+    if (desktopJobDetailsRef.current) {
+      const scrollableContent = desktopJobDetailsRef.current.querySelector('.overflow-y-auto') as HTMLElement;
+      if (scrollableContent) {
+        scrollableContent.scrollTop = 0;
+      }
+    }
   };
 
   const handleContainerClick = () => {
@@ -1453,13 +1461,17 @@ export default function JobsPage() {
             </div>
 
             {/* Job Details Panel - Desktop 55% */}
-            <div className="hidden lg:block lg:flex-1 lg:min-w-0 job-details-panel lg:sticky lg:top-8 lg:self-start" style={{ 
-              maxWidth: '55%', 
-              overflowWrap: 'break-word',
-              minHeight: '600px',
-              height: 'min(1000px, 90vh)',
-              maxHeight: '90vh'
-            }}>
+            <div 
+              ref={desktopJobDetailsRef}
+              className="hidden lg:block lg:flex-1 lg:min-w-0 job-details-panel lg:sticky lg:top-8 lg:self-start" 
+              style={{ 
+                maxWidth: '55%', 
+                overflowWrap: 'break-word',
+                minHeight: '600px',
+                height: 'min(1000px, 90vh)',
+                maxHeight: '90vh'
+              }}
+            >
               {selectedJob ? (
                 <div className="bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] h-full flex flex-col overflow-hidden" style={{ maxWidth: '100%', zIndex: 10 }}>
                   {/* Header - Fixed */}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import JobModal from '../components/JobModal';
 import { Job, Tag, TagType } from '../types/job';
 import { Search, MapPin, Filter, ChevronDown, X } from 'lucide-react';
@@ -664,36 +664,36 @@ const getShift = (title: string, description: string): string => {
     // First check for specific time patterns and return the exact time range
     const specificTimePatterns = [
       // 12-hour shift patterns (common in healthcare)
-      { pattern: /7\s*(?:am|a)?\s*[-to]\s*7\s*(?:pm|p)?/i, shift: '7a-7p' },
-      { pattern: /7\s*(?:pm|p)?\s*[-to]\s*7\s*(?:am|a)?/i, shift: '7p-7a' },
-      { pattern: /6\s*(?:am|a)?\s*[-to]\s*6\s*(?:pm|p)?/i, shift: '6a-6p' },
-      { pattern: /6\s*(?:pm|p)?\s*[-to]\s*6\s*(?:am|a)?/i, shift: '6p-6a' },
-      { pattern: /8\s*(?:am|a)?\s*[-to]\s*8\s*(?:pm|p)?/i, shift: '8a-8p' },
-      { pattern: /8\s*(?:pm|p)?\s*[-to]\s*8\s*(?:am|a)?/i, shift: '8p-8a' },
+      { pattern: /7\s*(?:am|a)?\s*[-to]\s*7\s*(?:pm|p)?/i, shift: '7AM-7PM' },
+      { pattern: /7\s*(?:pm|p)?\s*[-to]\s*7\s*(?:am|a)?/i, shift: '7PM-7AM' },
+      { pattern: /6\s*(?:am|a)?\s*[-to]\s*6\s*(?:pm|p)?/i, shift: '6AM-6PM' },
+      { pattern: /6\s*(?:pm|p)?\s*[-to]\s*6\s*(?:am|a)?/i, shift: '6PM-6AM' },
+      { pattern: /8\s*(?:am|a)?\s*[-to]\s*8\s*(?:pm|p)?/i, shift: '8AM-8PM' },
+      { pattern: /8\s*(?:pm|p)?\s*[-to]\s*8\s*(?:am|a)?/i, shift: '8PM-8AM' },
       
       // 8-hour shift patterns (standard healthcare shifts)
-      { pattern: /7\s*(?:am|a)?\s*[-to]\s*3\s*(?:pm|p)?/i, shift: '7a-3p' },
-      { pattern: /3\s*(?:pm|p)?\s*[-to]\s*11\s*(?:pm|p)?/i, shift: '3p-11p' },
-      { pattern: /11\s*(?:pm|p)?\s*[-to]\s*7\s*(?:am|a)?/i, shift: '11p-7a' },
-      { pattern: /6\s*(?:am|a)?\s*[-to]\s*2\s*(?:pm|p)?/i, shift: '6a-2p' },
-      { pattern: /2\s*(?:pm|p)?\s*[-to]\s*10\s*(?:pm|p)?/i, shift: '2p-10p' },
-      { pattern: /10\s*(?:pm|p)?\s*[-to]\s*6\s*(?:am|a)?/i, shift: '10p-6a' },
-      { pattern: /8\s*(?:am|a)?\s*[-to]\s*4\s*(?:pm|p)?/i, shift: '8a-4p' },
-      { pattern: /4\s*(?:pm|p)?\s*[-to]\s*12\s*(?:am|a|midnight)?/i, shift: '4p-12a' },
-      { pattern: /12\s*(?:am|a|midnight)?\s*[-to]\s*8\s*(?:am|a)?/i, shift: '12a-8a' },
-      { pattern: /9\s*(?:am|a)?\s*[-to]\s*5\s*(?:pm|p)?/i, shift: '9a-5p' },
-      { pattern: /5\s*(?:pm|p)?\s*[-to]\s*1\s*(?:am|a)?/i, shift: '5p-1a' },
-      { pattern: /1\s*(?:am|a)?\s*[-to]\s*9\s*(?:am|a)?/i, shift: '1a-9a' },
+      { pattern: /7\s*(?:am|a)?\s*[-to]\s*3\s*(?:pm|p)?/i, shift: '7AM-3PM' },
+      { pattern: /3\s*(?:pm|p)?\s*[-to]\s*11\s*(?:pm|p)?/i, shift: '3PM-11PM' },
+      { pattern: /11\s*(?:pm|p)?\s*[-to]\s*7\s*(?:am|a)?/i, shift: '11PM-7AM' },
+      { pattern: /6\s*(?:am|a)?\s*[-to]\s*2\s*(?:pm|p)?/i, shift: '6AM-2PM' },
+      { pattern: /2\s*(?:pm|p)?\s*[-to]\s*10\s*(?:pm|p)?/i, shift: '2PM-10PM' },
+      { pattern: /10\s*(?:pm|p)?\s*[-to]\s*6\s*(?:am|a)?/i, shift: '10PM-6AM' },
+      { pattern: /8\s*(?:am|a)?\s*[-to]\s*4\s*(?:pm|p)?/i, shift: '8AM-4PM' },
+      { pattern: /4\s*(?:pm|p)?\s*[-to]\s*12\s*(?:am|a|midnight)?/i, shift: '4PM-12AM' },
+      { pattern: /12\s*(?:am|a|midnight)?\s*[-to]\s*8\s*(?:am|a)?/i, shift: '12AM-8AM' },
+      { pattern: /9\s*(?:am|a)?\s*[-to]\s*5\s*(?:pm|p)?/i, shift: '9AM-5PM' },
+      { pattern: /5\s*(?:pm|p)?\s*[-to]\s*1\s*(?:am|a)?/i, shift: '5PM-1AM' },
+      { pattern: /1\s*(?:am|a)?\s*[-to]\s*9\s*(?:am|a)?/i, shift: '1AM-9AM' },
       
       // More flexible patterns for common ranges with liberal time formats
-      { pattern: /(7|8)\s*(?:am|a)?\s*[-to]\s*(3|4)\s*(?:pm|p)?/i, shift: '7a-3p' },
-      { pattern: /(3|4)\s*(?:pm|p)?\s*[-to]\s*(11|12)\s*(?:pm|p|am|a)?/i, shift: '3p-11p' },
-      { pattern: /(11|12)\s*(?:pm|p|am|a)?\s*[-to]\s*(7|8)\s*(?:am|a)?/i, shift: '11p-7a' },
+      { pattern: /(7|8)\s*(?:am|a)?\s*[-to]\s*(3|4)\s*(?:pm|p)?/i, shift: '7AM-3PM' },
+      { pattern: /(3|4)\s*(?:pm|p)?\s*[-to]\s*(11|12)\s*(?:pm|p|am|a)?/i, shift: '3PM-11PM' },
+      { pattern: /(11|12)\s*(?:pm|p|am|a)?\s*[-to]\s*(7|8)\s*(?:am|a)?/i, shift: '11PM-7AM' },
       
       // Very liberal patterns for common healthcare shifts
-      { pattern: /(7|8)\s*[-to]\s*(3|4)/i, shift: '7a-3p' },
-      { pattern: /(3|4)\s*[-to]\s*(11|12)/i, shift: '3p-11p' },
-      { pattern: /(11|12)\s*[-to]\s*(7|8)/i, shift: '11p-7a' },
+      { pattern: /(7|8)\s*[-to]\s*(3|4)/i, shift: '7AM-3PM' },
+      { pattern: /(3|4)\s*[-to]\s*(11|12)/i, shift: '3PM-11PM' },
+      { pattern: /(11|12)\s*[-to]\s*(7|8)/i, shift: '11PM-7AM' },
     ];
     
     for (const { pattern, shift } of specificTimePatterns) {
@@ -807,12 +807,14 @@ export default function JobsPage() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [locationInput, setLocationInput] = useState(''); // Changed from selectedLocation
-  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false); // Changed from isLocationOpen
+  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
+
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Tag[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasUserAppliedFilters, setHasUserAppliedFilters] = useState(false);
   const { user, showLoginModal, refreshUser } = useAuth();
+  const jobDetailsRef = useRef<HTMLDivElement>(null);
 
   // Handle Google OAuth token from URL params
   useEffect(() => {
@@ -870,34 +872,279 @@ export default function JobsPage() {
   const filterOptions = {
     job_settings: Array.from(new Set(jobs.flatMap(job => (job.tags || []).filter(tag => tag.type === 'job_setting').map(tag => tag.label)))),
     employment_types: Array.from(new Set(jobs.flatMap(job => (job.tags || []).filter(tag => tag.type === 'employment_type').map(tag => tag.label)))),
-    shifts: Array.from(new Set(jobs.flatMap(job => (job.tags || []).filter(tag => tag.type === 'shift').map(tag => tag.label))))
+    shifts: ['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight'] // Only show basic shift names
   };
 
   // Available locations - dynamically generated from loaded data
   const allLocations = Array.from(new Set(jobs.map(job => job.location))).sort();
 
-  // Filtered location suggestions based on input
-  const locationSuggestions = allLocations.filter(location => 
-    location.toLowerCase().includes(locationInput.toLowerCase()) && 
-    location.toLowerCase() !== locationInput.toLowerCase() // Don't show exact matches
-  ).slice(0, 5); // Limit to 5 suggestions
+  // Location suggestions based on input (show after 2 characters)
+  const locationSuggestions = locationInput.length >= 2 
+    ? allLocations.filter(location => 
+        location.toLowerCase().includes(locationInput.toLowerCase()) && 
+        location.toLowerCase() !== locationInput.toLowerCase()
+      ).slice(0, 5) // Limit to 5 suggestions
+    : [];
 
   // Filter jobs based on search, location, and active filters
   useEffect(() => {
     const filtered = jobs.filter(job => {
-      // Search functionality - search job descriptions only, split words
+      // Enhanced search functionality with role-specific matching
       const searchTerms = searchTerm.toLowerCase().split(/\s+/).filter(term => term.length > 0);
-      const matchesSearch = searchTerm === '' || 
-                           (job.description && searchTerms.length > 0 && searchTerms.every(term => 
-                             job.description!.toLowerCase().includes(term)
-                           ));
       
-      // Enhanced location filtering - handle state-based filtering
+      let matchesSearch = searchTerm === '';
+      
+      if (searchTerm !== '' && searchTerms.length > 0) {
+        // Define healthcare role categories and their variations
+        const roleCategories: Record<string, {
+          primary: string[];
+          exclude: string[];
+          titlePatterns: RegExp[];
+        }> = {
+          'nurse': {
+            primary: ['nurse', 'nursing', 'rn', 'lpn', 'registered nurse', 'licensed practical nurse'],
+            exclude: ['cna', 'certified nursing assistant', 'nursing assistant', 'caregiver', 'home health aide', 'hha'],
+            titlePatterns: [/nurse/i, /rn\b/i, /lpn\b/i, /registered nurse/i, /licensed practical nurse/i]
+          },
+          'cna': {
+            primary: ['cna', 'certified nursing assistant', 'nursing assistant', 'caregiver', 'home health aide', 'hha'],
+            exclude: ['rn', 'lpn', 'registered nurse', 'licensed practical nurse', 'nurse'],
+            titlePatterns: [/cna\b/i, /certified nursing assistant/i, /nursing assistant/i, /caregiver/i, /home health aide/i, /hha\b/i]
+          },
+          'therapist': {
+            primary: ['therapist', 'therapy', 'pt', 'ot', 'st', 'physical therapist', 'occupational therapist', 'speech therapist', 'respiratory therapist', 'rt'],
+            exclude: ['nurse', 'cna', 'caregiver', 'assistant'],
+            titlePatterns: [/therapist/i, /pt\b/i, /ot\b/i, /st\b/i, /rt\b/i, /physical therapist/i, /occupational therapist/i, /speech therapist/i, /respiratory therapist/i]
+          },
+          'aide': {
+            primary: ['aide', 'assistant', 'hha', 'home health aide', 'personal care aide', 'pca'],
+            exclude: ['nurse', 'rn', 'lpn', 'therapist', 'pt', 'ot', 'st', 'rt'],
+            titlePatterns: [/aide/i, /assistant/i, /hha\b/i, /home health aide/i, /personal care aide/i, /pca\b/i]
+          },
+          'manager': {
+            primary: ['manager', 'supervisor', 'director', 'coordinator', 'lead'],
+            exclude: ['cna', 'aide', 'assistant'],
+            titlePatterns: [/manager/i, /supervisor/i, /director/i, /coordinator/i, /lead/i]
+          }
+        };
+
+        // Check if search terms match any specific role category
+        let matchedRole = null;
+        
+        // Special handling for exact matches to avoid cross-category confusion
+        if (searchTerms.length === 1) {
+          const singleTerm = searchTerms[0];
+          if (singleTerm === 'rn' || singleTerm === 'lpn') {
+            matchedRole = 'nurse';
+          } else if (singleTerm === 'cna') {
+            matchedRole = 'cna';
+          } else if (singleTerm === 'pt' || singleTerm === 'ot' || singleTerm === 'st' || singleTerm === 'rt') {
+            matchedRole = 'therapist';
+          } else if (singleTerm === 'hha') {
+            matchedRole = 'aide';
+          }
+        }
+        
+        // If no exact match, check for general role matches
+        if (!matchedRole) {
+          for (const [roleKey, roleData] of Object.entries(roleCategories)) {
+            const hasPrimaryMatch = searchTerms.some(term => 
+              roleData.primary.some(primary => primary === term || primary.includes(term) || term.includes(primary))
+            );
+            
+            if (hasPrimaryMatch) {
+              matchedRole = roleKey;
+              break;
+            }
+          }
+        }
+
+        if (matchedRole) {
+          // Role-specific matching
+          const roleData = roleCategories[matchedRole];
+          const jobTitle = job.title.toLowerCase();
+          const jobDescription = job.description?.toLowerCase() || '';
+          
+          // For single-term searches, be more specific
+          if (searchTerms.length === 1) {
+            const singleTerm = searchTerms[0];
+            
+            // Check if the job title contains the exact search term
+            if (jobTitle.includes(singleTerm)) {
+              // For specific abbreviations, only match if they appear as standalone terms
+              if (['rn', 'lpn', 'pt', 'ot', 'st', 'rt', 'cna', 'hha'].includes(singleTerm)) {
+                const wordBoundaryPattern = new RegExp(`\\b${singleTerm}\\b`, 'i');
+                matchesSearch = wordBoundaryPattern.test(jobTitle);
+                
+                // Special case for CNA - also include "Nursing Assistant"
+                if (singleTerm === 'cna' && jobTitle.includes('nursing assistant')) {
+                  matchesSearch = true;
+                }
+              } else {
+                matchesSearch = true;
+              }
+            } else {
+              // Special case for CNA - also include "Nursing Assistant"
+              if (singleTerm === 'cna' && jobTitle.includes('nursing assistant')) {
+                matchesSearch = true;
+              } else {
+                matchesSearch = false;
+              }
+            }
+          } else {
+            // For multi-term searches, use the original logic
+            const titleMatches = roleData.titlePatterns.some((pattern: RegExp) => pattern.test(jobTitle));
+            
+            if (titleMatches) {
+              matchesSearch = true;
+            } else {
+              const titleHasPrimaryTerms = roleData.primary.some((term: string) => 
+                jobTitle.includes(term)
+              );
+              
+              const titleHasExcludedTerms = roleData.exclude.some((term: string) => 
+                jobTitle.includes(term)
+              );
+              
+              matchesSearch = titleHasPrimaryTerms && !titleHasExcludedTerms;
+            }
+          }
+        } else {
+          // Check if search terms match shift patterns
+          const shiftMatches = searchTerms.some(term => {
+            // Define shift patterns and their variations
+            const shiftPatterns: Record<string, string[]> = {
+              // Time-based patterns
+              '7am-3pm': ['7am-3pm', '7am to 3pm', '7:00am-3:00pm', '7:00am to 3:00pm'],
+              '3pm-11pm': ['3pm-11pm', '3pm to 11pm', '3:00pm-11:00pm', '3:00pm to 11:00pm'],
+              '11pm-7am': ['11pm-7am', '11pm to 7am', '11:00pm-7:00am', '11:00pm to 7:00am'],
+              '6am-2pm': ['6am-2pm', '6am to 2pm', '6:00am-2:00pm', '6:00am to 2:00pm'],
+              '2pm-10pm': ['2pm-10pm', '2pm to 10pm', '2:00pm-10:00pm', '2:00pm to 10:00pm'],
+              '10pm-6am': ['10pm-6am', '10pm to 6am', '10:00pm-6:00am', '10:00pm to 6:00am'],
+              '8am-4pm': ['8am-4pm', '8am to 4pm', '8:00am-4:00pm', '8:00am to 4:00pm'],
+              '4pm-12am': ['4pm-12am', '4pm to 12am', '4:00pm-12:00am', '4:00pm to 12:00am'],
+              '12am-8am': ['12am-8am', '12am to 8am', '12:00am-8:00am', '12:00am to 8:00am'],
+              '9am-5pm': ['9am-5pm', '9am to 5pm', '9:00am-5:00pm', '9:00am to 5:00pm'],
+              '5pm-1am': ['5pm-1am', '5pm to 1am', '5:00pm-1:00am', '5:00pm to 1:00am'],
+              '1am-9am': ['1am-9am', '1am to 9am', '1:00am-9:00am', '1:00am to 9:00am'],
+              '7am-7pm': ['7am-7pm', '7am to 7pm', '7:00am-7:00pm', '7:00am to 7:00pm'],
+              '7pm-7am': ['7pm-7am', '7pm to 7am', '7:00pm-7:00am', '7:00pm to 7:00am'],
+              '6am-6pm': ['6am-6pm', '6am to 6pm', '6:00am-6:00pm', '6:00am to 6:00pm'],
+              '6pm-6am': ['6pm-6am', '6pm to 6am', '6:00pm-6:00am', '6:00pm to 6:00am'],
+              '8am-8pm': ['8am-8pm', '8am to 8pm', '8:00am-8:00pm', '8:00am to 8:00pm'],
+              '8pm-8am': ['8pm-8am', '8pm to 8am', '8:00pm-8:00am', '8:00pm to 8:00am'],
+              
+              // General shift terms
+              'morning': ['morning', 'day shift'],
+              'afternoon': ['afternoon'],
+              'evening': ['evening'],
+              'night': ['night', 'night shift'],
+              'overnight': ['overnight', 'graveyard'],
+              
+              // Duration-based patterns
+              '12 hour': ['12 hour', '12-hour', '12hr', '12 hr', 'twelve hour', 'twelve-hour'],
+              '8 hour': ['8 hour', '8-hour', '8hr', '8 hr', 'eight hour', 'eight-hour'],
+              '10 hour': ['10 hour', '10-hour', '10hr', '10 hr', 'ten hour', 'ten-hour'],
+              '16 hour': ['16 hour', '16-hour', '16hr', '16 hr', 'sixteen hour', 'sixteen-hour'],
+              
+              // Specific time patterns
+              '7a-3p': ['7a-3p', '7a to 3p'],
+              '3p-11p': ['3p-11p', '3p to 11p'],
+              '11p-7a': ['11p-7a', '11p to 7a'],
+              '6a-2p': ['6a-2p', '6a to 2p'],
+              '2p-10p': ['2p-10p', '2p to 10p'],
+              '10p-6a': ['10p-6a', '10p to 6a'],
+              '8a-4p': ['8a-4p', '8a to 4p'],
+              '4p-12a': ['4p-12a', '4p to 12a'],
+              '12a-8a': ['12a-8a', '12a to 8a'],
+              '9a-5p': ['9a-5p', '9a to 5p'],
+              '5p-1a': ['5p-1a', '5p to 1a'],
+              '1a-9a': ['1a-9a', '1a to 9a'],
+              '7a-7p': ['7a-7p', '7a to 7p'],
+              '7p-7a': ['7p-7a', '7p to 7a'],
+              '6a-6p': ['6a-6p', '6a to 6p'],
+              '6p-6a': ['6p-6a', '6p to 6a'],
+              '8a-8p': ['8a-8p', '8a to 8p'],
+              '8p-8a': ['8p-8a', '8p to 8a']
+            };
+
+            // Check if the term matches any shift pattern
+            for (const [patternKey, variations] of Object.entries(shiftPatterns)) {
+              // Check if the search term matches this pattern
+              const termMatchesPattern = variations.some(variation => 
+                term === variation.toLowerCase() || 
+                term.includes(variation.toLowerCase()) || 
+                variation.toLowerCase().includes(term)
+              );
+              
+              if (termMatchesPattern) {
+                // Check if job has matching shift tags
+                const jobTags = job.tags || [];
+                const hasMatchingShift = jobTags.some(tag => {
+                  if (tag.type !== 'shift') return false;
+                  
+                  const tagLabel = tag.label.toLowerCase();
+                  
+                  // For time-based patterns, check for exact or close matches
+                  if (patternKey.includes('am') || patternKey.includes('pm') || patternKey.includes('a') || patternKey.includes('p')) {
+                    return variations.some(variation => tagLabel.includes(variation.toLowerCase()));
+                  }
+                  
+                  // For general terms, check for exact matches
+                  if (patternKey === 'morning') {
+                    return tagLabel === 'morning' || tagLabel.includes('7am-3pm') || tagLabel.includes('6am-2pm') || tagLabel.includes('8am-4pm') || tagLabel.includes('9am-5pm');
+                  }
+                  if (patternKey === 'afternoon') {
+                    return tagLabel === 'afternoon' || tagLabel.includes('3pm-11pm') || tagLabel.includes('2pm-10pm') || tagLabel.includes('4pm-12am');
+                  }
+                  if (patternKey === 'evening') {
+                    return tagLabel === 'evening' || tagLabel.includes('5pm-1am') || tagLabel.includes('4pm-12am');
+                  }
+                  if (patternKey === 'night') {
+                    return tagLabel === 'night' || tagLabel === 'night shift';
+                  }
+                  if (patternKey === 'overnight') {
+                    return tagLabel === 'overnight' || tagLabel === 'graveyard' || tagLabel.includes('11pm-7am') || tagLabel.includes('10pm-6am') || tagLabel.includes('12am-8am');
+                  }
+                  
+                  // For duration patterns, check for exact matches
+                  if (patternKey.includes('hour')) {
+                    return variations.some(variation => tagLabel.includes(variation.toLowerCase()));
+                  }
+                  
+                  return false;
+                });
+                
+                if (hasMatchingShift) {
+                  return true;
+                }
+              }
+            }
+            
+            return false;
+          });
+
+          if (shiftMatches) {
+            matchesSearch = true;
+          } else {
+            // General search - check if all terms are in title or description
+            const jobTitle = job.title.toLowerCase();
+            const jobDescription = job.description?.toLowerCase() || '';
+            const combinedText = jobTitle + ' ' + jobDescription;
+            
+            matchesSearch = searchTerms.every(term => 
+              combinedText.includes(term)
+            );
+          }
+        }
+      }
+      
+      // Enhanced location filtering with city validation
       let matchesLocation = true;
       if (locationInput !== '') {
         const inputLower = locationInput.toLowerCase().trim();
         
-        // Check if input is a state code or state name
+        // State name to code mapping
         const stateNameToCode: Record<string, string> = {
           'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
           'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
@@ -911,30 +1158,83 @@ export default function JobsPage() {
           'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY'
         };
         
+        const jobLocation = job.location.toLowerCase();
+        
+        // Extract city and state from location string
+        const locationParts = jobLocation.split(',').map(part => part.trim());
+        const jobCity = locationParts[0] || '';
+        const jobState = locationParts[1] || '';
+        
         // Check if input is a state code (2 letters)
         const isStateCode = /^[A-Z]{2}$/i.test(inputLower);
         
         // Check if input is a state name
         const isStateName = stateNameToCode[inputLower];
         
-        if (isStateCode || isStateName) {
-          // State-based filtering - show all jobs in that state
-          const targetState = isStateCode ? inputLower.toUpperCase() : isStateName;
-          const jobLocation = job.location.toLowerCase();
+        // Check if input contains city and state (e.g., "Boston, MA" or "Boston MA")
+        const cityStatePattern = /^([^,]+)\s*[,]?\s*([A-Z]{2}|[a-zA-Z\s]+)$/i;
+        const cityStateMatch = inputLower.match(cityStatePattern);
+        
+        if (cityStateMatch) {
+          // City, State format - use location validation
+          const inputCity = cityStateMatch[1].trim();
+          const inputState = cityStateMatch[2].trim();
           
-          // Check if job location contains the state code or state name
-          matchesLocation = jobLocation.includes(targetState.toLowerCase()) ||
+          // Check if state is a code or name
+          const targetState = stateNameToCode[inputState] || inputState.toUpperCase();
+          
+          // First try exact match
+          matchesLocation = (jobCity.includes(inputCity) || jobLocation.includes(inputCity)) &&
+                           (jobState.includes(targetState.toLowerCase()) || jobLocation.includes(targetState.toLowerCase()));
+          
+          // If no exact match, try to find closest city in the state
+          if (!matchesLocation) {
+            // This would ideally use the location validator, but for performance we'll do a simple check
+            // In a full implementation, you'd want to pre-validate the input and store the closest matches
+            const normalizedInputCity = inputCity.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
+            const normalizedJobCity = jobCity.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
+            
+            // Simple similarity check - if cities are similar and in the same state
+            if (normalizedInputCity.length > 2 && normalizedJobCity.length > 2) {
+              const similarity = this.calculateStringSimilarity(normalizedInputCity, normalizedJobCity);
+              matchesLocation = similarity > 0.7 && 
+                               (jobState.includes(targetState.toLowerCase()) || jobLocation.includes(targetState.toLowerCase()));
+            }
+          }
+        } else if (isStateCode || isStateName) {
+          // State-only filtering
+          const targetState = isStateCode ? inputLower.toUpperCase() : isStateName;
+          matchesLocation = jobState.includes(targetState.toLowerCase()) || 
+                           jobLocation.includes(targetState.toLowerCase()) ||
                            jobLocation.includes(inputLower);
         } else {
-          // Regular location filtering for cities or other locations
-          matchesLocation = job.location.toLowerCase().includes(inputLower);
+          // City-only or general location filtering
+          matchesLocation = jobCity.includes(inputLower) || 
+                           jobLocation.includes(inputLower) ||
+                           jobState.includes(inputLower);
         }
       }
       
       const matchesFilters = activeFilters.length === 0 || 
-                            activeFilters.some(filter => 
-                              (job.tags || []).some(tag => tag.label === filter.label)
-                            );
+                            activeFilters.some(filter => {
+                              if (filter.type === 'shift') {
+                                // Map time-based shifts to basic shift categories
+                                const shiftMapping: Record<string, string[]> = {
+                                  'Morning': ['Morning', '7AM-3PM', '6AM-2PM', '8AM-4PM', '9AM-5PM', '12-Hour Day', 'Day Shift'],
+                                  'Afternoon': ['Afternoon', '3PM-11PM', '2PM-10PM', '4PM-12AM'],
+                                  'Evening': ['Evening', '5PM-1AM', '4PM-12AM'],
+                                  'Night': ['Night', 'Overnight', '11PM-7AM', '10PM-6AM', '12AM-8AM', '7PM-7AM', '6PM-6AM', '8PM-8AM', '12-Hour Night', 'Night Shift', 'Graveyard'],
+                                  'Overnight': ['Overnight', 'Night', '11PM-7AM', '10PM-6AM', '12AM-8AM', '7PM-7AM', '6PM-6AM', '8PM-8AM', '12-Hour Night', 'Night Shift', 'Graveyard']
+                                };
+                                
+                                const mappedShifts = shiftMapping[filter.label] || [filter.label];
+                                return (job.tags || []).some(tag => 
+                                  tag.type === 'shift' && mappedShifts.includes(tag.label)
+                                );
+                              } else {
+                                return (job.tags || []).some(tag => tag.label === filter.label);
+                              }
+                            });
       
       return matchesSearch && matchesLocation && matchesFilters;
     });
@@ -961,13 +1261,17 @@ export default function JobsPage() {
 
   const handleLocationInputChange = (value: string) => {
     setLocationInput(value);
-    // Update suggestions based on the new value
-    const newSuggestions = allLocations.filter(location => 
-      location.toLowerCase().includes(value.toLowerCase()) && 
-      location.toLowerCase() !== value.toLowerCase()
-    ).slice(0, 5);
-    setShowLocationSuggestions(value.length > 0 && newSuggestions.length > 0);
     setIsFiltersOpen(false); // Close filters dropdown
+    
+    // Show suggestions after 2 characters
+    const suggestions = value.length >= 2 
+      ? allLocations.filter(location => 
+          location.toLowerCase().includes(value.toLowerCase()) && 
+          location.toLowerCase() !== value.toLowerCase()
+        ).slice(0, 5)
+      : [];
+    
+    setShowLocationSuggestions(value.length >= 2 && suggestions.length > 0);
     
     // Update filter flag
     if (value.trim() !== '') {
@@ -978,20 +1282,11 @@ export default function JobsPage() {
     }
   };
 
+
+
   const handleLocationSuggestionClick = (location: string) => {
     setLocationInput(location);
     setShowLocationSuggestions(false);
-  };
-
-  const handleLocationInputFocus = () => {
-    if (locationInput.length > 0 && locationSuggestions.length > 0) {
-      setShowLocationSuggestions(true);
-    }
-  };
-
-  const handleLocationInputBlur = () => {
-    // Delay hiding suggestions to allow for clicks
-    setTimeout(() => setShowLocationSuggestions(false), 200);
   };
 
   const handleLocationKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -1026,10 +1321,6 @@ export default function JobsPage() {
           // Apply state-based filtering
           const targetState = isStateCode ? inputValue.toUpperCase() : isStateName;
           setLocationInput(targetState);
-          setShowLocationSuggestions(false);
-        } else {
-          // For non-state inputs, just close suggestions
-          setShowLocationSuggestions(false);
         }
       }
     }
@@ -1037,7 +1328,6 @@ export default function JobsPage() {
 
   const handleFiltersToggle = () => {
     setIsFiltersOpen(!isFiltersOpen);
-    setShowLocationSuggestions(false); // Close location suggestions
   };
 
 
@@ -1074,6 +1364,14 @@ export default function JobsPage() {
 
   const handleJobClick = (job: Job) => {
     setSelectedJob(job);
+    
+    // On desktop, scroll to the job details container
+    if (window.innerWidth >= 1024 && jobDetailsRef.current) {
+      jobDetailsRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
   };
 
   const handleContainerClick = () => {
@@ -1101,7 +1399,7 @@ export default function JobsPage() {
       return 'bg-purple-200'; // Purple for Job Setting
     } else if (['Full-Time', 'Part-Time', 'Per-Diem', 'Temp-To-Perm', 'Local Contract'].includes(label)) {
       return 'bg-[#8AADFC]'; // Blue for Employment Type
-    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night', '7a-3p', '3p-11p', '11p-7a', '6a-2p', '2p-10p', '10p-6a', '8a-4p', '4p-12a', '12a-8a', '9a-5p', '5p-1a', '1a-9a', '7a-7p', '7p-7a', '6a-6p', '6p-6a', '8a-8p', '8p-8a'].includes(label)) {
+    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night'].includes(label)) {
       return 'bg-pink-200'; // Pink for Shift
     }
     return 'bg-gray-200';
@@ -1202,6 +1500,38 @@ export default function JobsPage() {
     return numbers;
   };
 
+  // Calculate string similarity using Levenshtein distance
+  const calculateStringSimilarity = (str1: string, str2: string): number => {
+    const matrix = [];
+    const len1 = str1.length;
+    const len2 = str2.length;
+
+    for (let i = 0; i <= len1; i++) {
+      matrix[i] = [i];
+    }
+
+    for (let j = 0; j <= len2; j++) {
+      matrix[0][j] = j;
+    }
+
+    for (let i = 1; i <= len1; i++) {
+      for (let j = 1; j <= len2; j++) {
+        if (str1[i - 1] === str2[j - 1]) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j - 1] + 1
+          );
+        }
+      }
+    }
+
+    const maxLen = Math.max(len1, len2);
+    return maxLen === 0 ? 0 : matrix[len1][len2] / maxLen;
+  };
+
   // Always generate pagination numbers when there are filtered jobs
   const paginationNumbers = filteredJobs.length > 0 ? generatePaginationNumbers(currentPage, totalPages) : [];
 
@@ -1269,7 +1599,7 @@ export default function JobsPage() {
                 <Search className="w-5 h-5 lg:w-6 lg:h-6 text-[#7691A4] mr-3 flex-shrink-0" strokeWidth={2} />
                 <input
                   type="text"
-                  placeholder="Search job descriptions..."
+                  placeholder="Search Jobs"
                   value={searchTerm}
                   onChange={(e) => handleSearch(e.target.value)}
                   className="flex-1 text-base lg:text-[20px] font-bold text-[#7691A4] placeholder-[#7691A4] bg-transparent outline-none font-avenir"
@@ -1277,42 +1607,43 @@ export default function JobsPage() {
               </div>
             </div>
 
-            {/* Location Dropdown */}
+            {/* Location Input */}
             <div className="relative">
-              <button
-                onClick={() => setShowLocationSuggestions(!showLocationSuggestions)}
-                className="flex items-center bg-white rounded-full px-4 lg:px-6 py-3 lg:py-3 shadow-sm w-full lg:min-w-[180px] justify-between"
-              >
-                <div className="flex items-center min-w-0 flex-1">
-                  <MapPin className="w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] mr-2 flex-shrink-0" strokeWidth={2} />
-                  <span className="text-base lg:text-[20px] font-bold text-[#7691A4] font-avenir truncate">
-                    {locationInput === '' ? 'Location' : locationInput.split(',')[0]}
-                  </span>
-                </div>
-                <ChevronDown className={`w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] transition-transform flex-shrink-0 ml-1 ${showLocationSuggestions ? 'rotate-180' : 'rotate-90'}`} strokeWidth={2} />
-              </button>
+              <div className="flex items-center bg-white rounded-full px-4 lg:px-6 py-3 lg:py-3 shadow-sm w-full lg:min-w-[180px]">
+                <MapPin className="w-5 h-5 lg:w-5 lg:h-5 text-[#7691A4] mr-2 flex-shrink-0" strokeWidth={2} />
+                <input
+                  type="text"
+                  placeholder="City, State"
+                  value={locationInput}
+                  onChange={(e) => handleLocationInputChange(e.target.value)}
+                  onKeyPress={handleLocationKeyPress}
+                  onFocus={() => {
+                    const suggestions = locationInput.length >= 2 
+                      ? allLocations.filter(location => 
+                          location.toLowerCase().includes(locationInput.toLowerCase()) && 
+                          location.toLowerCase() !== locationInput.toLowerCase()
+                        ).slice(0, 5)
+                      : [];
+                    setShowLocationSuggestions(locationInput.length >= 2 && suggestions.length > 0);
+                  }}
+                  onBlur={() => setTimeout(() => setShowLocationSuggestions(false), 200)}
+                  className="flex-1 text-base lg:text-[20px] font-bold text-[#7691A4] placeholder-[#7691A4] bg-transparent outline-none font-avenir"
+                />
+              </div>
               
-              {showLocationSuggestions && (
-                <div className="absolute top-full mt-2 left-0 bg-white rounded-2xl shadow-lg border border-gray-200 min-w-[250px] z-10">
-                  {/* Search input */}
-                  <div className="p-3 border-b border-gray-200">
-                    <input
-                      type="text"
-                      placeholder="Search locations..."
-                      value={locationInput}
-                      onChange={(e) => handleLocationInputChange(e.target.value)}
-                      onFocus={handleLocationInputFocus}
-                      onBlur={handleLocationInputBlur}
-                      onKeyPress={handleLocationKeyPress}
-                      className="w-full px-3 py-2 text-[16px] text-[#7691A4] placeholder-[#7691A4] border border-gray-300 rounded-lg outline-none focus:border-[#2466D0] font-avenir"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </div>
-                  
-                  {/* Location list */}
-                  <div className="max-h-48 overflow-y-auto">
-                    {locationSuggestions.length > 0 ? (
-                      locationSuggestions.map((location) => (
+              {/* Location Suggestions Dropdown */}
+              {showLocationSuggestions && (() => {
+                const suggestions = locationInput.length >= 2 
+                  ? allLocations.filter(location => 
+                      location.toLowerCase().includes(locationInput.toLowerCase()) && 
+                      location.toLowerCase() !== locationInput.toLowerCase()
+                    ).slice(0, 5)
+                  : [];
+                
+                return suggestions.length > 0 ? (
+                  <div className="absolute top-full mt-2 left-0 bg-white rounded-2xl shadow-lg border border-gray-200 min-w-[250px] z-10">
+                    <div className="max-h-48 overflow-y-auto">
+                      {suggestions.map((location) => (
                         <button
                           key={location}
                           onClick={() => handleLocationSuggestionClick(location)}
@@ -1320,15 +1651,11 @@ export default function JobsPage() {
                         >
                           {location}
                         </button>
-                      ))
-                    ) : (
-                      <div className="px-4 py-3 text-[#7691A4] font-avenir text-center">
-                        No locations found
-                      </div>
-                    )}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                ) : null;
+              })()}
             </div>
 
             {/* Filters Dropdown */}
@@ -1569,13 +1896,17 @@ export default function JobsPage() {
             </div>
 
             {/* Job Details Panel - Desktop 55% */}
-            <div className="hidden lg:block lg:flex-1 lg:min-w-0 job-details-panel lg:sticky lg:top-8 lg:self-start" style={{ 
-              maxWidth: '55%', 
-              overflowWrap: 'break-word',
-              minHeight: '600px',
-              height: 'min(1000px, 90vh)',
-              maxHeight: '90vh'
-            }}>
+            <div 
+              ref={jobDetailsRef}
+              className="hidden lg:block lg:flex-1 lg:min-w-0 job-details-panel lg:sticky lg:top-8 lg:self-start" 
+              style={{ 
+                maxWidth: '55%', 
+                overflowWrap: 'break-word',
+                minHeight: '600px',
+                height: 'min(1000px, 90vh)',
+                maxHeight: '90vh'
+              }}
+            >
               {selectedJob ? (
                 <div className="bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] h-full flex flex-col overflow-hidden" style={{ maxWidth: '100%', zIndex: 10 }}>
                   {/* Header - Fixed */}

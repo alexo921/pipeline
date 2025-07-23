@@ -101,21 +101,21 @@ export default function MobileMenu({ isOpen, onClose, onLoginClick }: MobileMenu
                   onClick={onClose}
                 >
                   Dashboard
-                </Link>
-                <Link
-                  href="/saved"
-                  className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
-                  onClick={onClose}
-                >
+            </Link>
+            <Link
+              href="/saved"
+              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
+              onClick={onClose}
+            >
                   Saved Jobs
-                </Link>
-                <Link
-                  href="/profile"
-                  className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
-                  onClick={onClose}
-                >
-                  Profile
-                </Link>
+            </Link>
+            <Link
+              href="/profile"
+              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
+              onClick={onClose}
+            >
+              Profile
+            </Link>
               </>
             ) : null}
           </nav>

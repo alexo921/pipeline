@@ -23,6 +23,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Preload fonts for faster rendering and less FOUT/FOIT */}
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap"
+          as="style"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+          as="style"
+          crossOrigin="anonymous"
+        />
         <link 
           href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" 
           rel="stylesheet" 
@@ -34,7 +47,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/pipeline_logo_p.png" />
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
       </head>
-      <body className={baloo.className}>
+      <body className={baloo.className + ' font-avenir'} style={{ fontFamily: `var(--font-avenir), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif` }}>
         <AuthProvider>
         <Suspense fallback={<Loading />}>
         <main>{children}</main>

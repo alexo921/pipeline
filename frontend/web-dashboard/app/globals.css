@@ -5,9 +5,20 @@
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 250, 250, 250;
-  --font-baloo: 'Baloo 2', cursive;
+  --font-baloo: 'Baloo 2', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
   --font-avenir: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
+
+/* Add font-display: swap for custom fonts if self-hosted (not needed for Google Fonts with display=swap) */
+/*
+@font-face {
+  font-family: 'Baloo 2';
+  src: url('/fonts/Baloo2.woff2') format('woff2');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+*/
 
 body {
   color: rgb(var(--foreground-rgb));

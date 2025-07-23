@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { X, ExternalLink } from 'lucide-react';
 import { Job } from '../types/job';
 import { useAuth } from '../contexts/AuthContext';
+import { createPortal } from 'react-dom';
 
 interface JobModalProps {
   job: Job | null;
@@ -12,6 +13,7 @@ interface JobModalProps {
 
 export default function JobModal({ job, onClose }: JobModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const { user, showLoginModal } = useAuth();
 
   useEffect(() => {
@@ -26,6 +28,42 @@ export default function JobModal({ job, onClose }: JobModalProps) {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose]);
+
+  // Prevent body scrolling when modal is open (mobile only)
+  useEffect(() => {
+    if (job) {
+      // Only lock body scroll on mobile devices
+      const isMobile = window.innerWidth < 1024; // lg breakpoint
+      
+      if (isMobile) {
+        // Store original body styles
+        const originalStyle = window.getComputedStyle(document.body);
+        const scrollY = window.scrollY;
+        
+        // Lock body scroll
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = '100%';
+        document.body.style.overflow = 'hidden';
+        
+        return () => {
+          // Restore original body styles
+          document.body.style.position = '';
+          document.body.style.top = '';
+          document.body.style.width = '';
+          document.body.style.overflow = '';
+          window.scrollTo(0, scrollY);
+        };
+      }
+    }
+  }, [job]);
+
+  // Scroll to top when job changes
+  useEffect(() => {
+    if (contentRef.current && job) {
+      contentRef.current.scrollTop = 0;
+    }
+  }, [job]);
 
   if (!job) return null;
 
@@ -77,21 +115,38 @@ export default function JobModal({ job, onClose }: JobModalProps) {
       return 'bg-purple-200'; // Purple for Job Setting
     } else if (['Full-Time', 'Part-Time', 'Per-Diem', 'Temp-To-Perm', 'Local Contract'].includes(label)) {
       return 'bg-[#8AADFC]'; // Blue for Employment Type
-    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night', '7a-3p', '3p-11p', '11p-7a', '6a-2p', '2p-10p', '10p-6a', '8a-4p', '4p-12a', '12a-8a', '9a-5p', '5p-1a', '1a-9a', '7a-7p', '7p-7a', '6a-6p', '6p-6a', '8a-8p', '8p-8a'].includes(label)) {
+    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night'].includes(label)) {
       return 'bg-pink-200'; // Pink for Shift
     }
     return 'bg-gray-200';
   };
 
-  return (
-    <div className="fixed inset-0 z-50 modal-backdrop bg-black bg-opacity-50">
-      {/* Full Screen Modal */}
+  // Create portal to render modal at root level, completely isolated from page elements
+  const modalContent = (
+    <div 
+      className="fixed inset-0 modal-backdrop bg-black bg-opacity-50 lg:hidden"
+      style={{ 
+        zIndex: 2147483647,
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        isolation: 'isolate' // Create new stacking context
+      }}
+    >
+      {/* Mobile-only bottom sheet modal */}
       <div 
         ref={modalRef}
-        className="fixed inset-0 bg-white overflow-y-auto"
+        className="fixed bottom-0 left-0 right-0 bg-white rounded-t-xl flex flex-col lg:hidden"
+        style={{ 
+          zIndex: 2147483647,
+          maxHeight: '80vh',
+          isolation: 'isolate' // Create new stacking context
+        }}
       >
-        {/* Header - Not sticky, scrolls with content */}
-        <div className="p-6 border-b bg-white">
+        {/* Header - Fixed at top */}
+        <div className="p-6 border-b bg-white flex-shrink-0">
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1 min-w-0">
               <h2 className="text-2xl font-black text-[#2466D0] font-avenir leading-[130%] mb-2">{job.title}</h2>
@@ -112,7 +167,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
           </div>
           
           {/* Tags */}
-          <div className="flex flex-wrap gap-3 mb-4">
+          <div className="flex flex-wrap gap-3">
             {(job.tags || []).map((tag) => (
               <div 
                 key={tag.id} 
@@ -127,18 +182,17 @@ export default function JobModal({ job, onClose }: JobModalProps) {
               </div>
             ))}
           </div>
-
-          {/* Apply Button */}
-          <button
-            onClick={handleApplyClick}
-            className="w-full bg-[#2CB3BF] text-white font-black text-[20px] py-3 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
-          >
-            Apply
-          </button>
         </div>
 
-        {/* Content - Single scroll, no dual scroll */}
-        <div className="p-6 space-y-6">
+        {/* Content - Scrollable area */}
+        <div 
+          ref={contentRef}
+          className="flex-1 overflow-y-auto p-6 space-y-6"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#cbd5e0 #f7fafc',
+          }}
+        >
           {/* Job Description */}
           {job.description && (
             <div>
@@ -177,10 +231,59 @@ export default function JobModal({ job, onClose }: JobModalProps) {
             </div>
           )}
 
-          {/* Extra spacing at bottom */}
+          {/* Extra spacing at bottom to ensure content doesn't get hidden behind sticky button */}
           <div className="h-24"></div>
         </div>
+
+        {/* Floating Apply Button - No background container */}
+        <div className="p-6 flex justify-center">
+          <button
+            onClick={handleApplyClick}
+            className="w-full sm:w-auto bg-[#2CB3BF] text-white font-black text-[20px] py-4 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
+          >
+            Apply
+          </button>
+        </div>
       </div>
+
+      {/* Custom scrollbar styles */}
+      <style jsx>{`
+        .overflow-y-auto::-webkit-scrollbar {
+          width: 6px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-track {
+          background: #f7fafc;
+          border-radius: 3px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+          background: #cbd5e0;
+          border-radius: 3px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+          background: #a0aec0;
+        }
+        
+        /* Ensure modal is always on top */
+        .modal-backdrop {
+          z-index: 2147483647 !important;
+        }
+        
+        /* Force modal content above everything */
+        .modal-backdrop > div {
+          z-index: 2147483647 !important;
+        }
+        
+        /* Override any other z-index values */
+        .modal-backdrop,
+        .modal-backdrop * {
+          z-index: 2147483647 !important;
+        }
+      `}</style>
     </div>
   );
+
+  // Use portal to render modal at document root, completely isolated from page elements
+  return typeof window !== 'undefined' 
+    ? createPortal(modalContent, document.body)
+    : null;
 } 
