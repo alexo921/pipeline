@@ -36,24 +36,24 @@ export default function JobModal({ job, onClose }: JobModalProps) {
       const isMobile = window.innerWidth < 1024; // lg breakpoint
       
       if (isMobile) {
-        // Store original body styles
-        const originalStyle = window.getComputedStyle(document.body);
-        const scrollY = window.scrollY;
-        
-        // Lock body scroll
-        document.body.style.position = 'fixed';
-        document.body.style.top = `-${scrollY}px`;
-        document.body.style.width = '100%';
-        document.body.style.overflow = 'hidden';
-        
-        return () => {
-          // Restore original body styles
-          document.body.style.position = '';
-          document.body.style.top = '';
-          document.body.style.width = '';
-          document.body.style.overflow = '';
-          window.scrollTo(0, scrollY);
-        };
+      // Store original body styles
+      const originalStyle = window.getComputedStyle(document.body);
+      const scrollY = window.scrollY;
+      
+      // Lock body scroll
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        // Restore original body styles
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
       }
     }
   }, [job]);
@@ -135,13 +135,13 @@ export default function JobModal({ job, onClose }: JobModalProps) {
         isolation: 'isolate' // Create new stacking context
       }}
     >
-      {/* Mobile-only bottom sheet modal */}
+      {/* Mobile-only full screen modal */}
       <div 
         ref={modalRef}
-        className="fixed bottom-0 left-0 right-0 bg-white rounded-t-xl flex flex-col lg:hidden"
+        className="fixed inset-0 bg-white flex flex-col lg:hidden"
         style={{ 
           zIndex: 2147483647,
-          maxHeight: '80vh',
+          height: '100vh',
           isolation: 'isolate' // Create new stacking context
         }}
       >
@@ -239,7 +239,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
         <div className="p-6 flex justify-center">
           <button
             onClick={handleApplyClick}
-            className="w-full sm:w-auto bg-[#2CB3BF] text-white font-black text-[20px] py-4 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
+            className="w-3/4 sm:w-auto bg-[#2CB3BF] text-white font-black text-[20px] py-4 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
           >
             Apply
           </button>
