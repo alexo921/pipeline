@@ -203,7 +203,7 @@ deploy_all() {
     deploy_frontend
     deploy_backend
     deploy_admin
-    deploy_scraper
+    # deploy_scraper  # Temporarily disabled to save disk space
     
     log "All components deployed successfully"
 }
