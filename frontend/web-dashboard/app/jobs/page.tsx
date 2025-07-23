@@ -1084,7 +1084,7 @@ export default function JobsPage() {
                   if (tag.type !== 'shift') return false;
                   
                   const tagLabel = tag.label.toLowerCase();
-                  
+      
                   // For time-based patterns, check for exact or close matches
                   if (patternKey.includes('am') || patternKey.includes('pm') || patternKey.includes('a') || patternKey.includes('p')) {
                     return variations.some(variation => tagLabel.includes(variation.toLowerCase()));
@@ -1900,11 +1900,11 @@ export default function JobsPage() {
               ref={jobDetailsRef}
               className="hidden lg:block lg:flex-1 lg:min-w-0 job-details-panel lg:sticky lg:top-8 lg:self-start" 
               style={{ 
-                maxWidth: '55%', 
-                overflowWrap: 'break-word',
-                minHeight: '600px',
-                height: 'min(1000px, 90vh)',
-                maxHeight: '90vh'
+              maxWidth: '55%', 
+              overflowWrap: 'break-word',
+              minHeight: '600px',
+              height: 'min(1000px, 90vh)',
+              maxHeight: '90vh'
               }}
             >
               {selectedJob ? (

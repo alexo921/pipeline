@@ -347,69 +347,69 @@ export default function DynamicSearchBar({
           <div className="flex-1 relative">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => onSearch(e.target.value)}
-                onKeyDown={handleKeyDown}
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => onSearch(e.target.value)}
+            onKeyDown={handleKeyDown}
                 placeholder="Search jobs, shifts, locations..."
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
-            </div>
-            
-            {/* Suggestions Dropdown */}
+        </div>
+
+        {/* Suggestions Dropdown */}
             {showSuggestions && (
               <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                {suggestions.map((suggestion, index) => (
-                  <button
+              {suggestions.map((suggestion, index) => (
+                <button
                     key={index}
                     type="button"
-                    onClick={() => handleSuggestionClick(suggestion)}
+                  onClick={() => handleSuggestionClick(suggestion)}
                     className={`w-full px-4 py-3 text-left hover:bg-gray-100 focus:outline-none ${getSuggestionBgColor(suggestion.type, index === selectedSuggestionIndex)}`}
-                  >
+                >
                     <div className="flex items-center gap-3">
-                      {suggestion.icon}
+                    {suggestion.icon}
                       <div className="flex-1">
                         <div className="font-medium text-gray-900">{suggestion.label}</div>
-                        {suggestion.description && (
+                    {suggestion.description && (
                           <div className="text-sm text-gray-500">{suggestion.description}</div>
                         )}
                       </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+        )}
+      </div>
 
-          {/* Location Input */}
+      {/* Location Input */}
           <div className="flex-1 relative">
             <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              value={locationInput}
-              onChange={(e) => onLocationChange(e.target.value)}
+          <input
+            type="text"
+            value={locationInput}
+            onChange={(e) => onLocationChange(e.target.value)}
               placeholder="Location (city, state)"
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
-          </div>
+      </div>
 
           {/* Filters Button */}
-          <button
-            onClick={onFiltersToggle}
+        <button
+          onClick={onFiltersToggle}
             className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-          >
+        >
             <Filter className="w-5 h-5" />
             <span className="hidden sm:inline">Filters</span>
             <ChevronDown className={`w-4 h-4 transition-transform ${isFiltersOpen ? 'rotate-180' : ''}`} />
             {activeFilters.length > 0 && (
               <span className="bg-white text-blue-600 rounded-full px-2 py-1 text-xs font-medium">
                 {activeFilters.length}
-              </span>
+            </span>
             )}
-          </button>
-        </div>
-
+        </button>
+              </div>
+              
         {/* Active Filters */}
         {activeFilters.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
