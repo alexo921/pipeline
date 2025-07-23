@@ -70,7 +70,7 @@ check_status() {
     fi
     
     # Check API
-    if curl -s -f http://localhost:3001/api/jobs?limit=1 >/dev/null 2>&1; then
+    if curl -s -f http://localhost:3001/api/job?limit=1 >/dev/null 2>&1; then
         echo "✅ Jobs API: Working"
     else
         echo "❌ Jobs API: Failed"
