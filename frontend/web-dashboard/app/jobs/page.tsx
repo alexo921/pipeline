@@ -15,6 +15,8 @@ const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
     // List of all enhanced JSON files to load
     const jsonFiles = [
       '/live_data.json',
+      '/all_ct_jobs_20250721_232811.json',
+      '/fixed_apploi_jobs.json',
       '/site_Athena_Health_Care_Systems_20250716_221638_enhanced.json',
       '/site_National_Healthcare_Associates_20250716_204858_enhanced.json',
       '/site_Genesis_20250716_222027_enhanced.json',
@@ -105,7 +107,7 @@ const cleanJobCardContent = (text: string, maxLength: number = 100): string => {
 
 // Utility to extract city, state from a full address
 const extractCityState = (location: string): { cityState: string | null; stateOnly: string | null } => {
-  if (!location) return { cityState: null, stateOnly: null };
+  if (!location || typeof location !== 'string') return { cityState: null, stateOnly: null };
   
   // State name to code mapping
   const stateNameToCode: Record<string, string> = {
@@ -902,29 +904,54 @@ export default function JobsPage() {
           titlePatterns: RegExp[];
         }> = {
           'nurse': {
-            primary: ['nurse', 'nursing', 'rn', 'lpn', 'registered nurse', 'licensed practical nurse'],
-            exclude: ['cna', 'certified nursing assistant', 'nursing assistant', 'caregiver', 'home health aide', 'hha'],
-            titlePatterns: [/nurse/i, /rn\b/i, /lpn\b/i, /registered nurse/i, /licensed practical nurse/i]
+            primary: ['nurse', 'nursing', 'rn', 'lpn', 'lvn', 'registered nurse', 'licensed practical nurse', 'licensed vocational nurse', 'staff nurse', 'travel nurse', 'charge nurse', 'icu nurse', 'er nurse', 'or nurse', 'pediatric nurse', 'psychiatric nurse'],
+            exclude: ['cna', 'certified nursing assistant', 'nursing assistant', 'caregiver', 'home health aide', 'hha', 'pca', 'patient care assistant'],
+            titlePatterns: [/nurse/i, /rn\b/i, /lpn\b/i, /lvn\b/i, /registered nurse/i, /licensed practical nurse/i, /licensed vocational nurse/i, /staff nurse/i, /travel nurse/i, /charge nurse/i, /icu nurse/i, /er nurse/i, /or nurse/i, /pediatric nurse/i, /psychiatric nurse/i]
           },
           'cna': {
-            primary: ['cna', 'certified nursing assistant', 'nursing assistant', 'caregiver', 'home health aide', 'hha'],
-            exclude: ['rn', 'lpn', 'registered nurse', 'licensed practical nurse', 'nurse'],
-            titlePatterns: [/cna\b/i, /certified nursing assistant/i, /nursing assistant/i, /caregiver/i, /home health aide/i, /hha\b/i]
+            primary: ['cna', 'certified nursing assistant', 'nursing assistant', 'caregiver', 'home health aide', 'hha', 'home care aide', 'hca', 'patient care assistant', 'pca', 'personal care aide', 'nursing aide', 'hospital aide', 'patient care technician', 'pct'],
+            exclude: ['rn', 'lpn', 'lvn', 'registered nurse', 'licensed practical nurse', 'licensed vocational nurse', 'nurse'],
+            titlePatterns: [/cna\b/i, /certified nursing assistant/i, /nursing assistant/i, /caregiver/i, /home health aide/i, /hha\b/i, /home care aide/i, /hca\b/i, /patient care assistant/i, /pca\b/i, /personal care aide/i, /nursing aide/i, /hospital aide/i, /patient care technician/i, /pct\b/i]
           },
           'therapist': {
-            primary: ['therapist', 'therapy', 'pt', 'ot', 'st', 'physical therapist', 'occupational therapist', 'speech therapist', 'respiratory therapist', 'rt'],
+            primary: ['therapist', 'therapy', 'pt', 'ot', 'st', 'rt', 'physical therapist', 'occupational therapist', 'speech therapist', 'respiratory therapist', 'speech language pathologist', 'slp', 'physical therapy assistant', 'pta', 'occupational therapy assistant', 'ota', 'recreational therapist', 'massage therapist', 'mt'],
             exclude: ['nurse', 'cna', 'caregiver', 'assistant'],
-            titlePatterns: [/therapist/i, /pt\b/i, /ot\b/i, /st\b/i, /rt\b/i, /physical therapist/i, /occupational therapist/i, /speech therapist/i, /respiratory therapist/i]
+            titlePatterns: [/therapist/i, /pt\b/i, /ot\b/i, /st\b/i, /rt\b/i, /physical therapist/i, /occupational therapist/i, /speech therapist/i, /respiratory therapist/i, /speech language pathologist/i, /slp\b/i, /physical therapy assistant/i, /pta\b/i, /occupational therapy assistant/i, /ota\b/i, /recreational therapist/i, /massage therapist/i, /mt\b/i]
           },
           'aide': {
-            primary: ['aide', 'assistant', 'hha', 'home health aide', 'personal care aide', 'pca'],
-            exclude: ['nurse', 'rn', 'lpn', 'therapist', 'pt', 'ot', 'st', 'rt'],
-            titlePatterns: [/aide/i, /assistant/i, /hha\b/i, /home health aide/i, /personal care aide/i, /pca\b/i]
+            primary: ['aide', 'assistant', 'hha', 'home health aide', 'personal care aide', 'pca', 'patient care assistant', 'medical assistant', 'ma', 'certified medical assistant', 'cma', 'clinical assistant', 'ca'],
+            exclude: ['nurse', 'rn', 'lpn', 'lvn', 'therapist', 'pt', 'ot', 'st', 'rt'],
+            titlePatterns: [/aide/i, /assistant/i, /hha\b/i, /home health aide/i, /personal care aide/i, /pca\b/i, /patient care assistant/i, /medical assistant/i, /ma\b/i, /certified medical assistant/i, /cma\b/i, /clinical assistant/i, /ca\b/i]
           },
           'manager': {
-            primary: ['manager', 'supervisor', 'director', 'coordinator', 'lead'],
+            primary: ['manager', 'supervisor', 'director', 'coordinator', 'lead', 'charge nurse', 'lead nurse', 'clinical manager', 'unit manager', 'department head', 'assistant director', 'nurse manager', 'director of nursing', 'don'],
             exclude: ['cna', 'aide', 'assistant'],
-            titlePatterns: [/manager/i, /supervisor/i, /director/i, /coordinator/i, /lead/i]
+            titlePatterns: [/manager/i, /supervisor/i, /director/i, /coordinator/i, /lead/i, /charge nurse/i, /lead nurse/i, /clinical manager/i, /unit manager/i, /department head/i, /assistant director/i, /nurse manager/i, /director of nursing/i, /don\b/i]
+          },
+          'specialist': {
+            primary: ['specialist', 'wound care nurse', 'infection control nurse', 'icn', 'quality assurance nurse', 'qa nurse', 'case manager', 'utilization review nurse', 'ur nurse', 'mds coordinator', 'mds', 'restorative nurse', 'staff development coordinator', 'sdc'],
+            exclude: ['cna', 'aide', 'assistant'],
+            titlePatterns: [/specialist/i, /wound care nurse/i, /infection control nurse/i, /icn\b/i, /quality assurance nurse/i, /qa nurse/i, /case manager/i, /utilization review nurse/i, /ur nurse/i, /mds coordinator/i, /mds\b/i, /restorative nurse/i, /staff development coordinator/i, /sdc\b/i]
+          },
+          'technician': {
+            primary: ['technician', 'tech', 'phlebotomist', 'lab technician', 'lab tech', 'x-ray technician', 'x-ray tech', 'radiology technician', 'rad tech', 'ekg technician', 'ekg tech', 'ecg technician', 'ecg tech', 'ultrasound technician', 'sonographer', 'surgical technician', 'surg tech', 'sterile processing technician', 'spt'],
+            exclude: ['nurse', 'cna', 'caregiver'],
+            titlePatterns: [/technician/i, /tech\b/i, /phlebotomist/i, /lab technician/i, /lab tech/i, /x-ray technician/i, /x-ray tech/i, /radiology technician/i, /rad tech/i, /ekg technician/i, /ekg tech/i, /ecg technician/i, /ecg tech/i, /ultrasound technician/i, /sonographer/i, /surgical technician/i, /surg tech/i, /sterile processing technician/i, /spt\b/i]
+          },
+          'dietary': {
+            primary: ['dietary', 'diet', 'nutrition', 'dietary aide', 'dietary technician', 'diet tech', 'nutritionist', 'registered dietitian', 'rd'],
+            exclude: ['nurse', 'cna', 'therapist'],
+            titlePatterns: [/dietary/i, /diet\b/i, /nutrition/i, /dietary aide/i, /dietary technician/i, /diet tech/i, /nutritionist/i, /registered dietitian/i, /rd\b/i]
+          },
+          'social_work': {
+            primary: ['social worker', 'sw', 'licensed social worker', 'lsw', 'clinical social worker', 'lcsw', 'mental health technician', 'mht', 'behavioral health technician', 'bht', 'activity director', 'activities director', 'recreation therapist', 'rec therapist'],
+            exclude: ['nurse', 'cna', 'therapist'],
+            titlePatterns: [/social worker/i, /sw\b/i, /licensed social worker/i, /lsw\b/i, /clinical social worker/i, /lcsw\b/i, /mental health technician/i, /mht\b/i, /behavioral health technician/i, /bht\b/i, /activity director/i, /activities director/i, /recreation therapist/i, /rec therapist/i]
+          },
+          'support': {
+            primary: ['housekeeper', 'environmental services', 'maintenance technician', 'maintenance tech', 'security officer', 'security'],
+            exclude: ['nurse', 'cna', 'therapist'],
+            titlePatterns: [/housekeeper/i, /environmental services/i, /maintenance technician/i, /maintenance tech/i, /security officer/i, /security/i]
           }
         };
 
@@ -1010,131 +1037,116 @@ export default function JobsPage() {
             }
           }
         } else {
-          // Check if search terms match shift patterns
-          const shiftMatches = searchTerms.some(term => {
-            // Define shift patterns and their variations
-            const shiftPatterns: Record<string, string[]> = {
-              // Time-based patterns
-              '7am-3pm': ['7am-3pm', '7am to 3pm', '7:00am-3:00pm', '7:00am to 3:00pm'],
-              '3pm-11pm': ['3pm-11pm', '3pm to 11pm', '3:00pm-11:00pm', '3:00pm to 11:00pm'],
-              '11pm-7am': ['11pm-7am', '11pm to 7am', '11:00pm-7:00am', '11:00pm to 7:00am'],
-              '6am-2pm': ['6am-2pm', '6am to 2pm', '6:00am-2:00pm', '6:00am to 2:00pm'],
-              '2pm-10pm': ['2pm-10pm', '2pm to 10pm', '2:00pm-10:00pm', '2:00pm to 10:00pm'],
-              '10pm-6am': ['10pm-6am', '10pm to 6am', '10:00pm-6:00am', '10:00pm to 6:00am'],
-              '8am-4pm': ['8am-4pm', '8am to 4pm', '8:00am-4:00pm', '8:00am to 4:00pm'],
-              '4pm-12am': ['4pm-12am', '4pm to 12am', '4:00pm-12:00am', '4:00pm to 12:00am'],
-              '12am-8am': ['12am-8am', '12am to 8am', '12:00am-8:00am', '12:00am to 8:00am'],
-              '9am-5pm': ['9am-5pm', '9am to 5pm', '9:00am-5:00pm', '9:00am to 5:00pm'],
-              '5pm-1am': ['5pm-1am', '5pm to 1am', '5:00pm-1:00am', '5:00pm to 1:00am'],
-              '1am-9am': ['1am-9am', '1am to 9am', '1:00am-9:00am', '1:00am to 9:00am'],
-              '7am-7pm': ['7am-7pm', '7am to 7pm', '7:00am-7:00pm', '7:00am to 7:00pm'],
-              '7pm-7am': ['7pm-7am', '7pm to 7am', '7:00pm-7:00am', '7:00pm to 7:00am'],
-              '6am-6pm': ['6am-6pm', '6am to 6pm', '6:00am-6:00pm', '6:00am to 6:00pm'],
-              '6pm-6am': ['6pm-6am', '6pm to 6am', '6:00pm-6:00am', '6:00pm to 6:00am'],
-              '8am-8pm': ['8am-8pm', '8am to 8pm', '8:00am-8:00pm', '8:00am to 8:00pm'],
-              '8pm-8am': ['8pm-8am', '8pm to 8am', '8:00pm-8:00am', '8:00pm to 8:00am'],
+          // Enhanced dynamic search - search across ALL job data
+          const jobTitle = job.title.toLowerCase();
+          const jobDescription = job.description?.toLowerCase() || '';
+          const jobCompany = job.company.toLowerCase();
+          const jobLocation = job.location.toLowerCase();
+          const jobSalary = job.salary?.toLowerCase() || '';
+          const jobRequirements = Array.isArray(job.requirements) 
+            ? job.requirements.join(' ').toLowerCase()
+            : (job.requirements?.toLowerCase() || '');
+          const jobOverview = job.overview?.toLowerCase() || '';
+          
+          // Get all tags and their labels
+          const jobTags = job.tags || [];
+          const tagLabels = jobTags.map(tag => tag.label.toLowerCase()).join(' ');
+          const tagTypes = jobTags.map(tag => tag.type.toLowerCase()).join(' ');
+          
+          // Create a comprehensive searchable text from all job data
+          const comprehensiveJobText = [
+            jobTitle,
+            jobDescription,
+            jobCompany,
+            jobLocation,
+            jobSalary,
+            jobRequirements,
+            jobOverview,
+            tagLabels,
+            tagTypes
+          ].join(' ');
+          
+          // Check if ALL search terms are found in the comprehensive job data
+          matchesSearch = searchTerms.every(term => {
+            // Direct text matching
+            if (comprehensiveJobText.includes(term)) {
+              return true;
+            }
+            
+            // Enhanced tag-based matching
+            const hasMatchingTag = jobTags.some(tag => {
+              const tagLabel = tag.label.toLowerCase();
               
-              // General shift terms
-              'morning': ['morning', 'day shift'],
-              'afternoon': ['afternoon'],
-              'evening': ['evening'],
-              'night': ['night', 'night shift'],
-              'overnight': ['overnight', 'graveyard'],
-              
-              // Duration-based patterns
-              '12 hour': ['12 hour', '12-hour', '12hr', '12 hr', 'twelve hour', 'twelve-hour'],
-              '8 hour': ['8 hour', '8-hour', '8hr', '8 hr', 'eight hour', 'eight-hour'],
-              '10 hour': ['10 hour', '10-hour', '10hr', '10 hr', 'ten hour', 'ten-hour'],
-              '16 hour': ['16 hour', '16-hour', '16hr', '16 hr', 'sixteen hour', 'sixteen-hour'],
-              
-              // Specific time patterns
-              '7a-3p': ['7a-3p', '7a to 3p'],
-              '3p-11p': ['3p-11p', '3p to 11p'],
-              '11p-7a': ['11p-7a', '11p to 7a'],
-              '6a-2p': ['6a-2p', '6a to 2p'],
-              '2p-10p': ['2p-10p', '2p to 10p'],
-              '10p-6a': ['10p-6a', '10p to 6a'],
-              '8a-4p': ['8a-4p', '8a to 4p'],
-              '4p-12a': ['4p-12a', '4p to 12a'],
-              '12a-8a': ['12a-8a', '12a to 8a'],
-              '9a-5p': ['9a-5p', '9a to 5p'],
-              '5p-1a': ['5p-1a', '5p to 1a'],
-              '1a-9a': ['1a-9a', '1a to 9a'],
-              '7a-7p': ['7a-7p', '7a to 7p'],
-              '7p-7a': ['7p-7a', '7p to 7a'],
-              '6a-6p': ['6a-6p', '6a to 6p'],
-              '6p-6a': ['6p-6a', '6p to 6a'],
-              '8a-8p': ['8a-8p', '8a to 8p'],
-              '8p-8a': ['8p-8a', '8p to 8a']
-            };
-
-            // Check if the term matches any shift pattern
-            for (const [patternKey, variations] of Object.entries(shiftPatterns)) {
-              // Check if the search term matches this pattern
-              const termMatchesPattern = variations.some(variation => 
-                term === variation.toLowerCase() || 
-                term.includes(variation.toLowerCase()) || 
-                variation.toLowerCase().includes(term)
-              );
-              
-              if (termMatchesPattern) {
-                // Check if job has matching shift tags
-                const jobTags = job.tags || [];
-                const hasMatchingShift = jobTags.some(tag => {
-                  if (tag.type !== 'shift') return false;
-                  
-                  const tagLabel = tag.label.toLowerCase();
-      
-                  // For time-based patterns, check for exact or close matches
-                  if (patternKey.includes('am') || patternKey.includes('pm') || patternKey.includes('a') || patternKey.includes('p')) {
-                    return variations.some(variation => tagLabel.includes(variation.toLowerCase()));
-                  }
-                  
-                  // For general terms, check for exact matches
-                  if (patternKey === 'morning') {
-                    return tagLabel === 'morning' || tagLabel.includes('7am-3pm') || tagLabel.includes('6am-2pm') || tagLabel.includes('8am-4pm') || tagLabel.includes('9am-5pm');
-                  }
-                  if (patternKey === 'afternoon') {
-                    return tagLabel === 'afternoon' || tagLabel.includes('3pm-11pm') || tagLabel.includes('2pm-10pm') || tagLabel.includes('4pm-12am');
-                  }
-                  if (patternKey === 'evening') {
-                    return tagLabel === 'evening' || tagLabel.includes('5pm-1am') || tagLabel.includes('4pm-12am');
-                  }
-                  if (patternKey === 'night') {
-                    return tagLabel === 'night' || tagLabel === 'night shift';
-                  }
-                  if (patternKey === 'overnight') {
-                    return tagLabel === 'overnight' || tagLabel === 'graveyard' || tagLabel.includes('11pm-7am') || tagLabel.includes('10pm-6am') || tagLabel.includes('12am-8am');
-                  }
-                  
-                  // For duration patterns, check for exact matches
-                  if (patternKey.includes('hour')) {
-                    return variations.some(variation => tagLabel.includes(variation.toLowerCase()));
-                  }
-                  
-                  return false;
-                });
-                
-                if (hasMatchingShift) {
-                  return true;
-                }
+              // Exact tag match
+              if (tagLabel === term) {
+                return true;
               }
+              
+              // Partial tag match
+              if (tagLabel.includes(term) || term.includes(tagLabel)) {
+                return true;
+              }
+              
+              // Tag type matching (e.g., "shift", "employment", "setting")
+              if (tag.type.toLowerCase().includes(term)) {
+                return true;
+              }
+              
+              return false;
+            });
+            
+            if (hasMatchingTag) {
+              return true;
+            }
+            
+            // Enhanced salary matching
+            if (jobSalary.includes(term)) {
+              return true;
+            }
+            
+            // Enhanced requirement matching
+            if (jobRequirements.includes(term)) {
+              return true;
+            }
+            
+            // Enhanced company matching
+            if (jobCompany.includes(term)) {
+              return true;
+            }
+            
+            // Enhanced location matching
+            if (jobLocation.includes(term)) {
+              return true;
+            }
+            
+            // Enhanced title matching with fuzzy logic
+            if (jobTitle.includes(term)) {
+              return true;
+            }
+            
+            // Enhanced description matching
+            if (jobDescription.includes(term)) {
+              return true;
             }
             
             return false;
           });
-
-          if (shiftMatches) {
-            matchesSearch = true;
-          } else {
-            // General search - check if all terms are in title or description
-            const jobTitle = job.title.toLowerCase();
-            const jobDescription = job.description?.toLowerCase() || '';
-            const combinedText = jobTitle + ' ' + jobDescription;
+          
+          // If no matches found with comprehensive search, try fuzzy matching
+          if (!matchesSearch) {
+            const fuzzyMatch = searchTerms.some(term => {
+              // Calculate similarity scores for different job fields
+              const titleSimilarity = calculateStringSimilarity(term, jobTitle);
+              const companySimilarity = calculateStringSimilarity(term, jobCompany);
+              const locationSimilarity = calculateStringSimilarity(term, jobLocation);
+              
+              // Check if any field has high similarity
+              return titleSimilarity > 0.7 || companySimilarity > 0.7 || locationSimilarity > 0.7;
+            });
             
-            matchesSearch = searchTerms.every(term => 
-              combinedText.includes(term)
-            );
+            if (fuzzyMatch) {
+              matchesSearch = true;
+            }
           }
         }
       }
@@ -1143,20 +1155,6 @@ export default function JobsPage() {
       let matchesLocation = true;
       if (locationInput !== '') {
         const inputLower = locationInput.toLowerCase().trim();
-        
-        // State name to code mapping
-        const stateNameToCode: Record<string, string> = {
-          'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
-          'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
-          'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
-          'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
-          'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
-          'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
-          'new mexico': 'NM', 'new york': 'NY', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
-          'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
-          'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
-          'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY'
-        };
         
         const jobLocation = job.location.toLowerCase();
         
@@ -1181,7 +1179,7 @@ export default function JobsPage() {
           const inputState = cityStateMatch[2].trim();
           
           // Check if state is a code or name
-          const targetState = stateNameToCode[inputState] || inputState.toUpperCase();
+          const targetState = stateNameToCode[inputState.toLowerCase()] || inputState.toUpperCase();
           
           // First try exact match
           matchesLocation = (jobCity.includes(inputCity) || jobLocation.includes(inputCity)) &&
@@ -1196,7 +1194,7 @@ export default function JobsPage() {
             
             // Simple similarity check - if cities are similar and in the same state
             if (normalizedInputCity.length > 2 && normalizedJobCity.length > 2) {
-              const similarity = this.calculateStringSimilarity(normalizedInputCity, normalizedJobCity);
+              const similarity = calculateStringSimilarity(normalizedInputCity, normalizedJobCity);
               matchesLocation = similarity > 0.7 && 
                                (jobState.includes(targetState.toLowerCase()) || jobLocation.includes(targetState.toLowerCase()));
             }
@@ -1263,14 +1261,8 @@ export default function JobsPage() {
     setLocationInput(value);
     setIsFiltersOpen(false); // Close filters dropdown
     
-    // Show suggestions after 2 characters
-    const suggestions = value.length >= 2 
-      ? allLocations.filter(location => 
-          location.toLowerCase().includes(value.toLowerCase()) && 
-          location.toLowerCase() !== value.toLowerCase()
-        ).slice(0, 5)
-      : [];
-    
+    // Generate enhanced location suggestions
+    const suggestions = generateLocationSuggestions(value);
     setShowLocationSuggestions(value.length >= 2 && suggestions.length > 0);
     
     // Update filter flag
@@ -1282,10 +1274,8 @@ export default function JobsPage() {
     }
   };
 
-
-
-  const handleLocationSuggestionClick = (location: string) => {
-    setLocationInput(location);
+  const handleLocationSuggestionClick = (suggestion: { display: string; value: string; type: 'city_state' | 'state_only' }) => {
+    setLocationInput(suggestion.value);
     setShowLocationSuggestions(false);
   };
 
@@ -1503,37 +1493,198 @@ export default function JobsPage() {
   // Calculate string similarity using Levenshtein distance
   const calculateStringSimilarity = (str1: string, str2: string): number => {
     const matrix = [];
-    const len1 = str1.length;
-    const len2 = str2.length;
-
-    for (let i = 0; i <= len1; i++) {
+    
+    for (let i = 0; i <= str2.length; i++) {
       matrix[i] = [i];
     }
-
-    for (let j = 0; j <= len2; j++) {
+    
+    for (let j = 0; j <= str1.length; j++) {
       matrix[0][j] = j;
     }
-
-    for (let i = 1; i <= len1; i++) {
-      for (let j = 1; j <= len2; j++) {
-        if (str1[i - 1] === str2[j - 1]) {
+    
+    for (let i = 1; i <= str2.length; i++) {
+      for (let j = 1; j <= str1.length; j++) {
+        if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
           matrix[i][j] = matrix[i - 1][j - 1];
         } else {
           matrix[i][j] = Math.min(
-            matrix[i - 1][j] + 1,
+            matrix[i - 1][j - 1] + 1,
             matrix[i][j - 1] + 1,
-            matrix[i - 1][j - 1] + 1
+            matrix[i - 1][j] + 1
           );
         }
       }
     }
-
-    const maxLen = Math.max(len1, len2);
-    return maxLen === 0 ? 0 : matrix[len1][len2] / maxLen;
+    
+    const maxLength = Math.max(str1.length, str2.length);
+    return maxLength === 0 ? 1 : (maxLength - matrix[str2.length][str1.length]) / maxLength;
   };
 
   // Always generate pagination numbers when there are filtered jobs
   const paginationNumbers = filteredJobs.length > 0 ? generatePaginationNumbers(currentPage, totalPages) : [];
+
+  // State name to code mapping - comprehensive with abbreviations and full names
+  const stateNameToCode: Record<string, string> = {
+    // Full state names
+    'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
+    'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
+    'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
+    'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
+    'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
+    'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
+    'new mexico': 'NM', 'new york': 'NY', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
+    'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
+    'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
+    'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY',
+    // State abbreviations (for reverse lookup)
+    'AL': 'AL', 'AK': 'AK', 'AZ': 'AZ', 'AR': 'AR', 'CA': 'CA',
+    'CO': 'CO', 'CT': 'CT', 'DE': 'DE', 'FL': 'FL', 'GA': 'GA',
+    'HI': 'HI', 'ID': 'ID', 'IL': 'IL', 'IN': 'IN', 'IA': 'IA',
+    'KS': 'KS', 'KY': 'KY', 'LA': 'LA', 'ME': 'ME', 'MD': 'MD',
+    'MA': 'MA', 'MI': 'MI', 'MN': 'MN', 'MS': 'MS', 'MO': 'MO',
+    'MT': 'MT', 'NE': 'NE', 'NV': 'NV', 'NH': 'NH', 'NJ': 'NJ',
+    'NM': 'NM', 'NY': 'NY', 'NC': 'NC', 'ND': 'ND', 'OH': 'OH',
+    'OK': 'OK', 'OR': 'OR', 'PA': 'PA', 'RI': 'RI', 'SC': 'SC',
+    'SD': 'SD', 'TN': 'TN', 'TX': 'TX', 'UT': 'UT', 'VT': 'VT',
+    'VA': 'VA', 'WA': 'WA', 'WV': 'WV', 'WI': 'WI', 'WY': 'WY'
+  };
+
+  // State code to full name mapping for display
+  const stateCodeToName: Record<string, string> = {
+    'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+    'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+    'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+    'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+    'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+    'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+    'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+    'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+    'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+    'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+  };
+
+  // Generate location suggestions with state autofill
+  const generateLocationSuggestions = (input: string) => {
+    if (input.length < 2) return [];
+    
+    const inputLower = input.toLowerCase().trim();
+    const suggestions: Array<{ display: string; value: string; type: 'city_state' | 'state_only' }> = [];
+    
+    // Check if input is a state code or state name
+    const isStateCode = /^[A-Z]{2}$/i.test(inputLower);
+    const isStateName = stateNameToCode[inputLower];
+    
+    if (isStateCode || isStateName) {
+      // State-only input - show state with full name
+      const stateCode = isStateCode ? inputLower.toUpperCase() : isStateName;
+      const stateName = stateCodeToName[stateCode];
+      suggestions.push({
+        display: `${stateName} (${stateCode})`,
+        value: stateCode,
+        type: 'state_only'
+      });
+      
+      // Add popular cities in that state
+      const popularCities = getPopularCitiesForState(stateCode);
+      popularCities.forEach(city => {
+        suggestions.push({
+          display: `${city}, ${stateCode}`,
+          value: `${city}, ${stateCode}`,
+          type: 'city_state'
+        });
+      });
+    } else {
+      // Check if input contains a comma (city, state format)
+      const commaIndex = inputLower.indexOf(',');
+      if (commaIndex > 0) {
+        const cityPart = inputLower.substring(0, commaIndex).trim();
+        const statePart = inputLower.substring(commaIndex + 1).trim();
+        
+        // If state part is incomplete, suggest state completions
+        if (statePart.length > 0 && statePart.length < 2) {
+          Object.entries(stateNameToCode).forEach(([name, code]) => {
+            if (name.toLowerCase().startsWith(statePart) && name.length > 2) {
+              suggestions.push({
+                display: `${cityPart}, ${stateCodeToName[code]} (${code})`,
+                value: `${cityPart}, ${code}`,
+                type: 'city_state'
+              });
+            }
+          });
+        } else if (statePart.length >= 2) {
+          // Check if state part matches a state
+          const matchingState = Object.entries(stateNameToCode).find(([name, code]) => 
+            name.toLowerCase().startsWith(statePart) || code.toLowerCase().startsWith(statePart)
+          );
+          
+          if (matchingState) {
+            const [name, code] = matchingState;
+            suggestions.push({
+              display: `${cityPart}, ${stateCodeToName[code]} (${code})`,
+              value: `${cityPart}, ${code}`,
+              type: 'city_state'
+            });
+          }
+        }
+      } else {
+        // No comma - could be city or state
+        // Check if it matches a state name
+        Object.entries(stateNameToCode).forEach(([name, code]) => {
+          if (name.toLowerCase().includes(inputLower) && name.length > 2) {
+            suggestions.push({
+              display: `${stateCodeToName[code]} (${code})`,
+              value: code,
+              type: 'state_only'
+            });
+          }
+        });
+        
+        // Check if it matches a city in existing job locations
+        const matchingCities = allLocations.filter(location => 
+          location.toLowerCase().includes(inputLower) && 
+          location.toLowerCase() !== inputLower
+        );
+        
+        matchingCities.forEach(location => {
+          suggestions.push({
+            display: location,
+            value: location,
+            type: 'city_state'
+          });
+        });
+      }
+    }
+    
+    return suggestions.slice(0, 8); // Limit to 8 suggestions
+  };
+
+  // Get popular cities for a given state
+  const getPopularCitiesForState = (stateCode: string): string[] => {
+    const popularCitiesByState: Record<string, string[]> = {
+      'CA': ['Los Angeles', 'San Francisco', 'San Diego', 'Sacramento', 'San Jose'],
+      'NY': ['New York', 'Buffalo', 'Rochester', 'Syracuse', 'Albany'],
+      'TX': ['Houston', 'Dallas', 'Austin', 'San Antonio', 'Fort Worth'],
+      'FL': ['Miami', 'Orlando', 'Tampa', 'Jacksonville', 'Fort Lauderdale'],
+      'IL': ['Chicago', 'Springfield', 'Peoria', 'Rockford', 'Naperville'],
+      'PA': ['Philadelphia', 'Pittsburgh', 'Allentown', 'Erie', 'Reading'],
+      'OH': ['Columbus', 'Cleveland', 'Cincinnati', 'Toledo', 'Akron'],
+      'MI': ['Detroit', 'Grand Rapids', 'Warren', 'Sterling Heights', 'Lansing'],
+      'GA': ['Atlanta', 'Savannah', 'Athens', 'Augusta', 'Columbus'],
+      'NC': ['Charlotte', 'Raleigh', 'Greensboro', 'Durham', 'Winston-Salem'],
+      'VA': ['Richmond', 'Virginia Beach', 'Norfolk', 'Arlington', 'Alexandria'],
+      'WA': ['Seattle', 'Spokane', 'Tacoma', 'Vancouver', 'Bellevue'],
+      'MA': ['Boston', 'Worcester', 'Springfield', 'Lowell', 'Cambridge'],
+      'CT': ['Bridgeport', 'New Haven', 'Stamford', 'Hartford', 'Waterbury'],
+      'NJ': ['Newark', 'Jersey City', 'Paterson', 'Elizabeth', 'Edison'],
+      'CO': ['Denver', 'Colorado Springs', 'Aurora', 'Fort Collins', 'Lakewood'],
+      'AZ': ['Phoenix', 'Tucson', 'Mesa', 'Chandler', 'Scottsdale'],
+      'TN': ['Nashville', 'Memphis', 'Knoxville', 'Chattanooga', 'Clarksville'],
+      'IN': ['Indianapolis', 'Fort Wayne', 'Evansville', 'South Bend', 'Carmel'],
+      'MO': ['Kansas City', 'St. Louis', 'Springfield', 'Columbia', 'Independence']
+    };
+    
+    return popularCitiesByState[stateCode] || [];
+  };
 
   return (
     <div className="min-h-screen relative bg-[#F4F4F4]">
@@ -1599,7 +1750,7 @@ export default function JobsPage() {
                 <Search className="w-5 h-5 lg:w-6 lg:h-6 text-[#7691A4] mr-3 flex-shrink-0" strokeWidth={2} />
                 <input
                   type="text"
-                  placeholder="Search Jobs"
+                  placeholder="Search Jobs..."
                   value={searchTerm}
                   onChange={(e) => handleSearch(e.target.value)}
                   className="flex-1 text-base lg:text-[20px] font-bold text-[#7691A4] placeholder-[#7691A4] bg-transparent outline-none font-avenir"
@@ -1618,12 +1769,7 @@ export default function JobsPage() {
                   onChange={(e) => handleLocationInputChange(e.target.value)}
                   onKeyPress={handleLocationKeyPress}
                   onFocus={() => {
-                    const suggestions = locationInput.length >= 2 
-                      ? allLocations.filter(location => 
-                          location.toLowerCase().includes(locationInput.toLowerCase()) && 
-                          location.toLowerCase() !== locationInput.toLowerCase()
-                        ).slice(0, 5)
-                      : [];
+                    const suggestions = generateLocationSuggestions(locationInput);
                     setShowLocationSuggestions(locationInput.length >= 2 && suggestions.length > 0);
                   }}
                   onBlur={() => setTimeout(() => setShowLocationSuggestions(false), 200)}
@@ -1633,23 +1779,18 @@ export default function JobsPage() {
               
               {/* Location Suggestions Dropdown */}
               {showLocationSuggestions && (() => {
-                const suggestions = locationInput.length >= 2 
-                  ? allLocations.filter(location => 
-                      location.toLowerCase().includes(locationInput.toLowerCase()) && 
-                      location.toLowerCase() !== locationInput.toLowerCase()
-                    ).slice(0, 5)
-                  : [];
+                const suggestions = generateLocationSuggestions(locationInput);
                 
                 return suggestions.length > 0 ? (
                   <div className="absolute top-full mt-2 left-0 bg-white rounded-2xl shadow-lg border border-gray-200 min-w-[250px] z-10">
                     <div className="max-h-48 overflow-y-auto">
-                      {suggestions.map((location) => (
+                      {suggestions.map((suggestion, index) => (
                         <button
-                          key={location}
-                          onClick={() => handleLocationSuggestionClick(location)}
+                          key={`${suggestion.value}-${index}`}
+                          onClick={() => handleLocationSuggestionClick(suggestion)}
                           className="w-full text-left px-4 py-3 hover:bg-gray-50 first:rounded-t-2xl last:rounded-b-2xl font-avenir text-[#7691A4]"
                         >
-                          {location}
+                          {suggestion.display}
                         </button>
                       ))}
                     </div>

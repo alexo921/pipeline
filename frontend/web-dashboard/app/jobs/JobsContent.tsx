@@ -15,6 +15,8 @@ const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
     // List of all enhanced JSON files to load
     const jsonFiles = [
       '/live_data.json',
+      '/all_ct_jobs_20250721_232811.json',
+      '/fixed_apploi_jobs.json',
       '/site_Athena_Health_Care_Systems_20250716_221638_enhanced.json',
       '/site_National_Healthcare_Associates_20250716_204858_enhanced.json',
       '/site_Genesis_20250716_222027_enhanced.json',
@@ -105,7 +107,7 @@ const cleanJobCardContent = (text: string, maxLength: number = 100): string => {
 
 // Utility to extract city, state from a full address
 const extractCityState = (location: string): { cityState: string | null; stateOnly: string | null } => {
-  if (!location) return { cityState: null, stateOnly: null };
+  if (!location || typeof location !== 'string') return { cityState: null, stateOnly: null };
   
   // State name to code mapping
   const stateNameToCode: Record<string, string> = {
@@ -197,7 +199,7 @@ const isMonetary = (value: string): boolean => {
   return /\$\s?\d|\d+\s?(USD|usd|dollars|per\s?hour|\/hr|hourly|annually|per\s?year)/.test(value);
 };
 
-wrong// Utility to check if text contains sign-on bonus or other non-salary monetary values
+// Utility to check if text contains sign-on bonus or other non-salary monetary values
 const isSignOnBonus = (text: string): boolean => {
   if (!text) return false;
   const lowerText = text.toLowerCase();
