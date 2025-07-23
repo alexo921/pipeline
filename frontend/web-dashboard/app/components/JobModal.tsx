@@ -29,31 +29,12 @@ export default function JobModal({ job, onClose }: JobModalProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose]);
 
-  // Prevent body scrolling when modal is open (mobile only)
+  // No body scroll locking - let the modal handle its own scrolling
   useEffect(() => {
     if (job) {
-      // Only lock body scroll on mobile devices
-      const isMobile = window.innerWidth < 1024; // lg breakpoint
-      
-      if (isMobile) {
-      // Store original body styles
-      const originalStyle = window.getComputedStyle(document.body);
-      const scrollY = window.scrollY;
-      
-      // Lock body scroll
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.body.style.overflow = 'hidden';
-      
-      return () => {
-        // Restore original body styles
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        document.body.style.overflow = '';
-        window.scrollTo(0, scrollY);
-      };
+      // Scroll to top when modal opens
+      if (contentRef.current) {
+        contentRef.current.scrollTop = 0;
       }
     }
   }, [job]);
@@ -135,13 +116,15 @@ export default function JobModal({ job, onClose }: JobModalProps) {
         isolation: 'isolate' // Create new stacking context
       }}
     >
-      {/* Mobile-only full screen modal */}
+      {/* Mobile-only full screen modal with safe area support */}
       <div 
         ref={modalRef}
         className="fixed inset-0 bg-white flex flex-col lg:hidden"
         style={{ 
           zIndex: 2147483647,
-          height: '100vh',
+          height: '100dvh',
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
           isolation: 'isolate' // Create new stacking context
         }}
       >
@@ -184,65 +167,67 @@ export default function JobModal({ job, onClose }: JobModalProps) {
           </div>
         </div>
 
-        {/* Content - Scrollable area */}
+        {/* Content - Scrollable area with sticky button */}
         <div 
           ref={contentRef}
-          className="flex-1 overflow-y-auto p-6 space-y-6"
+          className="flex-1 overflow-y-auto"
           style={{
             scrollbarWidth: 'thin',
             scrollbarColor: '#cbd5e0 #f7fafc',
           }}
         >
-          {/* Job Description */}
-          {job.description && (
-            <div>
-              <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir">
-                Job Description
-              </h3>
-              <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
-                {formatDescription(job.description).split('\n').map((paragraph, index) => (
-                  paragraph.trim() && (
-                    <p key={index} className="mb-3 last:mb-0 leading-relaxed">
-                      {paragraph.trim()}
-                    </p>
-                  )
-                ))}
+          <div className="p-6 space-y-6">
+            {/* Job Description */}
+            {job.description && (
+              <div>
+                <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir">
+                  Job Description
+                </h3>
+                <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
+                  {formatDescription(job.description).split('\n').map((paragraph, index) => (
+                    paragraph.trim() && (
+                      <p key={index} className="mb-3 last:mb-0 leading-relaxed">
+                        {paragraph.trim()}
+                      </p>
+                    )
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Requirements */}
-          {job.requirements && (
-            <div>
-              <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir">
-                Requirements
-              </h3>
-              <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
-                {Array.isArray(job.requirements) ? (
-                  <ul className="list-disc pl-5 space-y-2">
-                    {formatRequirements(job.requirements).map((req, index) => (
-                      <li key={index} className="leading-relaxed">{req}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="leading-relaxed">{job.requirements}</p>
-                )}
+            {/* Requirements */}
+            {job.requirements && (
+              <div>
+                <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir">
+                  Requirements
+                </h3>
+                <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
+                  {Array.isArray(job.requirements) ? (
+                    <ul className="list-disc pl-5 space-y-2">
+                      {formatRequirements(job.requirements).map((req, index) => (
+                        <li key={index} className="leading-relaxed">{req}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="leading-relaxed">{job.requirements}</p>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Extra spacing at bottom to ensure content doesn't get hidden behind sticky button */}
-          <div className="h-24"></div>
-        </div>
+            {/* Extra spacing at bottom to ensure content doesn't get hidden behind sticky button */}
+            <div className="h-32"></div>
+          </div>
 
-        {/* Floating Apply Button - No background container */}
-        <div className="p-6 flex justify-center">
-          <button
-            onClick={handleApplyClick}
-            className="w-3/4 sm:w-auto bg-[#2CB3BF] text-white font-black text-[20px] py-4 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
-          >
-            Apply
-          </button>
+          {/* Sticky Apply Button - Safe area aware */}
+          <div className="sticky bottom-0 p-6 pb-safe flex justify-center bg-white border-t shadow-lg">
+            <button
+              onClick={handleApplyClick}
+              className="w-3/4 sm:w-auto bg-[#2CB3BF] text-white font-black text-[20px] py-4 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
+            >
+              Apply
+            </button>
+          </div>
         </div>
       </div>
 
