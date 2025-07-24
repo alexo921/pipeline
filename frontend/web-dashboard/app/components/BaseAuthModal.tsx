@@ -54,32 +54,34 @@ const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
                     <X size={20} />
                 </button>
                 <div className="py-8 lg:pb-14 lg:pt-12">
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl text-center font-bold text-blue-600 mb-5 sm:mb-7 lg:mb-10">
-                        {isSignupMode ? 'Join Pipeline!' : 'Welcome Back!'}
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl text-center font-bold text-blue-600 mb-5 sm:mb-7 lg:mb-10" style={{ fontFamily: 'Baloo 2, cursive' }}>
+                        {isSignupMode && isIntakeStep ? 'Congratulations! Just a few more questions' : (isSignupMode ? 'Join Pipeline!' : 'Welcome Back!')}
                     </h2>
                     <div className="flex items-center justify-between px-8 lg:px-10">
-                        {/* Left Section (Image + Illustration) */}
-                        <div className="w-1/2 relative hidden md:flex items-center justify-center mr-8 lg:mr-10">
-                            {/* Gradient Circle */}
-                            <Image
-                                src="/circle.svg"
-                                alt="Circle background"
-                                width={300}
-                                height={300} 
-                                className="absolute object-contain"
-                            />
-                            {/* Illustration */}
-                            <Image
-                                src={isSignupMode && isIntakeStep ? "/Ellipse 3.png" : "/nurse.svg"}
-                                alt={isSignupMode && isIntakeStep ? "Ellipse illustration" : "Nurse illustration"}
-                                width={250}
-                                height={250} 
-                                className="relative object-contain z-10"
-                            />
-                        </div>
+                        {/* Left Section (Image + Illustration) - Only show when not in intake step */}
+                        {!isIntakeStep && (
+                            <div className="w-1/2 relative hidden md:flex items-center justify-center mr-8 lg:mr-10">
+                                {/* Gradient Circle */}
+                                <Image
+                                    src="/circle.svg"
+                                    alt="Circle background"
+                                    width={300}
+                                    height={300} 
+                                    className="absolute object-contain"
+                                />
+                                {/* Illustration */}
+                                <Image
+                                    src="/nurse.svg"
+                                    alt="Nurse illustration"
+                                    width={250}
+                                    height={250} 
+                                    className="relative object-contain z-10"
+                                />
+                            </div>
+                        )}
 
                         {/* Right Section (Form) */}
-                        <div className="w-full md:w-1/2">
+                        <div className={`${isIntakeStep ? 'w-full' : 'w-full md:w-1/2'}`}>
                             {isSignupMode ? (
                                 <SignupModalForm 
                                     onClose={handleClose}
