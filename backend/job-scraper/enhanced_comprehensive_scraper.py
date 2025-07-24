@@ -61,21 +61,25 @@ class EnhancedHealthcareScraper:
         }
         self.lock = threading.Lock()  # For thread-safe operations
         
-        # Job categories and classifications
-        self.job_categories = {
-            'nursing': ['nurse', 'rn', 'lpn', 'cna', 'nursing', 'registered nurse', 'licensed practical nurse', 'certified nursing assistant'],
-            'caregiving': ['caregiver', 'care aide', 'home health aide', 'personal care', 'companion', 'care assistant'],
-            'therapy': ['therapist', 'therapy', 'physical therapist', 'occupational therapist', 'speech therapist', 'respiratory therapist'],
-            'administration': ['coordinator', 'scheduler', 'administrator', 'manager', 'director', 'supervisor', 'lead'],
-            'medical': ['doctor', 'physician', 'nurse practitioner', 'physician assistant', 'medical assistant'],
-            'support': ['receptionist', 'clerk', 'assistant', 'aide', 'technician', 'specialist']
+        # Job settings, employment types, and shifts for classification
+        self.job_settings = {
+            'nursing_home': ['nursing home', 'skilled nursing', 'ltc', 'long term care', 'nursing facility'],
+            'assisted_living': ['assisted living', 'alf', 'memory care', 'senior living', 'independent living'],
+            'homecare': ['homecare', 'home care', 'home health', 'in-home', 'home health aide', 'personal care']
         }
         
-        self.seniority_levels = {
-            'entry': ['entry', 'junior', 'new grad', 'recent graduate', 'no experience', 'training provided'],
-            'mid': ['experienced', '2+ years', '3+ years', 'intermediate', 'mid-level'],
-            'senior': ['senior', 'lead', 'supervisor', '5+ years', '7+ years', 'advanced'],
-            'executive': ['director', 'manager', 'chief', 'head of', 'vice president', 'executive']
+        self.employment_types = {
+            'full_time': ['full-time', 'full time', 'permanent', 'regular'],
+            'part_time': ['part-time', 'part time', 'flexible hours'],
+            'per_diem': ['per diem', 'per-diem', 'prn', 'as needed', 'on call'],
+            'temp_to_perm': ['temp-to-perm', 'temp to perm', 'temporary to permanent', 'contract to hire'],
+            'local_contract': ['local contract', 'travel contract', 'contract position', 'temporary contract']
+        }
+        
+        self.shifts = {
+            '7am_3pm': ['7am-3pm', '7am to 3pm', '7:00am-3:00pm', 'day shift', 'morning shift', 'first shift'],
+            '3pm_11pm': ['3pm-11pm', '3pm to 11pm', '3:00pm-11:00pm', 'evening shift', 'afternoon shift', 'second shift'],
+            '11pm_7am': ['11pm-7am', '11pm to 7am', '11:00pm-7:00am', 'night shift', 'overnight shift', 'third shift']
         }
         
         # Enhanced platform-specific selectors and patterns
@@ -807,36 +811,41 @@ class EnhancedHealthcareScraper:
         return {'min': None, 'max': None, 'type': None, 'raw': salary_text, 'is_competitive': False}
     
     def _classify_job(self, title: str, description: str = '') -> Dict[str, Any]:
-        """Classify job into category and seniority level."""
+        """Classify job into job setting, employment type, and shift."""
         text = f"{title} {description}".lower()
         
-        # Determine job category
-        category_scores = {}
-        for category, keywords in self.job_categories.items():
+        # Determine job setting
+        job_setting_scores = {}
+        for setting, keywords in self.job_settings.items():
             score = sum(1 for keyword in keywords if keyword in text)
             if score > 0:
-                category_scores[category] = score
+                job_setting_scores[setting] = score
         
-        primary_category = max(category_scores.items(), key=lambda x: x[1])[0] if category_scores else 'other'
+        primary_job_setting = max(job_setting_scores.items(), key=lambda x: x[1])[0] if job_setting_scores else 'nursing_home'
         
-        # Determine seniority level
-        seniority_scores = {}
-        for level, keywords in self.seniority_levels.items():
+        # Determine employment type
+        employment_scores = {}
+        for emp_type, keywords in self.employment_types.items():
             score = sum(1 for keyword in keywords if keyword in text)
             if score > 0:
-                seniority_scores[level] = score
+                employment_scores[emp_type] = score
         
-        seniority_level = max(seniority_scores.items(), key=lambda x: x[1])[0] if seniority_scores else 'entry'
+        primary_employment_type = max(employment_scores.items(), key=lambda x: x[1])[0] if employment_scores else 'full_time'
         
-        # Detect remote work availability
-        remote_keywords = ['remote', 'work from home', 'wfh', 'telecommute', 'virtual', 'hybrid']
-        is_remote = any(keyword in text for keyword in remote_keywords)
+        # Determine shift
+        shift_scores = {}
+        for shift, keywords in self.shifts.items():
+            score = sum(1 for keyword in keywords if keyword in text)
+            if score > 0:
+                shift_scores[shift] = score
+        
+        primary_shift = max(shift_scores.items(), key=lambda x: x[1])[0] if shift_scores else '7am_3pm'
         
         return {
-            'category': primary_category,
-            'seniority_level': seniority_level,
-            'is_remote': is_remote,
-            'confidence_score': max(category_scores.values()) if category_scores else 0
+            'job_setting': primary_job_setting,
+            'employment_type': primary_employment_type,
+            'shift': primary_shift,
+            'confidence_score': max(job_setting_scores.values()) if job_setting_scores else 0
         }
     
     def _extract_requirements_intelligently(self, text: str) -> Dict[str, List[str]]:

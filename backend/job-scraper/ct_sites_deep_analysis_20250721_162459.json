@@ -1,0 +1,1111 @@
+[
+  {
+    "site": "RydersHealth",
+    "url": "https://www.rydershealth.com/jobs/",
+    "job_board_type": "apploi",
+    "status": "success",
+    "page_title": "Jobs - Rydershealth",
+    "html_structure": {
+      "[class*=\"job\"]": {
+        "count": 55,
+        "sample_classes": [
+          "job_listings",
+          "job_filters",
+          "search_jobs"
+        ],
+        "sample_ids": []
+      },
+      "[class*=\"position\"]": {
+        "count": 20,
+        "sample_classes": [
+          "position"
+        ],
+        "sample_ids": []
+      },
+      "[id*=\"job\"]": {
+        "count": 9,
+        "sample_classes": [],
+        "sample_ids": [
+          "job_type_freelance",
+          "job_type_full-time",
+          "wp-job-manager-frontend-css"
+        ]
+      },
+      "article": {
+        "count": 1,
+        "sample_classes": [
+          "post-133 page type-page status-publish hentry"
+        ],
+        "sample_ids": [
+          "post-133"
+        ]
+      },
+      "section": {
+        "count": 4,
+        "sample_classes": [
+          "widget widget_media_image",
+          "widget widget_nav_menu",
+          "widget widget_text"
+        ],
+        "sample_ids": [
+          "media_image-2",
+          "text-8",
+          "nav_menu-2"
+        ]
+      },
+      "li": {
+        "count": 85,
+        "sample_classes": [
+          "menu-item menu-item-type-post_type menu-item-object-page menu-item-20",
+          "menu-item menu-item-type-post_type menu-item-object-page menu-item-41",
+          "menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-17"
+        ],
+        "sample_ids": [
+          "menu-item-17",
+          "menu-item-20",
+          "menu-item-41"
+        ]
+      },
+      "job_links": [
+        {
+          "text": "Career Opportunities",
+          "href": "https://www.rydershealth.com/career-opportunities/",
+          "class": ""
+        },
+        {
+          "text": "Career Opportunities",
+          "href": "https://www.rydershealth.com/career-opportunities/",
+          "class": ""
+        }
+      ]
+    },
+    "potential_job_elements": [
+      {
+        "keyword": "job",
+        "text": "Jobs - Rydershealth",
+        "tag": "title",
+        "class": [],
+        "id": "",
+        "selector": "title"
+      },
+      {
+        "keyword": "job",
+        "text": "/* <![CDATA[ */\nvar pysOptions = {\"staticEvents\":{\"facebook\":{\"init_event\":[{\"delay\":0,\"type\":\"stati",
+        "tag": "script",
+        "class": [],
+        "id": "pys-js-extra",
+        "selector": "script"
+      },
+      {
+        "keyword": "job",
+        "text": "Jobs",
+        "tag": "h1",
+        "class": [],
+        "id": "",
+        "selector": "h1"
+      },
+      {
+        "keyword": "job",
+        "text": "--<h3 class=\"inner_page_heading\">Jobs</h3>-",
+        "tag": "main",
+        "class": [
+          "site-main"
+        ],
+        "id": "main",
+        "selector": "main.site-main"
+      },
+      {
+        "keyword": "job",
+        "text": "/* <![CDATA[ */\nvar job_manager_chosen_multiselect_args = {\"search_contains\":\"1\"};\n/* ]]> */",
+        "tag": "script",
+        "class": [],
+        "id": "chosen-js-extra",
+        "selector": "script"
+      },
+      {
+        "keyword": "career",
+        "text": "Career Opportunities",
+        "tag": "a",
+        "class": [],
+        "id": "",
+        "selector": "a"
+      },
+      {
+        "keyword": "career",
+        "text": "Career Opportunities",
+        "tag": "a",
+        "class": [],
+        "id": "",
+        "selector": "a"
+      },
+      {
+        "keyword": "career",
+        "text": "Career Opportunities",
+        "tag": "a",
+        "class": [
+          "responsive-menu-item-link"
+        ],
+        "id": "",
+        "selector": "a.responsive-menu-item-link"
+      },
+      {
+        "keyword": "position",
+        "text": "button#responsive-menu-button,\n#responsive-menu-container {\n    display: none;\n    -webkit-text-size",
+        "tag": "style",
+        "class": [],
+        "id": "",
+        "selector": "style"
+      },
+      {
+        "keyword": "apply",
+        "text": "window._wpemojiSettings = {\"baseUrl\":\"https:\\/\\/s.w.org\\/images\\/core\\/emoji\\/14.0.0\\/72x72\\/\",\"ext\"",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "apply",
+        "text": "!function(f,b,e,v,n,t,s)\n{if(f.fbq)return;n=f.fbq=function(){n.callMethod?\nn.callMethod.apply(n,argu",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      }
+    ],
+    "error": ""
+  },
+  {
+    "site": "New Haven Center for Nursing & Rehab",
+    "url": "https://newhavennh.com/career/",
+    "job_board_type": "apploi",
+    "status": "success",
+    "page_title": "Career | New Haven Center for Nursing & Rehabilitation",
+    "html_structure": {
+      "[class*=\"job\"]": {
+        "count": 22,
+        "sample_classes": [
+          "search-job-container",
+          "job-link-containter",
+          "jobs-card"
+        ],
+        "sample_ids": []
+      },
+      "[class*=\"career\"]": {
+        "count": 1,
+        "sample_classes": [
+          "elementor-element elementor-element-09b4b02 career-link-sec-sv elementor-widget elementor-widget-text-editor"
+        ],
+        "sample_ids": []
+      },
+      "[class*=\"position\"]": {
+        "count": 6,
+        "sample_classes": [
+          "elementor-element elementor-element-3f42cea elementor-view-stacked elementor-position-left elementor-shape-circle elementor-mobile-position-top elementor-vertical-align-top elementor-widget elementor-widget-icon-box",
+          "elementor-element elementor-element-7fc31d7 elementor-view-stacked elementor-position-left elementor-shape-circle elementor-mobile-position-top elementor-vertical-align-top elementor-widget elementor-widget-icon-box",
+          "elementor-element elementor-element-667bea1 elementor-view-stacked elementor-position-left elementor-shape-circle elementor-mobile-position-top elementor-vertical-align-top elementor-widget elementor-widget-icon-box"
+        ],
+        "sample_ids": []
+      },
+      "[id*=\"job\"]": {
+        "count": 4,
+        "sample_classes": [],
+        "sample_ids": [
+          "search-job",
+          "job-title-filter",
+          "jobs-card-list"
+        ]
+      },
+      "article": {
+        "count": 1,
+        "sample_classes": [
+          "post-1565 page type-page status-publish ast-article-single"
+        ],
+        "sample_ids": [
+          "post-1565"
+        ]
+      },
+      "section": {
+        "count": 18,
+        "sample_classes": [
+          "elementor-section elementor-inner-section elementor-element elementor-element-0c14801 elementor-section-boxed elementor-section-height-default elementor-section-height-default",
+          "elementor-section elementor-top-section elementor-element elementor-element-4f858a1 elementor-hidden-tablet elementor-hidden-mobile elementor-section-boxed elementor-section-height-default elementor-section-height-default",
+          "elementor-section elementor-inner-section elementor-element elementor-element-74b2876 elementor-section-boxed elementor-section-height-default elementor-section-height-default"
+        ],
+        "sample_ids": []
+      },
+      "div[class*=\"card\"]": {
+        "count": 7,
+        "sample_classes": [
+          "jobs-card"
+        ],
+        "sample_ids": []
+      },
+      "div[class*=\"item\"]": {
+        "count": 7,
+        "sample_classes": [
+          "elementor-element elementor-element-8e6639d elementor-widget__width-auto elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list",
+          "elementor-element elementor-element-996c389 elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list",
+          "elementor-element elementor-element-30f2996 elementor-icon-list--layout-traditional elementor-list-item-link-full_width elementor-widget elementor-widget-icon-list"
+        ],
+        "sample_ids": []
+      },
+      "li": {
+        "count": 33,
+        "sample_classes": [
+          "menu-item menu-item-type-post_type menu-item-object-page menu-item-home parent hfe-creative-menu",
+          "menu-item menu-item-type-post_type menu-item-object-page parent hfe-creative-menu",
+          "elementor-icon-list-item"
+        ],
+        "sample_ids": [
+          "menu-item-22",
+          "menu-item-19"
+        ]
+      },
+      "job_links": [
+        {
+          "text": "Career",
+          "href": "https://newhavennh.com/career/",
+          "class": "hfe-menu-item"
+        },
+        {
+          "text": "CNA EVERY OTHER WEEKEND | Union 1199 Position",
+          "href": "https://jobs.apploi.com/view/742146?utm_campaign=jobs_snippet&utm_source=new-haven-nh-career-page&utm_medium=client-web-site&utm_term=josh-reiss&_=1753115039.1175103",
+          "class": "job-link"
+        },
+        {
+          "text": "Career",
+          "href": "https://newhavennh.com/career/",
+          "class": ""
+        }
+      ]
+    },
+    "potential_job_elements": [
+      {
+        "keyword": "job",
+        "text": "/* GENERAL */\n\n/* Image Outline */\n.rehabili-img img{\n  outline: 1px solid #C4C4C4;\n  outline-offset",
+        "tag": "style",
+        "class": [],
+        "id": "wp-custom-css",
+        "selector": "style"
+      },
+      {
+        "keyword": "job",
+        "text": ".apploi-drop-down .location-label {    font-size: 1.3rem;    font-family: \"Open Sans\", \"Helvetica Ne",
+        "tag": "style",
+        "class": [],
+        "id": "",
+        "selector": "style"
+      },
+      {
+        "keyword": "job",
+        "text": "See All Jobs",
+        "tag": "option",
+        "class": [],
+        "id": "",
+        "selector": "option"
+      },
+      {
+        "keyword": "job",
+        "text": "total jobs)",
+        "tag": "div",
+        "class": [],
+        "id": "paginator_footer",
+        "selector": "div"
+      },
+      {
+        "keyword": "job",
+        "text": "var MAX_NUM_OF_VISIBLE_PAGINATION_BUTTONS = 6;var MIN_NUM_OF_VISIBLE_PAGINATION_BUTTONS = 3;var jobC",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "career",
+        "text": "Career | New Haven Center for Nursing & Rehabilitation",
+        "tag": "title",
+        "class": [],
+        "id": "",
+        "selector": "title"
+      },
+      {
+        "keyword": "career",
+        "text": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"WebPage\",\"@id\":\"https://newhavennh.com/career/\"",
+        "tag": "script",
+        "class": [
+          "yoast-schema-graph"
+        ],
+        "id": "",
+        "selector": "script.yoast-schema-graph"
+      },
+      {
+        "keyword": "career",
+        "text": "/* GENERAL */\n\n/* Image Outline */\n.rehabili-img img{\n  outline: 1px solid #C4C4C4;\n  outline-offset",
+        "tag": "style",
+        "class": [],
+        "id": "wp-custom-css",
+        "selector": "style"
+      },
+      {
+        "keyword": "career",
+        "text": "Career",
+        "tag": "a",
+        "class": [
+          "hfe-menu-item"
+        ],
+        "id": "",
+        "selector": "a.hfe-menu-item"
+      },
+      {
+        "keyword": "career",
+        "text": "Career",
+        "tag": "a",
+        "class": [
+          "ekit-menu-nav-link",
+          "active",
+          "menu-link"
+        ],
+        "id": "",
+        "selector": "a.ekit-menu-nav-link.active.menu-link"
+      },
+      {
+        "keyword": "position",
+        "text": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"WebPage\",\"@id\":\"https://newhavennh.com/career/\"",
+        "tag": "script",
+        "class": [
+          "yoast-schema-graph"
+        ],
+        "id": "",
+        "selector": "script.yoast-schema-graph"
+      },
+      {
+        "keyword": "position",
+        "text": ":root{--ast-post-nav-space:0;--ast-container-default-xlg-padding:3em;--ast-container-default-lg-padd",
+        "tag": "style",
+        "class": [],
+        "id": "astra-theme-css-inline-css",
+        "selector": "style"
+      },
+      {
+        "keyword": "position",
+        "text": "#wpfront-scroll-top-container{position:fixed;cursor:pointer;z-index:9999;border:none;outline:none;ba",
+        "tag": "style",
+        "class": [],
+        "id": "",
+        "selector": "style"
+      },
+      {
+        "keyword": "position",
+        "text": ".apploi-drop-down .location-label {    font-size: 1.3rem;    font-family: \"Open Sans\", \"Helvetica Ne",
+        "tag": "style",
+        "class": [],
+        "id": "",
+        "selector": "style"
+      },
+      {
+        "keyword": "position",
+        "text": "CNA EVERY OTHER WEEKEND | Union 1199 Position",
+        "tag": "option",
+        "class": [],
+        "id": "",
+        "selector": "option"
+      },
+      {
+        "keyword": "opportunity",
+        "text": "Working as a caregiver at New Haven Center is a great opportunity to pursue a career in healthcare. ",
+        "tag": "div",
+        "class": [
+          "elementor-widget-container"
+        ],
+        "id": "",
+        "selector": "div.elementor-widget-container"
+      },
+      {
+        "keyword": "opportunity",
+        "text": "Working as a caregiver at New Haven Center is a great opportunity to pursue a career in healthcare. ",
+        "tag": "div",
+        "class": [
+          "elementor-widget-container"
+        ],
+        "id": "",
+        "selector": "div.elementor-widget-container"
+      },
+      {
+        "keyword": "apply",
+        "text": ":root{--ast-post-nav-space:0;--ast-container-default-xlg-padding:3em;--ast-container-default-lg-padd",
+        "tag": "style",
+        "class": [],
+        "id": "astra-theme-css-inline-css",
+        "selector": "style"
+      },
+      {
+        "keyword": "apply",
+        "text": ".apploi-drop-down .location-label {    font-size: 1.3rem;    font-family: \"Open Sans\", \"Helvetica Ne",
+        "tag": "style",
+        "class": [],
+        "id": "",
+        "selector": "style"
+      },
+      {
+        "keyword": "apply",
+        "text": "var MAX_NUM_OF_VISIBLE_PAGINATION_BUTTONS = 6;var MIN_NUM_OF_VISIBLE_PAGINATION_BUTTONS = 3;var jobC",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      }
+    ],
+    "error": ""
+  },
+  {
+    "site": "Elim Park Baptist Home",
+    "url": "https://www.paycomonline.net/v4/ats/web.php/jobs?clientkey=180516033B69A146A2841F6A7865A478",
+    "job_board_type": "paycom",
+    "status": "success",
+    "page_title": "Job Opportunities",
+    "html_structure": {
+      "[class*=\"job\"]": {
+        "count": 46,
+        "sample_classes": [
+          "jobBoardCustomMessage",
+          "loginBoxControl jobAlertsButton"
+        ],
+        "sample_ids": []
+      },
+      "[class*=\"position\"]": {
+        "count": 2,
+        "sample_classes": [
+          "positionTypeFilterContent"
+        ],
+        "sample_ids": []
+      },
+      "[id*=\"job\"]": {
+        "count": 6,
+        "sample_classes": [],
+        "sample_ids": [
+          "jobSearchMobileSidebar",
+          "jobCount_desktop",
+          "jobCount_mobile"
+        ]
+      },
+      "[id*=\"position\"]": {
+        "count": 12,
+        "sample_classes": [
+          "expandableFilterContent",
+          "filterCheckbox"
+        ],
+        "sample_ids": [
+          "filters[positiontype][338]_desktop",
+          "filters[positiontype][341]_desktop",
+          "positionTypeFilterContent"
+        ]
+      },
+      "div[class*=\"item\"]": {
+        "count": 1,
+        "sample_classes": [
+          "phone-number__menu-items"
+        ],
+        "sample_ids": []
+      },
+      "li": {
+        "count": 13,
+        "sample_classes": [
+          "jobInfo JobListing"
+        ],
+        "sample_ids": []
+      },
+      "job_links": [],
+      "iframes": [
+        "https://newassets.hcaptcha.com/captcha/v1/e34a17199a5ad5f79373a8e86f1f5508fb0d8531/static/hcaptcha.html#frame=checkbox-invisible",
+        "https://newassets.hcaptcha.com/captcha/v1/e34a17199a5ad5f79373a8e86f1f5508fb0d8531/static/hcaptcha.html#frame=checkbox-invisible",
+        "https://newassets.hcaptcha.com/captcha/v1/e34a17199a5ad5f79373a8e86f1f5508fb0d8531/static/hcaptcha.html#frame=checkbox-invisible",
+        "https://newassets.hcaptcha.com/captcha/v1/e34a17199a5ad5f79373a8e86f1f5508fb0d8531/static/hcaptcha.html#frame=challenge&id=0w6qroaeh30n&host=www.paycomonline.net&sentry=true&reportapi=https%3A%2F%2Faccounts.hcaptcha.com&recaptchacompat=true&custom=false&hl=en&tplinks=on&andint=off&pstissuer=https%3A%2F%2Fpst-issuer.hcaptcha.com&sitekey=12281f21-d27e-48b9-9faf-f83d141d11e5&size=invisible&theme=light&origin=https%3A%2F%2Fwww.paycomonline.net",
+        "https://newassets.hcaptcha.com/captcha/v1/e34a17199a5ad5f79373a8e86f1f5508fb0d8531/static/hcaptcha.html#frame=challenge&id=13jt4nrkee2v&host=www.paycomonline.net&sentry=true&reportapi=https%3A%2F%2Faccounts.hcaptcha.com&recaptchacompat=true&custom=false&hl=en&tplinks=on&andint=off&pstissuer=https%3A%2F%2Fpst-issuer.hcaptcha.com&sitekey=12281f21-d27e-48b9-9faf-f83d141d11e5&size=invisible&theme=light&origin=https%3A%2F%2Fwww.paycomonline.net",
+        "https://newassets.hcaptcha.com/captcha/v1/e34a17199a5ad5f79373a8e86f1f5508fb0d8531/static/hcaptcha.html#frame=challenge&id=2fuegt2cznih&host=www.paycomonline.net&sentry=true&reportapi=https%3A%2F%2Faccounts.hcaptcha.com&recaptchacompat=true&custom=false&hl=en&tplinks=on&andint=off&pstissuer=https%3A%2F%2Fpst-issuer.hcaptcha.com&sitekey=12281f21-d27e-48b9-9faf-f83d141d11e5&size=invisible&theme=light&origin=https%3A%2F%2Fwww.paycomonline.net"
+      ]
+    },
+    "potential_job_elements": [
+      {
+        "keyword": "job",
+        "text": "Job Opportunities",
+        "tag": "title",
+        "class": [],
+        "id": "",
+        "selector": "title"
+      },
+      {
+        "keyword": "job",
+        "text": "if (!('LibViews' in window.translations.sets)) window.translations.sets['LibViews'] = {};if (!('Filt",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "job",
+        "text": "var jobs = [{\"jobcode\":24977,\"title\":\"CNA\",\"location\":{\"locid\":321,\"description\":\"CHESHIRE, CT, 0641",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "job",
+        "text": "Search Job Postings",
+        "tag": "h3",
+        "class": [
+          "filter_font_color"
+        ],
+        "id": "",
+        "selector": "h3.filter_font_color"
+      },
+      {
+        "keyword": "job",
+        "text": "Job Title",
+        "tag": "option",
+        "class": [],
+        "id": "",
+        "selector": "option"
+      },
+      {
+        "keyword": "career",
+        "text": "Welcome to our Careers Portal! If you do not see an open position that matches your qualifications a",
+        "tag": "p",
+        "class": [],
+        "id": "",
+        "selector": "p"
+      },
+      {
+        "keyword": "position",
+        "text": "var jobs = [{\"jobcode\":24977,\"title\":\"CNA\",\"location\":{\"locid\":321,\"description\":\"CHESHIRE, CT, 0641",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "position",
+        "text": "Position Type",
+        "tag": "div",
+        "class": [
+          "expandableFilterHeader"
+        ],
+        "id": "",
+        "selector": "div.expandableFilterHeader"
+      },
+      {
+        "keyword": "position",
+        "text": "Select Position Type",
+        "tag": "legend",
+        "class": [],
+        "id": "",
+        "selector": "legend"
+      },
+      {
+        "keyword": "position",
+        "text": "Welcome to our Careers Portal! If you do not see an open position that matches your qualifications a",
+        "tag": "p",
+        "class": [],
+        "id": "",
+        "selector": "p"
+      },
+      {
+        "keyword": "position",
+        "text": "Position Type",
+        "tag": "div",
+        "class": [
+          "expandableFilterHeader"
+        ],
+        "id": "",
+        "selector": "div.expandableFilterHeader"
+      },
+      {
+        "keyword": "opening",
+        "text": "Welcome to our Careers Portal! If you do not see an open position that matches your qualifications a",
+        "tag": "p",
+        "class": [],
+        "id": "",
+        "selector": "p"
+      },
+      {
+        "keyword": "apply",
+        "text": "if (!('Paycom_View_Helper' in window.translations.sets)) window.translations.sets['Paycom_View_Helpe",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "apply",
+        "text": "var jobs = [{\"jobcode\":24977,\"title\":\"CNA\",\"location\":{\"locid\":321,\"description\":\"CHESHIRE, CT, 0641",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      }
+    ],
+    "error": ""
+  },
+  {
+    "site": "National Healthcare Associates",
+    "url": "https://careers-nathealthcare.icims.com/jobs/search?ss=1&searchRelation=keyword_all",
+    "job_board_type": "icims",
+    "status": "success",
+    "page_title": "Job Listings at National Health Care Associates Inc.",
+    "html_structure": {
+      "div[class*=\"item\"]": {
+        "count": 1,
+        "sample_classes": [
+          "right-aligned-menu-items"
+        ],
+        "sample_ids": []
+      },
+      "li": {
+        "count": 22,
+        "sample_classes": [
+          "menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children nectar-regular-menu-item sf-with-ul menu-item-26",
+          "menu-item menu-item-type-post_type menu-item-object-page nectar-regular-menu-item menu-item-8624",
+          "menu-item menu-item-type-post_type menu-item-object-page nectar-regular-menu-item menu-item-9137"
+        ],
+        "sample_ids": [
+          "menu-item-26",
+          "menu-item-9137",
+          "menu-item-8624"
+        ]
+      },
+      "job_links": [
+        {
+          "text": "Careers",
+          "href": "https://c-13329-20230208-nhca-com.i.icims.com/careers/",
+          "class": ""
+        },
+        {
+          "text": "Career Opportunities",
+          "href": "https://c-13329-20230208-nhca-com.i.icims.com/about-careers/",
+          "class": ""
+        }
+      ],
+      "iframes": [
+        "https://careers-nathealthcare.icims.com/jobs/search?ss=1&searchRelation=keyword_all&in_iframe=1",
+        "https://api.talkfurther.com/api/chat/visitors?visit=336cea43-9fe0-4357-95eb-76109ae05f21",
+        "https://api.talkfurther.com/api/chat/visitors?visit=336cea43-9fe0-4357-95eb-76109ae05f21",
+        "https://api.talkfurther.com/api/chat/visitors?visit=336cea43-9fe0-4357-95eb-76109ae05f21",
+        "https://api.talkfurther.com/api/chat/visitors?visit=336cea43-9fe0-4357-95eb-76109ae05f21",
+        "https://api.talkfurther.com/api/chat/visitors?visit=336cea43-9fe0-4357-95eb-76109ae05f21",
+        "https://api.talkfurther.com/api/chat/visitors?visit=336cea43-9fe0-4357-95eb-76109ae05f21"
+      ]
+    },
+    "potential_job_elements": [
+      {
+        "keyword": "job",
+        "text": "Job Listings at National Health Care Associates Inc.",
+        "tag": "title",
+        "class": [],
+        "id": "",
+        "selector": "title"
+      },
+      {
+        "keyword": "job",
+        "text": "if (window.addEventListener) {\nwindow.addEventListener('message', icims_handlePostMessage, false);\n}",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "career",
+        "text": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"WebPage\",\"@id\":\"https://c-13329-20230208-nhca-c",
+        "tag": "script",
+        "class": [
+          "yoast-schema-graph"
+        ],
+        "id": "",
+        "selector": "script.yoast-schema-graph"
+      },
+      {
+        "keyword": "career",
+        "text": "Careers",
+        "tag": "span",
+        "class": [
+          "menu-title-text"
+        ],
+        "id": "",
+        "selector": "span.menu-title-text"
+      },
+      {
+        "keyword": "career",
+        "text": "2.3 – ABOUT > Careers",
+        "tag": "span",
+        "class": [
+          "breadcrumb_last"
+        ],
+        "id": "",
+        "selector": "span.breadcrumb_last"
+      },
+      {
+        "keyword": "career",
+        "text": "if (window.addEventListener) {\nwindow.addEventListener('message', icims_handlePostMessage, false);\n}",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "career",
+        "text": "Career Opportunities",
+        "tag": "span",
+        "class": [],
+        "id": "",
+        "selector": "span"
+      },
+      {
+        "keyword": "position",
+        "text": "{\"@context\":\"https://schema.org\",\"@graph\":[{\"@type\":\"WebPage\",\"@id\":\"https://c-13329-20230208-nhca-c",
+        "tag": "script",
+        "class": [
+          "yoast-schema-graph"
+        ],
+        "id": "",
+        "selector": "script.yoast-schema-graph"
+      },
+      {
+        "keyword": "position",
+        "text": "#page-header-bg h1,#page-header-bg .subheader,.nectar-box-roll .overlaid-content h1,.nectar-box-roll",
+        "tag": "style",
+        "class": [],
+        "id": "dynamic-css-inline-css",
+        "selector": "style"
+      },
+      {
+        "keyword": "position",
+        "text": "/* ------------------ */ /* Header/Footer / Padding\t\t*/ /* ------------------ */  #top .container, .",
+        "tag": "style",
+        "class": [],
+        "id": "wp-custom-css",
+        "selector": "style"
+      },
+      {
+        "keyword": "position",
+        "text": "var nectarLove = {\"ajaxurl\":\"https:\\/\\/c-13329-20230208-nhca-com.i.icims.com\\/wp-admin\\/admin-ajax.p",
+        "tag": "script",
+        "class": [],
+        "id": "nectar-frontend-js-extra",
+        "selector": "script"
+      }
+    ],
+    "error": ""
+  },
+  {
+    "site": "Genesis",
+    "url": "https://www.genesiscareers.jobs/genesishcc/jobs",
+    "job_board_type": "custom",
+    "status": "success",
+    "page_title": "Genesis Careers",
+    "html_structure": {
+      "[class*=\"job\"]": {
+        "count": 153,
+        "sample_classes": [
+          "job-results-container",
+          "job-search-filters jibe-container contemporary-search",
+          "jobs-banner defaults"
+        ],
+        "sample_ids": [
+          "job-search-filters"
+        ]
+      },
+      "[class*=\"position\"]": {
+        "count": 2,
+        "sample_classes": [
+          "mat-form-field ng-tns-c47-17 mat-primary position-relative rounded-input mat-form-field-type-mat-input mat-form-field-appearance-legacy mat-form-field-can-float mat-form-field-should-float mat-form-field-has-label ng-untouched ng-pristine ng-valid ng-star-inserted",
+          "mat-form-field ng-tns-c47-14 mat-primary position-relative rounded-input location-on mat-form-field-type-mat-input mat-form-field-appearance-legacy mat-form-field-can-float mat-form-field-should-float mat-form-field-has-label ng-untouched ng-pristine ng-valid ng-star-inserted"
+        ],
+        "sample_ids": []
+      },
+      "[id*=\"job\"]": {
+        "count": 11,
+        "sample_classes": [
+          "job-title-link",
+          "job-search-filters jibe-container contemporary-search"
+        ],
+        "sample_ids": [
+          "job-search-filters",
+          "link-job-1",
+          "link-job-0"
+        ]
+      },
+      "div[class*=\"card\"]": {
+        "count": 55,
+        "sample_classes": [
+          "job-card-result-container job-result__categories ng-star-inserted",
+          "job-card-result-container job-result__tags ng-star-inserted",
+          "job-card-result-container job-result__location ng-star-inserted"
+        ],
+        "sample_ids": []
+      },
+      "li": {
+        "count": 7,
+        "sample_classes": [],
+        "sample_ids": []
+      },
+      "job_links": [
+        {
+          "text": "Careers Home",
+          "href": "https://www.genesiscareers.jobs/genesishcc/careers-home",
+          "class": ""
+        },
+        {
+          "text": "Apply Now",
+          "href": "https://careers-genesishcc.icims.com/jobs/28109/login",
+          "class": "mat-focus-indicator apply-button mat-raised-button mat-button-base mat-primary ng-star-inserted"
+        },
+        {
+          "text": "Apply Now",
+          "href": "https://careers-genesishcc.icims.com/jobs/27971/login",
+          "class": "mat-focus-indicator apply-button mat-raised-button mat-button-base mat-primary ng-star-inserted"
+        },
+        {
+          "text": "Apply Now",
+          "href": "https://careers-genesishcc.icims.com/jobs/28024/login",
+          "class": "mat-focus-indicator apply-button mat-raised-button mat-button-base mat-primary ng-star-inserted"
+        },
+        {
+          "text": "Apply Now",
+          "href": "https://careers-genesishcc.icims.com/jobs/27898/login",
+          "class": "mat-focus-indicator apply-button mat-raised-button mat-button-base mat-primary ng-star-inserted"
+        },
+        {
+          "text": "Apply Now",
+          "href": "https://careers-genesishcc.icims.com/jobs/27815/login",
+          "class": "mat-focus-indicator apply-button mat-raised-button mat-button-base mat-primary ng-star-inserted"
+        },
+        {
+          "text": "Apply Now",
+          "href": "https://careers-genesishcc.icims.com/jobs/28065/login",
+          "class": "mat-focus-indicator apply-button mat-raised-button mat-button-base mat-primary ng-star-inserted"
+        },
+        {
+          "text": "Apply Now",
+          "href": "https://careers-genesishcc.icims.com/jobs/27475/login",
+          "class": "mat-focus-indicator apply-button mat-raised-button mat-button-base mat-primary ng-star-inserted"
+        },
+        {
+          "text": "Apply Now",
+          "href": "https://careers-genesishcc.icims.com/jobs/27508/login",
+          "class": "mat-focus-indicator apply-button mat-raised-button mat-button-base mat-primary ng-star-inserted"
+        },
+        {
+          "text": "Apply Now",
+          "href": "https://careers-genesishcc.icims.com/jobs/27220/login",
+          "class": "mat-focus-indicator apply-button mat-raised-button mat-button-base mat-primary ng-star-inserted"
+        }
+      ],
+      "iframes": [
+        "https://assets.textrecruit.com/jc2/prd/index.html"
+      ]
+    },
+    "potential_job_elements": [
+      {
+        "keyword": "job",
+        "text": "window.logoutRedirectUrl = '/jobs';",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "job",
+        "text": "var dataLayer = dataLayer || []; // This is required and critical as this empty object initializes t",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "job",
+        "text": "var event = function (event) {\n\tif( window._jibe.models && window._jibe.models.jobs &&\n             ",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "job",
+        "text": "var clickedJob;\n   function applyEvent(apply, variant) {\n    if(variant === 'descriptions'){\n      c",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "job",
+        "text": "function socialShareEvent(eventName) {\n    var socialShareData = window._jibe.models && window._jibe",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "career",
+        "text": "Genesis Careers",
+        "tag": "title",
+        "class": [],
+        "id": "",
+        "selector": "title"
+      },
+      {
+        "keyword": "career",
+        "text": "var event = function (event) {\n\tif( window._jibe.models && window._jibe.models.jobs &&\n             ",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "career",
+        "text": "var videoStarted, videoTen, videoTwentyFive, videoFifty, videoSeventyFive, videoComplete = false;\n  ",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "career",
+        "text": "var clickedJob;\n   function applyEvent(apply, variant) {\n    if(variant === 'descriptions'){\n      c",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "career",
+        "text": "function socialShareEvent(eventName) {\n    var socialShareData = window._jibe.models && window._jibe",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "position",
+        "text": "var event = function (event) {\n\tif( window._jibe.models && window._jibe.models.jobs &&\n             ",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "position",
+        "text": "var clickedJob;\n   function applyEvent(apply, variant) {\n    if(variant === 'descriptions'){\n      c",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "position",
+        "text": "function socialShareEvent(eventName) {\n    var socialShareData = window._jibe.models && window._jibe",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "position",
+        "text": "function searchEvent(search) {\n   var searchQuery= window._jibe.models && window._jibe.models.jobs &",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "position",
+        "text": "// translations\n  window.i18n = {\n    DEFAULT_TRANSLATIONS: {\"GET_REFERRED\":{\"TOOLTIP_TITLE\":\"What i",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "opportunity",
+        "text": "// translations\n  window.i18n = {\n    DEFAULT_TRANSLATIONS: {\"GET_REFERRED\":{\"TOOLTIP_TITLE\":\"What i",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "opportunity",
+        "text": "Genesis HealthCare, Inc. and all affiliated entities (collectively “Genesis”) has a strong commitmen",
+        "tag": "p",
+        "class": [],
+        "id": "",
+        "selector": "p"
+      },
+      {
+        "keyword": "opening",
+        "text": "// translations\n  window.i18n = {\n    DEFAULT_TRANSLATIONS: {\"GET_REFERRED\":{\"TOOLTIP_TITLE\":\"What i",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "apply",
+        "text": "var event = function (event) {\n\tif( window._jibe.models && window._jibe.models.jobs &&\n             ",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "apply",
+        "text": "var clickedJob;\n   function applyEvent(apply, variant) {\n    if(variant === 'descriptions'){\n      c",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "apply",
+        "text": "function searchEvent(search) {\n   var searchQuery= window._jibe.models && window._jibe.models.jobs &",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "apply",
+        "text": "// translations\n  window.i18n = {\n    DEFAULT_TRANSLATIONS: {\"GET_REFERRED\":{\"TOOLTIP_TITLE\":\"What i",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "apply",
+        "text": "mat-expansion-panel.mat-expansion-panel.search-result-item[_ngcontent-kbs-c163]{border-radius:0}.pro",
+        "tag": "style",
+        "class": [],
+        "id": "",
+        "selector": "style"
+      },
+      {
+        "keyword": "hiring",
+        "text": "// translations\n  window.i18n = {\n    DEFAULT_TRANSLATIONS: {\"GET_REFERRED\":{\"TOOLTIP_TITLE\":\"What i",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      },
+      {
+        "keyword": "hiring",
+        "text": "window.searchConfig = {\"availableLanguages\":[{\"code\":\"en-US\",\"name\":\"English\"}],\"globalSearch\":{\"ena",
+        "tag": "script",
+        "class": [],
+        "id": "",
+        "selector": "script"
+      }
+    ],
+    "error": ""
+  }
+]

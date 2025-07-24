@@ -1,0 +1,170 @@
+[
+  {
+    "site": "RydersHealth",
+    "url": "https://www.rydershealth.com/jobs/",
+    "job_board_type": "apploi",
+    "status": "success",
+    "page_title": "Jobs - Rydershealth",
+    "job_containers_found": [],
+    "job_titles_found": [],
+    "job_locations_found": [
+      {
+        "selector": ".location",
+        "count": 20,
+        "sample": "Chester, Newington and Windham, Connecticut"
+      }
+    ],
+    "apply_buttons_found": [],
+    "pagination_found": false,
+    "error": ""
+  },
+  {
+    "site": "New Haven Center for Nursing & Rehab",
+    "url": "https://newhavennh.com/career/",
+    "job_board_type": "apploi",
+    "status": "success",
+    "page_title": "Career | New Haven Center for Nursing & Rehabilitation",
+    "job_containers_found": [],
+    "job_titles_found": [
+      {
+        "selector": "h3 a",
+        "count": 6,
+        "sample": "Address"
+      }
+    ],
+    "job_locations_found": [],
+    "apply_buttons_found": [],
+    "pagination_found": false,
+    "error": ""
+  },
+  {
+    "site": "Southport Center for Nursing & Rehab",
+    "url": "https://southportnh.com/careers/",
+    "job_board_type": "apploi",
+    "status": "success",
+    "page_title": "Careers - Southport Center For Nursing and Rehabilitation",
+    "job_containers_found": [],
+    "job_titles_found": [
+      {
+        "selector": "h3 a",
+        "count": 2,
+        "sample": "MAIL US"
+      }
+    ],
+    "job_locations_found": [],
+    "apply_buttons_found": [],
+    "pagination_found": false,
+    "error": ""
+  },
+  {
+    "site": "Elim Park Baptist Home",
+    "url": "https://www.paycomonline.net/v4/ats/web.php/jobs?clientkey=180516033B69A146A2841F6A7865A478",
+    "job_board_type": "paycom",
+    "status": "success",
+    "page_title": "Job Opportunities",
+    "job_containers_found": [],
+    "job_titles_found": [],
+    "job_locations_found": [],
+    "apply_buttons_found": [],
+    "pagination_found": false,
+    "error": ""
+  },
+  {
+    "site": "Mary Wade Home, Inc., The",
+    "url": "https://www.paycomonline.net/v4/ats/web.php/jobs?clientkey=0521B54859A716A26956A48336337782#join-talent-community",
+    "job_board_type": "paycom",
+    "status": "success",
+    "page_title": "Job Opportunities",
+    "job_containers_found": [],
+    "job_titles_found": [],
+    "job_locations_found": [],
+    "apply_buttons_found": [],
+    "pagination_found": false,
+    "error": ""
+  },
+  {
+    "site": "National Healthcare Associates",
+    "url": "https://careers-nathealthcare.icims.com/jobs/search?ss=1&searchRelation=keyword_all",
+    "job_board_type": "icims",
+    "status": "success",
+    "page_title": "Job Listings at National Health Care Associates Inc.",
+    "job_containers_found": [],
+    "job_titles_found": [],
+    "job_locations_found": [],
+    "apply_buttons_found": [],
+    "pagination_found": false,
+    "error": ""
+  },
+  {
+    "site": "Whitney Rehabilitation Care Center",
+    "url": "https://careers-whitneyrehab.icims.com/jobs/search?hashed=-625911698&mobile=false&width=2052&height=500&bga=true&needsRedirect=false&jan1offset=-300&jun1offset=-240",
+    "job_board_type": "icims",
+    "status": "success",
+    "page_title": "Job Listings at iCIMS Recruiting Platform",
+    "job_containers_found": [],
+    "job_titles_found": [],
+    "job_locations_found": [],
+    "apply_buttons_found": [],
+    "pagination_found": false,
+    "error": ""
+  },
+  {
+    "site": "Genesis",
+    "url": "https://www.genesiscareers.jobs/genesishcc/jobs",
+    "job_board_type": "custom",
+    "status": "success",
+    "page_title": "Genesis Careers",
+    "job_containers_found": [],
+    "job_titles_found": [
+      {
+        "selector": ".job-title",
+        "count": 10,
+        "sample": "Certified Medicine Aide, CMA"
+      }
+    ],
+    "job_locations_found": [
+      {
+        "selector": ".location",
+        "count": 20,
+        "sample": "Albuquerque, New Mexico\nUS"
+      }
+    ],
+    "apply_buttons_found": [
+      {
+        "selector": ".apply-button",
+        "count": 10
+      }
+    ],
+    "pagination_found": false,
+    "error": ""
+  },
+  {
+    "site": "Masonicare",
+    "url": "https://jobs.masonicare.org/search-jobs",
+    "job_board_type": "custom",
+    "status": "success",
+    "page_title": "Search our Job Opportunities at MASONICARE",
+    "job_containers_found": [],
+    "job_titles_found": [],
+    "job_locations_found": [
+      {
+        "selector": ".job-location",
+        "count": 16,
+        "sample": "Norwich, Connecticut"
+      },
+      {
+        "selector": ".location",
+        "count": 3,
+        "sample": "Norwich, Connecticut"
+      }
+    ],
+    "apply_buttons_found": [
+      {
+        "selector": "a[href*=\"apply\"]",
+        "count": 1
+      }
+    ],
+    "pagination_found": true,
+    "error": ""
+  }
+]

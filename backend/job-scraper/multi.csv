@@ -1,0 +1,85 @@
+source_site,search_url,role,state,city,zip_code,location_scope,location_source,parse_location?,notes,setting_type
+RydersHealth,https://www.rydershealth.com/career-opportunities/,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf
+Atlas Healthcare,https://theatlashcg.com/careers/,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf
+iCare Health Network,https://www.icarehn.com/careers/,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf
+National Healthcare Associates,https://careers-nathealthcare.icims.com/jobs/search?ss=1&searchRelation=keyword_all,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf
+Athena Health Care Systems,https://athenahealthcare.com/careers/,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,mixed
+Apple Rehab,https://jobs.apploi.com/profile/apple-rehab?utm_campaign=truman&utm_medium=&utm_source=false,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf
+Genesis,https://www.genesiscareers.jobs/genesishcc/jobs,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf
+Autumn Lake,https://autumnlakehealthcare.com/careers/,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf
+Masonicare,https://jobs.masonicare.org/search-jobs,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,mixed
+Ascension,https://jobs.ascension.org/us/en,ALL_MATCHING,,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,home_care
+Aveanna,https://jobs.aveanna.com/jobs/?search_term=,ALL_MATCHING,,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,home_care
+Affinity Home Care,https://www.intelycare.com/jobs/?listing_page=1&employer_id=4978365,ALL_MATCHING,,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,home_care
+Northbridge Communities,https://jobs.jobvite.com/northbridgecompanies/search?t=&c=&l=,ALL_MATCHING,,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,home_care
+SYNERGY Home Care,https://synergyhomecare.com/careers/,ALL_MATCHING,,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,home_care
+Brightstar,https://careers.brightstarcare.com/career-search/?q=&loc=&radius=10&spage=1,ALL_MATCHING,,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,home_care
+Salmon Health and Retirement,https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html?cid=ab1e132a-3473-4c05-b218-5122e60081b0&ccId=19000101_000001&type=JS&lang=en_US,ALL_MATCHING,MA,,,multi,card body,Yes,ADP ATS. Must parse role + location from job cards,mixed
+CareOne Senior Living,https://fa-eqgc-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2/jobs?mode=location,ALL_MATCHING,,,,multi,card body,Yes,"Oracle HCM portal. Scraper must extract role and location from card
+",mixed
+AdviniaCare,https://www.adviniacare.com/jobs/,ALL_MATCHING,,,,multi,card body,Yes,"Multi-location, multi-role feed. Scraper must extract title and location.",snf
+Benchmark,https://jobs.dayforcehcm.com/en-US/benchmark/CANDIDATEPORTAL,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+EPOCH,https://careers.hireology.com/epochseniorliving,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+VNA Care,https://careers.vnacare.org/jobs.aspx,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,home_care
+Mozaic Senior Services,https://mozaicsl.applicantpool.com/jobs/,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+Covenant Living,https://careers.covliving.org/global/en/search-results,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+LCB Senior Living,https://www.paycomonline.net/v4/ats/web.php/jobs?clientkey=E3CC4AFB47AA6C8DDFE96BF0D1042480,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+Harbor Chase,https://recruiting.ultipro.com/HAR1012/JobBoard/c8658d95-b2fe-7c84-9ea4-273644487cd4/?q=&o=postedDateDesc,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+The Arbors & The Ivy,https://sites.hireology.com/thearborsassistedlivingresidentialcommunities/jobs.html,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+Oak Hill,https://jobs.dayforcehcm.com/en-US/oakhill/OakHillDefaultPostingSite,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,mixed
+Hallkeen,https://www.hallkeen.com/careers,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+ProMedica,https://www.promedica.org/promedicacareers/search-jobs?near=&facility_names=Assisted+Living+and+Memory+Care,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+Brookdale,https://careers.brookdale.com/en/jobs.html#/search?page=1,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+IntelyCare - StaffDNA,https://www.intelycare.com/jobs/?listing_page=1&employer_id=5008017,ALL_MATCHING,,,,multi,card body,Yes,ATS feed for StaffDNA via IntelyCare; parse city/state from job cards,
+Watermark Retirement Communities,https://careers.hireology.com/watermarkretirementcommunitiesinc,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+Sunrise Senior Living,https://uscareers-sunriseseniorliving.icims.com/jobs/search?ss=1&country=US&mobile=false&width=1300&height=500&bga=true&needsRedirect=false&jan1offset=-300&jun1offset=-240,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+Artis Senior Living,https://recruiting.ultipro.com/ART1008ARTH/JobBoard/dc78aa87-cca0-413e-a32b-450fecf2bffb/?q=&o=postedDateDesc&w=&wc=&we=&wpst=,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+ECHN Visiting Nurse & Health Services of CT,https://pm.healthcaresource.com/cs/echn#/results?whereControl=radius&radiusDistance=25&radiusUnit=mi&radius%5Bselection%5D%5Bdistance%5D=25&radius%5Bselection%5D%5Bunit%5D=mi&Facility=Visiting%20Nurse%20%26%20Health%20Services%20of%20CT&sort=titleAlphaAsc,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,home_care
+Atria,https://atriacareers.com/careers/category/care-and-nursing/,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+Monarch Communities,https://careers.smartrecruiters.com/MonarchCommunities,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+Senior Living Communities,https://senior-living-communities.jobs.net/jobs,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+Maplewood Senior Living,https://recruiting.ultipro.com/MAP1003/JobBoard/51997001-de38-2b3c-51f7-8dfc3b02a5dd/?q=&o=postedDateDesc&w=&wc=&we=&wpst=,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living
+Alliance Health,https://alliancehhs.org/open-positions/,ALL_MATCHING,MA,,,multi,card body,Yes,Multi-site healthcare network career page,snf
+BaneCare,https://www.banecare.com/Employment-Opportunities,ALL_MATCHING,MA,,,multi,card body,Yes,Corporate career page for multiple facilities,snf
+Always Best Care,https://alwaysbestcare.com/manchester/caregivers/#Join-Our-Team,ALL_MATCHING,MA,,,multi,card body,Yes,"Franchise career page, home care focus",home_care
+UniversaCare,https://www.intelycare.com/jobs/?listing_page=1&employer_id=3843912,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+CenterWell,https://www.centerwellcareers.com/us/en/search-results,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+LHC Group,https://lhcgroup.jibeapply.com/careers-home/jobs?view=search&page=1,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+enhabit,https://careers.ehab.com/search-jobs,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Amedisys,https://careers.amedisys.com/careers-home/jobs?tags1=Homecare&page=1,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+All Ways Caring,https://careers-allwayscaring.icims.com/jobs/search?ss=1&hashed=-626002160,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Trinity Health at Home,https://jobs.trinity-health.org/athome/search-results?m=3,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Charter Senior Living,https://www.careersatcharter.com/find-your-next-role/,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,assisted_living
+Elara Caring,https://careers.elara.com/us/en/search-results,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Brightview Senior Living,https://careers.brightviewseniorliving.com/career-home/jobs,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,assisted_living
+accentCare,https://careers.accentcare.com/careers-home/jobs,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Senior Lifestyle,https://www.seniorlifestyle.com/careers/search/,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,assisted_living
+PathWell,https://pathwellhealth.com/careers/,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Encompass Health,https://careers.encompasshealth.com/jobs/?&filter[category][]=Nurse+Mgmt&filter[category][]=Nursing,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,rehab_only
+Aspen Hill,https://aspenhillrehab.com/apply-today/,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,snf
+Southcoast Health,https://careers-southcoast.icims.com/jobs/search?ss=1&searchRelation=keyword_all&searchCategory=47355,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Southcoast Health,https://careers-southcoast.icims.com/jobs/search?ss=1&searchRelation=keyword_all&searchCategory=47351,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,snf
+Southcoast Health,https://careers-southcoast.icims.com/jobs/search?ss=1&searchRelation=keyword_all&searchCategory=47350,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,assisted_living
+SCA Health,https://careers.sca.health/jobs?page=1,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,rehab_only
+Healogics,https://healogics.wd5.myworkdayjobs.com/healogics,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,rehab_only
+Guardian Angel Senior Services,https://www.intelycare.com/jobs/?listing_page=1&employer_id=2038009,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Seniors Helping Seniors,https://www.intelycare.com/jobs/?listing_page=1&employer_id=4978638,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Integritus Healthcare,https://recruiting.ultipro.com/BER1002BHCS/JobBoard/ab6dd2ae-e2f4-4e5a-9d54-ba5e47b6291f/?q=&o=postedDateDesc,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,snf
+Hebrew Senior Life,https://hebrewseniorlife.wd501.myworkdayjobs.com/HebrewSeniorLifeCareers,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,mixed
+Honor Health Network,https://honorhealthnetwork.com/job-openings/,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+FiveStar Nursing,https://jobs.apploi.com/profile/fivestarnusing,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Gardenview Home Care,https://www.intelycare.com/jobs/?listing_page=1&employer_id=2315252,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Bond Health Staffing,https://bondhealthstaffing.com/view-jobs/,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,mixed
+MJHS Health System,https://mjhs.jobs/jobs/,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,mixed
+DRIFT Services,https://www.intelycare.com/jobs/?listing_page=1&employer_id=2064688,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,snf
+Fine Care Center,https://www.intelycare.com/jobs/?employer_id=2315019,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,snf
+Tandym Group,https://careers.tandymgroup.com/#/healthcare,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+The Jewish Home,https://jewishhome.org/careers-and-culture/job-listings/,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,snf
+Allendale Rehabilitation & Healthcare Center,https://allendalehc.com/careers/,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,snf
+Sapphire Center,https://www.sapphirerehab.com/careers,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,snf
+Laconia Nursing Home,https://www.laconianursinghome.com/job-openings,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,snf
+Compassion Home Care,https://www.compassionhomellc.com/careers/#apply,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Hometown Nannies,https://hometownnannies.com/job-board/,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Endurance Home Care,https://endurancehomecare.com/job-openings/,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+Home Helpers,https://home-helpers-careers.careerplug.com/jobs#job_filters,ALL_MATCHING,,,,multi,card body,Yes,Network or national feed,home_care
+The Nurse Network,https://ctms.contingenttalentmanagement.com/nursenetwork/jobboard/v2.0/jobboard.cfm,ALL_MATCHING,,,,multi,,,Network or national feed,staffing

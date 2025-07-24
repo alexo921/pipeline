@@ -1,0 +1,30 @@
+[
+  {
+    "title": "",
+    "company": "",
+    "location": "",
+    "city": "",
+    "state": "",
+    "date_posted": "",
+    "salary": "",
+    "description": "",
+    "url": "https://mozaicsl.applicantpool.com/jobs/",
+    "apply_url": "https://mozaicsl.applicantpool.com/jobs/",
+    "scraped_at": "2025-07-17T16:46:41.204735",
+    "source_site": "Mozaic Senior Services"
+  },
+  {
+    "title": "",
+    "company": "",
+    "location": "",
+    "city": "",
+    "state": "",
+    "date_posted": "",
+    "salary": "",
+    "description": "",
+    "url": "https://mozaicsl.applicantpool.com/internaljobs/",
+    "apply_url": "https://mozaicsl.applicantpool.com/internaljobs/",
+    "scraped_at": "2025-07-17T16:46:41.210281",
+    "source_site": "Mozaic Senior Services"
+  }
+]

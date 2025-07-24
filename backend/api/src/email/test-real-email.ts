@@ -1,28 +1,34 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../app.module';
-import { UserEventsListener } from './user-events.listener';
-import { AccountCreatedEvent } from '../events/user-events';
+import * as dotenv from 'dotenv';
+import { EmailService } from './email.service';
+
+// Load environment variables from .env file
+dotenv.config();
 
 async function testRealEmail() {
   console.log('🚀 Starting real email test...');
   
   try {
-    // Create a minimal app context
-    const app = await NestFactory.createApplicationContext(AppModule);
-    
-    // Get the listener
-    const listener = app.get(UserEventsListener);
+    // Create email service directly
+    const emailService = new EmailService();
     
     console.log('📧 Sending real welcome email to alex@pipelineworkforce.com...');
     
-    // Test welcome email
-    await listener.handleAccountCreated(new AccountCreatedEvent('test-user-1'));
+    // Test welcome email template
+    await emailService.sendTemplateMail(
+      'alex@pipelineworkforce.com',
+      'Welcome to Pipeline - Test Email',
+      'welcome-email',
+      {
+        firstName: 'Alex',
+        jobsUrl: 'https://pipelineworkforce.com/jobs'
+      }
+    );
     
     console.log('✅ Email sent successfully! Check your inbox at alex@pipelineworkforce.com');
     
-    await app.close();
   } catch (error) {
     console.error('❌ Failed to send email:', error);
+    console.error('Error details:', error.message);
   }
 }
 

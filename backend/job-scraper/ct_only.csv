@@ -1,0 +1,70 @@
+source_site,search_url,role,state,city,zip_code,location_scope,location_source,parse_location?,notes,setting_type,job board type
+RydersHealth,https://www.rydershealth.com/career-opportunities/,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf,apploi
+New Haven Center for Nursing & Rehab,https://newhavennh.com/career/,ALL_MATCHING,CT,New Haven,6511,fixed,static,No,Single-site employer,snf,apploi
+Southport Center for Nursing & Rehab,https://southportnh.com/careers/,ALL_MATCHING,CT,Southport,6890,fixed,static,No,Single-site employer,snf,apploi
+Torrington Center for Nursing & Reha,https://torringtonnh.com/careers/,ALL_MATCHING,CT,Torrington,6790,fixed,static,No,Single-site employer,snf,apploi
+Waterbury Center for Nursing & Rehab,https://waterburynh.com/careers/,ALL_MATCHING,CT,Waterbury,6702,fixed,static,No,Single-site employer,snf,apploi
+West Haven Center for Nursing & Reha,https://westhavennh.com/careers/,ALL_MATCHING,CT,West Haven,6516,fixed,static,No,Single-site employer,snf,apploi
+Atlas Healthcare,https://theatlashcg.com/careers/,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf,apploi
+iCare Health Network,https://www.icarehn.com/careers/,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf,apploi
+National Healthcare Associates,https://careers-nathealthcare.icims.com/jobs/search?ss=1&searchRelation=keyword_all,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf,icims
+Athena Health Care Systems,https://athenahealthcare.com/careers/,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,mixed,apploi
+Apple Rehab,https://jobs.apploi.com/profile/apple-rehab?utm_campaign=truman&utm_medium=&utm_source=false,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf,apploi
+Genesis,https://www.genesiscareers.jobs/genesishcc/jobs,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf,custom
+Complete Care at Glendale Center LLC,https://completecareglendale.com/careers/,ALL_MATCHING,CT,Naugatuck,6770,,,,Single-site employer,snf,apploi
+Fox Hill,https://ccfoxhill.com/careers/,ALL_MATCHING,CT,Vernon,6066,,,,Single-site employer,snf,apploi
+Complete Care at Groton Regency LLC,https://ccgrotonregency.com/careers/,ALL_MATCHING,CT,Groton,6340,fixed,static,,Single-site employer,snf,apploi
+Complete Care at Harrington Court LL,https://ccharringtoncourt.com/careers/,ALL_MATCHING,CT,Colchester,6415,fixed,static,,Single-site employer,snf,apploi
+Complete Care at Meriden Center LLC,https://ccmeriden.com/careers/,ALL_MATCHING,CT,Meriden,6450,fixed,static,,Single-site employer,snf,apploi
+Kimberly Hall North,https://completecarekhn.com/careers/,ALL_MATCHING,CT,Windsor,6095,fixed,static,,Single-site employer,snf,apploi
+Kimberly Hall South Center,https://completecarekhs.com/careers/,ALL_MATCHING,CT,Windsor,6095,,,,Single-site employer,snf,apploi
+Autumn Lake,https://autumnlakehealthcare.com/careers/,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,snf,apploi
+Autumn Lake Bucks Hill,https://autumnlakebuckshill.com/career/,ALL_MATCHING,CT,Cromwell,6416,fixed,static,,Single-site employer,snf,apploi
+Autumn Lake Cromwell,https://autumnlakecromwell.com/career/,ALL_MATCHING,CT,Waterbury,6704,fixed,static,,Single-site employer,snf,apploi
+Autumn Lake New Britain,https://autumnlakenewbritain.com/career/,ALL_MATCHING,CT,New Britain,6051,fixed,static,,Single-site employer,snf,apploi
+Masonicare,https://jobs.masonicare.org/search-jobs,ALL_MATCHING,CT,,,multi,card body,Yes,Multi-location feed. Scraper must extract job title and location per post.,mixed,custom
+Advanced Center for Nursing & Rehabilitation,https://advancednh.com/careers/,ALL_MATCHING,CT,New Haven,6511,fixed,static,,Single-site employer,snf,apploi
+Amberwoods of Farmington,https://www.amberwoodsof.com/careers/,ALL_MATCHING,CT,Farmington,6032,fixed,static,,Single-site employer,snf,apploi
+Home Instead,https://www.homeinstead.com/home-care-jobs/search/?q=Connecticut,ALL_MATCHING,CT,,,state,card body,Yes,"State-level job search feed, Parse city/zip from each job for proper routing	",home_care,custom
+"Colonial Health & Rehab Center of Plainfield, LLC",https://colonialhr.com/careers/,ALL_MATCHING,CT,Plainfield,6374,fixed,static,No,Facility-specific site,snf,old most likely needs manual
+Connecticut Baptist Homes,https://www.ctbaptisthomes.org/careers,ALL_MATCHING,CT,Meriden,6450,fixed,static,No,Facility-specific site,snf,old most likely needs manual
+Elim Park Baptist Home,https://www.paycomonline.net/v4/ats/web.php/jobs?clientkey=180516033B69A146A2841F6A7865A478,ALL_MATCHING,CT,Cheshire,6410,fixed,static,No,Facility-specific site,assisted_living,paycom
+Gladeview Health Care Center,https://www.gladeviewcares.com/Employment/index.html,ALL_MATCHING,CT,Old Saybrook,6475,fixed,static,No,Facility-specific site,snf,old most likely needs manual
+Grimes Center,https://jobs.ynhhs.org/jobs?view=search&keywords=grimes&sortBy=relevance&page=1,ALL_MATCHING,CT,New Haven,6511,fixed,static,No,Facility-specific site,snf,custom
+Benchmark,https://jobs.dayforcehcm.com/en-US/benchmark/CANDIDATEPORTAL,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living,dayforce
+EPOCH,https://careers.hireology.com/epochseniorliving,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living,hireology
+VNA Care,https://careers.vnacare.org/jobs.aspx,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,home_care,custom
+Mozaic Senior Services,https://mozaicsl.applicantpool.com/jobs/,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living,applicantpool
+"Mary Wade Home, Inc., The",https://www.paycomonline.net/v4/ats/web.php/jobs?clientkey=0521B54859A716A26956A48336337782#join-talent-community,ALL_MATCHING,CT,New Haven,6513,fixed,static,No,Facility-specific site,snf,paycom
+McLean Health Center,https://mcleancare.org/careers/,ALL_MATCHING,CT,Simsbury,6070,fixed,static,No,Facility-specific site,mixed,needs manual
+The Villa at Stamford,https://stamfordvilla.org/careers/,ALL_MATCHING,CT,Stamford,6902,fixed,static,No,Single-site facility,assisted_living,apploi
+Whitney Rehabilitation Care Center,https://careers-whitneyrehab.icims.com/jobs/search?hashed=-625911698&mobile=false&width=2052&height=500&bga=true&needsRedirect=false&jan1offset=-300&jun1offset=-240,ALL_MATCHING,CT,Hamden,6517,fixed,static,No,Single-site facility,snf,icims
+Seabury Health Center,https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html?cid=e850fd5f-9193-432e-ab86-502e2790d6fe&ccId=19000101_000001&type=MP&lang=en_US,ALL_MATCHING,CT,Bloomfield,6002,fixed,static,No,Single-site facility,mixed,adp
+Meriden Health and Rehab,https://meridenrehab.com/careers/,ALL_MATCHING,CT,Meriden,6451,fixed,static,No,Single-site facility,snf,apploi
+Nathaniel Witherell,https://www.governmentjobs.com/careers/greenwichct?department%5B0%5D=NATHANIEL%20WITHERELL&sort=PositionTitle%7CAscending,ALL_MATCHING,CT,Greenwich,6830,fixed,static,No,Single-site facility,snf,custom
+Beechwood Post-Acute & Transitional Care,https://www.beechwoodrehab.net/careers,ALL_MATCHING,CT,New London,6320,fixed,static,No,Single-site facility,snf,needs manual
+Noble Horizons,https://noblehorizons.org/about/career-opportunities/,ALL_MATCHING,CT,Salisbury,6068,fixed,static,No,Single-site facility,assisted_living,"custom
+
+a little weird may need manial"
+"Notre Dame Conv. Home, Inc.",https://ndhrehab.org/careers/,ALL_MATCHING,CT,Norwich,6360,fixed,static,No,Single-site facility,snf,def needs manual
+Orange Health Care Center,http://orange-healthcare.com/website/publish/employment/employmentList.php?1,ALL_MATCHING,CT,Orange,6477,fixed,static,No,Single-site facility,snf,def needs manual
+Covenant Living,https://careers.covliving.org/global/en/search-results,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living,custom
+Saint Joseph's Living Center,https://www.sjlivingcenter.org/career-opportunities/,ALL_MATCHING,CT,Windham,6280,fixed,static,No,Single-site facility,snf,needs manual
+Skyview Rehab and Nursing,https://recruiting.paylocity.com/recruiting/jobs/All/50df8651-aa45-4266-9fa5-56fb8c912d44/Sky-View-Rehabilitation-Health-Care-Center,ALL_MATCHING,CT,Wallingford,6492,fixed,static,No,Single-site facility,snf,paylocity
+Westview Health Care Center,https://westviewhcc.com/careers.html,ALL_MATCHING,CT,Dayville,6241,fixed,static,No,Single-site facility,snf,needs manual
+Whispering Pines Rehabilitation and Nursing Center,https://wprnc.com/careers/,ALL_MATCHING,CT,East Haven,6512,fixed,static,No,Single-site facility,snf,needs manual
+LCB Senior Living,https://www.paycomonline.net/v4/ats/web.php/jobs?clientkey=E3CC4AFB47AA6C8DDFE96BF0D1042480,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living,paycom
+Harbor Chase,https://recruiting.ultipro.com/HAR1012/JobBoard/c8658d95-b2fe-7c84-9ea4-273644487cd4/?q=&o=postedDateDesc,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living,ultipro
+The Arbors & The Ivy,https://sites.hireology.com/thearborsassistedlivingresidentialcommunities/jobs.html,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living,hireology
+Oak Hill,https://jobs.dayforcehcm.com/en-US/oakhill/OakHillDefaultPostingSite,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,mixed,dayforce
+Hallkeen,https://www.hallkeen.com/careers,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living,"A bunch of PDFs
+
+weird one"
+The Retreat Assisted Living,https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html?cid=562bea23-2b6e-4477-9c0a-adc42c796344,ALL_MATCHING,CT,Hartford,6106,fixed,static,No,Single-site facility,assisted_living,adp
+ProMedica,https://www.promedica.org/promedicacareers/search-jobs?near=&facility_names=Assisted+Living+and+Memory+Care,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living,custom
+Brookdale,https://careers.brookdale.com/en/jobs.html#/search?page=1,ALL_MATCHING,,,,multi,card body,Yes,Multi-location or ATS feed; extract location per job,assisted_living,oracle
+Duncaster Retirement Community,https://workforcenow.adp.com/mascsr/default/mdf/recruitment/recruitment.html?cid=ff7523f0-dfc2-4bb0-8c7a-f3e7bd97a59e&ccId=19000101_000001&lang=en_US,ALL_MATCHING,CT,Bloomfield,6002,fixed,static,No,Single-site facility,assisted_living,adp
+Right at Home,https://www.rightathome.net/tolland/jobs,ALL_MATCHING,CT,Tolland,6084,fixed,static,No,Direct facility career page,home_care,apploi
+Bristol Health,https://www.bristolhealth.org/careers,ALL_MATCHING,CT,Bristol,6010,fixed,static,No,Direct facility career page,mixed,paycom
+Aaron Manor Nursing and Rehabilitation Center,https://aaronmanor.com/Careers.aspx,ALL_MATCHING,CT,Chester,6412,fixed,static,No,Direct facility career page,snf,apploi
+Always Best Care,https://alwaysbestcare.com/new-haven/caregivers/#Join-Our-Team,ALL_MATCHING,CT,New Haven,6510,fixed,static,No,Direct facility career page,home_care,hireology

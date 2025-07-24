@@ -3,6 +3,7 @@ import { UserEventsListener } from './user-events.listener';
 import { EmailService } from './email.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { PrismaService } from 'src/common/prisma/prisma.service';
+import { QueueService } from '../queue/queue.service';
 import {
   AccountCreatedEvent,
   JobApplyClickedNoConfirmEvent,
@@ -43,6 +44,13 @@ async function createTestingModule() {
           },
         },
       },
+      {
+        provide: QueueService,
+        useValue: {
+          addEmailJob: jest.fn(),
+          scheduleTier2Followups: jest.fn(),
+        },
+      },
     ],
   })
     .overrideProvider(EmailService)
@@ -53,13 +61,17 @@ async function createTestingModule() {
 describe('Email Automation E2E', () => {
   let listener: UserEventsListener;
   let emailService: { sendTemplateMail: jest.Mock };
+  let queueService: { addEmailJob: jest.Mock; scheduleTier2Followups: jest.Mock };
 
   beforeEach(async () => {
     jest.useFakeTimers();
     const module: TestingModule = await createTestingModule();
     listener = module.get<UserEventsListener>(UserEventsListener);
     emailService = module.get<EmailService>(EmailService) as any;
+    queueService = module.get<QueueService>(QueueService) as any;
     emailService.sendTemplateMail.mockClear();
+    queueService.addEmailJob.mockClear();
+    queueService.scheduleTier2Followups.mockClear();
   });
 
   afterEach(() => {
@@ -68,68 +80,77 @@ describe('Email Automation E2E', () => {
 
   it('should send welcome email on account creation', async () => {
     await listener.handleAccountCreated(new AccountCreatedEvent(MOCK_USER_ID));
-    expect(emailService.sendTemplateMail).toHaveBeenCalledWith(
-      MOCK_EMAIL,
-      'Welcome to Pipeline',
-      'welcome-email',
-      {}
-    );
+    expect(queueService.addEmailJob).toHaveBeenCalledWith({
+      to: MOCK_EMAIL,
+      subject: 'Welcome to Pipeline',
+      template: 'welcome-email',
+      context: {
+        firstName: 'there',
+        jobsUrl: `${process.env.FRONTEND_URL}/jobs`
+      }
+    });
+    expect(queueService.scheduleTier2Followups).toHaveBeenCalledWith(MOCK_USER_ID, MOCK_EMAIL);
   });
 
   it('should send partial signup reminder for tier2 triggers', async () => {
-    await (listener as any).scheduleNoTier2Followups(MOCK_USER_ID, MOCK_EMAIL);
-    jest.runAllTimers(); // Fast-forward all scheduled timeouts
-
-    // Flush all pending microtasks (async callbacks in setTimeout)
-    for (let i = 0; i < 10; i++) {
-      await Promise.resolve();
-    }
-
-    expect(emailService.sendTemplateMail).toHaveBeenCalledWith(
-      MOCK_EMAIL,
-      expect.any(String),
-      'partial-signup-reminder',
-      {}
-    );
+    // Test that tier2 followups are scheduled when account is created
+    await listener.handleAccountCreated(new AccountCreatedEvent(MOCK_USER_ID));
+    expect(queueService.scheduleTier2Followups).toHaveBeenCalledWith(MOCK_USER_ID, MOCK_EMAIL);
   });
 
   it('should send apply nudge email', async () => {
     await listener.handleJobApplyClickedNoConfirm(new JobApplyClickedNoConfirmEvent(MOCK_USER_ID, MOCK_JOB_ID));
-    expect(emailService.sendTemplateMail).toHaveBeenCalledWith(
-      MOCK_EMAIL,
-      'Did You Apply to This Job?',
-      'apply-nudge-email',
-      { jobId: MOCK_JOB_ID }
-    );
+    expect(queueService.addEmailJob).toHaveBeenCalledWith({
+      to: MOCK_EMAIL,
+      subject: 'Did You Apply to This Job?',
+      template: 'apply-nudge-email',
+      context: { 
+        firstName: 'there',
+        jobsUrl: `${process.env.FRONTEND_URL}/jobs`
+      }
+    });
   });
 
   it('should send local job alert email', async () => {
     await listener.handleNewJobPostedNearZip(new NewJobPostedNearZipEvent(MOCK_USER_ID, MOCK_JOB_ID));
-    expect(emailService.sendTemplateMail).toHaveBeenCalledWith(
-      MOCK_EMAIL,
-      'New Job in Your Area',
-      'local-job-alert',
-      expect.objectContaining({ jobTitle: 'Nurse', jobLink: expect.any(String) })
-    );
+    expect(queueService.addEmailJob).toHaveBeenCalledWith({
+      to: MOCK_EMAIL,
+      subject: 'New Job in Your Area',
+      template: 'local-job-alert',
+      context: { 
+        firstName: 'there',
+        city: '12345',
+        jobCount: 1,
+        cityJobsUrl: `${process.env.FRONTEND_URL}/jobs?city=${encodeURIComponent('12345')}`,
+        jobTitle: 'Nurse',
+        jobLink: 'https://pipelineworkforce.com/jobs/job1'
+      }
+    });
   });
 
   it('should send weekly digest email', async () => {
     await listener.handleIntakeComplete(new IntakeCompleteEvent(MOCK_USER_ID));
-    expect(emailService.sendTemplateMail).toHaveBeenCalledWith(
-      MOCK_EMAIL,
-      'Top 10 Jobs This Week',
-      'launch-email',
-      {}
-    );
+    expect(queueService.addEmailJob).toHaveBeenCalledWith({
+      to: MOCK_EMAIL,
+      subject: 'Top 10 Jobs This Week',
+      template: 'top_10_jobs_this_week',
+      context: {
+        firstName: 'there',
+        jobsUrl: `${process.env.FRONTEND_URL}/jobs`
+      }
+    });
   });
 
   it('should send welcome back email', async () => {
     await listener.handleReactivatedUserLogin(new ReactivatedUserLoginEvent(MOCK_USER_ID));
-    expect(emailService.sendTemplateMail).toHaveBeenCalledWith(
-      MOCK_EMAIL,
-      'Welcome Back',
-      'welcome-email',
-      {}
-    );
+    expect(queueService.addEmailJob).toHaveBeenCalledWith({
+      to: MOCK_EMAIL,
+      subject: 'Welcome Back',
+      template: 'welcome-email',
+      context: {
+        firstName: 'there',
+        jobsUrl: `${process.env.FRONTEND_URL}/jobs`
+      }
+    });
   });
 }); 
