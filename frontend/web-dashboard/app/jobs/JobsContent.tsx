@@ -1557,25 +1557,7 @@ export default function JobsPage() {
                         </div>
                       )}
 
-                      {/* Requirements */}
-                      {selectedJob.requirements && (
-                        <div className="mb-6" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
-                          <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir break-all">
-                            Requirements
-                          </h3>
-                          <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
-                            {Array.isArray(selectedJob.requirements) ? (
-                              <ul className="list-disc pl-5 space-y-2">
-                                {selectedJob.requirements.map((req, index) => (
-                                  <li key={index} className="break-all whitespace-pre-wrap max-w-full" style={{wordBreak: 'break-word'}}>{req}</li>
-                                ))}
-                              </ul>
-                            ) : (
-                              <p className="break-all whitespace-pre-wrap max-w-full" style={{wordBreak: 'break-word'}}>{selectedJob.requirements}</p>
-                            )}
-                          </div>
-                        </div>
-                      )}
+
                       
                       {/* Extra scroll space */}
                       <div className="h-24"></div>

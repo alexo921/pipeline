@@ -57,26 +57,57 @@ export default function JobModal({ job, onClose }: JobModalProps) {
       return;
     }
 
-    if (!job.url) {
+    // Use job_url if available, otherwise fall back to url
+    const applyUrl = job.job_url || job.url;
+    
+    if (!applyUrl) {
       alert('Application URL not available for this job.');
       return;
     }
 
-    window.open(job.url, '_blank', 'noopener,noreferrer');
-  };
-
-  const formatRequirements = (requirements: string[] | string | undefined) => {
-    if (!requirements) return [];
-    if (typeof requirements === 'string') {
-      // Try to split by common delimiters
-      return requirements.split(/[•\n\r]/).filter(req => req.trim().length > 0).map(req => req.trim());
-    }
-    return requirements;
+    window.open(applyUrl, '_blank', 'noopener,noreferrer');
   };
 
   const formatDescription = (description: string) => {
+    console.log('Original description:', description.substring(0, 200));
+    
+    // More aggressive HTML stripping
+    let cleaned = description
+      // Remove all HTML tags and their attributes
+      .replace(/<[^>]*>/g, '')
+      // Remove HTML entities
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&rsquo;/g, "'")
+      .replace(/&lsquo;/g, "'")
+      .replace(/&rdquo;/g, '"')
+      .replace(/&ldquo;/g, '"')
+      .replace(/&mdash;/g, '—')
+      .replace(/&ndash;/g, '–')
+      .replace(/&hellip;/g, '...')
+      .replace(/&copy;/g, '©')
+      .replace(/&reg;/g, '®')
+      .replace(/&trade;/g, '™')
+      // Remove any remaining HTML-like patterns
+      .replace(/class="[^"]*"/g, '')
+      .replace(/style="[^"]*"/g, '')
+      .replace(/id="[^"]*"/g, '')
+      .replace(/lang="[^"]*"/g, '')
+      .replace(/mso-[^"]*="[^"]*"/g, '')
+      .replace(/font-family:[^;]*;/g, '')
+      .replace(/font-size:[^;]*;/g, '')
+      .replace(/line-height:[^;]*;/g, '')
+      .replace(/color:[^;]*;/g, '')
+      .replace(/background:[^;]*;/g, '');
+    
+    console.log('After aggressive HTML stripping:', cleaned.substring(0, 200));
+    
     // Clean up description and format it nicely
-    return description
+    cleaned = cleaned
       .replace(/Skip to content/g, '')
       .replace(/Back to search/g, '')
       .replace(/EASY APPLY.*?Apply Now/g, '')
@@ -87,6 +118,10 @@ export default function JobModal({ job, onClose }: JobModalProps) {
       .replace(/Benefits:/g, '\n\nBenefits:')
       .replace(/\s+/g, ' ')
       .trim();
+    
+    console.log('Final cleaned description:', cleaned.substring(0, 200));
+    
+    return cleaned;
   };
 
   // Tag color function to match main page
@@ -140,6 +175,33 @@ export default function JobModal({ job, onClose }: JobModalProps) {
               {job.salary && job.salary.trim() !== '' && job.salary.trim().toLowerCase() !== 'salary not specified' && (
                 <p className="text-[16px] text-[#01253F] font-avenir">{job.salary}</p>
               )}
+              
+              {/* Rich data info */}
+              <div className="mt-3 space-y-1">
+                {job.date_posted && (
+                  <p className="text-sm text-gray-600">
+                    Posted: {new Date(job.date_posted).toLocaleDateString()}
+                  </p>
+                )}
+                {job.employment_type && (
+                  <p className="text-sm text-gray-600">
+                    Employment: {Array.isArray(job.employment_type) 
+                      ? job.employment_type.map(t => t.replace('_', ' ')).join(', ')
+                      : job.employment_type.replace('_', ' ')
+                    }
+                  </p>
+                )}
+                {job.industry && (
+                  <p className="text-sm text-gray-600">
+                    Industry: {job.industry}
+                  </p>
+                )}
+                {job.direct_apply && (
+                  <p className="text-sm text-green-600 font-medium">
+                    ✓ Direct Apply Available
+                  </p>
+                )}
+              </div>
             </div>
             <button
               onClick={onClose}
@@ -184,33 +246,17 @@ export default function JobModal({ job, onClose }: JobModalProps) {
                   Job Description
                 </h3>
                 <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
-                  {formatDescription(job.description).split('\n').map((paragraph, index) => (
-                    paragraph.trim() && (
-                      <p key={index} className="mb-3 last:mb-0 leading-relaxed">
-                        {paragraph.trim()}
-                      </p>
-                    )
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Requirements */}
-            {job.requirements && (
-              <div>
-                <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir">
-                  Requirements
-                </h3>
-                <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
-                  {Array.isArray(job.requirements) ? (
-                    <ul className="list-disc pl-5 space-y-2">
-                      {formatRequirements(job.requirements).map((req, index) => (
-                        <li key={index} className="leading-relaxed">{req}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="leading-relaxed">{job.requirements}</p>
-                  )}
+                  {(() => {
+                    const formattedDescription = formatDescription(job.description);
+                    console.log('Formatted description being rendered:', formattedDescription.substring(0, 200));
+                    return formattedDescription.split('\n').map((paragraph, index) => (
+                      paragraph.trim() && (
+                        <p key={index} className="mb-3 last:mb-0 leading-relaxed">
+                          {paragraph.trim()}
+                        </p>
+                      )
+                    ));
+                  })()}
                 </div>
               </div>
             )}

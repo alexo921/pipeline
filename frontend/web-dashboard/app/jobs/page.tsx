@@ -14,6 +14,7 @@ const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
     
     // List of all enhanced JSON files to load
     const jsonFiles = [
+      '/improved_ct_jobs_20250725_054659.json', // Load this file FIRST
       '/live_data.json',
       '/all_ct_jobs_20250721_232811.json',
       '/fixed_apploi_jobs.json',
@@ -43,7 +44,8 @@ const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
     console.log(`Total jobs loaded: ${allJobs.length}`);
     
     // Transform the raw job data to generate tags and clean up the data
-    const transformedJobs = transformJobData(allJobs, shouldShuffle);
+    // Don't shuffle - keep the order as loaded (improved_ct_jobs first)
+    const transformedJobs = transformJobData(allJobs, false);
     console.log(`Total jobs after transformation: ${transformedJobs.length}`);
     
     // Debug: Check for jobs with "morning" content
@@ -507,16 +509,26 @@ const transformJobData = (rawJobs: Record<string, unknown>[], shouldShuffle: boo
     .map((job, index) => {
       const title = (job.title as string) || 'Unknown Position';
       const description = (job.description as string) || '';
-      const url = (job.url as string) || '';
-      const company = (job.company as string) || '';
+      const url = (job.url as string) || (job.job_url as string) || '';
+      const company = (job.company as string) || (job.organization_name as string) || '';
       let location = (job.location as string) || '';
+      
       // Extract city, state from location
       const { cityState, stateOnly } = extractCityState(location);
       location = cityState || stateOnly || '';
       // If not parseable, hide location
       if (!cityState && !stateOnly) location = '';
-      // Enhanced salary logic - check both title and description
+      
+      // Enhanced salary logic - check multiple sources
       let salary = (job.salary_range as string) || (job.salary as string) || '';
+      
+      // Check for base_salary from rich data
+      if (!salary && job.basesalary) {
+        const baseSalary = job.basesalary as any;
+        if (baseSalary.value) {
+          salary = `$${baseSalary.value}/hr`;
+        }
+      }
       
       // First try to extract valid salary from title
       if (!salary || isSignOnBonus(salary)) {
@@ -573,6 +585,30 @@ const transformJobData = (rawJobs: Record<string, unknown>[], shouldShuffle: boo
         }
       }
       
+      // Extract rich data fields
+      const richData = {
+        job_url: job.job_url as string,
+        date_posted: job.dateposted as string || job.date_posted as string,
+        employment_type: job.employmenttype as string[] | string,
+        base_salary: job.basesalary as any,
+        industry: job.industry as string,
+        direct_apply: job.directapply as boolean,
+        education_requirements: job.educationrequirements as any,
+        organization_logo: job.organization_logo as string || (job.hiringorganization as any)?.logo,
+        organization_name: job.organization_name as string || (job.hiringorganization as any)?.name,
+        organization_website: job.organization_sameas as string || (job.hiringorganization as any)?.sameAs,
+        address: {
+          city: job.address_addresslocality as string || (job.joblocation as any)?.address?.addressLocality,
+          state: job.address_addressregion as string || (job.joblocation as any)?.address?.addressRegion,
+          zip_code: job.address_postalcode as string || (job.joblocation as any)?.address?.postalCode,
+          street_address: job.address_streetaddress as string || (job.joblocation as any)?.address?.streetAddress,
+          latitude: job.address_latitude as string || (job.joblocation as any)?.address?.latitude,
+          longitude: job.address_longitude as string || (job.joblocation as any)?.address?.longitude,
+        },
+        scraped_at: job.scraped_at as string,
+        source_url: job.source_url as string,
+      };
+      
       return {
         id: (job.id as string) || `job_${index + 1}`,
         title: truncatedTitle,
@@ -583,7 +619,8 @@ const transformJobData = (rawJobs: Record<string, unknown>[], shouldShuffle: boo
         overview: cleanJobCardContent((job.overview as string) || 'Community Focused. Care Driven.', 50),
         description: description + (movedToDescription ? `\n\n${movedToDescription}` : ''), // Append moved description to description
         requirements,
-        tags
+        tags,
+        ...richData // Spread all the rich data fields
       };
     })
     .filter(job => {
@@ -995,18 +1032,6 @@ export default function JobsPage() {
   // Get unique companies for company filter
   const uniqueCompanies = Array.from(new Set(jobs.map(job => job.company).filter(Boolean))).sort();
 
-  // Enhanced filter state
-  const [salaryRange, setSalaryRange] = useState<string>('');
-  const [experienceLevel, setExperienceLevel] = useState<string>('');
-  const [selectedCertifications, setSelectedCertifications] = useState<string[]>([]);
-  const [selectedSpecialties, setSelectedSpecialties] = useState<string[]>([]);
-  const [selectedBenefits, setSelectedBenefits] = useState<string[]>([]);
-  const [selectedWorkSchedules, setSelectedWorkSchedules] = useState<string[]>([]);
-  const [selectedCompany, setSelectedCompany] = useState<string>('');
-  const [distanceRadius, setDistanceRadius] = useState<number>(0);
-  const [datePosted, setDatePosted] = useState<string>('');
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
-
   // Available locations - dynamically generated from loaded data
   const allLocations = Array.from(new Set(jobs.map(job => job.location))).sort();
 
@@ -1017,6 +1042,15 @@ export default function JobsPage() {
         location.toLowerCase() !== locationInput.toLowerCase()
       ).slice(0, 5) // Limit to 5 suggestions
     : [];
+
+  // --- ENHANCED SEARCH: Map shift keywords to time-based shift tags ---
+  const shiftKeywordMap: Record<string, string[]> = {
+    'morning': ['morning', '7am-3pm', '6am-2pm', '8am-4pm', '9am-5pm', '12-hour day', 'day shift'],
+    'afternoon': ['afternoon', '3pm-11pm', '2pm-10pm', '4pm-12am'],
+    'evening': ['evening', '5pm-1am', '4pm-12am'],
+    'night': ['night', 'overnight', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard'],
+    'overnight': ['overnight', 'night', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard']
+  };
 
   // Filter jobs based on search, location, and active filters
   useEffect(() => {
@@ -1107,41 +1141,48 @@ export default function JobsPage() {
         const roleTerms = searchTerms.filter(term => !shiftTimeTerms.includes(term));
         const shiftTerms = searchTerms.filter(term => shiftTimeTerms.includes(term));
         
+        // Expand shift terms using the shiftKeywordMap
+        const expandedShiftTerms = shiftTerms.flatMap(term => {
+          const mapped = shiftKeywordMap[term];
+          return mapped ? [term, ...mapped] : [term];
+        });
+        
         if (searchTerm === 'morning') {
           console.log('🔍 Search analysis for "morning":');
           console.log('🔍 Role terms:', roleTerms);
-          console.log('🔍 Shift terms:', shiftTerms);
+          console.log('🔍 Original shift terms:', shiftTerms);
+          console.log('🔍 Expanded shift terms:', expandedShiftTerms);
         }
-        
+
         // Check if search terms match any specific role category
         let matchedRole = null;
         
         // If we have role terms, try to match them
         if (roleTerms.length > 0) {
-          // Special handling for exact matches to avoid cross-category confusion
+        // Special handling for exact matches to avoid cross-category confusion
           if (roleTerms.length === 1) {
             const singleTerm = roleTerms[0];
-            if (singleTerm === 'rn' || singleTerm === 'lpn') {
-              matchedRole = 'nurse';
-            } else if (singleTerm === 'cna') {
-              matchedRole = 'cna';
-            } else if (singleTerm === 'pt' || singleTerm === 'ot' || singleTerm === 'st' || singleTerm === 'rt') {
-              matchedRole = 'therapist';
-            } else if (singleTerm === 'hha') {
-              matchedRole = 'aide';
-            }
+          if (singleTerm === 'rn' || singleTerm === 'lpn') {
+            matchedRole = 'nurse';
+          } else if (singleTerm === 'cna') {
+            matchedRole = 'cna';
+          } else if (singleTerm === 'pt' || singleTerm === 'ot' || singleTerm === 'st' || singleTerm === 'rt') {
+            matchedRole = 'therapist';
+          } else if (singleTerm === 'hha') {
+            matchedRole = 'aide';
           }
-          
-          // If no exact match, check for general role matches
-          if (!matchedRole) {
-            for (const [roleKey, roleData] of Object.entries(roleCategories)) {
+        }
+        
+        // If no exact match, check for general role matches
+        if (!matchedRole) {
+          for (const [roleKey, roleData] of Object.entries(roleCategories)) {
               const hasPrimaryMatch = roleTerms.some(term => 
-                roleData.primary.some(primary => primary === term || primary.includes(term) || term.includes(primary))
-              );
-              
-              if (hasPrimaryMatch) {
-                matchedRole = roleKey;
-                break;
+              roleData.primary.some(primary => primary === term || primary.includes(term) || term.includes(primary))
+            );
+            
+            if (hasPrimaryMatch) {
+              matchedRole = roleKey;
+              break;
               }
             }
           }
@@ -1210,10 +1251,10 @@ export default function JobsPage() {
           
           // If role matches, check for shift terms if any
           if (roleMatches) {
-            if (shiftTerms.length === 0) {
+            if (expandedShiftTerms.length === 0) {
               // No shift terms specified, so any job of this role matches
               matchesSearch = true;
-            } else {
+        } else {
               // Check if the job contains any of the specified shift terms
               const jobTags = job.tags || [];
               const tagLabels = jobTags.map(tag => tag.label.toLowerCase()).join(' ');
@@ -1223,12 +1264,12 @@ export default function JobsPage() {
                 tagLabels
               ].join(' ');
               
-              const hasShiftMatch = shiftTerms.some(shiftTerm => 
+              const hasShiftMatch = expandedShiftTerms.some(shiftTerm => 
                 comprehensiveJobText.includes(shiftTerm)
               );
               
               if (searchTerm === 'morning') {
-                console.log('🔍 Role matches, checking shift terms:', shiftTerms);
+                console.log('🔍 Role matches, checking shift terms:', expandedShiftTerms);
                 console.log('🔍 Shift match found:', hasShiftMatch);
               }
               
@@ -1246,14 +1287,14 @@ export default function JobsPage() {
           }
           
           // For shift-only searches, we want to find any job with that shift
-          if (shiftTerms.length > 0 && roleTerms.length === 0) {
+          if (expandedShiftTerms.length > 0 && roleTerms.length === 0) {
             if (searchTerm === 'morning') {
               console.log('🔍 Shift-only search for "morning"');
             }
             
             const jobTitle = job.title.toLowerCase();
             const jobDescription = job.description?.toLowerCase() || '';
-            const jobTags = job.tags || [];
+                const jobTags = job.tags || [];
             const tagLabels = jobTags.map(tag => tag.label.toLowerCase()).join(' ');
             
             // Create comprehensive text for shift searching
@@ -1264,7 +1305,7 @@ export default function JobsPage() {
             ].join(' ');
             
             // Check if any shift term is found
-            matchesSearch = shiftTerms.some(shiftTerm => {
+            matchesSearch = expandedShiftTerms.some(shiftTerm => {
               if (searchTerm === 'morning') {
                 console.log('🔍 Checking shift term "' + shiftTerm + '" in job:', job.title);
                 console.log('🔍 Found in comprehensive text:', comprehensiveJobText.includes(shiftTerm));
@@ -1303,7 +1344,7 @@ export default function JobsPage() {
             
             // COMPREHENSIVE: Check if ANY search term is found anywhere in the job
             matchesSearch = searchTerms.some(term => {
-              // Debug logging for shift-related searches
+              // Debug logging for shift-related searchesz
               if (['morning', 'evening', 'night', 'shift', '7am', '8am', '9am', '3pm', '11pm'].includes(term)) {
                 console.log('🔍 Searching for "' + term + '" in job:', job.title);
                 console.log('📝 Job description contains "' + term + '":', jobDescription.includes(term));
@@ -1311,6 +1352,7 @@ export default function JobsPage() {
                 console.log('📋 Tag labels contain "' + term + '":', tagLabels.includes(term));
                 console.log('📄 Comprehensive text contains "' + term + '":', comprehensiveJobText.includes(term));
                 
+
                 // Show the first 200 characters of comprehensive text for debugging
                 console.log('📄 Sample comprehensive text:', comprehensiveJobText.substring(0, 200));
               }
@@ -1339,14 +1381,14 @@ export default function JobsPage() {
                 // Tag type matching (e.g., "shift", "employment", "setting")
                 if (tagType.includes(term)) {
                   return true;
-                }
+                  }
+                  
+                  return false;
+                });
                 
-                return false;
-              });
-              
               if (hasMatchingTag) {
-                return true;
-              }
+                  return true;
+                }
               
               // Individual field matching for better precision
               if (jobTitle.includes(term)) {
@@ -1466,157 +1508,8 @@ export default function JobsPage() {
                                 return (job.tags || []).some(tag => tag.label === filter.label);
                               }
                             });
-
-      // Salary range filtering
-      const matchesSalary = !salaryRange || (() => {
-        const jobSalary = job.salary?.toLowerCase() || '';
-        const jobDescription = job.description?.toLowerCase() || '';
-        const allSalaryText = `${jobSalary} ${jobDescription}`;
-        
-        const salaryRanges = {
-          'Under $20/hour': () => /(\$1[0-9]|\$20|\$1[0-9]\.\d{2}|\$20\.\d{2})/i.test(allSalaryText),
-          '$20-25/hour': () => /(\$2[0-4]|\$25|\$2[0-4]\.\d{2}|\$25\.\d{2})/i.test(allSalaryText),
-          '$25-30/hour': () => /(\$2[5-9]|\$30|\$2[5-9]\.\d{2}|\$30\.\d{2})/i.test(allSalaryText),
-          '$30-35/hour': () => /(\$3[0-4]|\$35|\$3[0-4]\.\d{2}|\$35\.\d{2})/i.test(allSalaryText),
-          '$35-40/hour': () => /(\$3[5-9]|\$40|\$3[5-9]\.\d{2}|\$40\.\d{2})/i.test(allSalaryText),
-          '$40-50/hour': () => /(\$4[0-9]|\$50|\$4[0-9]\.\d{2}|\$50\.\d{2})/i.test(allSalaryText),
-          '$50+/hour': () => /(\$5[0-9]|\$[6-9][0-9]|\$[0-9]{3,}|\$5[0-9]\.\d{2}|\$[6-9][0-9]\.\d{2}|\$[0-9]{3,}\.\d{2})/i.test(allSalaryText)
-        };
-        
-        return salaryRanges[salaryRange as keyof typeof salaryRanges]?.() || false;
-      })();
-
-      // Experience level filtering
-      const matchesExperience = !experienceLevel || (() => {
-        const jobDescription = job.description?.toLowerCase() || '';
-        const jobTitle = job.title?.toLowerCase() || '';
-        const allText = `${jobDescription} ${jobTitle}`;
-        
-        const experiencePatterns = {
-          'Entry Level': () => /(entry level|new grad|recent graduate|no experience|entry|beginner|trainee)/i.test(allText),
-          '1-2 years': () => /(1-2 years|1 to 2 years|one to two years|1 year|2 years)/i.test(allText),
-          '3-5 years': () => /(3-5 years|3 to 5 years|three to five years|3 years|4 years|5 years)/i.test(allText),
-          '5-10 years': () => /(5-10 years|5 to 10 years|five to ten years|6 years|7 years|8 years|9 years|10 years)/i.test(allText),
-          '10+ years': () => /(10\+ years|10\+ years|ten plus years|11 years|12 years|15 years|20 years)/i.test(allText)
-        };
-        
-        return experiencePatterns[experienceLevel as keyof typeof experiencePatterns]?.() || false;
-      })();
-
-      // Certification filtering
-      const matchesCertifications = selectedCertifications.length === 0 || (() => {
-        const jobDescription = job.description?.toLowerCase() || '';
-        const jobTitle = job.title?.toLowerCase() || '';
-        const allText = `${jobDescription} ${jobTitle}`;
-        
-        return selectedCertifications.some(cert => {
-          const certPatterns = {
-            'RN License': /(rn|registered nurse|rn license)/i,
-            'LPN License': /(lpn|lvn|licensed practical nurse|licensed vocational nurse|lpn license)/i,
-            'CNA Certification': /(cna|certified nursing assistant|cna certification)/i,
-            'BLS/CPR': /(bls|cpr|basic life support|cardiopulmonary resuscitation)/i,
-            'ACLS': /(acls|advanced cardiac life support)/i,
-            'PALS': /(pals|pediatric advanced life support)/i,
-            'First Aid': /(first aid)/i,
-            'Medication Aide': /(medication aide|med aide)/i,
-            'Wound Care': /(wound care|wound care certification)/i,
-            'IV Certification': /(iv|intravenous|iv certification)/i,
-            'Phlebotomy': /(phlebotomy|phlebotomist)/i,
-            'EKG Certification': /(ekg|ecg|ekg certification|ecg certification)/i
-          };
-          
-          return certPatterns[cert as keyof typeof certPatterns]?.test(allText) || false;
-        });
-      })();
-
-      // Specialty filtering
-      const matchesSpecialties = selectedSpecialties.length === 0 || (() => {
-        const jobDescription = job.description?.toLowerCase() || '';
-        const jobTitle = job.title?.toLowerCase() || '';
-        const allText = `${jobDescription} ${jobTitle}`;
-        
-        return selectedSpecialties.some(specialty => {
-          const specialtyPatterns = {
-            'ICU/CCU': /(icu|ccu|intensive care|critical care)/i,
-            'Emergency Room': /(er|emergency|emergency room|ed|emergency department)/i,
-            'Operating Room': /(or|operating room|surgery|surgical)/i,
-            'Pediatrics': /(pediatric|pediatrics|pedi|children|child)/i,
-            'Geriatrics': /(geriatric|geriatrics|elderly|senior)/i,
-            'Oncology': /(oncology|oncology|cancer)/i,
-            'Cardiology': /(cardiology|cardiac|heart)/i,
-            'Neurology': /(neurology|neurological|brain)/i,
-            'Psychiatric': /(psychiatric|psych|mental health|behavioral)/i,
-            'Rehabilitation': /(rehab|rehabilitation|physical therapy|pt)/i,
-            'Home Health': /(home health|home care|home visit)/i,
-            'Hospice': /(hospice|end of life|palliative)/i,
-            'Dialysis': /(dialysis|renal|kidney)/i,
-            'Wound Care': /(wound care|wound|ulcer)/i,
-            'Infection Control': /(infection control|infection prevention)/i
-          };
-          
-          return specialtyPatterns[specialty as keyof typeof specialtyPatterns]?.test(allText) || false;
-        });
-      })();
-
-      // Benefits filtering
-      const matchesBenefits = selectedBenefits.length === 0 || (() => {
-        const jobDescription = job.description?.toLowerCase() || '';
-        const allText = jobDescription;
-        
-        return selectedBenefits.some(benefit => {
-          const benefitPatterns = {
-            'Health Insurance': /(health insurance|medical insurance|health benefits)/i,
-            'Dental Insurance': /(dental insurance|dental benefits)/i,
-            'Vision Insurance': /(vision insurance|vision benefits)/i,
-            '401(k)': /(401k|401\(k\)|retirement)/i,
-            'Paid Time Off': /(pto|paid time off|vacation|holiday)/i,
-            'Sick Leave': /(sick leave|sick time)/i,
-            'Holiday Pay': /(holiday pay|holiday bonus)/i,
-            'Overtime Pay': /(overtime|ot pay)/i,
-            'Shift Differential': /(shift differential|differential pay)/i,
-            'Tuition Reimbursement': /(tuition reimbursement|education reimbursement)/i,
-            'Continuing Education': /(continuing education|ce|ceus)/i,
-            'Employee Discounts': /(employee discount|discount)/i,
-            'Life Insurance': /(life insurance)/i,
-            'Disability Insurance': /(disability insurance)/i
-          };
-          
-          return benefitPatterns[benefit as keyof typeof benefitPatterns]?.test(allText) || false;
-        });
-      })();
-
-      // Work schedule filtering
-      const matchesWorkSchedules = selectedWorkSchedules.length === 0 || (() => {
-        const jobDescription = job.description?.toLowerCase() || '';
-        const jobTitle = job.title?.toLowerCase() || '';
-        const allText = `${jobDescription} ${jobTitle}`;
-        
-        return selectedWorkSchedules.some(schedule => {
-          const schedulePatterns = {
-            '8-Hour Shifts': /(8 hour|8-hour|8 hr)/i,
-            '12-Hour Shifts': /(12 hour|12-hour|12 hr)/i,
-            'Weekends Only': /(weekend|weekends only)/i,
-            'Weekdays Only': /(weekday|weekdays only|monday to friday)/i,
-            'Rotating Shifts': /(rotating|rotation)/i,
-            'On-Call': /(on call|on-call)/i,
-            'Per Diem': /(per diem|per-diem)/i,
-            'Travel Assignments': /(travel|traveling)/i,
-            'Local Contract': /(local contract|contract)/i
-          };
-          
-          return schedulePatterns[schedule as keyof typeof schedulePatterns]?.test(allText) || false;
-        });
-      })();
-
-      // Company filtering
-      const matchesCompany = !selectedCompany || job.company?.toLowerCase().includes(selectedCompany.toLowerCase());
-
-      // Date posted filtering (if we had date data)
-      const matchesDatePosted = !datePosted || true; // Placeholder for date filtering
-
-      return matchesSearch && matchesLocation && matchesFilters && matchesSalary && 
-             matchesExperience && matchesCertifications && matchesSpecialties && 
-             matchesBenefits && matchesWorkSchedules && matchesCompany && matchesDatePosted;
+      
+      return matchesSearch && matchesLocation && matchesFilters;
     });
     
     console.log('📊 Search results:', {
@@ -1628,7 +1521,7 @@ export default function JobsPage() {
     
     setFilteredJobs(filtered);
     setCurrentPage(1); // Reset to first page when filters change
-  }, [jobs, searchTerm, locationInput, activeFilters, salaryRange, experienceLevel, selectedCertifications, selectedSpecialties, selectedBenefits, selectedWorkSchedules, selectedCompany, datePosted]);
+  }, [jobs, searchTerm, locationInput, activeFilters]);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
@@ -1742,80 +1635,6 @@ export default function JobsPage() {
       setHasUserAppliedFilters(searchTerm.trim() !== '' || locationInput.trim() !== '' || newFilters.length > 0);
       return newFilters;
     });
-  };
-
-  // Enhanced filter handlers
-  const handleSalaryRangeChange = (range: string) => {
-    setSalaryRange(range === salaryRange ? '' : range);
-    setHasUserAppliedFilters(true);
-  };
-
-  const handleExperienceLevelChange = (level: string) => {
-    setExperienceLevel(level === experienceLevel ? '' : level);
-    setHasUserAppliedFilters(true);
-  };
-
-  const handleCertificationToggle = (cert: string) => {
-    setSelectedCertifications(prev => {
-      const newCerts = prev.includes(cert) 
-        ? prev.filter(c => c !== cert)
-        : [...prev, cert];
-      setHasUserAppliedFilters(true);
-      return newCerts;
-    });
-  };
-
-  const handleSpecialtyToggle = (specialty: string) => {
-    setSelectedSpecialties(prev => {
-      const newSpecialties = prev.includes(specialty) 
-        ? prev.filter(s => s !== specialty)
-        : [...prev, specialty];
-      setHasUserAppliedFilters(true);
-      return newSpecialties;
-    });
-  };
-
-  const handleBenefitToggle = (benefit: string) => {
-    setSelectedBenefits(prev => {
-      const newBenefits = prev.includes(benefit) 
-        ? prev.filter(b => b !== benefit)
-        : [...prev, benefit];
-      setHasUserAppliedFilters(true);
-      return newBenefits;
-    });
-  };
-
-  const handleWorkScheduleToggle = (schedule: string) => {
-    setSelectedWorkSchedules(prev => {
-      const newSchedules = prev.includes(schedule) 
-        ? prev.filter(s => s !== schedule)
-        : [...prev, schedule];
-      setHasUserAppliedFilters(true);
-      return newSchedules;
-    });
-  };
-
-  const handleCompanyChange = (company: string) => {
-    setSelectedCompany(company === selectedCompany ? '' : company);
-    setHasUserAppliedFilters(true);
-  };
-
-  const handleDatePostedChange = (date: string) => {
-    setDatePosted(date === datePosted ? '' : date);
-    setHasUserAppliedFilters(true);
-  };
-
-  const clearAllFilters = () => {
-    setActiveFilters([]);
-    setSalaryRange('');
-    setExperienceLevel('');
-    setSelectedCertifications([]);
-    setSelectedSpecialties([]);
-    setSelectedBenefits([]);
-    setSelectedWorkSchedules([]);
-    setSelectedCompany('');
-    setDatePosted('');
-    setHasUserAppliedFilters(false);
   };
 
   const handleJobClick = (job: Job) => {
@@ -1959,15 +1778,15 @@ export default function JobsPage() {
   // Calculate string similarity using Levenshtein distance
   const calculateStringSimilarity = (str1: string, str2: string): number => {
     const matrix = [];
-    
+
     for (let i = 0; i <= str2.length; i++) {
       matrix[i] = [i];
     }
-    
+
     for (let j = 0; j <= str1.length; j++) {
       matrix[0][j] = j;
     }
-    
+
     for (let i = 1; i <= str2.length; i++) {
       for (let j = 1; j <= str1.length; j++) {
         if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
@@ -1981,7 +1800,7 @@ export default function JobsPage() {
         }
       }
     }
-    
+
     const maxLength = Math.max(str1.length, str2.length);
     return maxLength === 0 ? 1 : (maxLength - matrix[str2.length][str1.length]) / maxLength;
   };
@@ -2221,33 +2040,7 @@ export default function JobsPage() {
                   onChange={(e) => handleSearch(e.target.value)}
                   className="flex-1 text-base lg:text-[20px] font-bold text-[#7691A4] placeholder-[#7691A4] bg-transparent outline-none font-avenir"
                 />
-                {/* Test button for debugging */}
-                <button
-                  onClick={() => {
-                    console.log('🧪 Test button clicked');
-                    console.log('🧪 Testing first 3 jobs for "morning":');
-                    jobs.slice(0, 3).forEach((job, index) => {
-                      const text = `${job.title} ${job.description} ${job.tags?.map(t => t.label).join(' ')}`.toLowerCase();
-                      console.log(`🧪 Job ${index + 1}:`, {
-                        title: job.title,
-                        containsMorning: text.includes('morning'),
-                        tags: job.tags?.map(t => t.label)
-                      });
-                    });
-                    
-                    // Test with a simple term that should definitely be found
-                    console.log('🧪 Testing search for "nurse" (should find many results):');
-                    handleSearch('nurse');
-                    
-                    setTimeout(() => {
-                      console.log('🧪 Now testing search for "morning":');
-                      handleSearch('morning');
-                    }, 1000);
-                  }}
-                  className="ml-2 px-3 py-1 bg-blue-500 text-white rounded text-sm"
-                >
-                  Test
-                </button>
+
               </div>
             </div>
 
@@ -2310,18 +2103,7 @@ export default function JobsPage() {
               {isFiltersOpen && (
                 <div className="absolute top-full mt-2 right-0 bg-white rounded-2xl shadow-lg border border-gray-200 min-w-[300px] max-w-[400px] z-10 p-4 max-h-[80vh] overflow-y-auto">
                   <div className="space-y-4">
-                    {/* Header with clear all button */}
-                    <div className="flex justify-between items-center border-b border-gray-200 pb-2">
-                      <h3 className="font-bold text-[#01253F] font-avenir">Advanced Filters</h3>
-                      <button
-                        onClick={clearAllFilters}
-                        className="text-sm text-[#2466D0] hover:text-[#1d4ed8] font-avenir"
-                      >
-                        Clear All
-                      </button>
-                    </div>
-
-                    {/* Basic Filters */}
+                    {/* Basic Filters Only */}
                     <div>
                       <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Job Setting</h4>
                       <div className="space-y-2 max-h-32 overflow-y-auto">
@@ -2338,7 +2120,6 @@ export default function JobsPage() {
                         ))}
                       </div>
                     </div>
-                    
                     <div>
                       <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Employment Type</h4>
                       <div className="space-y-2 max-h-32 overflow-y-auto">
@@ -2355,7 +2136,6 @@ export default function JobsPage() {
                         ))}
                       </div>
                     </div>
-
                     <div>
                       <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Shift</h4>
                       <div className="space-y-2">
@@ -2372,135 +2152,6 @@ export default function JobsPage() {
                         ))}
                       </div>
                     </div>
-
-                    {/* Salary Range */}
-                    <div>
-                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Salary Range</h4>
-                      <div className="space-y-2">
-                        {filterOptions.salary_ranges.map((range) => (
-                          <label key={range} className="flex items-center">
-                            <input
-                              type="radio"
-                              name="salaryRange"
-                              checked={salaryRange === range}
-                              onChange={() => handleSalaryRangeChange(range)}
-                              className="mr-2 accent-[#2466D0]"
-                            />
-                            <span className="text-[#7691A4] font-avenir text-sm">{range}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Experience Level */}
-                    <div>
-                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Experience Level</h4>
-                      <div className="space-y-2">
-                        {filterOptions.experience_levels.map((level) => (
-                          <label key={level} className="flex items-center">
-                            <input
-                              type="radio"
-                              name="experienceLevel"
-                              checked={experienceLevel === level}
-                              onChange={() => handleExperienceLevelChange(level)}
-                              className="mr-2 accent-[#2466D0]"
-                            />
-                            <span className="text-[#7691A4] font-avenir text-sm">{level}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Certifications */}
-                    <div>
-                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Certifications</h4>
-                      <div className="space-y-2 max-h-32 overflow-y-auto">
-                        {filterOptions.certifications.map((cert) => (
-                          <label key={cert} className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={selectedCertifications.includes(cert)}
-                              onChange={() => handleCertificationToggle(cert)}
-                              className="mr-2 accent-[#2466D0]"
-                            />
-                            <span className="text-[#7691A4] font-avenir text-sm">{cert}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Specialties */}
-                    <div>
-                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Specialties</h4>
-                      <div className="space-y-2 max-h-32 overflow-y-auto">
-                        {filterOptions.specialties.map((specialty) => (
-                          <label key={specialty} className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={selectedSpecialties.includes(specialty)}
-                              onChange={() => handleSpecialtyToggle(specialty)}
-                              className="mr-2 accent-[#2466D0]"
-                            />
-                            <span className="text-[#7691A4] font-avenir text-sm">{specialty}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Benefits */}
-                    <div>
-                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Benefits</h4>
-                      <div className="space-y-2 max-h-32 overflow-y-auto">
-                        {filterOptions.benefits.map((benefit) => (
-                          <label key={benefit} className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={selectedBenefits.includes(benefit)}
-                              onChange={() => handleBenefitToggle(benefit)}
-                              className="mr-2 accent-[#2466D0]"
-                            />
-                            <span className="text-[#7691A4] font-avenir text-sm">{benefit}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Work Schedules */}
-                    <div>
-                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Work Schedule</h4>
-                      <div className="space-y-2 max-h-32 overflow-y-auto">
-                        {filterOptions.work_schedules.map((schedule) => (
-                          <label key={schedule} className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={selectedWorkSchedules.includes(schedule)}
-                              onChange={() => handleWorkScheduleToggle(schedule)}
-                              className="mr-2 accent-[#2466D0]"
-                            />
-                            <span className="text-[#7691A4] font-avenir text-sm">{schedule}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Company */}
-                    <div>
-                      <h4 className="font-bold text-[#01253F] mb-2 font-avenir">Company</h4>
-                      <div className="space-y-2 max-h-32 overflow-y-auto">
-                        {uniqueCompanies.slice(0, 20).map((company) => (
-                          <label key={company} className="flex items-center">
-                            <input
-                              type="radio"
-                              name="company"
-                              checked={selectedCompany === company}
-                              onChange={() => handleCompanyChange(company)}
-                              className="mr-2 accent-[#2466D0]"
-                            />
-                            <span className="text-[#7691A4] font-avenir text-sm">{company}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
                   </div>
                 </div>
               )}
@@ -2508,13 +2159,11 @@ export default function JobsPage() {
           </div>
 
           {/* Active Filter Tags */}
-          {(activeFilters.length > 0 || salaryRange || experienceLevel || selectedCertifications.length > 0 || 
-            selectedSpecialties.length > 0 || selectedBenefits.length > 0 || selectedWorkSchedules.length > 0 || 
-            selectedCompany || datePosted) && (
+          {(activeFilters.length > 0) && (
             <div className="flex gap-3 mb-6 flex-wrap">
               {/* Basic filters */}
               {activeFilters.map((filter) => (
-                <div key={filter.label} className={`flex items-center ${getTagColor(filter.label)} rounded-full px-4 py-2`}>
+                <div key={filter.id} className="flex items-center bg-[#E8F4FD] rounded-full px-4 py-2">
                   <button
                     onClick={() => removeFilter(filter)}
                     className="w-6 h-6 bg-[#01253F] rounded-full mr-2 flex items-center justify-center cursor-pointer hover:bg-[#012a4a] transition-colors"
@@ -2526,111 +2175,6 @@ export default function JobsPage() {
                   </span>
                 </div>
               ))}
-
-              {/* Salary range */}
-              {salaryRange && (
-                <div className="flex items-center bg-green-200 rounded-full px-4 py-2">
-                  <button
-                    onClick={() => setSalaryRange('')}
-                    className="w-6 h-6 bg-[#01253F] rounded-full mr-2 flex items-center justify-center cursor-pointer hover:bg-[#012a4a] transition-colors"
-                  >
-                    <X className="w-3 h-3 text-white" strokeWidth={3} />
-                  </button>
-                  <span className="text-[16px] font-bold text-[#01253F] font-avenir">
-                    {salaryRange}
-                  </span>
-                </div>
-              )}
-
-              {/* Experience level */}
-              {experienceLevel && (
-                <div className="flex items-center bg-orange-200 rounded-full px-4 py-2">
-                  <button
-                    onClick={() => setExperienceLevel('')}
-                    className="w-6 h-6 bg-[#01253F] rounded-full mr-2 flex items-center justify-center cursor-pointer hover:bg-[#012a4a] transition-colors"
-                  >
-                    <X className="w-3 h-3 text-white" strokeWidth={3} />
-                  </button>
-                  <span className="text-[16px] font-bold text-[#01253F] font-avenir">
-                    {experienceLevel}
-                  </span>
-                </div>
-              )}
-
-              {/* Certifications */}
-              {selectedCertifications.map((cert) => (
-                <div key={cert} className="flex items-center bg-blue-200 rounded-full px-4 py-2">
-                  <button
-                    onClick={() => handleCertificationToggle(cert)}
-                    className="w-6 h-6 bg-[#01253F] rounded-full mr-2 flex items-center justify-center cursor-pointer hover:bg-[#012a4a] transition-colors"
-                  >
-                    <X className="w-3 h-3 text-white" strokeWidth={3} />
-                  </button>
-                  <span className="text-[16px] font-bold text-[#01253F] font-avenir">
-                    {cert}
-                  </span>
-                </div>
-              ))}
-
-              {/* Specialties */}
-              {selectedSpecialties.map((specialty) => (
-                <div key={specialty} className="flex items-center bg-purple-200 rounded-full px-4 py-2">
-                  <button
-                    onClick={() => handleSpecialtyToggle(specialty)}
-                    className="w-6 h-6 bg-[#01253F] rounded-full mr-2 flex items-center justify-center cursor-pointer hover:bg-[#012a4a] transition-colors"
-                  >
-                    <X className="w-3 h-3 text-white" strokeWidth={3} />
-                  </button>
-                  <span className="text-[16px] font-bold text-[#01253F] font-avenir">
-                    {specialty}
-                  </span>
-                </div>
-              ))}
-
-              {/* Benefits */}
-              {selectedBenefits.map((benefit) => (
-                <div key={benefit} className="flex items-center bg-teal-200 rounded-full px-4 py-2">
-                  <button
-                    onClick={() => handleBenefitToggle(benefit)}
-                    className="w-6 h-6 bg-[#01253F] rounded-full mr-2 flex items-center justify-center cursor-pointer hover:bg-[#012a4a] transition-colors"
-                  >
-                    <X className="w-3 h-3 text-white" strokeWidth={3} />
-                  </button>
-                  <span className="text-[16px] font-bold text-[#01253F] font-avenir">
-                    {benefit}
-                  </span>
-                </div>
-              ))}
-
-              {/* Work schedules */}
-              {selectedWorkSchedules.map((schedule) => (
-                <div key={schedule} className="flex items-center bg-indigo-200 rounded-full px-4 py-2">
-                  <button
-                    onClick={() => handleWorkScheduleToggle(schedule)}
-                    className="w-6 h-6 bg-[#01253F] rounded-full mr-2 flex items-center justify-center cursor-pointer hover:bg-[#012a4a] transition-colors"
-                  >
-                    <X className="w-3 h-3 text-white" strokeWidth={3} />
-                  </button>
-                  <span className="text-[16px] font-bold text-[#01253F] font-avenir">
-                    {schedule}
-                  </span>
-                </div>
-              ))}
-
-              {/* Company */}
-              {selectedCompany && (
-                <div className="flex items-center bg-yellow-200 rounded-full px-4 py-2">
-                  <button
-                    onClick={() => setSelectedCompany('')}
-                    className="w-6 h-6 bg-[#01253F] rounded-full mr-2 flex items-center justify-center cursor-pointer hover:bg-[#012a4a] transition-colors"
-                  >
-                    <X className="w-3 h-3 text-white" strokeWidth={3} />
-                  </button>
-                  <span className="text-[16px] font-bold text-[#01253F] font-avenir">
-                    {selectedCompany}
-                  </span>
-                </div>
-              )}
             </div>
           )}
 
@@ -2873,25 +2417,7 @@ export default function JobsPage() {
                         </div>
                       )}
 
-                      {/* Requirements */}
-                      {selectedJob.requirements && (
-                        <div className="mb-6" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
-                          <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir break-all">
-                            Requirements
-                          </h3>
-                          <div className="text-[16px] font-[350] leading-[196%] tracking-[0%] text-[#01253F] font-avenir">
-                            {Array.isArray(selectedJob.requirements) ? (
-                              <ul className="list-disc pl-5 space-y-2">
-                                {selectedJob.requirements.map((req, index) => (
-                                  <li key={index} className="break-all whitespace-pre-wrap max-w-full" style={{wordBreak: 'break-word'}}>{req}</li>
-                                ))}
-                              </ul>
-                            ) : (
-                              <p className="break-all whitespace-pre-wrap max-w-full" style={{wordBreak: 'break-word'}}>{selectedJob.requirements}</p>
-                            )}
-                          </div>
-                        </div>
-                      )}
+
                       
                       {/* Extra scroll space */}
                       <div className="h-24"></div>
