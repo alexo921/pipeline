@@ -80,9 +80,22 @@ check_status() {
 deploy_frontend() {
     log "Deploying frontend (web-dashboard)..."
     
-    # Copy job data files
+    # Copy job data files (but preserve cleaned files)
     mkdir -p "$PROJECT_DIR/frontend/web-dashboard/public/"
-    find "$PROJECT_DIR/backend/job-scraper/" -maxdepth 1 -type f -name "*.json" -exec cp {} "$PROJECT_DIR/frontend/web-dashboard/public/" \; 2>/dev/null || true
+    
+    # Copy JSON files from backend/job-scraper, but don't overwrite cleaned files
+    find "$PROJECT_DIR/backend/job-scraper/" -maxdepth 1 -type f -name "*.json" | while read file; do
+        filename=$(basename "$file")
+        target="$PROJECT_DIR/frontend/web-dashboard/public/$filename"
+        
+        # Don't overwrite cleaned files
+        if [[ "$filename" == "improved_ct_jobs_20250725_054659.json" ]]; then
+            log "Preserving cleaned file: $filename"
+            continue
+        fi
+        
+        cp "$file" "$target" 2>/dev/null || true
+    done
     
     # Stop and remove existing container
     docker-compose stop web-dashboard 2>/dev/null || true
