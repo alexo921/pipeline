@@ -48,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({
             >
               {/* Combined logo: P icon + wordmark */}
               <Image
-                src="https://raw.githubusercontent.com/alexo921/pipeline-images/main/images/pipeline_logo_p.png"
+                src="/images/pipeline_logo_p.png"
                 alt="Pipeline P"
                 width={38}
                 height={38}
@@ -56,7 +56,7 @@ const Navbar: React.FC<NavbarProps> = ({
                 priority
               />
               <Image
-                src="https://raw.githubusercontent.com/alexo921/pipeline-images/main/images/pipeline_logo.png"
+                src="/images/pipeline_logo.png"
                 alt="Pipeline Wordmark"
                 width={120}
                 height={38}

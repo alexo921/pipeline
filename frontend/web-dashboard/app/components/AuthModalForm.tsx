@@ -198,7 +198,7 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose, onSwitchToSi
           }}
           className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 rounded-xl hover:bg-gray-100 transition disabled:opacity-50"
         >
-          <Image src="https://raw.githubusercontent.com/alexo921/pipeline-images/main/images/google-logo.svg" alt="Google" width={20} height={20} />
+          <Image src="/images/google-logo.svg" alt="Google" width={20} height={20} />
           <span className="text-sm text-black font-medium">
             Sign in with Google
           </span>
