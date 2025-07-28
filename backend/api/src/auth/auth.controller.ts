@@ -125,7 +125,7 @@ export class AuthController {
         sub: user.id,
         email: user.email,
         role: user.role,
-        candidateId: user.candidate?.id || null,
+        candidateId: null, // Will be set when candidate profile is created
       });
 
       // Set the HTTP-only cookie
