@@ -7,7 +7,7 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
 
     const backendResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/candidate/onboarding/`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/candidate/onboarding/`,
       {
         method: "PUT",
         headers: {

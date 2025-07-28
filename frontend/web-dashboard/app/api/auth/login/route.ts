@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     // Call backend API
     const backendRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
       {
         method: "POST",
         headers: {

@@ -100,11 +100,23 @@ export class EmailService {
   async sendMail(to: string, subject: string, name: string, message: string) {
     const html = this.htmlTemplate(name, message);
     const testEmails = this.getTestEmails(to);
+    const testSubject = this.TEST_MODE ? `[TEST] ${subject} (Original: ${to})` : subject;
 
+    // Try Gmail API first if available
+    if (this.isGmailAuthorized()) {
+      try {
+        const result = await this.sendEmailViaGmailAPI(testEmails.join(', '), testSubject, html);
+        return result;
+      } catch (error) {
+        console.log('Gmail API failed for basic email, falling back to SMTP:', error.message);
+      }
+    }
+
+    // Fallback to SMTP
     const mailOptions = {
       from: `"Pipeline" <${process.env.EMAIL_USER}>`,
       to: testEmails.join(', '),
-      subject: this.TEST_MODE ? `[TEST] ${subject} (Original: ${to})` : subject,
+      subject: testSubject,
       html,
     };
 

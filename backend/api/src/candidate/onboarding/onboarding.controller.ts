@@ -10,6 +10,7 @@ import { OnboardingStep } from 'src/common/enums/enums';
 import { plainToInstance } from 'class-transformer';
 import { validate, ValidationError } from 'class-validator';
 import { InitialDetailsDto } from './dtos/initial-details.dto';
+import { IntakeDetailsDto } from './dtos/intake-details.dto';
 import { LocationDetailsDto } from './dtos/location-details.dto';
 import { AvailabilityDetailsDto } from './dtos/availability-details.dto';
 import { SetPassword } from './dtos/set-password.dto';
@@ -50,6 +51,15 @@ export class OnboardingController {
           );
         }
         return this.onboardingService.handleStepOne(dto);
+      }
+
+      case 'INTAKE_DETAILS': {
+        const dto = plainToInstance(IntakeDetailsDto, data);
+        const errors = await validate(dto);
+        if (errors.length > 0) {
+          throw new BadRequestException(formatErrors(errors));
+        }
+        return this.onboardingService.handleIntakeDetails(dto);
       }
 
       case OnboardingStep.LOCATION_DETAILS: {

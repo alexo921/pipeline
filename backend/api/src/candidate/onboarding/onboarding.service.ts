@@ -8,6 +8,7 @@ import { OnboardingStep } from 'src/common/enums/enums';
 import { JsonWebTokenError, JwtService } from '@nestjs/jwt';
 import { AvailabilityDetailsDto } from './dtos/availability-details.dto';
 import { InitialDetailsDto } from './dtos/initial-details.dto';
+import { IntakeDetailsDto } from './dtos/intake-details.dto';
 import { LocationDetailsDto } from './dtos/location-details.dto';
 import { EmailService } from 'src/email/email.service';
 import { SetPassword } from './dtos/set-password.dto';
@@ -72,6 +73,55 @@ export class OnboardingService {
       });
 
       return candidate;
+    } catch (error: unknown) {
+      throw new Error((error as Error).message);
+    }
+  }
+
+  // Handle intake details (step 2)
+  async handleIntakeDetails(data: IntakeDetailsDto) {
+    const { currentRole, preferredSetting, jobType, userId } = data;
+
+    try {
+      // Find the user by ID
+      const user = await this.prismaService.users.findUnique({
+        where: { id: userId },
+        include: { candidate: true }
+      });
+
+      if (!user) {
+        throw new BadRequestException('User not found');
+      }
+
+      // If user already has a candidate record, update it
+      if (user.candidate) {
+        const updatedCandidate = await this.prismaService.candidates.update({
+          where: { id: user.candidate.id },
+          data: {
+            healthcareRole: currentRole as any, // Convert string to enum
+            preferredSetting: [preferredSetting as any], // Convert to array
+            workType: [jobType as any], // Convert to array
+            step: OnboardingStep.LOCATION_DETAILS, // Move to next step
+          },
+        });
+        return updatedCandidate;
+      } else {
+        // Create a new candidate record if one doesn't exist
+        const candidate = await this.prismaService.candidates.create({
+          data: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            healthcareRole: currentRole as any,
+            certificationStatus: 'CERTIFIED' as any, // Default value
+            preferredSetting: [preferredSetting as any],
+            workType: [jobType as any],
+            userId: user.id,
+            step: OnboardingStep.LOCATION_DETAILS,
+          },
+        });
+        return candidate;
+      }
     } catch (error: unknown) {
       throw new Error((error as Error).message);
     }

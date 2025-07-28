@@ -886,6 +886,22 @@ export default function JobsPage() {
   const { user, showLoginModal, refreshUser } = useAuth();
   const jobDetailsRef = useRef<HTMLDivElement>(null);
 
+  // Check for Google sign-in completion and refresh user state
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const signedIn = urlParams.get('signed_in');
+    
+    if (signedIn === 'true') {
+      // Refresh user state to detect the new authentication
+      refreshUser();
+      
+      // Clean up the URL parameter
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('signed_in');
+      window.history.replaceState({}, '', newUrl.toString());
+    }
+  }, [refreshUser]);
+
 
 
   const jobsPerPage = 18; // Show 18 jobs per page maximum

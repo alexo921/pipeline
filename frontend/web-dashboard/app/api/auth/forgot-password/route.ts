@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
 
     const backendRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/forgot-password`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/forgot-password`,
       {
         method: "POST",
         headers: {

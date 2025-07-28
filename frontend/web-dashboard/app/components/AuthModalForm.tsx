@@ -194,7 +194,7 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose, onSwitchToSi
           type="button"
           disabled={isLoading}
           onClick={() => {
-            window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+            window.location.href = `/api/auth/google`;
           }}
           className="flex-1 flex items-center justify-center gap-2 border border-gray-300 py-2.5 rounded-xl hover:bg-gray-100 transition disabled:opacity-50"
         >

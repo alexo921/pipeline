@@ -105,7 +105,18 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
   const onSubmitIntake = async (data: IntakeSchema) => {
     setIsLoading(true);
     try {
-      // First, create the candidate profile
+      // Get the current user to get their ID
+      const userResponse = await fetch("/api/auth/profile", {
+        credentials: "include",
+      });
+      
+      if (!userResponse.ok) {
+        throw new Error("Failed to get user profile");
+      }
+      
+      const userData = await userResponse.json();
+      
+      // Submit intake details
       const response = await fetch("/api/user-onboarding/step-1", {
         method: "PUT",
         headers: {
@@ -113,7 +124,8 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
         },
         body: JSON.stringify({
           ...data,
-          step: "INITIAL_DETAILS",
+          step: "INTAKE_DETAILS",
+          userId: userData.id,
         }),
         credentials: "include",
       });
