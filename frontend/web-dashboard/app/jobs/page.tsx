@@ -592,7 +592,6 @@ const transformJobData = (rawJobs: Record<string, unknown>[], shouldShuffle: boo
         employment_type: job.employmenttype as string[] | string,
         base_salary: job.basesalary as any,
         industry: job.industry as string,
-        direct_apply: job.directapply as boolean,
         education_requirements: job.educationrequirements as any,
         organization_logo: job.organization_logo as string || (job.hiringorganization as any)?.logo,
         organization_name: job.organization_name as string || (job.hiringorganization as any)?.name,
@@ -1065,6 +1064,7 @@ export default function JobsPage() {
         console.log('🔍 Job description length:', job.description?.length || 0);
         console.log('🔍 Job tags:', job.tags?.map(t => t.label));
       }
+      
       // Enhanced search functionality with role-specific matching
       const searchTerms = searchTerm.toLowerCase().split(/\s+/).filter(term => term.length > 0);
       
@@ -1443,6 +1443,18 @@ export default function JobsPage() {
         // Check if input is a state name
         const isStateName = stateNameToCode[inputLower];
         
+        // Debug logging for location filtering
+        console.log('🔍 Location filtering debug:', {
+          input: locationInput,
+          inputLower,
+          jobLocation,
+          jobCity,
+          jobState,
+          isStateCode,
+          isStateName,
+          targetState: isStateCode ? inputLower.toUpperCase() : isStateName
+        });
+        
         // Check if input contains city and state (e.g., "Boston, MA" or "Boston MA")
         const cityStatePattern = /^([^,]+)\s*[,]?\s*([A-Z]{2}|[a-zA-Z\s]+)$/i;
         const cityStateMatch = inputLower.match(cityStatePattern);
@@ -1474,11 +1486,33 @@ export default function JobsPage() {
             }
           }
         } else if (isStateCode || isStateName) {
-          // State-only filtering
+          // State-only filtering - be more precise to avoid cross-matching
           const targetState = isStateCode ? inputLower.toUpperCase() : isStateName;
-          matchesLocation = jobState.includes(targetState.toLowerCase()) || 
-                           jobLocation.includes(targetState.toLowerCase()) ||
-                           jobLocation.includes(inputLower);
+          
+          // Extract state information from job location using helper function
+          const jobStateInfo = extractStateFromLocation(jobLocation);
+          const jobAddressState = job.address?.state?.toUpperCase() || '';
+          
+          // For state codes, use exact matching
+          if (isStateCode) {
+            matchesLocation = jobStateInfo.stateCode === targetState || jobAddressState === targetState;
+          } else {
+            // For state names, check for exact matches
+            const stateNameRegex = new RegExp(`\\b${inputLower}\\b`, 'i');
+            matchesLocation = stateNameRegex.test(jobState) || 
+                            stateNameRegex.test(jobLocation) ||
+                            !!(job.address?.state && stateNameRegex.test(job.address.state.toLowerCase()));
+          }
+          
+          console.log('🔍 State filtering result:', {
+            targetState,
+            jobStateCode: jobStateInfo.stateCode,
+            jobStateName: jobStateInfo.stateName,
+            jobAddressState,
+            jobState,
+            jobLocation,
+            matchesLocation
+          });
         } else {
           // City-only or general location filtering
           matchesLocation = jobCity.includes(inputLower) || 
@@ -1568,6 +1602,10 @@ export default function JobsPage() {
     if (e.key === 'Enter') {
       e.preventDefault();
       const inputValue = locationInput.trim();
+      
+      // Always close suggestions and blur input when Enter is pressed
+      setShowLocationSuggestions(false);
+      e.currentTarget.blur();
       
       if (inputValue) {
         // State name to code mapping
@@ -1971,6 +2009,29 @@ export default function JobsPage() {
     return popularCitiesByState[stateCode] || [];
   };
 
+  // Helper function to extract and normalize state from location string
+  const extractStateFromLocation = (location: string): { stateCode: string; stateName: string } => {
+    const locationLower = location.toLowerCase();
+    
+    // First check if there's a state code in the location
+    const stateCodeMatch = location.match(/\b([A-Z]{2})\b/);
+    if (stateCodeMatch) {
+      const stateCode = stateCodeMatch[1].toUpperCase();
+      // Find the state name for this code
+      const stateName = Object.entries(stateNameToCode).find(([name, code]) => code === stateCode)?.[0] || '';
+      return { stateCode, stateName };
+    }
+    
+    // Check for full state names
+    for (const [stateName, stateCode] of Object.entries(stateNameToCode)) {
+      if (locationLower.includes(stateName)) {
+        return { stateCode, stateName };
+      }
+    }
+    
+    return { stateCode: '', stateName: '' };
+  };
+
   return (
     <div className="min-h-screen relative bg-[#F4F4F4]">
       {/* Radial blue blur positioned in upper right */}
@@ -2035,7 +2096,7 @@ export default function JobsPage() {
                 <Search className="w-5 h-5 lg:w-6 lg:h-6 text-[#7691A4] mr-3 flex-shrink-0" strokeWidth={2} />
                 <input
                   type="text"
-                  placeholder="Search Jobs..."
+                  placeholder="Search Jobs"
                   value={searchTerm}
                   onChange={(e) => handleSearch(e.target.value)}
                   className="flex-1 text-base lg:text-[20px] font-bold text-[#7691A4] placeholder-[#7691A4] bg-transparent outline-none font-avenir"

@@ -36,7 +36,7 @@ const Footer = () => {
               <div className="flex items-center gap-4 sm:gap-6">
                 {/* Facebook */}
                 <a 
-                  href="https://facebook.com/pipelineworkforce" 
+                  href="https://www.facebook.com/joinpipeline" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-5 h-5 hover:opacity-80 transition-opacity cursor-pointer"
@@ -52,7 +52,7 @@ const Footer = () => {
 
                               {/* X (Twitter) */}
               <a 
-                href="https://twitter.com/pipelineworkforce" 
+                href="https://x.com/join_pipeline?s=21&t=zGRB_zcVikWYPgzbhXE3tw" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-5 h-5 hover:opacity-80 transition-opacity cursor-pointer"
@@ -68,7 +68,7 @@ const Footer = () => {
 
                 {/* Instagram */}
                 <a 
-                  href="https://instagram.com/pipelineworkforce" 
+                  href="https://www.instagram.com/join.pipeline?igsh=YnVwbmZkaG91eWlr&utm_source=qr" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-5 h-5 hover:opacity-80 transition-opacity cursor-pointer"
@@ -84,7 +84,7 @@ const Footer = () => {
 
                 {/* LinkedIn */}
                 <a 
-                  href="https://linkedin.com/company/pipelineworkforce" 
+                  href="https://www.linkedin.com/company/joinpipeline/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="w-5 h-5 hover:opacity-80 transition-opacity cursor-pointer"
@@ -152,7 +152,7 @@ const Footer = () => {
             <div className="flex items-center gap-6">
               {/* Facebook */}
               <a 
-                href="https://facebook.com/pipelineworkforce" 
+                href="https://www.facebook.com/joinpipeline" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-5 h-5 hover:opacity-80 transition-opacity cursor-pointer"
@@ -168,7 +168,7 @@ const Footer = () => {
 
               {/* X (Twitter) */}
               <a 
-                href="https://twitter.com/pipelineworkforce" 
+                href="https://x.com/join_pipeline?s=21&t=zGRB_zcVikWYPgzbhXE3tw" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-5 h-5 hover:opacity-80 transition-opacity cursor-pointer"
@@ -184,7 +184,7 @@ const Footer = () => {
 
               {/* Instagram */}
               <a 
-                href="https://instagram.com/pipelineworkforce" 
+                href="https://www.instagram.com/join.pipeline?igsh=YnVwbmZkaG91eWlr&utm_source=qr" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-5 h-5 hover:opacity-80 transition-opacity cursor-pointer"
@@ -200,7 +200,7 @@ const Footer = () => {
 
               {/* LinkedIn */}
               <a 
-                href="https://linkedin.com/company/pipelineworkforce" 
+                href="https://www.linkedin.com/company/joinpipeline/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="w-5 h-5 hover:opacity-80 transition-opacity cursor-pointer"

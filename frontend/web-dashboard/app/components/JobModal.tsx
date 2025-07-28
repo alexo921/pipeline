@@ -196,11 +196,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
                     Industry: {job.industry}
                   </p>
                 )}
-                {job.direct_apply && (
-                  <p className="text-sm text-green-600 font-medium">
-                    ✓ Direct Apply Available
-                  </p>
-                )}
+
               </div>
             </div>
             <button

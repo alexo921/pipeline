@@ -27,7 +27,6 @@ export interface Job {
     value?: number;
   };
   industry?: string; // Healthcare, etc.
-  direct_apply?: boolean; // Whether direct application is available
   education_requirements?: {
     credential_category?: string; // CERTIFICATE, etc.
   };

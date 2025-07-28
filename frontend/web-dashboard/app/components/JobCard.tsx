@@ -17,7 +17,6 @@ interface JobCardProps {
   employment_type?: string[] | string;
   organization_logo?: string;
   organization_name?: string;
-  direct_apply?: boolean;
   industry?: string;
 }
 
@@ -33,7 +32,6 @@ export default function JobCard({
   employment_type,
   organization_logo,
   organization_name,
-  direct_apply,
   industry
 }: JobCardProps) {
   // Format employment type for display
@@ -124,12 +122,7 @@ export default function JobCard({
               <span>{formatEmploymentType(employment_type)}</span>
             </div>
           )}
-          {direct_apply && (
-            <div className="flex items-center gap-1 text-green-600">
-              <ExternalLink className="w-3 h-3" />
-              <span>Direct Apply</span>
-            </div>
-          )}
+
           {industry && (
             <span className="bg-gray-100 px-2 py-1 rounded">
               {industry}

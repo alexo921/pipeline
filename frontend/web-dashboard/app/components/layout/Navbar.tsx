@@ -98,24 +98,24 @@ const Navbar: React.FC<NavbarProps> = ({
 
             {/* Enhanced Profile icon with user indicator */}
             {user ? (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 bg-white rounded-full px-4 py-2 shadow-lg border border-gray-200">
                 {/* User indicator text */}
                 <span className="text-sm text-slate-700 font-medium font-avenir">
                   {user.name || user.email || "User"}
                 </span>
                 
                 {/* Profile icon with online indicator */}
-              <Link
-                href="/dashboard"
-                  className="relative flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 hover:shadow-xl transition-shadow"
-              >
+                <Link
+                  href="/dashboard"
+                  className="relative flex items-center justify-center w-10 h-10 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors"
+                >
                   <User
-                    className="w-6 h-6 text-[#01253F]"
+                    className="w-5 h-5 text-[#01253F]"
                     strokeWidth={2}
                   />
                   {/* Online indicator dot */}
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-              </Link>
+                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                </Link>
               </div>
             ) : null}
           </div>
