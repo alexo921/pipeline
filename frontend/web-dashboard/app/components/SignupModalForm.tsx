@@ -105,6 +105,7 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
   const onSubmitIntake = async (data: IntakeSchema) => {
     setIsLoading(true);
     try {
+      // First, create the candidate profile
       const response = await fetch("/api/user-onboarding/step-1", {
         method: "PUT",
         headers: {
@@ -123,6 +124,9 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
         throw new Error(result.message || "Failed to save profile details");
       }
 
+      // Refresh user data to include candidate information
+      await refreshUser();
+      
       onClose();
     } catch (error: unknown) {
       console.error("Profile update error:", error);

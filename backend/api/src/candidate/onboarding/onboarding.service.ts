@@ -41,15 +41,22 @@ export class OnboardingService {
     }
 
     try {
-      // creating user for candidate
-      const user = await this.prismaService.users.create({
-        data: {
-          firstName,
-          lastName,
-          email,
-          password: '',
-        },
+      // Check if user already exists (from auth signup)
+      let user = await this.prismaService.users.findUnique({
+        where: { email },
       });
+
+      if (!user) {
+        // creating user for candidate
+        user = await this.prismaService.users.create({
+          data: {
+            firstName,
+            lastName,
+            email,
+            password: '',
+          },
+        });
+      }
 
       // create candidate record
       const candidate = await this.prismaService.candidates.create({

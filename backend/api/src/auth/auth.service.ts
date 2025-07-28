@@ -271,7 +271,21 @@ export class AuthService {
   }
 
   async getProfile(id: string): Promise<Partial<users>> {
-    const user = await this.prismaService.users.findUnique({ where: { id } });
+    const user = await this.prismaService.users.findUnique({ 
+      where: { id },
+      include: {
+        candidate: {
+          select: {
+            id: true,
+            healthcareRole: true,
+            certificationStatus: true,
+            step: true,
+            isOnboarded: true,
+            isActive: true,
+          },
+        },
+      },
+    });
     if (!user) {
       throw new NotFoundException('User not found');
     }

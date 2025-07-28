@@ -22,6 +22,7 @@ import { ChangePasswordDto } from './dto/change-password-dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/common/decorators/user.decorator';
 import { EmailService } from 'src/email/email.service';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -31,12 +32,37 @@ export class AuthController {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   @Post('signup')
   @ApiOperation({ summary: 'Register a new user' })
-  signup(@Body() signUpDto: SignUpDto) {
-    return this.authService.create(signUpDto);
+  async signup(
+    @Body() signUpDto: SignUpDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const user = await this.authService.create(signUpDto);
+    
+    // Create JWT token for the new user
+    const jwt = await this.jwtService.signAsync({
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+      candidateId: null,
+    });
+
+    // Set the HTTP-only cookie
+    res.cookie('access_token', jwt, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24, // 1 day
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...result } = user;
+
+    return { token: jwt, user: result };
   }
 
   @Post('login')
@@ -121,11 +147,23 @@ export class AuthController {
       const userInfo = await this.authService.getGoogleUserInfo(accessToken);
       const user = await this.authService.findOrCreateUser(userInfo);
 
+      // Get candidate ID if user has a candidate profile
+      const userWithCandidate = await this.prismaService.users.findUnique({
+        where: { id: user.id },
+        include: {
+          candidate: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+      
       const jwt = await this.jwtService.signAsync({
         sub: user.id,
         email: user.email,
         role: user.role,
-        candidateId: null, // Will be set when candidate profile is created
+        candidateId: userWithCandidate?.candidate?.id || null,
       });
 
       // Set the HTTP-only cookie

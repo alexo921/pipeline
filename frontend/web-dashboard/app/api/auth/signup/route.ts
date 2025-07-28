@@ -23,15 +23,15 @@ export async function POST(request: Request) {
     }
 
     // Set the auth cookie from the backend response
-    const headers = new Headers();
-    const cookies = response.headers.get('set-cookie');
-    if (cookies) {
-      headers.set('set-cookie', cookies);
+    const responseHeaders = new Headers();
+    const setCookieHeader = response.headers.get('set-cookie');
+    if (setCookieHeader) {
+      responseHeaders.set('set-cookie', setCookieHeader);
     }
 
     return NextResponse.json(data, {
       status: 200,
-      headers,
+      headers: responseHeaders,
     });
   } catch (error) {
     console.error('Signup error:', error);
