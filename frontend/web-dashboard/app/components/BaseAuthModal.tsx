@@ -73,7 +73,7 @@ const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
                         <div className="w-1/2 relative hidden md:flex items-center justify-center mr-8 lg:mr-10">
                             {/* Illustration */}
                             <Image
-                                src={isSignupMode && isIntakeStep ? "/Ellipse 3.png" : "/nurse.svg"}
+                                src={isSignupMode && isIntakeStep ? "https://raw.githubusercontent.com/alexo921/pipeline-images/main/images/Ellipse%203.png" : "https://raw.githubusercontent.com/alexo921/pipeline-images/main/images/nurse.svg"}
                                 alt={isSignupMode && isIntakeStep ? "Ellipse illustration" : "Nurse illustration"}
                                 width={250}
                                 height={250} 

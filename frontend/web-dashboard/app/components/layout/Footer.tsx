@@ -13,7 +13,7 @@ const Footer = () => {
             <div className="flex flex-col items-center max-w-[345px]">
               <div className="flex items-center mb-4 sm:mb-6">
                 <Image
-                  src="/logo-navy.svg"
+                  src="https://raw.githubusercontent.com/alexo921/pipeline-images/main/images/logo-navy.svg"
                   alt="Pipeline"
                   width={180}
                   height={42}
@@ -130,7 +130,7 @@ const Footer = () => {
           <div className="flex flex-col max-w-[345px]">
             <div className="flex items-center mb-6">
               <Image
-                src="/logo-navy.svg"
+                src="https://raw.githubusercontent.com/alexo921/pipeline-images/main/images/logo-navy.svg"
                 alt="Pipeline"
                 width={207}
                 height={48}

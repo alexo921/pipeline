@@ -40,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({
           >
             <Image
               //   src="/images/yourpipelinelogo.png"
-              src="images/Frame-1894.svg"
+              src="https://raw.githubusercontent.com/alexo921/pipeline-images/main/images/Frame-1894.svg"
               alt="Pipeline"
               width={200}
               height={50}
