@@ -18,6 +18,13 @@ export class EmailService {
   private gmailTokens: GmailTokens | null = null;
   private readonly tokenFilePath = path.join(process.cwd(), 'tokens', 'gmail-tokens.json');
   
+  // Test mode configuration - redirect all emails to test addresses
+  private readonly TEST_MODE = process.env.EMAIL_TEST_MODE === 'true';
+  private readonly TEST_EMAILS = [
+    'alex@pipelineworkforce.com',
+    'jonathan@pipelineworkforce.com'
+  ];
+  
   private transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: Number(process.env.EMAIL_PORT),
@@ -31,6 +38,20 @@ export class EmailService {
   constructor() {
     // Load tokens from file on service initialization
     this.loadGmailTokensFromFile();
+    
+    // Log test mode status
+    if (this.TEST_MODE) {
+      console.log('📧 EMAIL TEST MODE ENABLED - All emails will be sent to:', this.TEST_EMAILS.join(', '));
+    }
+  }
+
+  // Helper method to handle email redirection in test mode
+  private getTestEmails(originalEmail: string): string[] {
+    if (this.TEST_MODE) {
+      console.log(`📧 TEST MODE: Redirecting email from ${originalEmail} to test addresses`);
+      return this.TEST_EMAILS;
+    }
+    return [originalEmail];
   }
 
   // Load tokens from file
@@ -78,11 +99,12 @@ export class EmailService {
 
   async sendMail(to: string, subject: string, name: string, message: string) {
     const html = this.htmlTemplate(name, message);
+    const testEmails = this.getTestEmails(to);
 
     const mailOptions = {
       from: `"Pipeline" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
+      to: testEmails.join(', '),
+      subject: this.TEST_MODE ? `[TEST] ${subject} (Original: ${to})` : subject,
       html,
     };
 
@@ -108,7 +130,9 @@ export class EmailService {
       // Try Gmail API first if available
       if (this.isGmailAuthorized()) {
         try {
-          const result = await this.sendEmailViaGmailAPI(email, 'Reset Your Password', emailTemplate);
+          const testEmails = this.getTestEmails(email);
+          const subject = this.TEST_MODE ? `[TEST] Reset Your Password (Original: ${email})` : 'Reset Your Password';
+          const result = await this.sendEmailViaGmailAPI(testEmails.join(', '), subject, emailTemplate);
           return result;
         } catch (error) {
           console.log('Gmail API failed for password reset, falling back to SMTP:', error.message);
@@ -116,10 +140,11 @@ export class EmailService {
       }
 
       // Fallback to SMTP
+      const testEmails = this.getTestEmails(email);
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'Reset Your Password',
+        to: testEmails.join(', '),
+        subject: this.TEST_MODE ? `[TEST] Reset Your Password (Original: ${email})` : 'Reset Your Password',
         html: emailTemplate,
       };
 
@@ -148,7 +173,9 @@ export class EmailService {
       // Try Gmail API first if available
       if (this.isGmailAuthorized()) {
         try {
-          const result = await this.sendEmailViaGmailAPI(email, 'Confirm Your Email', emailTemplate);
+          const testEmails = this.getTestEmails(email);
+          const subject = this.TEST_MODE ? `[TEST] Confirm Your Email (Original: ${email})` : 'Confirm Your Email';
+          const result = await this.sendEmailViaGmailAPI(testEmails.join(', '), subject, emailTemplate);
           return result;
         } catch (error) {
           console.log('Gmail API failed for verification, falling back to SMTP:', error.message);
@@ -156,10 +183,11 @@ export class EmailService {
       }
 
       // Fallback to SMTP
+      const testEmails = this.getTestEmails(email);
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'Confirm Your Email',
+        to: testEmails.join(', '),
+        subject: this.TEST_MODE ? `[TEST] Confirm Your Email (Original: ${email})` : 'Confirm Your Email',
         html: emailTemplate,
       };
 
@@ -187,7 +215,9 @@ export class EmailService {
       // Try Gmail API first if available
       if (this.isGmailAuthorized()) {
         try {
-          const result = await this.sendEmailViaGmailAPI(email, 'Welcome to Pipeline', emailTemplate);
+          const testEmails = this.getTestEmails(email);
+          const subject = this.TEST_MODE ? `[TEST] Welcome to Pipeline (Original: ${email})` : 'Welcome to Pipeline';
+          const result = await this.sendEmailViaGmailAPI(testEmails.join(', '), subject, emailTemplate);
           return result;
         } catch (error) {
           console.log('Gmail API failed for welcome email, falling back to SMTP:', error.message);
@@ -195,10 +225,11 @@ export class EmailService {
       }
 
       // Fallback to SMTP
+      const testEmails = this.getTestEmails(email);
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'Welcome to Pipeline',
+        to: testEmails.join(', '),
+        subject: this.TEST_MODE ? `[TEST] Welcome to Pipeline (Original: ${email})` : 'Welcome to Pipeline',
         html: emailTemplate,
       };
 
@@ -225,7 +256,9 @@ export class EmailService {
       // Try Gmail API first if available
       if (this.isGmailAuthorized()) {
         try {
-          const result = await this.sendEmailViaGmailAPI(email, 'Just one step to unlock great jobs', emailTemplate);
+          const testEmails = this.getTestEmails(email);
+          const subject = this.TEST_MODE ? `[TEST] Just one step to unlock great jobs (Original: ${email})` : 'Just one step to unlock great jobs';
+          const result = await this.sendEmailViaGmailAPI(testEmails.join(', '), subject, emailTemplate);
           return result;
         } catch (error) {
           console.log('Gmail API failed for partial signup reminder, falling back to SMTP:', error.message);
@@ -233,10 +266,11 @@ export class EmailService {
       }
 
       // Fallback to SMTP
+      const testEmails = this.getTestEmails(email);
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'Just one step to unlock great jobs',
+        to: testEmails.join(', '),
+        subject: this.TEST_MODE ? `[TEST] Just one step to unlock great jobs (Original: ${email})` : 'Just one step to unlock great jobs',
         html: emailTemplate,
       };
 
@@ -263,7 +297,9 @@ export class EmailService {
       // Try Gmail API first if available
       if (this.isGmailAuthorized()) {
         try {
-          const result = await this.sendEmailViaGmailAPI(email, 'Did you apply yet?', emailTemplate);
+          const testEmails = this.getTestEmails(email);
+          const subject = this.TEST_MODE ? `[TEST] Did you apply yet? (Original: ${email})` : 'Did you apply yet?';
+          const result = await this.sendEmailViaGmailAPI(testEmails.join(', '), subject, emailTemplate);
           return result;
         } catch (error) {
           console.log('Gmail API failed for apply nudge, falling back to SMTP:', error.message);
@@ -271,10 +307,11 @@ export class EmailService {
       }
 
       // Fallback to SMTP
+      const testEmails = this.getTestEmails(email);
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'Did you apply yet?',
+        to: testEmails.join(', '),
+        subject: this.TEST_MODE ? `[TEST] Did you apply yet? (Original: ${email})` : 'Did you apply yet?',
         html: emailTemplate,
       };
 
@@ -303,7 +340,9 @@ export class EmailService {
       // Try Gmail API first if available
       if (this.isGmailAuthorized()) {
         try {
-          const result = await this.sendEmailViaGmailAPI(email, `${jobCount} caregiver jobs hiring near ${city}`, emailTemplate);
+          const testEmails = this.getTestEmails(email);
+          const subject = this.TEST_MODE ? `[TEST] ${jobCount} caregiver jobs hiring near ${city} (Original: ${email})` : `${jobCount} caregiver jobs hiring near ${city}`;
+          const result = await this.sendEmailViaGmailAPI(testEmails.join(', '), subject, emailTemplate);
           return result;
         } catch (error) {
           console.log('Gmail API failed for local job alert, falling back to SMTP:', error.message);
@@ -311,10 +350,11 @@ export class EmailService {
       }
 
       // Fallback to SMTP
+      const testEmails = this.getTestEmails(email);
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: `${jobCount} caregiver jobs hiring near ${city}`,
+        to: testEmails.join(', '),
+        subject: this.TEST_MODE ? `[TEST] ${jobCount} caregiver jobs hiring near ${city} (Original: ${email})` : `${jobCount} caregiver jobs hiring near ${city}`,
         html: emailTemplate,
       };
 
@@ -341,7 +381,9 @@ export class EmailService {
       // Try Gmail API first if available
       if (this.isGmailAuthorized()) {
         try {
-          const result = await this.sendEmailViaGmailAPI(email, 'You\'re up first. Pipeline is now live', emailTemplate);
+          const testEmails = this.getTestEmails(email);
+          const subject = this.TEST_MODE ? `[TEST] You're up first. Pipeline is now live (Original: ${email})` : 'You\'re up first. Pipeline is now live';
+          const result = await this.sendEmailViaGmailAPI(testEmails.join(', '), subject, emailTemplate);
           return result;
         } catch (error) {
           console.log('Gmail API failed for launch email, falling back to SMTP:', error.message);
@@ -349,10 +391,11 @@ export class EmailService {
       }
 
       // Fallback to SMTP
+      const testEmails = this.getTestEmails(email);
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'You\'re up first. Pipeline is now live',
+        to: testEmails.join(', '),
+        subject: this.TEST_MODE ? `[TEST] You're up first. Pipeline is now live (Original: ${email})` : 'You\'re up first. Pipeline is now live',
         html: emailTemplate,
       };
 
@@ -482,11 +525,13 @@ export class EmailService {
   // Enhanced send method with Gmail API fallback
   async sendMailWithGmailFallback(to: string, subject: string, name: string, message: string) {
     const html = this.htmlTemplate(name, message);
+    const testEmails = this.getTestEmails(to);
 
     // Try Gmail API first if available
     if (this.isGmailAuthorized()) {
       try {
-        const result = await this.sendEmailViaGmailAPI(to, subject, html);
+        const testSubject = this.TEST_MODE ? `[TEST] ${subject} (Original: ${to})` : subject;
+        const result = await this.sendEmailViaGmailAPI(testEmails.join(', '), testSubject, html);
         return result;
       } catch (error) {
         console.log('Gmail API failed, falling back to SMTP:', error.message);
@@ -496,8 +541,8 @@ export class EmailService {
     // Fallback to SMTP
     const mailOptions = {
       from: `"Pipeline" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
+      to: testEmails.join(', '),
+      subject: this.TEST_MODE ? `[TEST] ${subject} (Original: ${to})` : subject,
       html,
     };
 
@@ -529,7 +574,9 @@ export class EmailService {
       // Try Gmail API first if available
       if (this.isGmailAuthorized()) {
         try {
-          const result = await this.sendEmailViaGmailAPI(to, subject, emailTemplate);
+          const testEmails = this.getTestEmails(to);
+          const testSubject = this.TEST_MODE ? `[TEST] ${subject} (Original: ${to})` : subject;
+          const result = await this.sendEmailViaGmailAPI(testEmails.join(', '), testSubject, emailTemplate);
           return result;
         } catch (error) {
           console.log(`Gmail API failed for ${templateName}, falling back to SMTP:`, error.message);
@@ -537,10 +584,11 @@ export class EmailService {
       }
 
       // Fallback to SMTP
+      const testEmails = this.getTestEmails(to);
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
-        to,
-        subject,
+        to: testEmails.join(', '),
+        subject: this.TEST_MODE ? `[TEST] ${subject} (Original: ${to})` : subject,
         html: emailTemplate,
       };
 
