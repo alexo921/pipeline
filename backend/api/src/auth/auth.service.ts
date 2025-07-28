@@ -96,6 +96,13 @@ export class AuthService {
   async findOrCreateUser(userInfo: GoogleUserInfo): Promise<users> {
     const existingUser = await this.prismaService.users.findUnique({
       where: { email: userInfo.email },
+      include: {
+        candidate: {
+          select: {
+            id: true,
+          },
+        },
+      },
     });
 
     if (existingUser) {
@@ -113,6 +120,13 @@ export class AuthService {
         lastName,
         email: userInfo.email,
         password: '',
+      },
+      include: {
+        candidate: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
 

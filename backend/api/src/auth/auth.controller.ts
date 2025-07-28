@@ -124,12 +124,20 @@ export class AuthController {
       const jwt = await this.jwtService.signAsync({
         sub: user.id,
         email: user.email,
+        role: user.role,
+        candidateId: user.candidate?.id || null,
       });
 
-      // Redirect directly to homepage with token in URL params
-      return res.redirect(
-        `${process.env.FRONTEND_URL}/?token=${jwt}&email=${user.email}`,
-      );
+      // Set the HTTP-only cookie
+      res.cookie('access_token', jwt, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 1000 * 60 * 60 * 24, // 1 day
+      });
+
+      // Redirect to homepage
+      return res.redirect(`${process.env.FRONTEND_URL}/`);
     } catch (err: unknown) {
       error('Google OAuth error', (err as Error).stack);
       return res.status(500).send({
@@ -144,7 +152,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Get user profile' })
   @ApiBearerAuth()
   getProfile(@User('userId') userId: string) {
-    return this.authService.getProfile(userId);
+    return { data: this.authService.getProfile(userId) };
   }
 
   // Gmail OAuth Endpoints

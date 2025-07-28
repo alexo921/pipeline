@@ -75,7 +75,7 @@ export default function MobileMenu({ isOpen, onClose, onLoginClick }: MobileMenu
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-900 font-avenir">
-                    {user.name || user.email || "User"}
+                    {user.firstName ? `${user.firstName} ${user.lastName}` : user.email || "User"}
                   </p>
                   <p className="text-xs text-gray-500">Signed in</p>
                 </div>

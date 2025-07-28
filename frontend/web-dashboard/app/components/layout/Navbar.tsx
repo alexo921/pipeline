@@ -101,7 +101,7 @@ const Navbar: React.FC<NavbarProps> = ({
               <div className="flex items-center space-x-3 bg-white rounded-full px-4 py-2 shadow-lg border border-gray-200">
                 {/* User indicator text */}
                 <span className="text-sm text-slate-700 font-medium font-avenir">
-                  {user.name || user.email || "User"}
+                  {user.firstName ? `${user.firstName} ${user.lastName}` : user.email || "User"}
                 </span>
                 
                 {/* Profile icon with online indicator */}

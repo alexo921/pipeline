@@ -886,24 +886,7 @@ export default function JobsPage() {
   const { user, showLoginModal, refreshUser } = useAuth();
   const jobDetailsRef = useRef<HTMLDivElement>(null);
 
-  // Handle Google OAuth token from URL params
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const email = urlParams.get('email');
 
-    if (token && email) {
-      // Store email for display purposes only
-      localStorage.setItem('user_email', email);
-      
-      // Clear the URL parameters
-      const newUrl = window.location.pathname;
-      window.history.replaceState({}, '', newUrl);
-      
-      // Refresh the auth context - backend handles authentication via cookies
-      refreshUser();
-    }
-  }, [refreshUser]);
 
   const jobsPerPage = 18; // Show 18 jobs per page maximum
 
