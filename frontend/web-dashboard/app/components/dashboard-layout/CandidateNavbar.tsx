@@ -57,15 +57,8 @@ const Navbar: React.FC<NavbarProps> = ({
         </Link>
 
         {/* Right side user info */}
-        {user || true ? (
+        {user ? (
           <div className="hidden md:flex items-center space-x-4">
-            <div className="flex items-center space-x-4 bg-white rounded-full px-6 py-3 shadow-lg border border-gray-200">
-              {/* Username */}
-              <span className="logout-button-custom">
-                {(user && user.firstName) ? `${user.firstName} ${user.lastName}` : user?.email || "Demo User"}
-              </span>
-            </div>
-
             {/* User Icon with Dropdown */}
             <div className="relative">
               <button
@@ -91,6 +84,13 @@ const Navbar: React.FC<NavbarProps> = ({
               {isUserDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                   <div className="py-1">
+                    {/* User Info */}
+                    <div className="px-4 py-2 text-sm text-gray-700 border-b">
+                      <div className="font-medium">
+                        {(user && user.firstName) ? `${user.firstName} ${user.lastName}` : user?.email || "Demo User"}
+                      </div>
+                    </div>
+                    
                     <button
                       onClick={onLogoutClick}
                       className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-avenir flex items-center space-x-2"
@@ -103,7 +103,14 @@ const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
           </div>
-        ) : null}
+        ) : (
+          <button
+            onClick={onLoginClick}
+            className="text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 font-avenir"
+          >
+            Login
+          </button>
+        )}
 
         {/* Mobile Menu Button */}
         <button className="md:hidden p-2" onClick={onMobileMenuToggle}>

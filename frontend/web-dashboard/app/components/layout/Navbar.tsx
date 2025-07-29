@@ -88,44 +88,33 @@ const Navbar: React.FC<NavbarProps> = ({
               {user ? (
                 <div className="relative">
                   <button
-                    onClick={toggleUserDropdown}
-                    className="flex items-center space-x-2 text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 hover:text-blue-600 font-avenir"
+                    onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                    className="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors"
                   >
-                    {/* User indicator text */}
-                    <span>
-                      {user.firstName ? `${user.firstName} ${user.lastName}` : user.email || "User"}
-                    </span>
-                    
-                    {/* Profile icon with online indicator */}
-                    <div className="relative flex items-center justify-center w-8 h-8 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors">
-                      <User
-                        className="w-4 h-4 text-[#01253F]"
-                        strokeWidth={2}
-                      />
-                      {/* Online indicator dot */}
-                      <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-green-500 rounded-full border border-white"></div>
+                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                      <User className="w-5 h-5 text-white" />
                     </div>
-                    
-                    {/* Dropdown arrow */}
-                    <ChevronDown 
-                      className={`w-3 h-3 text-slate-700 transition-transform duration-200 ${
-                        isUserDropdownOpen ? 'rotate-180' : ''
-                      }`}
-                    />
+                    <ChevronDown className="w-4 h-4" />
                   </button>
 
                   {/* Dropdown Menu */}
                   {isUserDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                      <div className="py-1">
-                        <button
-                          onClick={onLogoutClick}
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-avenir flex items-center space-x-2"
-                        >
-                          <LogOut className="w-4 h-4" />
-                          <span>Sign Out</span>
-                        </button>
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
+                      {/* User Info */}
+                      <div className="px-4 py-2 text-sm text-gray-700 border-b">
+                        <div className="font-medium">
+                          {(user && user.firstName) ? `${user.firstName} ${user.lastName}` : user?.email || "Demo User"}
+                        </div>
                       </div>
+                      
+                      {/* Sign Out Option */}
+                      <button
+                        onClick={onLogoutClick}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Sign Out</span>
+                      </button>
                     </div>
                   )}
                 </div>
