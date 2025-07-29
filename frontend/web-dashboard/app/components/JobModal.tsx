@@ -179,28 +179,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
                 <p className="text-[16px] text-[#01253F] font-avenir">{job.salary}</p>
               )}
               
-              {/* Rich data info */}
-              <div className="mt-3 space-y-1">
-                {job.date_posted && (
-                  <p className="text-sm text-gray-600">
-                    Posted: {new Date(job.date_posted).toLocaleDateString()}
-                  </p>
-                )}
-                {job.employment_type && (
-                  <p className="text-sm text-gray-600">
-                    Employment: {Array.isArray(job.employment_type) 
-                      ? job.employment_type.map(t => t.replace('_', ' ')).join(', ')
-                      : job.employment_type.replace('_', ' ')
-                    }
-                  </p>
-                )}
-                {job.industry && (
-                  <p className="text-sm text-gray-600">
-                    Industry: {job.industry}
-                  </p>
-                )}
 
-              </div>
             </div>
             <button
               onClick={onClose}

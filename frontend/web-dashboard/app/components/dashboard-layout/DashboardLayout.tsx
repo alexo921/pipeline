@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import "../../styles/brand.css";
 import Navbar from "./CandidateNavbar";
+import GoogleTagManager from "../GoogleTagManager";
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -17,7 +18,6 @@ export default function DashboardLayout({
   showFooter = true,
   customBackground,
 }: BaseLayoutProps) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const backgroundStyle = customBackground
@@ -30,11 +30,11 @@ export default function DashboardLayout({
 
   return (
     <div className={backgroundClass} style={backgroundStyle}>
+      <GoogleTagManager />
       {/* Navbar navigation */}
       {showNav && (
         <Navbar
           onLoginClick={() => setIsAuthModalOpen(true)}
-          onMobileMenuToggle={() => setIsMobileMenuOpen(true)}
         />
       )}
 

@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import MobileMenu from "./MobileMenu";
 import "../../styles/brand.css";
 import AuthModal from "../AuthModal";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import BaseAuthModal from "../BaseAuthModal";
 import { useAuth } from "../../contexts/AuthContext";
+import GoogleTagManager from "../GoogleTagManager";
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -22,7 +22,6 @@ export default function BaseLayout({
   showFooter = true,
   customBackground,
 }: BaseLayoutProps) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { registerLoginModalTrigger } = useAuth();
 
@@ -40,21 +39,14 @@ export default function BaseLayout({
 
   return (
     <div className={`${backgroundClass} relative`} style={backgroundStyle}>
+      <GoogleTagManager />
       {/* Navbar navigation */}
       {showNav && (
         <Navbar
           onLoginClick={() => setIsAuthModalOpen(true)}
-          onMobileMenuToggle={() => setIsMobileMenuOpen(true)}
         />
       )}
       {/* Navbar navigation */}
-
-      {/* Mobile menu */}
-      <MobileMenu
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-        onLoginClick={() => setIsAuthModalOpen(true)}
-      />
 
       {/* Main content */}
       <main className="flex-grow relative z-10">{children}</main>
