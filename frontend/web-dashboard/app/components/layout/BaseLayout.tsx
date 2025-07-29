@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import BaseAuthModal from "../BaseAuthModal";
 import { useAuth } from "../../contexts/AuthContext";
+import GoogleTagManagerClient from "../GoogleTagManagerClient";
 
 
 interface BaseLayoutProps {
@@ -39,6 +40,7 @@ export default function BaseLayout({
 
   return (
     <div className={`${backgroundClass} relative`} style={backgroundStyle}>
+      <GoogleTagManagerClient />
       {/* Navbar navigation */}
       {showNav && (
         <Navbar

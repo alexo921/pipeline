@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import "../../styles/brand.css";
 import Navbar from "./CandidateNavbar";
+import GoogleTagManagerClient from "../GoogleTagManagerClient";
 
 
 interface BaseLayoutProps {
@@ -30,6 +31,7 @@ export default function DashboardLayout({
 
   return (
     <div className={backgroundClass} style={backgroundStyle}>
+      <GoogleTagManagerClient />
       {/* Navbar navigation */}
       {showNav && (
         <Navbar
