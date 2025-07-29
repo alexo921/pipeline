@@ -1,12 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, ChevronDown } from "lucide-react";
 
 type NavbarProps = {
   onLoginClick: () => void;
@@ -20,6 +20,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const pathname = usePathname();
   const { user, logout } = useAuth();
   const router = useRouter();
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
   async function onLogoutClick() {
     await fetch("/api/auth/logout", {
@@ -28,9 +29,13 @@ const Navbar: React.FC<NavbarProps> = ({
 
     logout();
     localStorage.removeItem("user");
-
+    setIsUserDropdownOpen(false);
     router.push("/");
   }
+
+  const toggleUserDropdown = () => {
+    setIsUserDropdownOpen(!isUserDropdownOpen);
+  };
 
   return (
     <>
@@ -79,13 +84,51 @@ const Navbar: React.FC<NavbarProps> = ({
                 Find Jobs
               </Link>
 
+              {/* User Icon with Dropdown or Login Button */}
               {user ? (
-                <button
-                  onClick={onLogoutClick}
-                  className="text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 hover:text-blue-600 font-avenir"
-                >
-                  Sign Out
-                </button>
+                <div className="relative">
+                  <button
+                    onClick={toggleUserDropdown}
+                    className="flex items-center space-x-2 text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 hover:text-blue-600 font-avenir"
+                  >
+                    {/* User indicator text */}
+                    <span>
+                      {user.firstName ? `${user.firstName} ${user.lastName}` : user.email || "User"}
+                    </span>
+                    
+                    {/* Profile icon with online indicator */}
+                    <div className="relative flex items-center justify-center w-8 h-8 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors">
+                      <User
+                        className="w-4 h-4 text-[#01253F]"
+                        strokeWidth={2}
+                      />
+                      {/* Online indicator dot */}
+                      <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-green-500 rounded-full border border-white"></div>
+                    </div>
+                    
+                    {/* Dropdown arrow */}
+                    <ChevronDown 
+                      className={`w-3 h-3 text-slate-700 transition-transform duration-200 ${
+                        isUserDropdownOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isUserDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                      <div className="py-1">
+                        <button
+                          onClick={onLogoutClick}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-avenir flex items-center space-x-2"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          <span>Sign Out</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <button
                   onClick={onLoginClick}
@@ -95,29 +138,6 @@ const Navbar: React.FC<NavbarProps> = ({
                 </button>
               )}
             </div>
-
-            {/* Enhanced Profile icon with user indicator */}
-            {user ? (
-              <div className="flex items-center space-x-3 bg-white rounded-full px-4 py-2 shadow-lg border border-gray-200">
-                {/* User indicator text */}
-                <span className="text-sm text-slate-700 font-medium font-avenir">
-                  {user.firstName ? `${user.firstName} ${user.lastName}` : user.email || "User"}
-                </span>
-                
-                {/* Profile icon with online indicator */}
-                <Link
-                  href="/dashboard"
-                  className="relative flex items-center justify-center w-10 h-10 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors"
-                >
-                  <User
-                    className="w-5 h-5 text-[#01253F]"
-                    strokeWidth={2}
-                  />
-                  {/* Online indicator dot */}
-                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                </Link>
-              </div>
-            ) : null}
           </div>
 
           {/* Mobile menu button */}
@@ -138,6 +158,14 @@ const Navbar: React.FC<NavbarProps> = ({
           </button>
         </div>
       </nav>
+
+      {/* Click outside to close dropdown */}
+      {isUserDropdownOpen && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setIsUserDropdownOpen(false)}
+        />
+      )}
     </>
   );
 };

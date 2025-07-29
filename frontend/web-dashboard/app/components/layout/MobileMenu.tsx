@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { User } from "lucide-react";
+import { User, LogOut } from "lucide-react";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -80,6 +80,14 @@ export default function MobileMenu({ isOpen, onClose, onLoginClick }: MobileMenu
                   <p className="text-xs text-gray-500">Signed in</p>
                 </div>
               </div>
+              {/* Sign Out button in user section */}
+              <button
+                onClick={onLogoutClick}
+                className="mt-3 w-full flex items-center space-x-2 text-sm text-red-600 hover:text-red-700 font-avenir px-2 py-1 rounded hover:bg-red-50"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Sign Out</span>
+              </button>
             </div>
           ) : null}
 
@@ -96,40 +104,26 @@ export default function MobileMenu({ isOpen, onClose, onLoginClick }: MobileMenu
             {user ? (
               <>
                 <Link
-                  href="/dashboard"
+                  href="/saved"
                   className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
                   onClick={onClose}
                 >
-                  Dashboard
-            </Link>
-            <Link
-              href="/saved"
-              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
-              onClick={onClose}
-            >
                   Saved Jobs
-            </Link>
-            <Link
-              href="/profile"
-              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
-              onClick={onClose}
-            >
-              Profile
-            </Link>
+                </Link>
+                <Link
+                  href="/profile"
+                  className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
+                  onClick={onClose}
+                >
+                  Profile
+                </Link>
               </>
             ) : null}
           </nav>
 
-          {/* Auth section */}
-          <div className="px-4 py-4 border-t border-gray-200">
-            {user ? (
-              <button
-                onClick={onLogoutClick}
-                className="w-full text-left text-base font-medium text-red-600 hover:text-red-700 font-avenir"
-              >
-                Sign Out
-              </button>
-            ) : (
+          {/* Auth section - only show for non-authenticated users */}
+          {!user && (
+            <div className="px-4 py-4 border-t border-gray-200">
               <button
                 onClick={() => {
                   onClose();
@@ -139,8 +133,8 @@ export default function MobileMenu({ isOpen, onClose, onLoginClick }: MobileMenu
               >
                 Sign In
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -21,7 +21,6 @@ export async function POST(request: NextRequest) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-        credentials: "include",
       }
     );
 
@@ -34,13 +33,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get the 'set-cookie' header from backend response
-    const setCookie = backendRes.headers.get("set-cookie");
+    // Create response with data
+    const response = NextResponse.json(data, { status: 200 });
 
-    return NextResponse.json(data, {
-      status: 200,
-      headers: setCookie ? { "set-cookie": setCookie } : undefined,
-    });
+    // Get the 'set-cookie' header from backend response and set it
+    const setCookieHeader = backendRes.headers.get("set-cookie");
+    if (setCookieHeader) {
+      response.headers.set("set-cookie", setCookieHeader);
+    }
+
+    return response;
   } catch (err: any) {
     console.error('Login route error:', err);
     return NextResponse.json(
