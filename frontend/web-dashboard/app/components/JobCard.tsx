@@ -12,6 +12,7 @@ interface JobCardProps {
   tags: Tag[];
   onClick?: () => void;
   isSelected?: boolean;
+  jobId?: string; // Add jobId for GTM tracking
   // New rich data fields
   date_posted?: string;
   employment_type?: string[] | string;
@@ -28,6 +29,7 @@ export default function JobCard({
   tags,
   onClick,
   isSelected = false,
+  jobId,
   date_posted,
   employment_type,
   organization_logo,
@@ -71,6 +73,9 @@ export default function JobCard({
         }
         p-6
       `}
+      data-job-id={jobId}
+      data-title={title}
+      data-location={location}
     >
       <div className="space-y-3">
         {/* Header with logo and company info */}

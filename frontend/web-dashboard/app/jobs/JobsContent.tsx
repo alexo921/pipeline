@@ -15,7 +15,7 @@ const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
     // List of all enhanced JSON files to load
     const jsonFiles = [
       '/live_data.json',
-      '/all_ct_jobs_20250721_232811.json',
+      '/new_manual_jobs.json',
       '/fixed_apploi_jobs.json',
       '/site_Athena_Health_Care_Systems_20250716_221638_enhanced.json',
       '/site_National_Healthcare_Associates_20250716_204858_enhanced.json',
@@ -737,7 +737,23 @@ const getShift = (title: string, description: string): string => {
   
   // Helper function to check text for patterns
   const checkTextForPatterns = (text: string) => {
-    // First check for specific time patterns and return the exact time range
+    // First check for first, second, third shift patterns
+    const shiftNumberPatterns = [
+      { pattern: /first\s*shift|1st\s*shift|1st\s*shift/i, shift: 'First Shift' },
+      { pattern: /second\s*shift|2nd\s*shift|2nd\s*shift/i, shift: 'Second Shift' },
+      { pattern: /third\s*shift|3rd\s*shift|3rd\s*shift/i, shift: 'Third Shift' },
+      { pattern: /first\s*shift|1st\s*shift/i, shift: 'First Shift' },
+      { pattern: /second\s*shift|2nd\s*shift/i, shift: 'Second Shift' },
+      { pattern: /third\s*shift|3rd\s*shift/i, shift: 'Third Shift' },
+    ];
+    
+    for (const { pattern, shift } of shiftNumberPatterns) {
+      if (pattern.test(text)) {
+        return shift;
+      }
+    }
+    
+    // Check for specific time patterns and return the exact time range
     const specificTimePatterns = [
       // 12-hour shift patterns (common in healthcare)
       { pattern: /7\s*(?:am|a)?\s*[-to]\s*7\s*(?:pm|p)?/i, shift: '7AM-7PM' },
@@ -789,18 +805,17 @@ const getShift = (title: string, description: string): string => {
       return '16-Hour Shift';
     }
     
-    // Check for explicit shift keywords
-    if (text.includes('overnight shift') || text.includes('night shift') || text.includes('graveyard shift')) {
-      return 'Overnight';
-    } else if (text.includes('morning shift') || text.includes('early morning')) {
-      return 'Morning';
-    } else if (text.includes('afternoon shift') || text.includes('midday')) {
-      return 'Afternoon';
-    } else if (text.includes('evening shift') || text.includes('late afternoon')) {
-      return 'Evening';
-    } else if (text.includes('night') || text.includes('overnight')) {
+    // Check for explicit shift keywords - ENHANCED to catch more patterns
+    if (text.includes('overnight shift') || text.includes('night shift') || text.includes('graveyard shift') || 
+        text.includes('night nurses') || text.includes('night shift') || text.includes('overnight')) {
       return 'Night';
-    } else if (text.includes('day shift') || text.includes('daytime')) {
+    } else if (text.includes('morning shift') || text.includes('early morning') || text.includes('morning')) {
+      return 'Morning';
+    } else if (text.includes('afternoon shift') || text.includes('midday') || text.includes('afternoon')) {
+      return 'Afternoon';
+    } else if (text.includes('evening shift') || text.includes('late afternoon') || text.includes('evening')) {
+      return 'Evening';
+    } else if (text.includes('day shift') || text.includes('daytime') || text.includes('day and evening')) {
       return 'Morning';
     }
     
@@ -1093,7 +1108,7 @@ export default function JobsPage() {
       return 'bg-purple-200'; // Purple for Job Setting
     } else if (['Full-Time', 'Part-Time', 'Per-Diem', 'Temp-To-Perm', 'Local Contract'].includes(label)) {
       return 'bg-[#8AADFC]'; // Blue for Employment Type
-    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night', '7a-3p', '3p-11p', '11p-7a', '6a-2p', '2p-10p', '10p-6a', '8a-4p', '4p-12a', '12a-8a', '9a-5p', '5p-1a', '1a-9a', '7a-7p', '7p-7a', '6a-6p', '6p-6a', '8a-8p', '8p-8a'].includes(label)) {
+    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', 'First Shift', 'Second Shift', 'Third Shift', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night'].includes(label)) {
       return 'bg-pink-200'; // Pink for Shift
     }
     return 'bg-gray-200';
@@ -1414,13 +1429,16 @@ export default function JobsPage() {
                         e.stopPropagation();
                         handleJobClick(job);
                       }}
-                      className={`bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] p-6 lg:p-8 cursor-pointer hover:shadow-[6px_4px_15px_rgba(36,102,208,0.6)] transition-all duration-200 w-full overflow-hidden ${
+                      className={`bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] p-6 lg:p-8 cursor-pointer hover:shadow-[6px_4px_15px_rgba(36,102,208,0.6)] transition-all duration-200 w-full overflow-hidden job-card ${
                         selectedJob?.id === job.id ? 'ring-2 ring-[#2466D0]' : ''
                       }`}
                       style={{
                         minHeight: '140px',
                         height: 'auto'
                       }}
+                      data-job-id={job.id}
+                      data-title={job.title}
+                      data-location={job.location}
                     >
                       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start h-full">
                         <div className="flex-1 min-w-0 lg:pr-4 mb-4 lg:mb-0">

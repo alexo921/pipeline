@@ -16,7 +16,7 @@ const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
     const jsonFiles = [
       '/improved_ct_jobs_20250725_054659.json', // Load this file FIRST
       '/live_data.json',
-      '/all_ct_jobs_20250721_232811.json',
+      '/new_manual_jobs.json',
       '/fixed_apploi_jobs.json',
       '/site_Athena_Health_Care_Systems_20250716_221638_enhanced.json',
       '/site_National_Healthcare_Associates_20250716_204858_enhanced.json',
@@ -805,7 +805,23 @@ const getShift = (title: string, description: string): string => {
   
   // Helper function to check text for patterns
   const checkTextForPatterns = (text: string) => {
-    // First check for specific time patterns and return the exact time range
+    // First check for first, second, third shift patterns
+    const shiftNumberPatterns = [
+      { pattern: /first\s*shift|1st\s*shift|1st\s*shift/i, shift: 'First Shift' },
+      { pattern: /second\s*shift|2nd\s*shift|2nd\s*shift/i, shift: 'Second Shift' },
+      { pattern: /third\s*shift|3rd\s*shift|3rd\s*shift/i, shift: 'Third Shift' },
+      { pattern: /first\s*shift|1st\s*shift/i, shift: 'First Shift' },
+      { pattern: /second\s*shift|2nd\s*shift/i, shift: 'Second Shift' },
+      { pattern: /third\s*shift|3rd\s*shift/i, shift: 'Third Shift' },
+    ];
+    
+    for (const { pattern, shift } of shiftNumberPatterns) {
+      if (pattern.test(text)) {
+        return shift;
+      }
+    }
+    
+    // Check for specific time patterns and return the exact time range
     const specificTimePatterns = [
       // 12-hour shift patterns (common in healthcare)
       { pattern: /7\s*(?:am|a)?\s*[-to]\s*7\s*(?:pm|p)?/i, shift: '7AM-7PM' },
@@ -1130,492 +1146,102 @@ export default function JobsPage() {
     console.log('🏷️ Active filters:', activeFilters.length);
     
     const filtered = jobs.filter(job => {
-      // Debug: Show what's happening with the first few jobs during search
-      if (searchTerm === 'morning' && jobs.indexOf(job) < 3) {
-        console.log('🔍 Processing job for "morning" search:', job.title);
-        console.log('🔍 Job description length:', job.description?.length || 0);
-        console.log('🔍 Job tags:', job.tags?.map(t => t.label));
-      }
+      // Enhanced search functionality - search across all relevant fields
+      const searchLower = searchTerm.toLowerCase();
       
-      // Enhanced search functionality with role-specific matching
-      const searchTerms = searchTerm.toLowerCase().split(/\s+/).filter(term => term.length > 0);
+      // Enhanced shift search mapping - comprehensive and flexible
+      const shiftSearchMapping: Record<string, string[]> = {
+        // Morning/First Shift variations
+        'morning': ['morning', '7am-3pm', '6am-2pm', '8am-4pm', '9am-5pm', '12-hour day', 'day shift', 'first shift', '1st shift'],
+        'first': ['first shift', '1st shift', 'morning', '7am-3pm', '6am-2pm', '8am-4pm', '9am-5pm', '12-hour day', 'day shift'],
+        '1st': ['first shift', '1st shift', 'morning', '7am-3pm', '6am-2pm', '8am-4pm', '9am-5pm', '12-hour day', 'day shift'],
+        
+        // Afternoon/Second Shift variations
+        'afternoon': ['afternoon', '3pm-11pm', '2pm-10pm', '4pm-12am', 'second shift', '2nd shift'],
+        'second': ['second shift', '2nd shift', 'afternoon', 'evening', '3pm-11pm', '2pm-10pm', '4pm-12am', '5pm-1am'],
+        '2nd': ['second shift', '2nd shift', 'afternoon', 'evening', '3pm-11pm', '2pm-10pm', '4pm-12am', '5pm-1am'],
+        
+        // Evening variations
+        'evening': ['evening', '5pm-1am', '4pm-12am', 'second shift', '2nd shift'],
+        
+        // Night/Third Shift variations
+        'night': ['night', 'overnight', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard', 'third shift', '3rd shift'],
+        'third': ['third shift', '3rd shift', 'night', 'overnight', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard'],
+        '3rd': ['third shift', '3rd shift', 'night', 'overnight', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard'],
+        'overnight': ['overnight', 'night', 'third shift', '3rd shift', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard'],
+        
+        // Time-specific searches
+        '7am': ['7am-3pm', '7am-7pm'],
+        '8am': ['8am-4pm', '8am-8pm'],
+        '3pm': ['3pm-11pm', '7am-3pm'],
+        '11pm': ['11pm-7am'],
+        '7pm': ['7pm-7am'],
+        '6am': ['6am-2pm', '6am-6pm'],
+        '2pm': ['2pm-10pm', '6am-2pm'],
+        '10pm': ['10pm-6am'],
+        '6pm': ['6pm-6am'],
+        '8pm': ['8pm-8am'],
+        '4pm': ['4pm-12am', '8am-4pm'],
+        '12am': ['12am-8am', '4pm-12am'],
+        '9am': ['9am-5pm'],
+        '5pm': ['5pm-1am', '9am-5pm'],
+        '1am': ['1am-9am', '5pm-1am'],
+        '9pm': ['9pm-5am'],
+        '5am': ['5am-1pm'],
+        '1pm': ['1pm-9pm'],
+        
+        // Generic shift searches
+        'shift': ['morning', 'afternoon', 'evening', 'night', 'overnight', 'first shift', 'second shift', 'third shift', '1st shift', '2nd shift', '3rd shift', 'day shift', 'night shift', '12-hour shift', '8-hour shift'],
+        'day': ['morning', 'day shift', '12-hour day', 'first shift', '1st shift'],
+        'graveyard': ['night', 'overnight', 'third shift', '3rd shift', 'graveyard shift'],
+        
+        // Additional variations
+        'am': ['morning', 'first shift', '1st shift', '7am-3pm', '6am-2pm', '8am-4pm', '9am-5pm'],
+        'pm': ['afternoon', 'evening', 'second shift', '2nd shift', '3pm-11pm', '2pm-10pm', '4pm-12am', '5pm-1am']
+      };
       
-      let matchesSearch = searchTerm === '';
+      // Check if search term is a shift keyword
+      let shiftSearchTerms: string[] = [];
+      let isShiftOnlySearch = false;
       
-      if (searchTerm !== '' && searchTerms.length > 0) {
-        // Define healthcare role categories and their variations
-        const roleCategories: Record<string, {
-          primary: string[];
-          exclude: string[];
-          titlePatterns: RegExp[];
-        }> = {
-          'nurse': {
-            primary: ['nurse', 'nursing', 'rn', 'lpn', 'lvn', 'registered nurse', 'licensed practical nurse', 'licensed vocational nurse', 'staff nurse', 'travel nurse', 'charge nurse', 'icu nurse', 'er nurse', 'or nurse', 'pediatric nurse', 'psychiatric nurse'],
-            exclude: ['cna', 'certified nursing assistant', 'nursing assistant', 'caregiver', 'home health aide', 'hha', 'pca', 'patient care assistant'],
-            titlePatterns: [/nurse/i, /rn\b/i, /lpn\b/i, /lvn\b/i, /registered nurse/i, /licensed practical nurse/i, /licensed vocational nurse/i, /staff nurse/i, /travel nurse/i, /charge nurse/i, /icu nurse/i, /er nurse/i, /or nurse/i, /pediatric nurse/i, /psychiatric nurse/i]
-          },
-          'cna': {
-            primary: ['cna', 'certified nursing assistant', 'nursing assistant', 'caregiver', 'home health aide', 'hha', 'home care aide', 'hca', 'patient care assistant', 'pca', 'personal care aide', 'nursing aide', 'hospital aide', 'patient care technician', 'pct'],
-            exclude: ['rn', 'lpn', 'lvn', 'registered nurse', 'licensed practical nurse', 'licensed vocational nurse', 'nurse'],
-            titlePatterns: [/cna\b/i, /certified nursing assistant/i, /nursing assistant/i, /caregiver/i, /home health aide/i, /hha\b/i, /home care aide/i, /hca\b/i, /patient care assistant/i, /pca\b/i, /personal care aide/i, /nursing aide/i, /hospital aide/i, /patient care technician/i, /pct\b/i]
-          },
-          'therapist': {
-            primary: ['therapist', 'therapy', 'pt', 'ot', 'st', 'rt', 'physical therapist', 'occupational therapist', 'speech therapist', 'respiratory therapist', 'speech language pathologist', 'slp', 'physical therapy assistant', 'pta', 'occupational therapy assistant', 'ota', 'recreational therapist', 'massage therapist', 'mt'],
-            exclude: ['nurse', 'cna', 'caregiver', 'assistant'],
-            titlePatterns: [/therapist/i, /pt\b/i, /ot\b/i, /st\b/i, /rt\b/i, /physical therapist/i, /occupational therapist/i, /speech therapist/i, /respiratory therapist/i, /speech language pathologist/i, /slp\b/i, /physical therapy assistant/i, /pta\b/i, /occupational therapy assistant/i, /ota\b/i, /recreational therapist/i, /massage therapist/i, /mt\b/i]
-          },
-          'aide': {
-            primary: ['aide', 'assistant', 'hha', 'home health aide', 'personal care aide', 'pca', 'patient care assistant', 'medical assistant', 'ma', 'certified medical assistant', 'cma', 'clinical assistant', 'ca'],
-            exclude: ['nurse', 'rn', 'lpn', 'lvn', 'therapist', 'pt', 'ot', 'st', 'rt'],
-            titlePatterns: [/aide/i, /assistant/i, /hha\b/i, /home health aide/i, /personal care aide/i, /pca\b/i, /patient care assistant/i, /medical assistant/i, /ma\b/i, /certified medical assistant/i, /cma\b/i, /clinical assistant/i, /ca\b/i]
-          },
-          'manager': {
-            primary: ['manager', 'supervisor', 'director', 'coordinator', 'lead', 'charge nurse', 'lead nurse', 'clinical manager', 'unit manager', 'department head', 'assistant director', 'nurse manager', 'director of nursing', 'don'],
-            exclude: ['cna', 'aide', 'assistant'],
-            titlePatterns: [/manager/i, /supervisor/i, /director/i, /coordinator/i, /lead/i, /charge nurse/i, /lead nurse/i, /clinical manager/i, /unit manager/i, /department head/i, /assistant director/i, /nurse manager/i, /director of nursing/i, /don\b/i]
-          },
-          'specialist': {
-            primary: ['specialist', 'wound care nurse', 'infection control nurse', 'icn', 'quality assurance nurse', 'qa nurse', 'case manager', 'utilization review nurse', 'ur nurse', 'mds coordinator', 'mds', 'restorative nurse', 'staff development coordinator', 'sdc'],
-            exclude: ['cna', 'aide', 'assistant'],
-            titlePatterns: [/specialist/i, /wound care nurse/i, /infection control nurse/i, /icn\b/i, /quality assurance nurse/i, /qa nurse/i, /case manager/i, /utilization review nurse/i, /ur nurse/i, /mds coordinator/i, /mds\b/i, /restorative nurse/i, /staff development coordinator/i, /sdc\b/i]
-          },
-          'technician': {
-            primary: ['technician', 'tech', 'phlebotomist', 'lab technician', 'lab tech', 'x-ray technician', 'x-ray tech', 'radiology technician', 'rad tech', 'ekg technician', 'ekg tech', 'ecg technician', 'ecg tech', 'ultrasound technician', 'sonographer', 'surgical technician', 'surg tech', 'sterile processing technician', 'spt'],
-            exclude: ['nurse', 'cna', 'caregiver'],
-            titlePatterns: [/technician/i, /tech\b/i, /phlebotomist/i, /lab technician/i, /lab tech/i, /x-ray technician/i, /x-ray tech/i, /radiology technician/i, /rad tech/i, /ekg technician/i, /ekg tech/i, /ecg technician/i, /ecg tech/i, /ultrasound technician/i, /sonographer/i, /surgical technician/i, /surg tech/i, /sterile processing technician/i, /spt\b/i]
-          },
-          'dietary': {
-            primary: ['dietary', 'diet', 'nutrition', 'dietary aide', 'dietary technician', 'diet tech', 'nutritionist', 'registered dietitian', 'rd'],
-            exclude: ['nurse', 'cna', 'therapist'],
-            titlePatterns: [/dietary/i, /diet\b/i, /nutrition/i, /dietary aide/i, /dietary technician/i, /diet tech/i, /nutritionist/i, /registered dietitian/i, /rd\b/i]
-          },
-          'social_work': {
-            primary: ['social worker', 'sw', 'licensed social worker', 'lsw', 'clinical social worker', 'lcsw', 'mental health technician', 'mht', 'behavioral health technician', 'bht', 'activity director', 'activities director', 'recreation therapist', 'rec therapist'],
-            exclude: ['nurse', 'cna', 'therapist'],
-            titlePatterns: [/social worker/i, /sw\b/i, /licensed social worker/i, /lsw\b/i, /clinical social worker/i, /lcsw\b/i, /mental health technician/i, /mht\b/i, /behavioral health technician/i, /bht\b/i, /activity director/i, /activities director/i, /recreation therapist/i, /rec therapist/i]
-          },
-          'support': {
-            primary: ['housekeeper', 'environmental services', 'maintenance technician', 'maintenance tech', 'security officer', 'security'],
-            exclude: ['nurse', 'cna', 'therapist'],
-            titlePatterns: [/housekeeper/i, /environmental services/i, /maintenance technician/i, /maintenance tech/i, /security officer/i, /security/i]
+      // Check for exact shift keyword matches first
+      for (const [keyword, shifts] of Object.entries(shiftSearchMapping)) {
+        if (searchLower === keyword || searchLower.includes(keyword)) {
+          shiftSearchTerms = shifts;
+          // If the search term is exactly a shift keyword, mark it as shift-only search
+          if (searchLower === keyword || searchLower === keyword + ' shift' || searchLower === keyword + ' shifts') {
+            isShiftOnlySearch = true;
           }
-        };
-
-        // Define shift/time terms that should never be treated as role matches
-        const shiftTimeTerms = [
-          'morning', 'evening', 'night', 'day', 'afternoon', 'overnight', 'shift', 'am', 'pm',
-          '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm', '12am',
-          '7:00am', '8:00am', '9:00am', '10:00am', '11:00am', '12:00pm', '1:00pm', '2:00pm', '3:00pm', '4:00pm', '5:00pm', '6:00pm', '7:00pm', '8:00pm', '9:00pm', '10:00pm', '11:00pm', '12:00am',
-          '7-3', '8-4', '9-5', '10-6', '11-7', '3-11', '4-12', '5-1', '6-2', '7-7', '6-6', '8-8', '12-12'
-        ];
-        
-        // Separate search terms into role terms and shift terms
-        const roleTerms = searchTerms.filter(term => !shiftTimeTerms.includes(term));
-        const shiftTerms = searchTerms.filter(term => shiftTimeTerms.includes(term));
-        
-        // Expand shift terms using the shiftKeywordMap
-        const expandedShiftTerms = shiftTerms.flatMap(term => {
-          const mapped = shiftKeywordMap[term];
-          return mapped ? [term, ...mapped] : [term];
-        });
-        
-        if (searchTerm === 'morning') {
-          console.log('🔍 Search analysis for "morning":');
-          console.log('🔍 Role terms:', roleTerms);
-          console.log('🔍 Original shift terms:', shiftTerms);
-          console.log('🔍 Expanded shift terms:', expandedShiftTerms);
-        }
-
-        // Check if search terms match any specific role category
-        let matchedRole = null;
-        
-        // If we have role terms, try to match them
-        if (roleTerms.length > 0) {
-        // Special handling for exact matches to avoid cross-category confusion
-          if (roleTerms.length === 1) {
-            const singleTerm = roleTerms[0];
-          if (singleTerm === 'rn' || singleTerm === 'lpn') {
-            matchedRole = 'nurse';
-          } else if (singleTerm === 'cna') {
-            matchedRole = 'cna';
-          } else if (singleTerm === 'pt' || singleTerm === 'ot' || singleTerm === 'st' || singleTerm === 'rt') {
-            matchedRole = 'therapist';
-          } else if (singleTerm === 'hha') {
-            matchedRole = 'aide';
-          }
-        }
-        
-        // If no exact match, check for general role matches
-        if (!matchedRole) {
-          for (const [roleKey, roleData] of Object.entries(roleCategories)) {
-              const hasPrimaryMatch = roleTerms.some(term => 
-              roleData.primary.some(primary => primary === term || primary.includes(term) || term.includes(primary))
-            );
-            
-            if (hasPrimaryMatch) {
-              matchedRole = roleKey;
-              break;
-              }
-            }
-          }
-        }
-        
-        if (searchTerm === 'morning') {
-          console.log('🔍 Final role matching result:', matchedRole);
-        }
-
-        if (matchedRole) {
-          // Role-specific matching with shift consideration
-          if (searchTerm === 'morning') {
-            console.log('🔍 Role + shift matching for "morning" with role:', matchedRole);
-          }
-          const roleData = roleCategories[matchedRole];
-          const jobTitle = job.title.toLowerCase();
-          const jobDescription = job.description?.toLowerCase() || '';
-          
-          // First, check if the job matches the role
-          let roleMatches = false;
-          
-          // For single-term role searches, be more specific
-          if (roleTerms.length === 1) {
-            const singleTerm = roleTerms[0];
-            
-            // Check if the job title contains the exact search term
-            if (jobTitle.includes(singleTerm)) {
-              // For specific abbreviations, only match if they appear as standalone terms
-              if (['rn', 'lpn', 'pt', 'ot', 'st', 'rt', 'cna', 'hha'].includes(singleTerm)) {
-                const wordBoundaryPattern = new RegExp(`\\b${singleTerm}\\b`, 'i');
-                roleMatches = wordBoundaryPattern.test(jobTitle);
-                
-                // Special case for CNA - also include "Nursing Assistant"
-                if (singleTerm === 'cna' && jobTitle.includes('nursing assistant')) {
-                  roleMatches = true;
-                }
-              } else {
-                roleMatches = true;
-              }
-            } else {
-              // Special case for CNA - also include "Nursing Assistant"
-              if (singleTerm === 'cna' && jobTitle.includes('nursing assistant')) {
-                roleMatches = true;
-              } else {
-                roleMatches = false;
-              }
-            }
-          } else {
-            // For multi-term role searches, use the original logic
-            const titleMatches = roleData.titlePatterns.some((pattern: RegExp) => pattern.test(jobTitle));
-            
-            if (titleMatches) {
-              roleMatches = true;
-            } else {
-              const titleHasPrimaryTerms = roleData.primary.some((term: string) => 
-                jobTitle.includes(term)
-              );
-              
-              const titleHasExcludedTerms = roleData.exclude.some((term: string) => 
-                jobTitle.includes(term)
-              );
-              
-              roleMatches = titleHasPrimaryTerms && !titleHasExcludedTerms;
-            }
-          }
-          
-          // If role matches, check for shift terms if any
-          if (roleMatches) {
-            if (expandedShiftTerms.length === 0) {
-              // No shift terms specified, so any job of this role matches
-              matchesSearch = true;
-        } else {
-              // Check if the job contains any of the specified shift terms
-              const jobTags = job.tags || [];
-              const tagLabels = jobTags.map(tag => tag.label.toLowerCase()).join(' ');
-              const comprehensiveJobText = [
-                jobTitle,
-                jobDescription,
-                tagLabels
-              ].join(' ');
-              
-              const hasShiftMatch = expandedShiftTerms.some(shiftTerm => 
-                comprehensiveJobText.includes(shiftTerm)
-              );
-              
-              if (searchTerm === 'morning') {
-                console.log('🔍 Role matches, checking shift terms:', expandedShiftTerms);
-                console.log('🔍 Shift match found:', hasShiftMatch);
-              }
-              
-              matchesSearch = hasShiftMatch;
-            }
-          } else {
-            matchesSearch = false;
-          }
-        } else {
-          // COMPREHENSIVE search - search through ALL job data including tags
-          if (searchTerm === 'morning') {
-            console.log('🔍 "morning" going to comprehensive search for job:', job.title);
-            console.log('🔍 Job description contains "morning":', job.description?.toLowerCase().includes('morning'));
-            console.log('🔍 Job tags:', job.tags?.map(t => t.label));
-          }
-          
-          // For shift-only searches, we want to find any job with that shift
-          if (expandedShiftTerms.length > 0 && roleTerms.length === 0) {
-            if (searchTerm === 'morning') {
-              console.log('🔍 Shift-only search for "morning"');
-            }
-            
-            const jobTitle = job.title.toLowerCase();
-            const jobDescription = job.description?.toLowerCase() || '';
-                const jobTags = job.tags || [];
-            const tagLabels = jobTags.map(tag => tag.label.toLowerCase()).join(' ');
-            
-            // Create comprehensive text for shift searching
-            const comprehensiveJobText = [
-              jobTitle,
-              jobDescription,
-              tagLabels
-            ].join(' ');
-            
-            // Check if any shift term is found
-            matchesSearch = expandedShiftTerms.some(shiftTerm => {
-              if (searchTerm === 'morning') {
-                console.log('🔍 Checking shift term "' + shiftTerm + '" in job:', job.title);
-                console.log('🔍 Found in comprehensive text:', comprehensiveJobText.includes(shiftTerm));
-              }
-              return comprehensiveJobText.includes(shiftTerm);
-            });
-          } else {
-            // General comprehensive search for other terms
-            const jobTitle = job.title.toLowerCase();
-            const jobDescription = job.description?.toLowerCase() || '';
-            const jobCompany = job.company.toLowerCase();
-            const jobLocation = job.location.toLowerCase();
-            const jobSalary = job.salary?.toLowerCase() || '';
-            const jobRequirements = Array.isArray(job.requirements) 
-              ? job.requirements.join(' ').toLowerCase()
-              : (job.requirements?.toLowerCase() || '');
-            const jobOverview = job.overview?.toLowerCase() || '';
-            
-            // Get all tags and their labels
-            const jobTags = job.tags || [];
-            const tagLabels = jobTags.map(tag => tag.label.toLowerCase()).join(' ');
-            const tagTypes = jobTags.map(tag => tag.type.toLowerCase()).join(' ');
-            
-            // Create a comprehensive searchable text from all job data
-            const comprehensiveJobText = [
-              jobTitle,
-              jobDescription,
-              jobCompany,
-              jobLocation,
-              jobSalary,
-              jobRequirements,
-              jobOverview,
-              tagLabels,
-              tagTypes
-            ].join(' ');
-            
-            // COMPREHENSIVE: Check if ANY search term is found anywhere in the job
-            matchesSearch = searchTerms.some(term => {
-              // Debug logging for shift-related searchesz
-              if (['morning', 'evening', 'night', 'shift', '7am', '8am', '9am', '3pm', '11pm'].includes(term)) {
-                console.log('🔍 Searching for "' + term + '" in job:', job.title);
-                console.log('📝 Job description contains "' + term + '":', jobDescription.includes(term));
-                console.log('🏷️ Job tags:', jobTags.map(t => `${t.label} (${t.type})`));
-                console.log('📋 Tag labels contain "' + term + '":', tagLabels.includes(term));
-                console.log('📄 Comprehensive text contains "' + term + '":', comprehensiveJobText.includes(term));
-                
-
-                // Show the first 200 characters of comprehensive text for debugging
-                console.log('📄 Sample comprehensive text:', comprehensiveJobText.substring(0, 200));
-              }
-              
-              // Check comprehensive text first
-              if (comprehensiveJobText.includes(term)) {
-                console.log('✅ Found match in comprehensive text for term:', term, 'in job:', job.title);
-                return true;
-              }
-              
-              // Enhanced tag-based matching
-              const hasMatchingTag = jobTags.some(tag => {
-                const tagLabel = tag.label.toLowerCase();
-                const tagType = tag.type.toLowerCase();
-                
-                // Exact tag match
-                if (tagLabel === term) {
-                  return true;
-                }
-                
-                // Partial tag match
-                if (tagLabel.includes(term) || term.includes(tagLabel)) {
-                  return true;
-                }
-                
-                // Tag type matching (e.g., "shift", "employment", "setting")
-                if (tagType.includes(term)) {
-                  return true;
-                  }
-                  
-                  return false;
-                });
-                
-              if (hasMatchingTag) {
-                  return true;
-                }
-              
-              // Individual field matching for better precision
-              if (jobTitle.includes(term)) {
-                return true;
-              }
-              
-              if (jobDescription.includes(term)) {
-                return true;
-              }
-              
-              if (jobCompany.includes(term)) {
-                return true;
-              }
-              
-              if (jobLocation.includes(term)) {
-                return true;
-              }
-              
-              if (jobSalary.includes(term)) {
-                return true;
-              }
-              
-              if (jobRequirements.includes(term)) {
-                return true;
-              }
-              
-              if (jobOverview.includes(term)) {
-                return true;
-              }
-              
-              return false;
-            });
-          }
+          break;
         }
       }
       
-      // Enhanced location filtering with city validation
-      let matchesLocation = true;
-      if (locationInput !== '') {
-        const inputLower = locationInput.toLowerCase().trim();
-        
-        const jobLocation = job.location.toLowerCase();
-        
-        // Extract city and state from location string
-        const locationParts = jobLocation.split(',').map(part => part.trim());
-        const jobCity = locationParts[0] || '';
-        const jobState = locationParts[1] || '';
-        
-        // Check if input is a state code (2 letters)
-        const isStateCode = /^[A-Z]{2}$/i.test(inputLower);
-        
-        // Check if input is a state name
-        const isStateName = stateNameToCode[inputLower];
-        
-        // Debug logging for location filtering
-        console.log('🔍 Location filtering debug:', {
-          input: locationInput,
-          inputLower,
-          jobLocation,
-          jobCity,
-          jobState,
-          isStateCode,
-          isStateName,
-          targetState: isStateCode ? inputLower.toUpperCase() : isStateName
-        });
-        
-        // Check if input contains city and state (e.g., "Boston, MA" or "Boston MA")
-        const cityStatePattern = /^([^,]+)\s*[,]?\s*([A-Z]{2}|[a-zA-Z\s]+)$/i;
-        const cityStateMatch = inputLower.match(cityStatePattern);
-        
-        if (cityStateMatch) {
-          // City, State format - use location validation
-          const inputCity = cityStateMatch[1].trim();
-          const inputState = cityStateMatch[2].trim();
-          
-          // Check if state is a code or name
-          const targetState = stateNameToCode[inputState.toLowerCase()] || inputState.toUpperCase();
-          
-          // First try exact match
-          matchesLocation = (jobCity.includes(inputCity) || jobLocation.includes(inputCity)) &&
-                           (jobState.includes(targetState.toLowerCase()) || jobLocation.includes(targetState.toLowerCase()));
-          
-          // If no exact match, try to find closest city in the state
-          if (!matchesLocation) {
-            // This would ideally use the location validator, but for performance we'll do a simple check
-            // In a full implementation, you'd want to pre-validate the input and store the closest matches
-            const normalizedInputCity = inputCity.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
-            const normalizedJobCity = jobCity.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
-            
-            // Simple similarity check - if cities are similar and in the same state
-            if (normalizedInputCity.length > 2 && normalizedJobCity.length > 2) {
-              const similarity = calculateStringSimilarity(normalizedInputCity, normalizedJobCity);
-              matchesLocation = similarity > 0.7 && 
-                               (jobState.includes(targetState.toLowerCase()) || jobLocation.includes(targetState.toLowerCase()));
-            }
-          }
-        } else if (isStateCode || isStateName) {
-          // State-only filtering - be more precise to avoid cross-matching
-          const targetState = isStateCode ? inputLower.toUpperCase() : isStateName;
-          
-          // Extract state information from job location using helper function
-          const jobStateInfo = extractStateFromLocation(jobLocation);
-          const jobAddressState = job.address?.state?.toUpperCase() || '';
-          
-          // For state codes, use exact matching
-          if (isStateCode) {
-            matchesLocation = jobStateInfo.stateCode === targetState || jobAddressState === targetState;
-          } else {
-            // For state names, check for exact matches
-            const stateNameRegex = new RegExp(`\\b${inputLower}\\b`, 'i');
-            matchesLocation = stateNameRegex.test(jobState) || 
-                            stateNameRegex.test(jobLocation) ||
-                            !!(job.address?.state && stateNameRegex.test(job.address.state.toLowerCase()));
-          }
-          
-          console.log('🔍 State filtering result:', {
-            targetState,
-            jobStateCode: jobStateInfo.stateCode,
-            jobStateName: jobStateInfo.stateName,
-            jobAddressState,
-            jobState,
-            jobLocation,
-            matchesLocation
-          });
-        } else {
-          // City-only or general location filtering
-          matchesLocation = jobCity.includes(inputLower) || 
-                           jobLocation.includes(inputLower) ||
-                           jobState.includes(inputLower);
-        }
+      // Basic search matching
+      const basicSearchMatch = searchTerm === '' || 
+                              job.title.toLowerCase().includes(searchLower) ||
+                              job.company.toLowerCase().includes(searchLower) ||
+                              job.location.toLowerCase().includes(searchLower) ||
+                              (job.description && job.description.toLowerCase().includes(searchLower)) ||
+                              (job.requirements && Array.isArray(job.requirements) && 
+                               job.requirements.some(req => req.toLowerCase().includes(searchLower))) ||
+                              (job.requirements && typeof job.requirements === 'string' && 
+                               job.requirements.toLowerCase().includes(searchLower)) ||
+                              (job.tags && job.tags.some(tag => tag.label.toLowerCase().includes(searchLower)));
+      
+      // Enhanced shift search
+      const shiftMatch = shiftSearchTerms.length > 0 && job.tags && job.tags.some(tag => 
+        tag.type === 'shift' && shiftSearchTerms.some(term => 
+          tag.label.toLowerCase().includes(term.toLowerCase())
+        )
+      );
+      
+      // If it's a shift-only search, prioritize shift matching
+      if (isShiftOnlySearch) {
+        return shiftMatch;
       }
       
-      // Enhanced filtering logic
-      const matchesFilters = activeFilters.length === 0 || 
-                            activeFilters.some(filter => {
-                              if (filter.type === 'shift') {
-                                // Map time-based shifts to basic shift categories
-                                const shiftMapping: Record<string, string[]> = {
-                                  'Morning': ['Morning', '7AM-3PM', '6AM-2PM', '8AM-4PM', '9AM-5PM', '12-Hour Day', 'Day Shift'],
-                                  'Afternoon': ['Afternoon', '3PM-11PM', '2PM-10PM', '4PM-12AM'],
-                                  'Evening': ['Evening', '5PM-1AM', '4PM-12AM'],
-                                  'Night': ['Night', 'Overnight', '11PM-7AM', '10PM-6AM', '12AM-8AM', '7PM-7AM', '6PM-6AM', '8PM-8AM', '12-Hour Night', 'Night Shift', 'Graveyard'],
-                                  'Overnight': ['Overnight', 'Night', '11PM-7AM', '10PM-6AM', '12AM-8AM', '7PM-7AM', '6PM-6AM', '8PM-8AM', '12-Hour Night', 'Night Shift', 'Graveyard']
-                                };
-                                
-                                const mappedShifts = shiftMapping[filter.label] || [filter.label];
-                                return (job.tags || []).some(tag => 
-                                  tag.type === 'shift' && mappedShifts.includes(tag.label)
-                                );
-                              } else {
-                                return (job.tags || []).some(tag => tag.label === filter.label);
-                              }
-                            });
-      
-      return matchesSearch && matchesLocation && matchesFilters;
+      // For combined searches, return true if either basic search OR shift search matches
+      return basicSearchMatch || shiftMatch;
     });
     
     console.log('📊 Search results:', {
@@ -1750,13 +1376,13 @@ export default function JobsPage() {
   const handleJobClick = (job: Job) => {
     setSelectedJob(job);
     
-    // On desktop, scroll to the job details container
-    if (window.innerWidth >= 1024 && jobDetailsRef.current) {
-      jobDetailsRef.current.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
-    }
+    // Remove the scrolling behavior - clicking on a job should not scroll the screen
+    // if (window.innerWidth >= 1024 && jobDetailsRef.current) {
+    //   jobDetailsRef.current.scrollIntoView({ 
+    //     behavior: 'smooth', 
+    //     block: 'start' 
+    //   });
+    // }
   };
 
   const handleContainerClick = () => {
@@ -1784,7 +1410,7 @@ export default function JobsPage() {
       return 'bg-purple-200'; // Purple for Job Setting
     } else if (['Full-Time', 'Part-Time', 'Per-Diem', 'Temp-To-Perm', 'Local Contract'].includes(label)) {
       return 'bg-[#8AADFC]'; // Blue for Employment Type
-    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night'].includes(label)) {
+    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', 'First Shift', 'Second Shift', 'Third Shift', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night'].includes(label)) {
       return 'bg-pink-200'; // Pink for Shift
     }
     return 'bg-gray-200';
@@ -2332,13 +1958,16 @@ export default function JobsPage() {
                         e.stopPropagation();
                         handleJobClick(job);
                       }}
-                      className={`bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] p-6 lg:p-8 cursor-pointer hover:shadow-[6px_4px_15px_rgba(36,102,208,0.6)] transition-all duration-200 w-full overflow-hidden ${
+                      className={`bg-white rounded-xl lg:rounded-[20px] shadow-[4px_3px_12px_rgba(36,102,208,0.4)] p-6 lg:p-8 cursor-pointer hover:shadow-[6px_4px_15px_rgba(36,102,208,0.6)] transition-all duration-200 w-full overflow-hidden job-card ${
                         selectedJob?.id === job.id ? 'ring-2 ring-[#2466D0]' : ''
                       }`}
                       style={{
                         minHeight: '140px',
                         height: 'auto'
                       }}
+                      data-job-id={job.id}
+                      data-title={job.title}
+                      data-location={job.location}
                     >
                       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start h-full">
                         <div className="flex-1 min-w-0 lg:pr-4 mb-4 lg:mb-0">

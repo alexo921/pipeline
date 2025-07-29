@@ -154,7 +154,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
       {/* Mobile-only full screen modal with safe area support */}
       <div 
         ref={modalRef}
-        className="fixed inset-0 bg-white flex flex-col lg:hidden"
+        className="fixed inset-0 bg-white flex flex-col lg:hidden job-modal"
         style={{ 
           zIndex: 2147483647,
           height: '100dvh',
@@ -162,6 +162,9 @@ export default function JobModal({ job, onClose }: JobModalProps) {
           paddingBottom: 'env(safe-area-inset-bottom)',
           isolation: 'isolate' // Create new stacking context
         }}
+        data-job-id={job.id}
+        data-title={job.title}
+        data-location={job.location}
       >
         {/* Header - Fixed at top */}
         <div className="p-6 border-b bg-white flex-shrink-0">
@@ -265,7 +268,10 @@ export default function JobModal({ job, onClose }: JobModalProps) {
           <div className="sticky bottom-0 p-6 pb-safe flex justify-center bg-white border-t shadow-lg">
             <button
               onClick={handleApplyClick}
-              className="w-3/4 sm:w-auto bg-[#2CB3BF] text-white font-black text-[20px] py-4 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
+              className="w-3/4 sm:w-auto bg-[#2CB3BF] text-white font-black text-[20px] py-4 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir job-apply-button"
+              data-job-id={job.id}
+              data-title={job.title}
+              data-location={job.location}
             >
               Apply
             </button>
