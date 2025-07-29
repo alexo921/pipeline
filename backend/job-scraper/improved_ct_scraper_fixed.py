@@ -8,6 +8,8 @@ import os
 import time
 import json
 import csv
+import signal
+import threading
 from datetime import datetime
 from typing import List, Dict, Optional
 from urllib.parse import urljoin
@@ -28,10 +30,11 @@ def setup_logging(debug: bool = False):
 class ImprovedCTJobScraper:
     """Improved Connecticut Healthcare Job Scraper with successful description extraction."""
     
-    def __init__(self, headless: bool = True, debug: bool = False):
+    def __init__(self, headless: bool = True, debug: bool = False, resume_from_progress: bool = True):
         self.logger = setup_logging(debug)
         self.headless = headless
         self.debug = debug
+        self.resume_from_progress = resume_from_progress
         self.playwright = None
         self.browser = None
         self.context = None
@@ -42,6 +45,28 @@ class ImprovedCTJobScraper:
         self.failed_sites = 0
         self.failed_urls = set()  # Track URLs that have failed to avoid retrying them
         self.corruption_count = 0  # Track how many times corruption has been detected
+        
+        # Progress tracking for restart functionality
+        self.progress_file = "scraper_progress.json"
+        self.last_activity_time = time.time()
+        self.current_site_index = 0
+        self.current_job_index = 0
+        self.current_site_name = ""
+        self.scraped_jobs = []  # All jobs scraped so far
+        self.site_jobs = []  # Jobs from current site
+        self.is_running = False
+        self.last_progress_save = time.time()
+        self.progress_save_interval = 60  # Save progress every 60 seconds
+        
+        # Timeout detection
+        self.max_job_timeout = 120  # 2 minutes per job
+        self.max_site_timeout = 1800  # 30 minutes per site
+        self.max_total_timeout = 7200  # 2 hours total
+        self.start_time = time.time()
+        
+        # Load progress if resuming
+        if self.resume_from_progress:
+            self._load_progress()
         
         # Pre-populate with known problematic URLs
         self.failed_urls.add("https://jobs.apploi.com/view/1439065?utm_campaign=jobs_snippet&utm_source=Ryders_Health_Management-career-page&utm_medium=client-web-site&utm_term=apploi-snippet&_=1753467150.221748")
@@ -73,6 +98,124 @@ class ImprovedCTJobScraper:
         
         # Load Connecticut healthcare sites
         self._load_ct_sites()
+        
+        # Setup signal handlers for graceful shutdown
+        signal.signal(signal.SIGINT, self._signal_handler)
+        signal.signal(signal.SIGTERM, self._signal_handler)
+    
+    def _signal_handler(self, signum, frame):
+        """Handle shutdown signals gracefully."""
+        self.logger.info(f"🛑 Received signal {signum}, shutting down gracefully...")
+        self.is_running = False
+        self._save_progress()
+        self._cleanup()
+        sys.exit(0)
+    
+    def _load_progress(self):
+        """Load progress from file if it exists."""
+        try:
+            if os.path.exists(self.progress_file):
+                with open(self.progress_file, 'r', encoding='utf-8') as f:
+                    progress = json.load(f)
+                
+                self.current_site_index = progress.get('current_site_index', 0)
+                self.current_job_index = progress.get('current_job_index', 0)
+                self.current_site_name = progress.get('current_site_name', "")
+                self.scraped_jobs = progress.get('scraped_jobs', [])
+                self.failed_urls = set(progress.get('failed_urls', []))
+                self.successful_sites = progress.get('successful_sites', 0)
+                self.failed_sites = progress.get('failed_sites', 0)
+                self.total_jobs_scraped = progress.get('total_jobs_scraped', 0)
+                
+                self.logger.info(f"📂 Loaded progress: Site {self.current_site_index}, Job {self.current_job_index}")
+                self.logger.info(f"📊 Resume point: {self.current_site_name} ({len(self.scraped_jobs)} jobs already scraped)")
+                return True
+        except Exception as e:
+            self.logger.warning(f"⚠️ Could not load progress: {e}")
+        return False
+    
+    def _save_progress(self):
+        """Save current progress to file."""
+        try:
+            progress = {
+                'timestamp': datetime.now().isoformat(),
+                'current_site_index': self.current_site_index,
+                'current_job_index': self.current_job_index,
+                'current_site_name': self.current_site_name,
+                'scraped_jobs': self.scraped_jobs,
+                'failed_urls': list(self.failed_urls),
+                'successful_sites': self.successful_sites,
+                'failed_sites': self.failed_sites,
+                'total_jobs_scraped': self.total_jobs_scraped,
+                'last_activity_time': self.last_activity_time
+            }
+            
+            with open(self.progress_file, 'w', encoding='utf-8') as f:
+                json.dump(progress, f, indent=2, ensure_ascii=False)
+            
+            self.last_progress_save = time.time()
+            self.logger.debug(f"💾 Progress saved: Site {self.current_site_index}, Job {self.current_job_index}")
+            
+        except Exception as e:
+            self.logger.error(f"❌ Error saving progress: {e}")
+    
+    def _check_timeout(self, operation: str = "general") -> bool:
+        """Check if any timeout has been exceeded."""
+        current_time = time.time()
+        elapsed = current_time - self.start_time
+        
+        # Check total timeout
+        if elapsed > self.max_total_timeout:
+            self.logger.warning(f"⚠️ Total timeout exceeded ({elapsed:.1f}s > {self.max_total_timeout}s)")
+            return True
+        
+        # Check site timeout
+        if operation == "site" and elapsed > self.max_site_timeout:
+            self.logger.warning(f"⚠️ Site timeout exceeded ({elapsed:.1f}s > {self.max_site_timeout}s)")
+            return True
+        
+        # Check job timeout
+        if operation == "job" and elapsed > self.max_job_timeout:
+            self.logger.warning(f"⚠️ Job timeout exceeded ({elapsed:.1f}s > {self.max_job_timeout}s)")
+            return True
+        
+        return False
+    
+    def _update_activity(self):
+        """Update last activity time."""
+        self.last_activity_time = time.time()
+        
+        # Auto-save progress periodically
+        if time.time() - self.last_progress_save > self.progress_save_interval:
+            self._save_progress()
+    
+    def _cleanup(self):
+        """Clean up resources."""
+        try:
+            if hasattr(self, 'page') and self.page:
+                self.page.close()
+        except:
+            pass
+        
+        try:
+            if hasattr(self, 'context') and self.context:
+                self.context.close()
+        except:
+            pass
+        
+        try:
+            if hasattr(self, 'browser') and self.browser:
+                self.browser.close()
+        except:
+            pass
+        
+        try:
+            if hasattr(self, 'playwright') and self.playwright:
+                self.playwright.stop()
+        except:
+            pass
+        
+        self.logger.info("🧹 Cleanup completed")
     
     def _load_ct_sites(self) -> List[Dict]:
         """Load Connecticut healthcare sites from CSV file."""
@@ -1467,6 +1610,509 @@ class ImprovedCTJobScraper:
                     # Track if this job was corrupted to prevent retries
                     job_corrupted = False
                     
+                    try:
+                        for retry in range(max_retries):
+                            # If job was corrupted in previous attempt, don't retry
+                            if job_corrupted:
+                                self.logger.info("⏭️ Skipping retry for corrupted job")
+                                break
+                            
+                            # Additional check at the start of each retry
+                            if isinstance(self.page, dict):
+                                self.logger.error("❌ Page corruption detected at start of retry, skipping job immediately")
+                                self.failed_urls.add(job_url)
+                                self.logger.info(f"📝 Added {job_url} to failed URLs list")
+                                job_corrupted = True
+                                break
+                                
+                            try:
+                                # Check if we've exceeded the job timeout
+                                if (datetime.now() - job_start_time).total_seconds() > job_timeout:
+                                    self.logger.warning(f"⚠️ Job timeout reached after {job_timeout}s, skipping job")
+                                    break
+                                
+                                # Validate that self.page is still a valid Playwright object
+                                if not self._ensure_valid_page():
+                                    self.logger.error("❌ self.page is not available after retry")
+                                    break
+                                
+                                # Additional validation before extraction - recreate page if corrupted
+                                if isinstance(self.page, dict):
+                                    self.logger.error("❌ self.page is corrupted (dict), recreating page")
+                                    if hasattr(self, 'context') and self.context:
+                                        try:
+                                            self.page = self.context.new_page()
+                                            self.logger.info("✅ Successfully recreated page")
+                                            # Navigate back to the job URL
+                                            self.page.goto(job_url, wait_until='domcontentloaded', timeout=10000)  # Reduced timeout
+                                            time.sleep(2)  # Reduced wait time
+                                        except Exception as recreate_error:
+                                            self.logger.error(f"❌ Error recreating page: {recreate_error}")
+                                            break
+                                    else:
+                                        self.logger.error("❌ No context available to recreate page")
+                                        break
+                                
+                                # Additional safety check - if page is still corrupted, skip this job
+                                if isinstance(self.page, dict):
+                                    self.logger.error("❌ Page is still corrupted after recreation, skipping job")
+                                    break
+                                
+                                # Try to extract job details, but catch corruption errors at this level
+                                try:
+                                    # ULTRA-EARLY CORRUPTION CHECK before calling _extract_job_details
+                                    if isinstance(self.page, dict):
+                                        self.logger.error("❌ Page corruption detected before job extraction, skipping job immediately")
+                                        self.failed_urls.add(job_url)
+                                        self.logger.info(f"📝 Added {job_url} to failed URLs list")
+                                        job_corrupted = True
+                                        break
+                                    
+                                    job_details = self._extract_job_details(self.page, job_url, site_config)
+                                    if job_details:
+                                        break  # Success, exit retry loop
+                                    else:
+                                        self.logger.warning(f"⚠️ Job extraction returned None, retry {retry + 1}/{max_retries}")
+                                except Exception as extract_error:
+                                    # Check if this is our special corruption exception
+                                    if str(extract_error) == "PAGE_CORRUPTION_DETECTED":
+                                        self.logger.error("❌ Page corruption detected during extraction, skipping job immediately")
+                                        # Add to failed URLs to prevent future attempts
+                                        self.failed_urls.add(job_url)
+                                        self.logger.info(f"📝 Added {job_url} to failed URLs list")
+                                        
+                                        # Mark job as corrupted to prevent retries
+                                        job_corrupted = True
+                                        
+                                        # Increment corruption counter
+                                        self.corruption_count += 1
+                                        
+                                        # If corruption happens multiple times, recreate browser context
+                                        if self.corruption_count >= 3:
+                                            self.logger.warning("⚠️ Multiple corruption events detected, recreating browser context")
+                                            if self._recreate_browser_context():
+                                                self.corruption_count = 0  # Reset counter
+                                            else:
+                                                self.logger.error("❌ Failed to recreate browser context, stopping scraper")
+                                                return site_jobs
+                                        
+                                        # CRITICAL: Break out of retry loop immediately - don't retry corrupted jobs
+                                        break
+                                    # Check if this is a corruption error
+                                    elif "'dict' object has no attribute" in str(extract_error):
+                                        self.logger.error("❌ Page object corruption detected during extraction, skipping job immediately")
+                                        # Add to failed URLs to prevent future attempts
+                                        self.failed_urls.add(job_url)
+                                        self.logger.info(f"📝 Added {job_url} to failed URLs list")
+                                        
+                                        # Mark job as corrupted to prevent retries
+                                        job_corrupted = True
+                                        
+                                        # Increment corruption counter
+                                        self.corruption_count += 1
+                                        
+                                        # If corruption happens multiple times, recreate browser context
+                                        if self.corruption_count >= 3:
+                                            self.logger.warning("⚠️ Multiple corruption events detected, recreating browser context")
+                                            if self._recreate_browser_context():
+                                                self.corruption_count = 0  # Reset counter
+                                            else:
+                                                self.logger.error("❌ Failed to recreate browser context, stopping scraper")
+                                                return site_jobs
+                                        
+                                        # CRITICAL: Break out of retry loop immediately - don't retry corrupted jobs
+                                        break
+                                    else:
+                                        # Re-raise non-corruption errors
+                                        raise extract_error
+                                
+                                except Exception as e:
+                                    # Check if this is a corruption error first
+                                    if "'dict' object has no attribute" in str(e):
+                                        self.logger.error("❌ Page object corruption detected during retry, skipping job immediately")
+                                        # Add to failed URLs to prevent future attempts
+                                        self.failed_urls.add(job_url)
+                                        self.logger.info(f"📝 Added {job_url} to failed URLs list")
+                                        
+                                        # Mark job as corrupted to prevent retries
+                                        job_corrupted = True
+                                        
+                                        # Increment corruption counter
+                                        self.corruption_count += 1
+                                        
+                                        # If corruption happens multiple times, recreate browser context
+                                        if self.corruption_count >= 3:
+                                            self.logger.warning("⚠️ Multiple corruption events detected, recreating browser context")
+                                            if self._recreate_browser_context():
+                                                self.corruption_count = 0  # Reset counter
+                                            else:
+                                                self.logger.error("❌ Failed to recreate browser context, stopping scraper")
+                                                return site_jobs
+                                        
+                                        # Break out of retry loop immediately - don't retry corrupted jobs
+                                        break
+                                    else:
+                                        self.logger.error(f"❌ Error extracting job details (retry {retry + 1}/{max_retries}): {e}")
+                                        # Only retry for non-corruption errors
+                                        if retry < max_retries - 1:
+                                            time.sleep(1)  # Reduced wait time
+                                            # Try to recreate page if it's corrupted
+                                            try:
+                                                if hasattr(self, 'context') and self.context:
+                                                    self.page = self.context.new_page()
+                                                    self.logger.info("✅ Recreated page for retry")
+                                            except Exception as recreate_error:
+                                                self.logger.error(f"❌ Error recreating page: {recreate_error}")
+                                        continue
+                    except Exception as e:
+                        # Check if this is a corruption error first
+                        if "'dict' object has no attribute" in str(e):
+                            self.logger.error("❌ Page object corruption detected during retry, skipping job immediately")
+                            # Add to failed URLs to prevent future attempts
+                            self.failed_urls.add(job_url)
+                            self.logger.info(f"📝 Added {job_url} to failed URLs list")
+                            
+                            # Mark job as corrupted to prevent retries
+                            job_corrupted = True
+                            
+                            # Increment corruption counter
+                            self.corruption_count += 1
+                            
+                            # If corruption happens multiple times, recreate browser context
+                            if self.corruption_count >= 3:
+                                self.logger.warning("⚠️ Multiple corruption events detected, recreating browser context")
+                                if self._recreate_browser_context():
+                                    self.corruption_count = 0  # Reset counter
+                                else:
+                                    self.logger.error("❌ Failed to recreate browser context, stopping scraper")
+                                    return site_jobs
+                            
+                            # Break out of retry loop immediately - don't retry corrupted jobs
+                            break
+                        else:
+                            self.logger.error(f"❌ Error extracting job details (retry {retry + 1}/{max_retries}): {e}")
+                            # Only retry for non-corruption errors
+                            if retry < max_retries - 1:
+                                time.sleep(1)  # Reduced wait time
+                                # Try to recreate page if it's corrupted
+                                try:
+                                    if hasattr(self, 'context') and self.context:
+                                        self.page = self.context.new_page()
+                                        self.logger.info("✅ Recreated page for retry")
+                                except Exception as recreate_error:
+                                    self.logger.error(f"❌ Error recreating page: {recreate_error}")
+                                continue
+                    
+                    job_duration = (datetime.now() - job_start_time).total_seconds()
+                    if job_duration > job_timeout:
+                        self.logger.warning(f"⚠️ Job processing timed out after {job_duration:.1f}s")
+                        continue
+                    
+                    # If job was corrupted, skip all further processing
+                    if job_corrupted:
+                        self.logger.info(f"⏭️ Skipping further processing for corrupted job: {job_url}")
+                        continue
+                    
+                    if job_details:
+                        card_text = card_info.get('text', '')
+                        if not job_details.get('title') and card_text:
+                            lines = card_text.split('\n')
+                            if len(lines) > 1:
+                                job_details['title'] = lines[-1].strip()
+                        if not job_details.get('location') and card_text:
+                            if '|' in card_text:
+                                parts = card_text.split('|')
+                                if len(parts) >= 2:
+                                    location_part = parts[1].strip()
+                                    job_details['location'] = location_part
+                        site_jobs.append(job_details)
+                        jobs_processed += 1
+                        self.logger.info(f"✅ Successfully extracted job: {job_details.get('title', 'Unknown')}")
+                    else:
+                        self.logger.warning(f"⚠️ Failed to extract job details from {job_url}")
+                        # Add to failed URLs to skip in future runs
+                        self.failed_urls.add(job_url)
+                        self.logger.info(f"📝 Added {job_url} to failed URLs list")
+                    
+                    time.sleep(1)
+                    if (i + 1) % 5 == 0:
+                        self._cleanup_memory()
+                    
+                except Exception as e:
+                    # Check for the specific dict corruption error
+                    if "'dict' object has no attribute" in str(e):
+                        job_url = card_info.get('job_url', '')
+                        if not self._handle_dict_corruption(str(e), job_url):
+                            self.logger.error("❌ Failed to handle corruption, stopping scraper")
+                            return site_jobs
+                        continue
+                    else:
+                        self.logger.error(f"❌ Error processing job {i+1}: {e}")
+                        continue
+            end_time = datetime.now()
+            duration = (end_time - site_start_time).total_seconds()
+            self.logger.info(f"✅ Completed {site_name}: {jobs_processed} jobs in {duration:.1f}s")
+            return site_jobs
+        except Exception as e:
+            self.logger.error(f"❌ Error scraping {site_name}: {e}")
+            return []
+        finally:
+            self._cleanup_memory()
+    
+    def scrape_all_sites(self, max_sites: int = None, max_jobs_per_site: int = 20) -> List[Dict]:
+        """Scrape jobs from all Apploi-based Connecticut healthcare sites with progress tracking and resume capability."""
+        if not self._setup_browser():
+            self.logger.error("❌ Failed to setup browser")
+            return []
+        
+        # Add global exception handler for dict corruption
+        import sys
+        original_excepthook = sys.excepthook
+        
+        def global_exception_handler(exc_type, exc_value, exc_traceback):
+            if "'dict' object has no attribute" in str(exc_value):
+                self.logger.error(f"❌ Global dict corruption detected: {exc_value}")
+                # Don't print the traceback for this specific error to avoid spam
+                return
+            else:
+                # Call the original exception handler for other errors
+                original_excepthook(exc_type, exc_value, exc_traceback)
+        
+        sys.excepthook = global_exception_handler
+        
+        self.is_running = True
+        self.start_time = time.time()
+        
+        # Filter for Apploi sites only
+        apploi_sites = [site for site in self.ct_sites if site.get('job board type', '').strip().lower() == 'apploi']
+        if max_sites:
+            apploi_sites = apploi_sites[:max_sites]
+        
+        self.logger.info(f"🚀 Starting to scrape {len(apploi_sites)} Apploi sites...")
+        if self.current_site_index > 0:
+            self.logger.info(f"📂 Resuming from site {self.current_site_index + 1}/{len(apploi_sites)}: {self.current_site_name}")
+        
+        # Start from the current site index (resume point)
+        for i in range(self.current_site_index, len(apploi_sites)):
+            if not self.is_running:
+                self.logger.info("🛑 Scraping stopped by user or timeout")
+                break
+            
+            site_config = apploi_sites[i]
+            site_name = site_config.get('source_site', f'site_{i+1}')
+            self.current_site_name = site_name
+            self.current_site_index = i
+            self.current_job_index = 0
+            
+            # Make a safe filename prefix
+            safe_site_name = ''.join(c if c.isalnum() else '_' for c in site_name)[:40]
+            self.logger.info(f"📋 Processing site {i+1}/{len(apploi_sites)}: {site_name}")
+            
+            # Check timeout before starting site
+            if self._check_timeout("site"):
+                self.logger.warning(f"⚠️ Site timeout reached, saving progress and stopping")
+                self._save_progress()
+                break
+            
+            try:
+                # Create a new context for each site to isolate them
+                try:
+                    if hasattr(self, 'context') and self.context:
+                        self.context.close()
+                    self.context = self.browser.new_context(
+                        user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                        extra_http_headers={
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                            'Accept-Language': 'en-US,en;q=0.5',
+                            'Accept-Encoding': 'gzip, deflate',
+                            'DNT': '1',
+                            'Connection': 'keep-alive',
+                            'Upgrade-Insecure-Requests': '1',
+                        },
+                        viewport={'width': 1920, 'height': 1080}
+                    )
+                    self.context.add_init_script("""
+                        Object.defineProperty(navigator, 'webdriver', {
+                            get: () => undefined,
+                        });
+                    """)
+                    self.page = self.context.new_page()
+                except Exception as e:
+                    self.logger.error(f"❌ Failed to create new context for {site_name}: {e}")
+                    self.failed_sites += 1
+                    continue
+                
+                # Scrape jobs from this site with progress tracking
+                site_jobs = self._scrape_site_jobs_with_progress(site_config, max_jobs_per_site)
+                
+                if site_jobs:
+                    self.scraped_jobs.extend(site_jobs)
+                    self.successful_sites += 1
+                    self.total_jobs_scraped += len(site_jobs)
+                    self.logger.info(f"✅ Successfully scraped {len(site_jobs)} jobs from {site_name}")
+                    # Save jobs for this site to its own file
+                    self.save_jobs(site_jobs, filename_prefix=f"apploi_jobs_{safe_site_name}")
+                else:
+                    self.failed_sites += 1
+                    self.logger.warning(f"⚠️ No jobs found on {site_name}")
+                
+                # Save progress after each site
+                self._save_progress()
+                
+                # Clean up context
+                try:
+                    if self.context:
+                        self.context.close()
+                except Exception as e:
+                    self.logger.debug(f"⚠️ Error closing context: {e}")
+                    time.sleep(2)
+                    
+            except Exception as e:
+                self.failed_sites += 1
+                self.logger.error(f"❌ Error processing {site_name}: {e}")
+                # Save progress on error
+                self._save_progress()
+        
+        self.is_running = False
+        self._cleanup_memory()
+        self.logger.info(f"🎉 Scraping completed!")
+        self.logger.info(f"📊 Total jobs scraped: {len(self.scraped_jobs)}")
+        self.logger.info(f"✅ Successful sites: {self.successful_sites}")
+        self.logger.info(f"❌ Failed sites: {self.failed_sites}")
+        
+        # Restore original exception handler
+        sys.excepthook = original_excepthook
+        
+        return self.scraped_jobs
+    
+    def _scrape_site_jobs_with_progress(self, site_config: Dict, max_jobs: int = 50) -> List[Dict]:
+        """Scrape jobs from a single site with progress tracking and timeout detection."""
+        site_jobs = []
+        site_name = site_config['source_site']
+        job_board_type = site_config.get('job_board_type', 'generic')
+        self.logger.info(f"🏥 Processing site: {site_name}")
+        self.logger.info(f"🔗 URL: {site_config['search_url']}")
+        self.logger.info(f"📋 Job board type: {job_board_type}")
+        
+        site_start_time = time.time()
+        
+        try:
+            self.logger.info(f"🌐 Accessing site: {site_config['search_url']}")
+            self.page.goto(site_config['search_url'], wait_until='domcontentloaded')
+            time.sleep(3)
+            
+            # Update activity
+            self._update_activity()
+            
+            job_cards = self._find_job_cards(self.page, job_board_type)
+            if not job_cards:
+                self.logger.warning(f"⚠️ No job cards found on {site_name}")
+                return []
+            
+            jobs_processed = 0
+            
+            # Resume from current job index if resuming
+            start_job_index = self.current_job_index
+            if start_job_index > 0:
+                self.logger.info(f"📂 Resuming from job {start_job_index + 1}/{len(job_cards)}")
+            
+            for i in range(start_job_index, min(len(job_cards), max_jobs)):
+                if not self.is_running:
+                    self.logger.info("🛑 Scraping stopped by user")
+                    break
+                
+                # Check timeout for this job
+                if self._check_timeout("job"):
+                    self.logger.warning(f"⚠️ Job timeout reached, saving progress and stopping")
+                    self._save_progress()
+                    break
+                
+                self.current_job_index = i
+                self._update_activity()
+                
+                try:
+                    # Global corruption check at the start of each job
+                    if isinstance(self.page, dict):
+                        self.logger.error(f"❌ Global page corruption detected before job {i+1}, skipping job immediately")
+                        # Add to failed URLs to prevent future attempts
+                        job_url = card_info.get('job_url', '')
+                        if job_url:
+                            self.failed_urls.add(job_url)
+                            self.logger.info(f"📝 Added {job_url} to failed URLs list")
+                        continue
+                    
+                    card_info = job_cards[i]
+                    job_url = card_info.get('job_url', '')
+                    if not job_url:
+                        self.logger.debug(f"⚠️ No job URL found for card {i+1}")
+                        continue
+                    
+                    # Skip URLs that have previously failed
+                    if job_url in self.failed_urls:
+                        self.logger.info(f"⏭️ Skipping previously failed URL: {job_url}")
+                        continue
+                    
+                    # Skip all Ryders Health jobs past job number 35
+                    if 'Ryders_Health_Management' in job_url and i >= 35:
+                        self.logger.info(f"⏭️ Skipping Ryders Health job {i+1} (past limit 35): {job_url}")
+                        continue
+                    
+                    # Also skip URLs that match problematic patterns
+                    if any(pattern in job_url for pattern in [
+                        "jobs.apploi.com/view/1439065",
+                        "jobs.apploi.com/view/877843",
+                        "jobs.apploi.com/view/1371768"
+                    ]):
+                        self.logger.info(f"⏭️ Skipping known problematic Ryders Health job: {job_url}")
+                        continue
+                    
+                    self.logger.info(f"📄 Processing job {i+1}/{min(len(job_cards), max_jobs)}: {job_url}")
+                    
+                    # EARLY CORRUPTION CHECK - before any processing
+                    if isinstance(self.page, dict):
+                        self.logger.error(f"❌ Page is corrupted (dict) before job processing, skipping job: {job_url}")
+                        self.failed_urls.add(job_url)
+                        self.logger.info(f"📝 Added {job_url} to failed URLs list")
+                        continue
+                    
+                    # Additional validation - check if page has required methods
+                    try:
+                        if not hasattr(self.page, 'goto') or not hasattr(self.page, 'title'):
+                            self.logger.error(f"❌ Page object is missing required methods, skipping job: {job_url}")
+                            self.failed_urls.add(job_url)
+                            continue
+                    except Exception as e:
+                        if "'dict' object has no attribute" in str(e):
+                            self.logger.error(f"❌ Page corruption detected during validation: {e}")
+                            self.failed_urls.add(job_url)
+                            continue
+                        else:
+                            self.logger.warning(f"⚠️ Error validating page object: {e}")
+                            continue
+                    
+                    # ULTRA-EARLY CORRUPTION CHECK - test page responsiveness before any operations
+                    try:
+                        test_url = self.page.url
+                        test_title = self.page.title()
+                    except Exception as e:
+                        if "'dict' object has no attribute" in str(e):
+                            self.logger.error(f"❌ Page corruption detected during responsiveness test, skipping job: {job_url}")
+                            self.failed_urls.add(job_url)
+                            self.logger.info(f"📝 Added {job_url} to failed URLs list")
+                            continue
+                        else:
+                            self.logger.warning(f"⚠️ Page not responsive during test: {e}")
+                            continue
+                    
+                    # Add retry mechanism for job extraction
+                    max_retries = 2
+                    job_details = None
+                    job_start_time = datetime.now()
+                    job_timeout = 30  # Reduced to 30 seconds per job to prevent hanging
+                    
+                    # Track if this job was corrupted to prevent retries
+                    job_corrupted = False
+                    
                     for retry in range(max_retries):
                         # If job was corrupted in previous attempt, don't retry
                         if job_corrupted:
@@ -1582,44 +2228,44 @@ class ImprovedCTJobScraper:
                                     # Re-raise non-corruption errors
                                     raise extract_error
                                 
-                        except Exception as e:
-                            # Check if this is a corruption error first
-                            if "'dict' object has no attribute" in str(e):
-                                self.logger.error("❌ Page object corruption detected during retry, skipping job immediately")
-                                # Add to failed URLs to prevent future attempts
-                                self.failed_urls.add(job_url)
-                                self.logger.info(f"📝 Added {job_url} to failed URLs list")
-                                
-                                # Mark job as corrupted to prevent retries
-                                job_corrupted = True
-                                
-                                # Increment corruption counter
-                                self.corruption_count += 1
-                                
-                                # If corruption happens multiple times, recreate browser context
-                                if self.corruption_count >= 3:
-                                    self.logger.warning("⚠️ Multiple corruption events detected, recreating browser context")
-                                    if self._recreate_browser_context():
-                                        self.corruption_count = 0  # Reset counter
-                                    else:
-                                        self.logger.error("❌ Failed to recreate browser context, stopping scraper")
-                                        return site_jobs
-                                
-                                # Break out of retry loop immediately - don't retry corrupted jobs
-                                break
-                            else:
-                                self.logger.error(f"❌ Error extracting job details (retry {retry + 1}/{max_retries}): {e}")
-                                # Only retry for non-corruption errors
-                                if retry < max_retries - 1:
-                                    time.sleep(1)  # Reduced wait time
-                                    # Try to recreate page if it's corrupted
-                                    try:
-                                        if hasattr(self, 'context') and self.context:
-                                            self.page = self.context.new_page()
-                                            self.logger.info("✅ Recreated page for retry")
-                                    except Exception as recreate_error:
-                                        self.logger.error(f"❌ Error recreating page: {recreate_error}")
-                                continue
+                            except Exception as e:
+                                # Check if this is a corruption error first
+                                if "'dict' object has no attribute" in str(e):
+                                    self.logger.error("❌ Page object corruption detected during retry, skipping job immediately")
+                                    # Add to failed URLs to prevent future attempts
+                                    self.failed_urls.add(job_url)
+                                    self.logger.info(f"📝 Added {job_url} to failed URLs list")
+                                    
+                                    # Mark job as corrupted to prevent retries
+                                    job_corrupted = True
+                                    
+                                    # Increment corruption counter
+                                    self.corruption_count += 1
+                                    
+                                    # If corruption happens multiple times, recreate browser context
+                                    if self.corruption_count >= 3:
+                                        self.logger.warning("⚠️ Multiple corruption events detected, recreating browser context")
+                                        if self._recreate_browser_context():
+                                            self.corruption_count = 0  # Reset counter
+                                        else:
+                                            self.logger.error("❌ Failed to recreate browser context, stopping scraper")
+                                            return site_jobs
+                                    
+                                    # Break out of retry loop immediately - don't retry corrupted jobs
+                                    break
+                                else:
+                                    self.logger.error(f"❌ Error extracting job details (retry {retry + 1}/{max_retries}): {e}")
+                                    # Only retry for non-corruption errors
+                                    if retry < max_retries - 1:
+                                        time.sleep(1)  # Reduced wait time
+                                        # Try to recreate page if it's corrupted
+                                        try:
+                                            if hasattr(self, 'context') and self.context:
+                                                self.page = self.context.new_page()
+                                                self.logger.info("✅ Recreated page for retry")
+                                        except Exception as recreate_error:
+                                            self.logger.error(f"❌ Error recreating page: {recreate_error}")
+                                        continue
                     
                     job_duration = (datetime.now() - job_start_time).total_seconds()
                     if job_duration > job_timeout:
@@ -1655,6 +2301,8 @@ class ImprovedCTJobScraper:
                     time.sleep(1)
                     if (i + 1) % 5 == 0:
                         self._cleanup_memory()
+                        # Save progress periodically
+                        self._save_progress()
                     
                 except Exception as e:
                     # Check for the specific dict corruption error
@@ -1667,6 +2315,7 @@ class ImprovedCTJobScraper:
                     else:
                         self.logger.error(f"❌ Error processing job {i+1}: {e}")
                         continue
+            
             end_time = datetime.now()
             duration = (end_time - start_time).total_seconds()
             self.logger.info(f"✅ Completed {site_name}: {jobs_processed} jobs in {duration:.1f}s")
@@ -1676,105 +2325,6 @@ class ImprovedCTJobScraper:
             return []
         finally:
             self._cleanup_memory()
-    
-    def scrape_all_sites(self, max_sites: int = None, max_jobs_per_site: int = 20) -> List[Dict]:
-        """Scrape jobs from all Apploi-based Connecticut healthcare sites, saving each site's jobs to its own file."""
-        if not self._setup_browser():
-            self.logger.error("❌ Failed to setup browser")
-            return []
-        
-        # Add global exception handler for dict corruption
-        import sys
-        original_excepthook = sys.excepthook
-        
-        def global_exception_handler(exc_type, exc_value, exc_traceback):
-            if "'dict' object has no attribute" in str(exc_value):
-                self.logger.error(f"❌ Global dict corruption detected: {exc_value}")
-                # Don't print the traceback for this specific error to avoid spam
-                return
-            else:
-                # Call the original exception handler for other errors
-                original_excepthook(exc_type, exc_value, exc_traceback)
-        
-        sys.excepthook = global_exception_handler
-        
-        all_jobs = []
-        # Filter for Apploi sites only
-        apploi_sites = [site for site in self.ct_sites if site.get('job board type', '').strip().lower() == 'apploi']
-        if max_sites:
-            apploi_sites = apploi_sites[:max_sites]
-        
-        self.logger.info(f"🚀 Starting to scrape {len(apploi_sites)} Apploi sites...")
-        
-        for i, site_config in enumerate(apploi_sites):
-            try:
-                
-                site_name = site_config.get('source_site', f'site_{i+1}')
-                # Make a safe filename prefix
-                safe_site_name = ''.join(c if c.isalnum() else '_' for c in site_name)[:40]
-                self.logger.info(f"📋 Processing site {i+1}/{len(apploi_sites)}: {site_name}")
-                
-                # Create a new context for each site to isolate them
-                try:
-                    if hasattr(self, 'context') and self.context:
-                        self.context.close()
-                    self.context = self.browser.new_context(
-                        user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                        extra_http_headers={
-                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                            'Accept-Language': 'en-US,en;q=0.5',
-                            'Accept-Encoding': 'gzip, deflate',
-                            'DNT': '1',
-                            'Connection': 'keep-alive',
-                            'Upgrade-Insecure-Requests': '1',
-                        },
-                        viewport={'width': 1920, 'height': 1080}
-                    )
-                    self.context.add_init_script("""
-                        Object.defineProperty(navigator, 'webdriver', {
-                            get: () => undefined,
-                        });
-                    """)
-                    self.page = self.context.new_page()
-                except Exception as e:
-                    self.logger.error(f"❌ Failed to create new context for {site_name}: {e}")
-                    continue
-                
-                # Scrape jobs from this site
-                site_jobs = self._scrape_site_jobs(site_config, max_jobs_per_site)
-                
-                if site_jobs:
-                    all_jobs.extend(site_jobs)
-                    self.successful_sites += 1
-                    self.logger.info(f"✅ Successfully scraped {len(site_jobs)} jobs from {site_name}")
-                    # Save jobs for this site to its own file
-                    self.save_jobs(site_jobs, filename_prefix=f"apploi_jobs_{safe_site_name}")
-                else:
-                    self.failed_sites += 1
-                    self.logger.warning(f"⚠️ No jobs found on {site_name}")
-                
-                # Clean up context
-                try:
-                    if self.context:
-                        self.context.close()
-                except Exception as e:
-                    self.logger.debug(f"⚠️ Error closing context: {e}")
-                    time.sleep(2)
-                    
-            except Exception as e:
-                self.failed_sites += 1
-                self.logger.error(f"❌ Error processing {site_config.get('source_site', f'site_{i+1}')}: {e}")
-        
-        self._cleanup_memory()
-        self.logger.info(f"🎉 Scraping completed!")
-        self.logger.info(f"📊 Total jobs scraped: {len(all_jobs)}")
-        self.logger.info(f"✅ Successful sites: {self.successful_sites}")
-        self.logger.info(f"❌ Failed sites: {self.failed_sites}")
-        
-        # Restore original exception handler
-        sys.excepthook = original_excepthook
-        
-        return all_jobs
             
     def _cleanup_memory(self):
         """Clean up memory to prevent heap growth issues."""
@@ -1911,18 +2461,30 @@ class ImprovedCTJobScraper:
             return False
 
 def main():
-    """Main function to run the scraper."""
+    """Main function to run the scraper with enhanced restart and timeout detection."""
     print("🚀 Starting Improved Connecticut Healthcare Job Scraper...")
     
-    max_restarts = 3
+    max_restarts = 5
     restart_count = 0
+    total_start_time = time.time()
+    max_total_runtime = 4 * 60 * 60  # 4 hours total runtime
     
     while restart_count < max_restarts:
         try:
             print(f"🔄 Attempt {restart_count + 1}/{max_restarts}")
             
-            # Create scraper instance
-            scraper = ImprovedCTJobScraper(headless=True, debug=True)
+            # Check if we've exceeded total runtime
+            total_elapsed = time.time() - total_start_time
+            if total_elapsed > max_total_runtime:
+                print(f"⏰ Total runtime exceeded ({total_elapsed/3600:.1f}h > {max_total_runtime/3600:.1f}h), stopping")
+                break
+            
+            # Create scraper instance with resume capability
+            scraper = ImprovedCTJobScraper(headless=True, debug=True, resume_from_progress=True)
+            
+            # Check if we're resuming from a previous run
+            if scraper.current_site_index > 0 or len(scraper.scraped_jobs) > 0:
+                print(f"📂 Resuming from previous run: Site {scraper.current_site_index + 1}, {len(scraper.scraped_jobs)} jobs already scraped")
             
             # Scrape all sites
             jobs = scraper.scrape_all_sites(max_jobs_per_site=50)
@@ -1930,6 +2492,7 @@ def main():
             # Save results
             if jobs:
                 scraper.save_jobs(jobs)
+                print(f"💾 Saved {len(jobs)} total jobs")
             
             # Print summary
             scraper.print_summary()
@@ -1937,20 +2500,45 @@ def main():
             print("✅ Scraper completed successfully!")
             break
             
+        except KeyboardInterrupt:
+            print("\n🛑 Scraping interrupted by user")
+            try:
+                scraper._save_progress()
+                scraper._cleanup()
+            except:
+                pass
+            break
+            
         except Exception as e:
-            if "'dict' object has no attribute" in str(e):
-                print(f"❌ Dict corruption error in attempt {restart_count + 1}: {e}")
-                restart_count += 1
-                if restart_count < max_restarts:
-                    print(f"🔄 Restarting scraper in 30 seconds... (attempt {restart_count + 1}/{max_restarts})")
-                    time.sleep(30)
-                    continue
-                else:
-                    print("❌ Max restart attempts reached. Giving up.")
-                    break
+            print(f"❌ Error in attempt {restart_count + 1}: {e}")
+            
+            # Save progress before restarting
+            try:
+                if 'scraper' in locals():
+                    scraper._save_progress()
+                    scraper._cleanup()
+            except:
+                pass
+            
+            restart_count += 1
+            if restart_count < max_restarts:
+                wait_time = min(60 * restart_count, 300)  # Progressive backoff: 1min, 2min, 3min, 5min, 5min
+                print(f"🔄 Restarting scraper in {wait_time} seconds... (attempt {restart_count + 1}/{max_restarts})")
+                time.sleep(wait_time)
+                continue
             else:
-                print(f"❌ Unexpected error: {e}")
+                print("❌ Max restart attempts reached. Giving up.")
                 break
+    
+    # Final cleanup
+    try:
+        if 'scraper' in locals():
+            scraper._save_progress()
+            scraper._cleanup()
+    except:
+        pass
+    
+    print("🏁 Scraper process finished")
 
 if __name__ == "__main__":
     main() 

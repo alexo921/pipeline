@@ -3,47 +3,56 @@
 import React, { useState } from "react";
 import "../../styles/brand.css";
 import Navbar from "./CandidateNavbar";
-import GoogleTagManagerClient from "../GoogleTagManagerClient";
-
+import BaseAuthModal from "../BaseAuthModal";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface BaseLayoutProps {
   children: React.ReactNode;
   showNav?: boolean;
-  showFooter?: boolean;
-  customBackground?: string;
+  backgroundImage?: string;
+  backgroundStyle?: React.CSSProperties;
 }
 
 export default function DashboardLayout({
   children,
   showNav = true,
-  showFooter = true,
-  customBackground,
+  backgroundImage,
+  backgroundStyle,
 }: BaseLayoutProps) {
+  const { showLoginModal } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  const backgroundStyle = customBackground
-    ? { background: customBackground }
-    : {};
+  const handleLoginClick = () => {
+    setIsAuthModalOpen(true);
+  };
 
-  const backgroundClass = customBackground
-    ? "min-h-screen flex flex-col"
+  const handleCloseAuthModal = () => {
+    setIsAuthModalOpen(false);
+  };
+
+  const backgroundClass = backgroundImage
+    ? "min-h-screen flex flex-col bg-cover bg-center bg-no-repeat"
     : "min-h-screen flex flex-col bg-tertiary";
 
   return (
     <div className={backgroundClass} style={backgroundStyle}>
-      <GoogleTagManagerClient />
       {/* Navbar navigation */}
       {showNav && (
         <Navbar
-          onLoginClick={() => setIsAuthModalOpen(true)}
+          onLoginClick={handleLoginClick}
         />
       )}
 
       {/* Main content */}
-      <main className="flex-grow">{children}</main>
+      <div className="flex-1">
+        {children}
+      </div>
 
-      {/* Footer */}
-      {/* {showFooter && <Footer />} */}
+      {/* Auth Modal */}
+      <BaseAuthModal
+        isOpen={isAuthModalOpen}
+        onClose={handleCloseAuthModal}
+      />
     </div>
   );
 }

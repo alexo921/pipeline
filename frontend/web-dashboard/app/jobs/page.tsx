@@ -45,8 +45,8 @@ const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
             continue;
           }
           
-          allJobs.push(...jobs);
-          console.log(`Loaded ${jobs.length} jobs from ${file}`);
+            allJobs.push(...jobs);
+            console.log(`Loaded ${jobs.length} jobs from ${file}`);
         }
       } catch (error) {
         console.warn(`Failed to load ${file}:`, error);
@@ -1224,7 +1224,7 @@ export default function JobsPage() {
           if (searchLower === keyword || searchLower === keyword + ' shift' || searchLower === keyword + ' shifts') {
             isShiftOnlySearch = true;
           }
-          break;
+              break;
         }
       }
       
