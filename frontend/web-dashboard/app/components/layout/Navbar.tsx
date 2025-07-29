@@ -89,7 +89,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
                     className="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors"
                   >
-                    <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-[#01253F] rounded-full flex items-center justify-center">
                       <User className="w-5 h-5 text-white" />
                     </div>
                     <ChevronDown className="w-4 h-4" />
@@ -98,13 +98,6 @@ const Navbar: React.FC<NavbarProps> = ({
                   {/* Dropdown Menu */}
                   {isUserDropdownOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
-                      {/* User Info */}
-                      <div className="px-4 py-2 text-sm text-gray-700 border-b">
-                        <div className="font-medium">
-                          {(user && user.firstName) ? `${user.firstName} ${user.lastName}` : user?.email || "Demo User"}
-                        </div>
-                      </div>
-                      
                       {/* Sign Out Option */}
                       <button
                         onClick={onLogoutClick}

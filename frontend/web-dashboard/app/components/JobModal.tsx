@@ -154,7 +154,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
       {/* Mobile-only full screen modal with safe area support */}
       <div 
         ref={modalRef}
-        className="fixed inset-0 bg-white flex flex-col lg:hidden job-modal"
+        className="fixed inset-0 bg-white lg:hidden job-modal"
         style={{ 
           zIndex: 2147483647,
           height: '100dvh',
@@ -166,58 +166,56 @@ export default function JobModal({ job, onClose }: JobModalProps) {
         data-title={job.title}
         data-location={job.location}
       >
-        {/* Header - Fixed at top */}
-        <div className="p-6 border-b bg-white flex-shrink-0">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex-1 min-w-0">
-              <h2 className="text-2xl font-black text-[#2466D0] font-avenir leading-[130%] mb-2">{job.title}</h2>
-              <p className="text-[16px] font-bold text-[#01253F] font-avenir">{job.company}</p>
-              {job.location && job.location.trim() !== '' && job.location.trim().toLowerCase() !== 'unknown location' && (
-                <p className="text-[16px] text-[#01253F] font-avenir">{job.location}</p>
-              )}
-              {job.salary && job.salary.trim() !== '' && job.salary.trim().toLowerCase() !== 'salary not specified' && (
-                <p className="text-[16px] text-[#01253F] font-avenir">{job.salary}</p>
-              )}
-              
-
-            </div>
-            <button
-              onClick={onClose}
-              className="ml-4 p-2 hover:bg-gray-100 rounded-full flex-shrink-0"
-            >
-              <X className="h-6 w-6 text-gray-400" />
-            </button>
-          </div>
-          
-          {/* Tags */}
-          <div className="flex flex-wrap gap-3">
-            {(job.tags || []).map((tag) => (
-              <div 
-                key={tag.id} 
-                className={`flex items-center justify-center text-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}
-                style={{ 
-                  minWidth: 'fit-content'
-                }}
-              >
-                <span className="text-sm font-bold text-[#01253F] font-avenir whitespace-nowrap truncate">
-                  {tag.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Content - Scrollable area with sticky button */}
+        {/* Scrollable content area with sticky button */}
         <div 
           ref={contentRef}
-          className="flex-1 overflow-y-auto"
+          className="h-full overflow-y-auto"
           style={{
             scrollbarWidth: 'thin',
             scrollbarColor: '#cbd5e0 #f7fafc',
           }}
         >
+          {/* Header - Scrolls with content */}
+          <div className="p-6 border-b bg-white">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-2xl font-black text-[#2466D0] font-avenir leading-[130%] mb-2">{job.title}</h2>
+                <p className="text-[16px] font-bold text-[#01253F] font-avenir">{job.company}</p>
+                {job.location && job.location.trim() !== '' && job.location.trim().toLowerCase() !== 'unknown location' && (
+                  <p className="text-[16px] text-[#01253F] font-avenir">{job.location}</p>
+                )}
+                {job.salary && job.salary.trim() !== '' && job.salary.trim().toLowerCase() !== 'salary not specified' && (
+                  <p className="text-[16px] text-[#01253F] font-avenir">{job.salary}</p>
+                )}
+              </div>
+              <button
+                onClick={onClose}
+                className="ml-4 p-2 hover:bg-gray-100 rounded-full flex-shrink-0"
+              >
+                <X className="h-6 w-6 text-gray-400" />
+              </button>
+            </div>
+            
+            {/* Tags */}
+            <div className="flex flex-wrap gap-3">
+              {(job.tags || []).map((tag) => (
+                <div 
+                  key={tag.id} 
+                  className={`flex items-center justify-center text-center ${getTagColor(tag.label)} rounded-full px-4 py-2`}
+                  style={{ 
+                    minWidth: 'fit-content'
+                  }}
+                >
+                  <span className="text-sm font-bold text-[#01253F] font-avenir whitespace-nowrap truncate">
+                    {tag.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Job Description */}
           <div className="p-6 space-y-6">
-            {/* Job Description */}
             {job.description && (
               <div>
                 <h3 className="text-[18px] font-bold leading-[130%] text-[#01253F] mb-4 font-avenir">

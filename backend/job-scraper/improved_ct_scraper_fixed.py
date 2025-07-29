@@ -1706,16 +1706,8 @@ class ImprovedCTJobScraper:
         
         self.logger.info(f"🚀 Starting to scrape {len(apploi_sites)} Apploi sites...")
         
-        # Add global timeout mechanism
-        global_start_time = datetime.now()
-        global_timeout = 3600  # 1 hour global timeout
-        
         for i, site_config in enumerate(apploi_sites):
             try:
-                # Check global timeout
-                if (datetime.now() - global_start_time).total_seconds() > global_timeout:
-                    self.logger.warning(f"⚠️ Global timeout reached after {global_timeout}s, stopping scraper")
-                    break
                 
                 site_name = site_config.get('source_site', f'site_{i+1}')
                 # Make a safe filename prefix
