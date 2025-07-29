@@ -1922,51 +1922,43 @@ def main():
     """Main function to run the scraper."""
     print("🚀 Starting Improved Connecticut Healthcare Job Scraper...")
     
-    # Add global exception handler for dict corruption
-    import sys
-    original_excepthook = sys.excepthook
+    max_restarts = 3
+    restart_count = 0
     
-    def global_exception_handler(exc_type, exc_value, exc_traceback):
-        if "'dict' object has no attribute" in str(exc_value):
-            print(f"❌ Global dict corruption detected: {exc_value}")
-            print("🔄 Restarting scraper due to corruption...")
-            # Don't print the traceback for this specific error to avoid spam
-            return
-        else:
-            # Call the original exception handler for other errors
-            original_excepthook(exc_type, exc_value, exc_traceback)
-    
-    sys.excepthook = global_exception_handler
-    
-    try:
-        # Create scraper instance
-        scraper = ImprovedCTJobScraper(headless=True, debug=True)  # Back to headless for server environment
-        
-        # Scrape all sites
-        jobs = scraper.scrape_all_sites(max_jobs_per_site=50)
-        
-        # Save results
-        if jobs:
-            scraper.save_jobs(jobs)
-        
-        # Print summary
-        scraper.print_summary()
-        
-    except Exception as e:
-        if "'dict' object has no attribute" in str(e):
-            print(f"❌ Dict corruption error in main: {e}")
-            print("🔄 Attempting to restart scraper...")
-            # Try to restart the scraper
-            try:
-                main()
-            except Exception as restart_error:
-                print(f"❌ Failed to restart scraper: {restart_error}")
-        else:
-            print(f"❌ Unexpected error in main: {e}")
-            raise e
-    finally:
-        # Restore original exception handler
-        sys.excepthook = original_excepthook
+    while restart_count < max_restarts:
+        try:
+            print(f"🔄 Attempt {restart_count + 1}/{max_restarts}")
+            
+            # Create scraper instance
+            scraper = ImprovedCTJobScraper(headless=True, debug=True)
+            
+            # Scrape all sites
+            jobs = scraper.scrape_all_sites(max_jobs_per_site=50)
+            
+            # Save results
+            if jobs:
+                scraper.save_jobs(jobs)
+            
+            # Print summary
+            scraper.print_summary()
+            
+            print("✅ Scraper completed successfully!")
+            break
+            
+        except Exception as e:
+            if "'dict' object has no attribute" in str(e):
+                print(f"❌ Dict corruption error in attempt {restart_count + 1}: {e}")
+                restart_count += 1
+                if restart_count < max_restarts:
+                    print(f"🔄 Restarting scraper in 30 seconds... (attempt {restart_count + 1}/{max_restarts})")
+                    time.sleep(30)
+                    continue
+                else:
+                    print("❌ Max restart attempts reached. Giving up.")
+                    break
+            else:
+                print(f"❌ Unexpected error: {e}")
+                break
 
 if __name__ == "__main__":
     main() 

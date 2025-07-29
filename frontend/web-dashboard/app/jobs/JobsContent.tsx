@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import JobModal from '../components/JobModal';
 import { Job, Tag, TagType } from '../types/job';
 import { Search, MapPin, Filter, ChevronDown, X } from 'lucide-react';
@@ -469,6 +469,76 @@ const extractRequirementsFromDescription = (desc: string): string[] => {
   return [...new Set(requirements)].slice(0, 10); // Limit to 10 requirements max
 };
 
+// Utility to parse out individual facilities from multi-site parent companies
+const parseFacilityFromCompany = (company: string, description: string, location: string): string => {
+  if (!company) return '';
+  
+  const companyLower = company.toLowerCase();
+  const descriptionLower = description.toLowerCase();
+  const locationLower = (typeof location === 'string' ? location : '').toLowerCase();
+  
+  // Multi-site parent companies and their facility patterns
+  const parentCompanyPatterns = {
+    'rydershealth': {
+      patterns: [
+        /bel-air manor/gi,
+        /bel air manor/gi,
+        /belair manor/gi
+      ],
+      fallback: 'Bel-Air Manor'
+    },
+    'athena health care systems': {
+      patterns: [
+        /athena hospice of rhode island/gi,
+        /athena home health & hospice/gi,
+        /athena home health and hospice/gi,
+        /athena hospice/gi,
+        /athena home health/gi
+      ],
+      fallback: 'Athena Health Care Systems'
+    },
+    'atlas healthcare': {
+      patterns: [
+        /atlas rehabilitation and healthcare at daughters of miriam campus/gi,
+        /daughters of miriam campus/gi,
+        /atlas post acute at woodbury country club/gi,
+        /woodbury country club/gi,
+        /atlas rehab and healthcare at maywood/gi,
+        /atlas rehab at maywood/gi,
+        /maywood/gi
+      ],
+      fallback: 'Atlas Healthcare'
+    },
+    'icare health network': {
+      patterns: [
+        /icare health network/gi,
+        /icare/gi
+      ],
+      fallback: 'iCare Health Network'
+    }
+  };
+  
+  // Check if this is a known parent company
+  for (const [parentCompany, config] of Object.entries(parentCompanyPatterns)) {
+    if (companyLower.includes(parentCompany)) {
+      // Look for facility patterns in description and location
+      for (const pattern of config.patterns) {
+        const match = descriptionLower.match(pattern) || locationLower.match(pattern);
+        if (match) {
+          // Return the matched facility name with proper capitalization
+          return match[0].replace(/\b\w/g, l => l.toUpperCase());
+        }
+      }
+      
+      // If no specific facility found, return the fallback
+      return config.fallback;
+    }
+  }
+  
+  // If not a known parent company, return the original company name
+  return company;
+};
+
 const transformJobData = (rawJobs: Record<string, unknown>[], shouldShuffle: boolean = true): Job[] => {
   const transformedJobs = rawJobs
     .map((job, index) => {
@@ -477,6 +547,10 @@ const transformJobData = (rawJobs: Record<string, unknown>[], shouldShuffle: boo
       const url = (job.url as string) || '';
       const company = (job.company as string) || '';
       let location = (job.location as string) || '';
+      
+      // Parse out individual facilities from multi-site parent companies
+      const parsedCompany = parseFacilityFromCompany(company, description, location);
+      
       // Extract city, state from location
       const { cityState, stateOnly } = extractCityState(location);
       location = cityState || stateOnly || '';
@@ -528,7 +602,7 @@ const transformJobData = (rawJobs: Record<string, unknown>[], shouldShuffle: boo
           type: tag.type as TagType
         }));
       } else {
-        tags = generateTags(truncatedTitle, description, job.category as string, company);
+        tags = generateTags(truncatedTitle, description, job.category as string, parsedCompany);
       }
       
       // Extract requirements from description if not already present
@@ -543,7 +617,7 @@ const transformJobData = (rawJobs: Record<string, unknown>[], shouldShuffle: boo
       return {
         id: (job.id as string) || `job_${index + 1}`,
         title: truncatedTitle,
-        company: cleanJobCardContent(company, 50),
+        company: cleanJobCardContent(parsedCompany, 50),
         location: cleanJobCardContent(location, 30),
         salary: cleanJobCardContent(salary, 20),
         url,
@@ -815,6 +889,7 @@ export default function JobsPage() {
   const [activeFilters, setActiveFilters] = useState<Tag[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const { user, showLoginModal } = useAuth();
+  const desktopJobDetailsRef = useRef<HTMLDivElement>(null);
 
   const jobsPerPage = 18; // Show 18 jobs per page maximum
 

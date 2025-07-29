@@ -90,7 +90,7 @@ export default function JobCard({
               {title}
             </h3>
             <p className="text-gray-700 font-medium truncate">
-              {organization_name || company}
+              {company}
             </p>
           </div>
         </div>
