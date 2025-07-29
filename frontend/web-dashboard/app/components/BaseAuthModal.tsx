@@ -44,7 +44,7 @@ const BaseAuthModal: React.FC<BaseAuthModalProps> = ({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={handleOverlayClick}>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" style={{ zIndex: 2147483648 }} onClick={handleOverlayClick}>
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl mx-4 overflow-hidden relative">
                 {/* Close button */}
                 <button

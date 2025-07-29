@@ -2129,7 +2129,7 @@ export default function JobsPage() {
                       </div>
                       <button 
                         onClick={handleApply}
-                        className="bg-[#2CB3BF] text-white font-black text-[20px] py-3 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir"
+                        className="bg-[#2CB3BF] text-white font-black text-[20px] py-3 px-6 rounded-[12px] hover:bg-[#269aa5] transition-colors shadow-lg font-avenir apply-button"
                       >
                         Apply
                       </button>

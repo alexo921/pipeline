@@ -89,7 +89,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black overflow-hidden bg-opacity-50 flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-black overflow-hidden bg-opacity-50 flex items-center justify-center p-4"
+      style={{ zIndex: 2147483648 }}
       onClick={handleOverlayClick}
     >
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md relative my-8 max-h-[90vh] overflow-y-auto overflow-x-hidden">
