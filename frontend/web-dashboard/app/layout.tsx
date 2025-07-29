@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { AuthProvider } from './contexts/AuthContext';
 import { Suspense } from 'react';
 import Loading from './components/Common/Loading';
+import GlobalAuthModal from './components/GlobalAuthModal';
 
 // Import Baloo and configure a fallback for Avenir
 const baloo = Inter({ 
@@ -75,6 +76,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <Suspense fallback={<Loading />}>
         <main>{children}</main>
         </Suspense>
+        <GlobalAuthModal />
         </AuthProvider>
       </body>
     </html>
