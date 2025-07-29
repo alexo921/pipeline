@@ -2,17 +2,17 @@ import { Metadata } from 'next';
 import BaseLayout from '../components/layout/BaseLayout';
 
 export const metadata: Metadata = {
-  title: 'Healthcare Jobs | Find Your Next Career',
-  description: 'Browse the latest healthcare jobs including CNA positions, home health aide roles, and more.',
+  title: 'Pipeline: Long-Term Care Jobs',
+  description: 'Pipeline: The Dedicated Long-Term Care Job Board | CNA, LPN, RN & Home Care Jobs',
   openGraph: {
-    title: 'Healthcare Jobs | Find Your Next Career',
-    description: 'Browse the latest healthcare jobs including CNA positions, home health aide roles, and more.',
+    title: 'Pipeline: Long-Term Care Jobs',
+    description: 'Pipeline: The Dedicated Long-Term Care Job Board | CNA, LPN, RN & Home Care Jobs',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Healthcare Jobs | Find Your Next Career',
-    description: 'Browse the latest healthcare jobs including CNA positions, home health aide roles, and more.',
+    title: 'Pipeline: Long-Term Care Jobs',
+    description: 'Pipeline: The Dedicated Long-Term Care Job Board | CNA, LPN, RN & Home Care Jobs',
   },
 };
 

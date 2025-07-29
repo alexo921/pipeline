@@ -11,8 +11,8 @@ const baloo = Inter({
 });
 
 export const metadata = {
-  title: 'Pipeline - Healthcare',
-  description: 'Find your next healthcare job',
+  title: 'Pipeline: Long-Term Care Jobs',
+  description: 'Pipeline: The Dedicated Long-Term Care Job Board | CNA, LPN, RN & Home Care Jobs',
 };
 
 export default function RootLayout({

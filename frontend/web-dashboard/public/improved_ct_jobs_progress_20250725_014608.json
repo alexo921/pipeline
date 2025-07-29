@@ -1,0 +1,82 @@
+[
+  {
+    "title": "Certified Nursing Assistant (CNA)",
+    "company": "RydersHealth",
+    "location": "Newington, Connecticut",
+    "salary": "",
+    "job_type": "",
+    "description": "<p class=\"MsoNormal\"><span lang=\"EN\">Bel-Air Manor is </span><span lang=\"EN\" style=\"font-size: 11.5pt; line-height: 115%; color: #050505; background: white; mso-highlight: white;\">a 71-bed, family-owned skilled nursing facility in Newington, Connecticut specializing in short-term rehabilitation and long-term care. </span><span lang=\"EN\" style=\"font-size: 11.5pt; line-height: 115%; color: #050505;\">We are currently hiring full-time, part-time and per diem C.N.A's. Come join our team!</span></p>\n<p class=\"MsoNormal\"><strong><span lang=\"EN\" style=\"font-size: 11.5pt; line-height: 115%; color: #050505;\">We are Currently offering Part-Time/ Full time and Per Diem&nbsp; Positions</span></strong></p>\n<p>The primary purpose of your job position is to provide each of your assigned residents with routine daily nursing care and services in accordance with the resident&rsquo;s assessment and care plan, and as may be directed by your supervisors.</p>\n<p>As a Certified Nursing Assistant you are delegated the administrative authority, responsibility, and accountability necessary for carrying out your assigned duties.</p>\n<p><em>The responsiblites of a Certified Nursing Assistant (CNA) include but are not limited too:</em></p>\n<ul>\n<li>Provide basic care to residents and assist them in daily activities</li>\n<li>Record all entries on flow sheets, notes, charts, etc., in an informative and descriptive manner.</li>\n<li>Observe and reports to changes in residents&rsquo; conditions.</li>\n</ul>\n<p><em>Certified Nursing Assistant (CNA) Requirements </em></p>\n<ul>\n<li>Must have a valid CT C.N.A certification</li>\n<li>Must be able to read, write, speak and understand the English language.</li>\n</ul>\n<p><em>Certified Nursing Assistant (CNA) Benefits (*FT and/or PT positions only)</em></p>\n<ul>\n<li>Competitive pay</li>\n<li>Shift and weekend differentials</li>\n<li>Medical, Dental and Vision Insurance*</li>\n<li>PTO*</li>\n<li>401 (k) with employer match*</li>\n<li>Employer Paid Life Insurance</li>\n<li>Paid Meal Period</li>\n<li>8 Paid Holidays</li>\n<li>Employee Assistance Program</li>\n<li>Longevity Credit*</li>\n<li>Short- &amp; Long-Term Disability*</li>\n</ul>\n<p>We are an equal opportunity employer and value diversity at our company.&nbsp; We do not discriminate based on race, religion, color, national origin, gender, sexual orientation, age, marital status, veteran status, or disability status.</p>\n<p>&nbsp;</p>\n<p>RHMBA</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>",
+    "requirements": "",
+    "qualifications": "",
+    "date_posted": "",
+    "application_info": "",
+    "job_url": "https://jobs.apploi.com/view/865692?utm_campaign=jobs_snippet&utm_source=Ryders_Health_Management-career-page&utm_medium=client-web-site&utm_term=apploi-snippet&_=1753407945.0688071",
+    "context": "https://schema.org/",
+    "type": "JobPosting",
+    "basesalary": {
+      "@type": "MonetaryAmount",
+      "currency": "USD",
+      "value": 20
+    },
+    "dateposted": "2025-07-23",
+    "directapply": true,
+    "educationrequirements": {
+      "@type": "EducationalOccupationalCredential",
+      "credentialCategory": "CERTIFICATE"
+    },
+    "employmenttype": [
+      "FULL_TIME",
+      "PART_TIME"
+    ],
+    "hiringorganization": {
+      "@type": "Organization",
+      "logo": "https://s3.amazonaws.com/apploi-company-profile-assets/58a1c986-50e7-11ef-9a45-264b57136b68",
+      "name": "Ryders Health Management",
+      "sameAs": "https://www.rydershealth.com/"
+    },
+    "industry": "Healthcare",
+    "joblocation": {
+      "@type": "Place",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Newington",
+        "addressRegion": "Connecticut",
+        "latitude": "41.6757642000",
+        "longitude": "-72.7331016000",
+        "postalCode": "06111",
+        "streetAddress": "256 New Britain Avenue Newington, CT 06111, USA"
+      }
+    },
+    "organization_type": "Organization",
+    "organization_logo": "https://s3.amazonaws.com/apploi-company-profile-assets/58a1c986-50e7-11ef-9a45-264b57136b68",
+    "organization_name": "Ryders Health Management",
+    "organization_sameas": "https://www.rydershealth.com/",
+    "location_type": "Place",
+    "location_address": {
+      "@type": "PostalAddress",
+      "addressCountry": "US",
+      "addressLocality": "Newington",
+      "addressRegion": "Connecticut",
+      "latitude": "41.6757642000",
+      "longitude": "-72.7331016000",
+      "postalCode": "06111",
+      "streetAddress": "256 New Britain Avenue Newington, CT 06111, USA"
+    },
+    "address_type": "PostalAddress",
+    "address_addresscountry": "US",
+    "address_addresslocality": "Newington",
+    "address_addressregion": "Connecticut",
+    "address_latitude": "41.6757642000",
+    "address_longitude": "-72.7331016000",
+    "address_postalcode": "06111",
+    "address_streetaddress": "256 New Britain Avenue Newington, CT 06111, USA",
+    "education_type": "EducationalOccupationalCredential",
+    "education_credentialcategory": "CERTIFICATE",
+    "source_url": "https://www.rydershealth.com/career-opportunities/",
+    "scraped_at": "2025-07-25T01:46:07.509801",
+    "state": "CT",
+    "city": "",
+    "zip_code": ""
+  }
+]
