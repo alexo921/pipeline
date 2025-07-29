@@ -7,7 +7,7 @@ export default function GoogleTagManager() {
     <>
       <Script
         id="gtm-script"
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -18,14 +18,19 @@ export default function GoogleTagManager() {
           `,
         }}
       />
-      <noscript>
-        <iframe
-          src="https://www.googletagmanager.com/ns.html?id=GTM-NB6Z3L2B"
-          height="0"
-          width="0"
-          style={{ display: 'none', visibility: 'hidden' }}
-        />
-      </noscript>
     </>
+  );
+}
+
+export function GoogleTagManagerNoScript() {
+  return (
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NB6Z3L2B"
+        height="0"
+        width="0"
+        style={{ display: 'none', visibility: 'hidden' }}
+      />
+    </noscript>
   );
 } 

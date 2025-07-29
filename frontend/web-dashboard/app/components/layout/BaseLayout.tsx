@@ -7,7 +7,7 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import BaseAuthModal from "../BaseAuthModal";
 import { useAuth } from "../../contexts/AuthContext";
-import GoogleTagManager from "../GoogleTagManager";
+
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -39,7 +39,6 @@ export default function BaseLayout({
 
   return (
     <div className={`${backgroundClass} relative`} style={backgroundStyle}>
-      <GoogleTagManager />
       {/* Navbar navigation */}
       {showNav && (
         <Navbar
