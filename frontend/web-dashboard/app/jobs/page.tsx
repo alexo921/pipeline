@@ -30,11 +30,23 @@ const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
       try {
         const response = await fetch(file);
         if (response.ok) {
-          const jobs = await response.json();
-          if (Array.isArray(jobs)) {
-            allJobs.push(...jobs);
-            console.log(`Loaded ${jobs.length} jobs from ${file}`);
+          const data = await response.json();
+          let jobs = [];
+          
+          // Handle different JSON structures
+          if (Array.isArray(data)) {
+            // Direct array of jobs
+            jobs = data;
+          } else if (data.jobs && Array.isArray(data.jobs)) {
+            // Object with jobs array
+            jobs = data.jobs;
+          } else {
+            console.warn(`Unexpected format in ${file}:`, data);
+            continue;
           }
+          
+          allJobs.push(...jobs);
+          console.log(`Loaded ${jobs.length} jobs from ${file}`);
         }
       } catch (error) {
         console.warn(`Failed to load ${file}:`, error);
