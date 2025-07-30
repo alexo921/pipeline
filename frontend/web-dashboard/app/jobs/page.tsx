@@ -171,6 +171,55 @@ const extractCityState = (location: string): { cityState: string | null; stateOn
     'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY'
   };
   
+  // First, try to extract city/state from the original location without aggressive cleaning
+  // This preserves good location data like "171 Main St East Windsor, Connecticut, 06088 United States"
+  
+  // Try to match: ... City, ST ... (with optional ZIP and country)
+  const cityStateMatch = location.match(/([A-Za-z .'-]+),\s*([A-Z]{2})(?:\s*,?\s*\d{5}(?:-\d{4})?\s*,?\s*(?:United States|USA|US)?)?$/i);
+  if (cityStateMatch) {
+    return { 
+      cityState: `${cityStateMatch[1].trim()}, ${cityStateMatch[2].trim()}`,
+      stateOnly: null
+    };
+  }
+  
+  // Try to match: ... City, State ... (with optional ZIP and country)
+  const cityFullStateMatch = location.match(/([A-Za-z .'-]+),\s*([A-Za-z\s]+)(?:\s*,?\s*\d{5}(?:-\d{4})?\s*,?\s*(?:United States|USA|US)?)?$/i);
+  if (cityFullStateMatch) {
+    const city = cityFullStateMatch[1].trim();
+    const fullState = cityFullStateMatch[2].trim();
+    const stateCode = stateNameToCode[fullState.toLowerCase()];
+    if (stateCode) {
+      return { 
+        cityState: `${city}, ${stateCode}`,
+        stateOnly: null
+      };
+    }
+  }
+  
+  // If the above didn't work, try a more flexible pattern that looks for city, state anywhere in the string
+  const flexibleCityStateMatch = location.match(/([A-Za-z .'-]+),\s*([A-Z]{2})/);
+  if (flexibleCityStateMatch) {
+    return { 
+      cityState: `${flexibleCityStateMatch[1].trim()}, ${flexibleCityStateMatch[2].trim()}`,
+      stateOnly: null
+    };
+  }
+  
+  const flexibleCityFullStateMatch = location.match(/([A-Za-z .'-]+),\s*([A-Za-z\s]+)/);
+  if (flexibleCityFullStateMatch) {
+    const city = flexibleCityFullStateMatch[1].trim();
+    const fullState = flexibleCityFullStateMatch[2].trim();
+    const stateCode = stateNameToCode[fullState.toLowerCase()];
+    if (stateCode) {
+      return { 
+        cityState: `${city}, ${stateCode}`,
+        stateOnly: null
+      };
+    }
+  }
+  
+  // If we still haven't found a good pattern, apply the original aggressive cleaning
   // Clean the location string - remove common unwanted patterns
   let cleanLocation = location
     .replace(/\d{5}(-\d{4})?/g, '') // Remove ZIP codes
@@ -181,19 +230,19 @@ const extractCityState = (location: string): { cityState: string | null; stateOn
     .trim();
   
   // Try to match: ... City, ST ...
-  const cityStateMatch = cleanLocation.match(/([A-Za-z .'-]+),\s*([A-Z]{2})(?:\s|,|$)/);
-  if (cityStateMatch) {
+  const cleanCityStateMatch = cleanLocation.match(/([A-Za-z .'-]+),\s*([A-Z]{2})(?:\s|,|$)/);
+  if (cleanCityStateMatch) {
     return { 
-      cityState: `${cityStateMatch[1].trim()}, ${cityStateMatch[2].trim()}`,
+      cityState: `${cleanCityStateMatch[1].trim()}, ${cleanCityStateMatch[2].trim()}`,
       stateOnly: null
     };
   }
   
   // Try to match: ... City, State ...
-  const cityFullStateMatch = cleanLocation.match(/([A-Za-z .'-]+),\s*([A-Za-z\s]+)(?:\s|,|$)/);
-  if (cityFullStateMatch) {
-    const city = cityFullStateMatch[1].trim();
-    const fullState = cityFullStateMatch[2].trim();
+  const cleanCityFullStateMatch = cleanLocation.match(/([A-Za-z .'-]+),\s*([A-Za-z\s]+)(?:\s|,|$)/);
+  if (cleanCityFullStateMatch) {
+    const city = cleanCityFullStateMatch[1].trim();
+    const fullState = cleanCityFullStateMatch[2].trim();
     const stateCode = stateNameToCode[fullState.toLowerCase()];
     if (stateCode) {
       return { 
@@ -602,6 +651,50 @@ const parseFacilityFromCompany = (company: string, description: string, location
     },
     'icare health network': {
       patterns: [
+        // Touchpoints facilities
+        /touchpoints at chestnut/gi,
+        /touchpoints at bloomfield/gi,
+        /touchpoints at manchester/gi,
+        /touchpoints at farmington/gi,
+        /touchpoints at newington/gi,
+        /touchpoints at waterbury/gi,
+        /touchpoints at torrington/gi,
+        /touchpoints at southport/gi,
+        /touchpoints at new haven/gi,
+        /touchpoints at west haven/gi,
+        /touchpoints at waterbury center/gi,
+        /touchpoints at torrington center/gi,
+        /touchpoints at southport center/gi,
+        /touchpoints at new haven center/gi,
+        /touchpoints at west haven center/gi,
+        
+        // Trinity Hill facilities
+        /trinity hill care/gi,
+        /trinity hill care center/gi,
+        /trinity hill/gi,
+        
+        // Westside facilities
+        /westside care center/gi,
+        /westside/gi,
+        
+        // MissionCare facilities
+        /missioncare at holyoke/gi,
+        /missioncare/gi,
+        
+        // Parkville facilities
+        /parkville care center/gi,
+        /parkville/gi,
+        
+        // Silver Springs facilities
+        /silver springs care center/gi,
+        /silver springs/gi,
+        
+        // Other specific Icare facilities
+        /60 west/gi,
+        /60 west st/gi,
+        /60 west street/gi,
+        
+        // General Icare patterns
         /icare health network/gi,
         /icare/gi
       ],
