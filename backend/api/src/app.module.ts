@@ -9,7 +9,7 @@ import { PrismaModule } from './common/prisma/prisma.module';
 import { CandidateModule } from './candidate/candidate.module';
 import { JobModule } from './job/job.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { EmailService } from './email/email.service';
+import { EmailModule } from './email/email.module';
 import { UserEventsListener } from './email/user-events.listener';
 import { JobsService } from './email/jobs.service';
 import { QueueModule } from './queue/queue.module';
@@ -36,8 +36,9 @@ import { QueueModule } from './queue/queue.module';
     CandidateModule,
     JobModule,
     QueueModule,
+    EmailModule,
     EventEmitterModule.forRoot(),
   ],
-  providers: [EmailService, UserEventsListener, JobsService],
+  providers: [UserEventsListener, JobsService],
 })
 export class AppModule {}

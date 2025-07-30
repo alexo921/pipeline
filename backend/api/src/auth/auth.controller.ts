@@ -278,6 +278,37 @@ export class AuthController {
     }
   }
 
+  @Post('send-launch')
+  @ApiOperation({ summary: 'Send launch email to waitlist subscriber' })
+  async sendLaunchEmail(@Body() body: { email: string; firstName: string }) {
+    try {
+      const { email, firstName } = body;
+      
+      if (!email || !firstName) {
+        return {
+          success: false,
+          message: 'Email and firstName are required',
+          error: 'Missing required fields'
+        };
+      }
+
+      await this.emailService.sendLaunchEmail(email, firstName);
+      
+      return {
+        success: true,
+        message: `Launch email sent successfully to ${firstName} (${email})`,
+        email,
+        firstName
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Failed to send launch email',
+        error: error.message
+      };
+    }
+  }
+
   @Post('test-email-templates')
   @ApiOperation({ summary: 'Test all email templates' })
   async testEmailTemplates(@Body() body: { 
