@@ -492,6 +492,7 @@ export class EmailService {
 
     const emailContent = [
       `To: ${to}`,
+      `From: Pipeline <${process.env.EMAIL_USER}>`,
       `Subject: ${subject}`,
       'Content-Type: text/html; charset=utf-8',
       '',

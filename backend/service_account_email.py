@@ -112,7 +112,7 @@ class ServiceAccountEmailSender:
             # Create message
             message = MIMEMultipart('alternative')
             message['to'] = ', '.join(to_emails)
-            message['from'] = self.delegated_user
+            message['from'] = f'Pipeline <{self.delegated_user}>'
             message['subject'] = subject
             
             # Add plain text part

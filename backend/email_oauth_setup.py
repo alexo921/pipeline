@@ -140,7 +140,7 @@ class GmailOAuthSender:
             # Create message
             message = MIMEMultipart('alternative')
             message['to'] = ', '.join(to_emails)
-            message['from'] = from_email
+            message['from'] = f'Pipeline <{from_email}>'
             message['subject'] = subject
             
             # Add plain text part
