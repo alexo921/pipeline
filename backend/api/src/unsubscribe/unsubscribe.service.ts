@@ -86,7 +86,7 @@ export class UnsubscribeService {
 
     return {
       subscribed: user.emailSubscribed,
-      unsubscribedAt: user.unsubscribedAt,
+      unsubscribedAt: user.unsubscribedAt || undefined,
     };
   }
 } 
