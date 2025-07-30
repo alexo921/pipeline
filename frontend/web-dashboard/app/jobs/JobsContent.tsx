@@ -1300,36 +1300,22 @@ export default function JobsPage() {
     );
   }
 
-  // Generate pagination numbers with ellipsis for large page counts
+  // Generate pagination numbers - show first 5 numbers and then "..."
   const generatePaginationNumbers = (current: number, total: number): (number | string)[] => {
     const numbers: (number | string)[] = [];
     const maxVisible = 5;
     
     if (total <= maxVisible) {
+      // If total pages is 5 or less, show all pages
       for (let i = 1; i <= total; i++) {
         numbers.push(i);
       }
     } else {
-      numbers.push(1);
-      
-      if (current > 3) {
-        numbers.push('...');
+      // Show first 5 numbers and then "..."
+      for (let i = 1; i <= maxVisible; i++) {
+        numbers.push(i);
       }
-      
-      const start = Math.max(2, current - 1);
-      const end = Math.min(total - 1, current + 1);
-      
-      for (let i = start; i <= end; i++) {
-        if (i !== 1 && i !== total) {
-          numbers.push(i);
-        }
-      }
-      
-      if (current < total - 2) {
-        numbers.push('...');
-      }
-      
-      numbers.push(total);
+      numbers.push('...');
     }
     
     return numbers;
