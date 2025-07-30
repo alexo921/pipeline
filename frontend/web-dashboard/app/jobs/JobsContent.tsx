@@ -1015,7 +1015,58 @@ export default function JobsPage() {
   // Available locations - dynamically generated from loaded data
   const allLocations = [
     "All Locations",
-    ...Array.from(new Set(jobs.map(job => job.location))).sort()
+    ...Array.from(new Set(jobs.map(job => job.location))).sort(),
+    // Add state names for better filtering
+    "Connecticut", "CT",
+    "Massachusetts", "MA", 
+    "New York", "NY",
+    "Rhode Island", "RI",
+    "New Hampshire", "NH",
+    "Vermont", "VT",
+    "Maine", "ME",
+    "Pennsylvania", "PA",
+    "New Jersey", "NJ",
+    "Delaware", "DE",
+    "Maryland", "MD",
+    "Virginia", "VA",
+    "West Virginia", "WV",
+    "Ohio", "OH",
+    "Indiana", "IN",
+    "Illinois", "IL",
+    "Michigan", "MI",
+    "Wisconsin", "WI",
+    "Minnesota", "MN",
+    "Iowa", "IA",
+    "Missouri", "MO",
+    "North Dakota", "ND",
+    "South Dakota", "SD",
+    "Nebraska", "NE",
+    "Kansas", "KS",
+    "Oklahoma", "OK",
+    "Texas", "TX",
+    "Arkansas", "AR",
+    "Louisiana", "LA",
+    "Mississippi", "MS",
+    "Alabama", "AL",
+    "Georgia", "GA",
+    "Florida", "FL",
+    "South Carolina", "SC",
+    "North Carolina", "NC",
+    "Tennessee", "TN",
+    "Kentucky", "KY",
+    "Colorado", "CO",
+    "Utah", "UT",
+    "Arizona", "AZ",
+    "New Mexico", "NM",
+    "California", "CA",
+    "Nevada", "NV",
+    "Oregon", "OR",
+    "Washington", "WA",
+    "Idaho", "ID",
+    "Montana", "MT",
+    "Wyoming", "WY",
+    "Alaska", "AK",
+    "Hawaii", "HI"
   ];
 
   // Filtered locations based on search
@@ -1025,6 +1076,7 @@ export default function JobsPage() {
 
   // Filter jobs based on search, location, and active filters
   useEffect(() => {
+    console.log('Filtering jobs with selectedLocation:', selectedLocation);
     const filtered = jobs.filter(job => {
       // Enhanced search functionality - search across all relevant fields
       const searchLower = searchTerm.toLowerCase();
@@ -1043,6 +1095,7 @@ export default function JobsPage() {
       let matchesLocation = true;
       if (selectedLocation !== 'All Locations') {
         const inputLower = selectedLocation.toLowerCase().trim();
+        const jobLocation = job.location.toLowerCase();
         
         // Check if input is a state code or state name
         const stateNameToCode: Record<string, string> = {
@@ -1067,14 +1120,19 @@ export default function JobsPage() {
         if (isStateCode || isStateName) {
           // State-based filtering - show all jobs in that state
           const targetState = isStateCode ? inputLower.toUpperCase() : isStateName;
-          const jobLocation = job.location.toLowerCase();
           
           // Check if job location contains the state code or state name
           matchesLocation = jobLocation.includes(targetState.toLowerCase()) ||
-                           jobLocation.includes(inputLower);
+                           jobLocation.includes(inputLower) ||
+                           jobLocation.includes(selectedLocation.toLowerCase());
+          
+          // Debug logging for state filtering
+          if (selectedLocation !== 'All Locations') {
+            console.log(`Job: ${job.title}, Location: ${job.location}, Target State: ${targetState}, Matches: ${matchesLocation}`);
+          }
         } else {
           // Regular location filtering for cities or other locations
-          matchesLocation = job.location.toLowerCase().includes(inputLower);
+          matchesLocation = jobLocation.includes(inputLower);
         }
       }
       
