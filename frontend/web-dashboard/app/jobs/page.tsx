@@ -528,11 +528,54 @@ const parseFacilityFromCompany = (company: string, description: string, location
   const parentCompanyPatterns = {
     'rydershealth': {
       patterns: [
+        // Bel-Air Manor variations
         /bel-air manor/gi,
         /bel air manor/gi,
-        /belair manor/gi
+        /belair manor/gi,
+        
+        // Cheshire House variations
+        /cheshire house nursing & rehabilitation center/gi,
+        /cheshire house/gi,
+        
+        // Douglas Manor variations
+        /douglas manor nursing & rehabilitation center/gi,
+        /douglas manor/gi,
+        
+        // Greentree Manor variations
+        /greentree manor nursing & rehabilitation center/gi,
+        /greentree manor/gi,
+        
+        // Aaron Manor variations
+        /aaron manor nursing and rehabilitation center/gi,
+        /aaron manor/gi,
+        
+        // West Haven Center variations
+        /west haven center for nursing & rehabilitation/gi,
+        /west haven center/gi,
+        
+        // Waterbury Center variations
+        /waterbury center for nursing & rehabilitation/gi,
+        /waterbury center/gi,
+        
+        // Torrington Center variations
+        /torrington center for nursing & rehabilitation/gi,
+        /torrington center/gi,
+        
+        // Southport Center variations
+        /southport center for nursing & rehabilitation/gi,
+        /southport center/gi,
+        
+        // New Haven Center variations
+        /new haven center for nursing & rehabilitation/gi,
+        /new haven center/gi,
+        
+        // General facility patterns for RydersHealth
+        /([a-zA-Z\s&-]+(?:manor|house|center|facility|nursing|rehabilitation|care|health|medical|hospital|clinic|home))(?:\s+is\s+a|\s+is\s+an|\s+is\s+located|\s+specializes)/gi,
+        /([a-zA-Z\s&-]+(?:manor|house|center|facility|nursing|rehabilitation|care|health|medical|hospital|clinic|home))(?:\s+in\s+[a-zA-Z\s]+,\s+connecticut)/gi,
+        /company\s+description:\s*([a-zA-Z\s&-]+(?:manor|house|center|facility|nursing|rehabilitation|care|health|medical|hospital|clinic|home))/gi,
+        /^([a-zA-Z\s&-]+(?:manor|house|center|facility|nursing|rehabilitation|care|health|medical|hospital|clinic|home))(?:\s+is\s+a|\s+is\s+an)/gi
       ],
-      fallback: 'Bel-Air Manor'
+      fallback: 'RydersHealth'
     },
     'athena health care systems': {
       patterns: [
@@ -572,8 +615,23 @@ const parseFacilityFromCompany = (company: string, description: string, location
       for (const pattern of config.patterns) {
         const match = descriptionLower.match(pattern) || locationLower.match(pattern);
         if (match) {
-          // Return the matched facility name with proper capitalization
-          return match[0].replace(/\b\w/g, l => l.toUpperCase());
+          // For patterns with capture groups, use the first capture group
+          let facilityName = match[0];
+          if (match[1]) {
+            facilityName = match[1];
+          }
+          
+          // Clean up the facility name
+          facilityName = facilityName.trim();
+          facilityName = facilityName.replace(/\s+/g, ' '); // Remove extra spaces
+          
+          // Proper capitalization
+          facilityName = facilityName.replace(/\b\w/g, l => l.toUpperCase());
+          
+          // Validate it's not too short or too long
+          if (facilityName.length >= 3 && facilityName.length <= 100) {
+            return facilityName;
+          }
         }
       }
       
