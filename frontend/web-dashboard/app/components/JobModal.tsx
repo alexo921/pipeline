@@ -142,7 +142,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
     <div 
       className="fixed inset-0 modal-backdrop bg-black bg-opacity-50 lg:hidden"
       style={{ 
-        zIndex: 9999,
+        zIndex: 9998,
         position: 'fixed',
         top: 0,
         left: 0,
@@ -156,7 +156,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
         ref={modalRef}
         className="fixed inset-0 bg-white lg:hidden job-modal"
         style={{ 
-          zIndex: 9999,
+          zIndex: 9998,
           height: '100dvh',
           paddingTop: 'env(safe-area-inset-top)',
           paddingBottom: 'env(safe-area-inset-bottom)',
