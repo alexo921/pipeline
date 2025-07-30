@@ -1303,13 +1303,79 @@ export default function JobsPage() {
         )
       );
       
-      // If it's a shift-only search, prioritize shift matching
-      if (isShiftOnlySearch) {
-        return shiftMatch;
+      // Location filtering
+      let matchesLocation = true;
+      if (locationInput.trim() !== '') {
+        const inputLower = locationInput.toLowerCase().trim();
+        const jobLocation = job.location.toLowerCase();
+        
+        console.log(`Checking location for job "${job.title}":`);
+        console.log(`  - Job location: "${job.location}"`);
+        console.log(`  - Location input: "${locationInput}"`);
+        console.log(`  - Input lower: "${inputLower}"`);
+        console.log(`  - Job location lower: "${jobLocation}"`);
+        
+        // Check if input is a state code or state name
+        const stateNameToCode: Record<string, string> = {
+          'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
+          'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
+          'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
+          'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
+          'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
+          'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
+          'new mexico': 'NM', 'new york': 'NY', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
+          'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
+          'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
+          'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY'
+        };
+        
+        // Check if input is a state code (2 letters)
+        const isStateCode = /^[A-Z]{2}$/i.test(inputLower);
+        console.log(`  - Is state code: ${isStateCode}`);
+        
+        // Check if input is a state name
+        const isStateName = stateNameToCode[inputLower];
+        console.log(`  - Is state name: ${isStateName ? 'Yes' : 'No'}`);
+        
+        if (isStateCode || isStateName) {
+          // State-based filtering - show all jobs in that state
+          const targetState = isStateCode ? inputLower.toUpperCase() : isStateName;
+          console.log(`  - Target state: "${targetState}"`);
+          
+          // Check if job location contains the state code or state name
+          const matchesTargetState = jobLocation.includes(targetState.toLowerCase());
+          const matchesInputLower = jobLocation.includes(inputLower);
+          const matchesLocationInput = jobLocation.includes(locationInput.toLowerCase());
+          
+          matchesLocation = matchesTargetState || matchesInputLower || matchesLocationInput;
+          
+          console.log(`  - Matches target state (${targetState.toLowerCase()}): ${matchesTargetState}`);
+          console.log(`  - Matches input lower (${inputLower}): ${matchesInputLower}`);
+          console.log(`  - Matches location input (${locationInput.toLowerCase()}): ${matchesLocationInput}`);
+          console.log(`  - Final location match: ${matchesLocation}`);
+        } else {
+          // Regular location filtering for cities or other locations
+          matchesLocation = jobLocation.includes(inputLower);
+          console.log(`  - Regular location match: ${matchesLocation}`);
+        }
       }
       
-      // For combined searches, return true if either basic search OR shift search matches
-      return basicSearchMatch || shiftMatch;
+      // Filter matching
+      const matchesFilters = activeFilters.length === 0 || 
+                            activeFilters.some(filter => 
+                              (job.tags || []).some(tag => tag.label === filter.label)
+                            );
+      
+      // If it's a shift-only search, prioritize shift matching
+      if (isShiftOnlySearch) {
+        return shiftMatch && matchesLocation && matchesFilters;
+      }
+      
+      // For combined searches, return true if search matches AND location matches AND filters match
+      const finalMatch = (basicSearchMatch || shiftMatch) && matchesLocation && matchesFilters;
+      console.log(`  - Final result for "${job.title}": ${finalMatch} (search: ${basicSearchMatch || shiftMatch}, location: ${matchesLocation}, filters: ${matchesFilters})`);
+      
+      return finalMatch;
     });
     
     console.log('📊 Search results:', {
