@@ -142,7 +142,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
     <div 
       className="fixed inset-0 modal-backdrop bg-black bg-opacity-50 lg:hidden"
       style={{ 
-        zIndex: 2147483647,
+        zIndex: 9999,
         position: 'fixed',
         top: 0,
         left: 0,
@@ -156,7 +156,7 @@ export default function JobModal({ job, onClose }: JobModalProps) {
         ref={modalRef}
         className="fixed inset-0 bg-white lg:hidden job-modal"
         style={{ 
-          zIndex: 2147483647,
+          zIndex: 9999,
           height: '100dvh',
           paddingTop: 'env(safe-area-inset-top)',
           paddingBottom: 'env(safe-area-inset-bottom)',
@@ -273,20 +273,20 @@ export default function JobModal({ job, onClose }: JobModalProps) {
           background: #a0aec0;
         }
         
-        /* Ensure modal is always on top */
+        /* Ensure modal is above page content but below auth modals */
         .modal-backdrop {
-          z-index: 2147483647 !important;
+          z-index: 9999 !important;
         }
         
-        /* Force modal content above everything */
+        /* Force modal content above page elements */
         .modal-backdrop > div {
-          z-index: 2147483647 !important;
+          z-index: 9999 !important;
         }
         
-        /* Override any other z-index values */
+        /* Override page z-index values but not auth modals */
         .modal-backdrop,
         .modal-backdrop * {
-          z-index: 2147483647 !important;
+          z-index: 9999 !important;
         }
       `}</style>
     </div>
