@@ -1042,6 +1042,7 @@ export default function JobsPage() {
   const [hasUserAppliedFilters, setHasUserAppliedFilters] = useState(false);
   const { user, showLoginModal, refreshUser } = useAuth();
   const jobDetailsRef = useRef<HTMLDivElement>(null);
+  const jobDetailsScrollRef = useRef<HTMLDivElement>(null);
 
   // Check for Google sign-in completion and refresh user state
   useEffect(() => {
@@ -1523,13 +1524,10 @@ export default function JobsPage() {
   const handleJobClick = (job: Job) => {
     setSelectedJob(job);
     
-    // Remove the scrolling behavior - clicking on a job should not scroll the screen
-    // if (window.innerWidth >= 1024 && jobDetailsRef.current) {
-    //   jobDetailsRef.current.scrollIntoView({ 
-    //     behavior: 'smooth', 
-    //     block: 'start' 
-    //   });
-    // }
+    // Scroll the job details content to the top when a new job is selected
+    if (jobDetailsScrollRef.current) {
+      jobDetailsScrollRef.current.scrollTop = 0;
+    }
   };
 
   const handleContainerClick = () => {
@@ -2293,6 +2291,7 @@ export default function JobsPage() {
 
                   {/* Content - Scrollable */}
                   <div 
+                    ref={jobDetailsScrollRef}
                     className="flex-1 p-8 overflow-y-auto overflow-x-hidden" 
                     style={{
                       minHeight: '400px',
