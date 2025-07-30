@@ -1342,20 +1342,33 @@ export default function JobsPage() {
           const targetState = isStateCode ? inputLower.toUpperCase() : isStateName;
           console.log(`  - Target state: "${targetState}"`);
           
-          // Check if job location contains the state code or state name
-          const matchesTargetState = jobLocation.includes(targetState.toLowerCase());
-          const matchesInputLower = jobLocation.includes(inputLower);
-          const matchesLocationInput = jobLocation.includes(locationInput.toLowerCase());
+          // More precise state matching - check for state code at the end or with comma/space
+          const stateCodePattern = new RegExp(`\\b${targetState}\\b`, 'i');
+          const stateNamePattern = new RegExp(`\\b${inputLower}\\b`, 'i');
           
-          matchesLocation = matchesTargetState || matchesInputLower || matchesLocationInput;
+          // Check if job location contains the state code or state name as a whole word
+          const matchesTargetState = stateCodePattern.test(jobLocation);
+          const matchesStateName = stateNamePattern.test(jobLocation);
           
-          console.log(`  - Matches target state (${targetState.toLowerCase()}): ${matchesTargetState}`);
-          console.log(`  - Matches input lower (${inputLower}): ${matchesInputLower}`);
-          console.log(`  - Matches location input (${locationInput.toLowerCase()}): ${matchesLocationInput}`);
+          // Also check for common location patterns like "City, ST" or "City, State"
+          const cityStatePattern = new RegExp(`[^,]*,\\s*${targetState}\\b`, 'i');
+          const cityStateNamePattern = new RegExp(`[^,]*,\\s*${inputLower}\\b`, 'i');
+          
+          const matchesCityState = cityStatePattern.test(jobLocation);
+          const matchesCityStateName = cityStateNamePattern.test(jobLocation);
+          
+          matchesLocation = matchesTargetState || matchesStateName || matchesCityState || matchesCityStateName;
+          
+          console.log(`  - Matches target state (${targetState}): ${matchesTargetState}`);
+          console.log(`  - Matches state name (${inputLower}): ${matchesStateName}`);
+          console.log(`  - Matches city, state pattern: ${matchesCityState}`);
+          console.log(`  - Matches city, state name pattern: ${matchesCityStateName}`);
           console.log(`  - Final location match: ${matchesLocation}`);
         } else {
           // Regular location filtering for cities or other locations
-          matchesLocation = jobLocation.includes(inputLower);
+          // Use word boundary for more precise matching
+          const cityPattern = new RegExp(`\\b${inputLower}\\b`, 'i');
+          matchesLocation = cityPattern.test(jobLocation);
           console.log(`  - Regular location match: ${matchesLocation}`);
         }
       }
