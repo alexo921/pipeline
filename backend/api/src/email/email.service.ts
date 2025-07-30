@@ -389,6 +389,7 @@ export class EmailService {
       // Replace placeholders
       emailTemplate = emailTemplate.replace('{{firstName}}', firstName);
       emailTemplate = emailTemplate.replace('{{jobsUrl}}', `${process.env.FRONTEND_URL}/jobs`);
+      emailTemplate = emailTemplate.replace('{{unsubscribeUrl}}', `${process.env.FRONTEND_URL}/unsubscribe?email=${encodeURIComponent(email)}`);
 
       // Try Gmail API first if available
       if (this.isGmailAuthorized()) {
@@ -577,6 +578,11 @@ export class EmailService {
       }
       
       let emailTemplate = fs.readFileSync(templatePath, 'utf8');
+
+      // Add unsubscribe URL if not provided
+      if (!data.unsubscribeUrl) {
+        data.unsubscribeUrl = `${process.env.FRONTEND_URL}/unsubscribe?email=${encodeURIComponent(to)}`;
+      }
 
       // Replace placeholders in the template
       Object.keys(data).forEach(key => {
