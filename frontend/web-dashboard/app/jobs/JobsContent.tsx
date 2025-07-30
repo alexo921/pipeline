@@ -95,6 +95,7 @@ const cleanJobCardContent = (text: string, maxLength: number = 100): string => {
     .replace(/Works in.*?(?=\s|$)/gi, '') // Remove working conditions
     .replace(/Physical.*?(?=\s|$)/gi, '') // Remove physical requirements
     .replace(/Accountability.*?(?=\s|$)/gi, '') // Remove accountability text
+    .replace(/\bis\s+a\b/gi, '') // Remove "is a" from company names
     // More aggressive cleaning for long-form content
     .replace(/We are hiring.*?team/gi, '') // Remove hiring announcements
     .replace(/Working with our team.*?life/gi, '') // Remove team descriptions
