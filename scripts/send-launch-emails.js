@@ -23,7 +23,7 @@ const axios = require('axios');
 // Configuration
 const CSV_FILE = 'Pipeline Waitlist_Submissions_2025-07-15.csv';
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3001';
-const EMAIL_ENDPOINT = `${API_BASE_URL}/auth/send-launch`;
+const EMAIL_ENDPOINT = `${API_BASE_URL}/api/auth/send-launch`;
 
 // Parse command line arguments
 const limitArg = process.argv[2];

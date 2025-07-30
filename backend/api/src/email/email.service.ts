@@ -3,6 +3,7 @@ import * as nodemailer from 'nodemailer';
 import * as path from 'path';
 import * as fs from 'fs';
 import axios from 'axios';
+import { PrismaService } from 'src/common/prisma/prisma.service';
 
 interface GmailTokens {
   access_token: string;
@@ -35,7 +36,7 @@ export class EmailService {
     },
   });
 
-  constructor() {
+  constructor(private prismaService: PrismaService) {
     // Load tokens from file on service initialization
     this.loadGmailTokensFromFile();
     
@@ -52,6 +53,21 @@ export class EmailService {
       return this.TEST_EMAILS;
     }
     return [originalEmail];
+  }
+
+  // Check if user is subscribed to emails
+  private async isUserSubscribed(email: string): Promise<boolean> {
+    try {
+      const user = await this.prismaService.users.findUnique({
+        where: { email: email.toLowerCase() },
+        select: { emailSubscribed: true },
+      });
+      
+      return user?.emailSubscribed ?? true; // Default to true if user not found
+    } catch (error) {
+      console.error('Error checking user subscription status:', error);
+      return true; // Default to true on error
+    }
   }
 
   // Load tokens from file
@@ -380,6 +396,15 @@ export class EmailService {
 
   async sendLaunchEmail(email: string, firstName: string) {
     try {
+      // Check if user is subscribed (skip check in test mode)
+      if (!this.TEST_MODE) {
+        const isSubscribed = await this.isUserSubscribed(email);
+        if (!isSubscribed) {
+          console.log(`Skipping launch email for ${email} - user is unsubscribed`);
+          return { skipped: true, reason: 'User unsubscribed' };
+        }
+      }
+
       const templatePath = path.join(
         process.cwd(),
         'src/templates/launch-email.html',

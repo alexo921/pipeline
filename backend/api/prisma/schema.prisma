@@ -34,18 +34,20 @@ model tasks {
 }
 
 model users {
-  id           String         @id @default(uuid())
-  email        String         @unique
-  password     String
-  role         Role           @default(CANDIDATE)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  firstName    String
-  lastName     String
-  applied_jobs applied_jobs[]
-  candidate    candidates?
-  saved_jobs   saved_jobs[]
-  tasks        tasks[]        @relation("UserTasks")
+  id              String         @id @default(uuid())
+  email           String         @unique
+  password        String
+  role            Role           @default(CANDIDATE)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  firstName       String
+  lastName        String
+  emailSubscribed Boolean        @default(true)
+  unsubscribedAt  DateTime?
+  applied_jobs    applied_jobs[]
+  candidate       candidates?
+  saved_jobs      saved_jobs[]
+  tasks           tasks[]        @relation("UserTasks")
 
   @@unique([email, role])
   @@index([email])
