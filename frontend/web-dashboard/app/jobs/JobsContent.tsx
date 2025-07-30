@@ -1077,6 +1077,8 @@ export default function JobsPage() {
   // Filter jobs based on search, location, and active filters
   useEffect(() => {
     console.log('Filtering jobs with selectedLocation:', selectedLocation);
+    console.log('Total jobs before filtering:', jobs.length);
+    
     const filtered = jobs.filter(job => {
       // Enhanced search functionality - search across all relevant fields
       const searchLower = searchTerm.toLowerCase();
@@ -1097,6 +1099,12 @@ export default function JobsPage() {
         const inputLower = selectedLocation.toLowerCase().trim();
         const jobLocation = job.location.toLowerCase();
         
+        console.log(`Checking location for job "${job.title}":`);
+        console.log(`  - Job location: "${job.location}"`);
+        console.log(`  - Selected location: "${selectedLocation}"`);
+        console.log(`  - Input lower: "${inputLower}"`);
+        console.log(`  - Job location lower: "${jobLocation}"`);
+        
         // Check if input is a state code or state name
         const stateNameToCode: Record<string, string> = {
           'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
@@ -1113,26 +1121,32 @@ export default function JobsPage() {
         
         // Check if input is a state code (2 letters)
         const isStateCode = /^[A-Z]{2}$/i.test(inputLower);
+        console.log(`  - Is state code: ${isStateCode}`);
         
         // Check if input is a state name
         const isStateName = stateNameToCode[inputLower];
+        console.log(`  - Is state name: ${isStateName ? 'Yes' : 'No'}`);
         
         if (isStateCode || isStateName) {
           // State-based filtering - show all jobs in that state
           const targetState = isStateCode ? inputLower.toUpperCase() : isStateName;
+          console.log(`  - Target state: "${targetState}"`);
           
           // Check if job location contains the state code or state name
-          matchesLocation = jobLocation.includes(targetState.toLowerCase()) ||
-                           jobLocation.includes(inputLower) ||
-                           jobLocation.includes(selectedLocation.toLowerCase());
+          const matchesTargetState = jobLocation.includes(targetState.toLowerCase());
+          const matchesInputLower = jobLocation.includes(inputLower);
+          const matchesSelectedLocation = jobLocation.includes(selectedLocation.toLowerCase());
           
-          // Debug logging for state filtering
-          if (selectedLocation !== 'All Locations') {
-            console.log(`Job: ${job.title}, Location: ${job.location}, Target State: ${targetState}, Matches: ${matchesLocation}`);
-          }
+          matchesLocation = matchesTargetState || matchesInputLower || matchesSelectedLocation;
+          
+          console.log(`  - Matches target state (${targetState.toLowerCase()}): ${matchesTargetState}`);
+          console.log(`  - Matches input lower (${inputLower}): ${matchesInputLower}`);
+          console.log(`  - Matches selected location (${selectedLocation.toLowerCase()}): ${matchesSelectedLocation}`);
+          console.log(`  - Final location match: ${matchesLocation}`);
         } else {
           // Regular location filtering for cities or other locations
           matchesLocation = jobLocation.includes(inputLower);
+          console.log(`  - Regular location match: ${matchesLocation}`);
         }
       }
       
@@ -1141,9 +1155,13 @@ export default function JobsPage() {
                               (job.tags || []).some(tag => tag.label === filter.label)
                             );
       
-      return matchesSearch && matchesLocation && matchesFilters;
+      const finalMatch = matchesSearch && matchesLocation && matchesFilters;
+      console.log(`  - Final result for "${job.title}": ${finalMatch} (search: ${matchesSearch}, location: ${matchesLocation}, filters: ${matchesFilters})`);
+      
+      return finalMatch;
     });
     
+    console.log('Filtered jobs count:', filtered.length);
     setFilteredJobs(filtered);
     setCurrentPage(1); // Reset to first page when filters change
   }, [jobs, searchTerm, selectedLocation, activeFilters]);
