@@ -878,12 +878,9 @@ const getShift = (title: string, description: string): string => {
   const checkTextForPatterns = (text: string) => {
     // First check for first, second, third shift patterns
     const shiftNumberPatterns = [
-      { pattern: /first\s*shift|1st\s*shift|1st\s*shift/i, shift: 'First Shift' },
-      { pattern: /second\s*shift|2nd\s*shift|2nd\s*shift/i, shift: 'Second Shift' },
-      { pattern: /third\s*shift|3rd\s*shift|3rd\s*shift/i, shift: 'Third Shift' },
-      { pattern: /first\s*shift|1st\s*shift/i, shift: 'First Shift' },
-      { pattern: /second\s*shift|2nd\s*shift/i, shift: 'Second Shift' },
-      { pattern: /third\s*shift|3rd\s*shift/i, shift: 'Third Shift' },
+      { pattern: /first\s*shift|1st\s*shift|first/i, shift: 'Morning' },
+      { pattern: /second\s*shift|2nd\s*shift|second/i, shift: 'Evening' },
+      { pattern: /third\s*shift|3rd\s*shift|third/i, shift: 'Overnight' },
     ];
     
     for (const { pattern, shift } of shiftNumberPatterns) {
@@ -1224,22 +1221,22 @@ export default function JobsPage() {
       const shiftSearchMapping: Record<string, string[]> = {
         // Morning/First Shift variations
         'morning': ['morning', '7am-3pm', '6am-2pm', '8am-4pm', '9am-5pm', '12-hour day', 'day shift', 'first shift', '1st shift'],
-        'first': ['first shift', '1st shift', 'morning', '7am-3pm', '6am-2pm', '8am-4pm', '9am-5pm', '12-hour day', 'day shift'],
-        '1st': ['first shift', '1st shift', 'morning', '7am-3pm', '6am-2pm', '8am-4pm', '9am-5pm', '12-hour day', 'day shift'],
+        'first': ['morning', 'first shift', '1st shift', '7am-3pm', '6am-2pm', '8am-4pm', '9am-5pm', '12-hour day', 'day shift'],
+        '1st': ['morning', 'first shift', '1st shift', '7am-3pm', '6am-2pm', '8am-4pm', '9am-5pm', '12-hour day', 'day shift'],
         
-        // Afternoon/Second Shift variations
+        // Evening/Second Shift variations
+        'evening': ['evening', '5pm-1am', '4pm-12am', 'second shift', '2nd shift', '3pm-11pm', '2pm-10pm'],
+        'second': ['evening', 'second shift', '2nd shift', '3pm-11pm', '2pm-10pm', '4pm-12am', '5pm-1am'],
+        '2nd': ['evening', 'second shift', '2nd shift', '3pm-11pm', '2pm-10pm', '4pm-12am', '5pm-1am'],
+        
+        // Afternoon variations (keep for backward compatibility)
         'afternoon': ['afternoon', '3pm-11pm', '2pm-10pm', '4pm-12am', 'second shift', '2nd shift'],
-        'second': ['second shift', '2nd shift', 'afternoon', 'evening', '3pm-11pm', '2pm-10pm', '4pm-12am', '5pm-1am'],
-        '2nd': ['second shift', '2nd shift', 'afternoon', 'evening', '3pm-11pm', '2pm-10pm', '4pm-12am', '5pm-1am'],
         
-        // Evening variations
-        'evening': ['evening', '5pm-1am', '4pm-12am', 'second shift', '2nd shift'],
-        
-        // Night/Third Shift variations
-        'night': ['night', 'overnight', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard', 'third shift', '3rd shift'],
-        'third': ['third shift', '3rd shift', 'night', 'overnight', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard'],
-        '3rd': ['third shift', '3rd shift', 'night', 'overnight', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard'],
+        // Overnight/Third Shift variations
         'overnight': ['overnight', 'night', 'third shift', '3rd shift', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard'],
+        'third': ['overnight', 'third shift', '3rd shift', 'night', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard'],
+        '3rd': ['overnight', 'third shift', '3rd shift', 'night', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard'],
+        'night': ['overnight', 'night', 'third shift', '3rd shift', '11pm-7am', '10pm-6am', '12am-8am', '7pm-7am', '6pm-6am', '8pm-8am', '12-hour night', 'night shift', 'graveyard'],
         
         // Time-specific searches
         '7am': ['7am-3pm', '7am-7pm'],
@@ -1481,7 +1478,7 @@ export default function JobsPage() {
       return 'bg-purple-200'; // Purple for Job Setting
     } else if (['Full-Time', 'Part-Time', 'Per-Diem', 'Temp-To-Perm', 'Local Contract'].includes(label)) {
       return 'bg-[#8AADFC]'; // Blue for Employment Type
-    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', 'First Shift', 'Second Shift', 'Third Shift', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night'].includes(label)) {
+    } else if (['Morning', 'Afternoon', 'Evening', 'Night', 'Overnight', '7AM-3PM', '3PM-11PM', '11PM-7AM', '6AM-2PM', '2PM-10PM', '10PM-6AM', '8AM-4PM', '4PM-12AM', '12AM-8AM', '9AM-5PM', '5PM-1AM', '1AM-9AM', '7AM-7PM', '7PM-7AM', '6AM-6PM', '6PM-6AM', '8AM-8PM', '8PM-8AM', '12-Hour Shift', '8-Hour Shift', '10-Hour Shift', '16-Hour Shift', '12-Hour Day', '12-Hour Night'].includes(label)) {
       return 'bg-pink-200'; // Pink for Shift
     }
     return 'bg-gray-200';
