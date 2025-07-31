@@ -35,7 +35,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       );
       if (!res.ok) return setUser(null);
       const data = await res.json();
-      setUser(data.data);
+      // The backend returns nested data structure: data.data.data
+      setUser(data.data?.data || data.data);
     } catch {
       setUser(null);
     }

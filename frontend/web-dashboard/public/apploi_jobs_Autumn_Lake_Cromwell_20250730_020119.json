@@ -1,0 +1,82 @@
+[
+  {
+    "title": "Medical Records",
+    "company": "Autumn Healthcare",
+    "location": "",
+    "salary": "",
+    "job_type": "",
+    "description": "<p><span style=\"font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif\">Join our wonderful team as a <strong>Medical Records today!</strong></span></p><p>&nbsp;</p><p><span style=\"font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif\"><strong>Autumn Lake Healthcare at Cromwell </strong>is an exceptional team-oriented company hiring for<strong> Medical Records!</strong> We provide our staff with the resources, tools, and training needed to succeed and grow in their current and desired future positions. We pride ourselves on our caring and compassionate management team who are there to fully support our staff and residents.&nbsp;&nbsp;</span></p><p><span style=\"font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif\">&nbsp;</span></p><p><span style=\"font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif\"><strong>Benefits for</strong></span><span><strong> Medical Records:</strong></span><span style=\"font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif\">&nbsp;</span></p><ul class=\"editor-ul\"><li><p><span style=\"font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif\"><strong>Referral Bonuses!</strong></span></p></li><li><p><strong>Competitive Rates!</strong></p></li><li><p><strong>Wonderful Environment!</strong></p></li><li><p><strong>Great Benefit package!</strong><span style=\"color: windowtext; font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif\"><strong>&nbsp;</strong></span></p></li><li><p><span style=\"font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif\"><strong>Now Offering Same Day Pay!</strong></span></p></li></ul><p><br><strong>Now Hiring: </strong>24-32 hours a week</p><p><span style=\"font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif\"><strong>&nbsp;</strong></span></p><p><span style=\"font-family: Calibri, Calibri_EmbeddedFont, Calibri_MSFontService, sans-serif\"><strong>Qualifications &amp; Experience Requirements for Medical Records:</strong></span></p><ul class=\"editor-ul\"><li><p><span>Previous Experience as a Medical Records preferred</span></p></li><li><p><span>Minimum 2 years experience required</span></p></li></ul><p>&nbsp;</p>",
+    "requirements": "",
+    "qualifications": "",
+    "date_posted": "",
+    "application_info": "",
+    "job_url": "https://jobs.apploi.com/view/977064",
+    "context": "https://schema.org/",
+    "type": "JobPosting",
+    "basesalary": {
+      "@type": "MonetaryAmount",
+      "currency": "USD",
+      "maxValue": 18,
+      "minValue": 15,
+      "value": {
+        "@type": "QuantitativeValue",
+        "unitText": "HOUR"
+      }
+    },
+    "dateposted": "2025-07-16",
+    "directapply": true,
+    "employmenttype": "PART_TIME",
+    "experiencerequirements": {
+      "@type": "OccupationalExperienceRequirements",
+      "monthsOfExperience": 24
+    },
+    "hiringorganization": {
+      "@type": "Organization",
+      "name": "Autumn Healthcare",
+      "sameAs": "https://jobs.apploi.com/profile/autumn-healthcare"
+    },
+    "industry": "Healthcare",
+    "joblocation": {
+      "@type": "Place",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US",
+        "addressLocality": "Cromwell",
+        "addressRegion": "Connecticut",
+        "latitude": "41.6000956000",
+        "longitude": "-72.6471346000",
+        "postalCode": "06416",
+        "streetAddress": "385 Main St  Cromwell, Connecticut, 06416 United States"
+      }
+    },
+    "organization_type": "Organization",
+    "organization_name": "Autumn Healthcare",
+    "organization_sameas": "https://jobs.apploi.com/profile/autumn-healthcare",
+    "location_type": "Place",
+    "location_address": {
+      "@type": "PostalAddress",
+      "addressCountry": "US",
+      "addressLocality": "Cromwell",
+      "addressRegion": "Connecticut",
+      "latitude": "41.6000956000",
+      "longitude": "-72.6471346000",
+      "postalCode": "06416",
+      "streetAddress": "385 Main St  Cromwell, Connecticut, 06416 United States"
+    },
+    "address_type": "PostalAddress",
+    "address_addresscountry": "US",
+    "address_addresslocality": "Cromwell",
+    "address_addressregion": "Connecticut",
+    "address_latitude": "41.6000956000",
+    "address_longitude": "-72.6471346000",
+    "address_postalcode": "06416",
+    "address_streetaddress": "385 Main St  Cromwell, Connecticut, 06416 United States",
+    "source_url": "https://autumnlakecromwell.com/career/",
+    "scraped_at": "2025-07-30T02:01:17.938151",
+    "parent_company": "Autumn Lake Cromwell",
+    "state": "CT",
+    "city": "Waterbury",
+    "zip_code": "6704",
+    "actual_facility_name": "Autumn Healthcare"
+  }
+]
