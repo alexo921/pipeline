@@ -26,7 +26,7 @@ const intakeSchema = z.object({
     ),
   jobType: z.string().min(1, 'Please select your job type')
     .refine(
-      (val) => ['FULL_TIME', 'PART_TIME', 'PRN', 'CONTRACT'].includes(val),
+      (val) => ['FULL_TIME', 'PART_TIME', 'PRN', 'CONTRACT', 'NOT_SURE'].includes(val),
       { message: 'Please select a valid job type' }
     ),
 });
@@ -178,6 +178,7 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
     { value: "PART_TIME", label: "Part Time" },
     { value: "PRN", label: "PRN" },
     { value: "CONTRACT", label: "Contract" },
+    { value: "NOT_SURE", label: "Not sure, open to opportunities" },
   ];
 
   if (!isStep1) {
@@ -258,7 +259,7 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
 
         <div>
           <label htmlFor="jobType" className="block text-sm font-medium text-gray-700 mb-1">
-            Job Type
+            What type of job are you looking for?
           </label>
           <select
             id="jobType"
