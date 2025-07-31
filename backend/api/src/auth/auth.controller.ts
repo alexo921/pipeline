@@ -189,8 +189,9 @@ export class AuthController {
   @Get('profile')
   @ApiOperation({ summary: 'Get user profile' })
   @ApiBearerAuth()
-  getProfile(@User('userId') userId: string) {
-    return { data: this.authService.getProfile(userId) };
+  async getProfile(@User('userId') userId: string) {
+    const profile = await this.authService.getProfile(userId);
+    return { data: profile };
   }
 
   // Gmail OAuth Endpoints
