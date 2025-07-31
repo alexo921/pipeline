@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getApiUrl } from "@/lib/api-utils";
 
 export async function POST(req: NextRequest) {
   try {
     const { token } = await req.json();
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/candidate/onboarding/verify-email`,
+      getApiUrl("/candidate/onboarding/verify-email"),
       {
         method: "POST",
         headers: {

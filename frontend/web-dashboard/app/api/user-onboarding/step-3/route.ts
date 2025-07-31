@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getApiUrl } from "@/lib/api-utils";
 
 export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/candidate/onboarding/`,
+      getApiUrl("/candidate/onboarding/"),
       {
         method: "PUT",
         headers: {

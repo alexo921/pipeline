@@ -9,13 +9,13 @@ import time
 import json
 import csv
 import signal
+import re
 from datetime import datetime
 from typing import List, Dict, Optional
 from urllib.parse import urljoin
 from playwright.sync_api import sync_playwright, Page
 import logging
 import ipdb as pdb
-import re
 
 def setup_logging(debug: bool = False):
     """Setup logging configuration."""
@@ -231,7 +231,24 @@ class ImprovedCTJobScraper:
                         '--disable-blink-features=AutomationControlled',
                         '--disable-dev-shm-usage',
                         '--disable-web-security',
-                        '--disable-features=VizDisplayCompositor'
+                        '--disable-features=VizDisplayCompositor',
+                        '--disable-extensions',
+                        '--disable-plugins',
+                        '--disable-background-networking',
+                        '--disable-default-apps',
+                        '--disable-sync',
+                        '--disable-translate',
+                        '--hide-scrollbars',
+                        '--mute-audio',
+                        '--no-default-browser-check',
+                        '--no-pings',
+                        '--disable-background-timer-throttling',
+                        '--disable-backgrounding-occluded-windows',
+                        '--disable-renderer-backgrounding',
+                        '--disable-features=TranslateUI',
+                        '--disable-ipc-flooding-protection',
+                        '--memory-pressure-off',
+                        '--max_old_space_size=2048'
                     ]
                 )
                 
@@ -257,8 +274,19 @@ class ImprovedCTJobScraper:
                 """)
                 
                 self.page = self.context.new_page()
+                
+                # Test that the browser is working by navigating to a simple page
+                try:
+                    self.page.goto('https://example.com', wait_until='domcontentloaded', timeout=10000)
+                    test_title = self.page.title()
+                    self.logger.info(f"✅ Browser test successful - page title: {test_title}")
+                except Exception as e:
+                    self.logger.error(f"❌ Browser test failed: {e}")
+                    return False
+                
                 self.logger.info("✅ Browser setup completed successfully")
                 return True
+                
             except Exception as e:
                 self.logger.error(f"❌ Failed to setup Chromium browser: {e}")
                 return False
@@ -1971,8 +1999,18 @@ class ImprovedCTJobScraper:
             try:
                 # Create a new context for each site to isolate them
                 try:
+                    # Check if browser is still valid
+                    if not self.browser:
+                        self.logger.error(f"❌ Browser is not available, cannot create context for {site_name}")
+                        self.failed_sites += 1
+                        continue
+                    
                     if hasattr(self, 'context') and self.context:
-                        self.context.close()
+                        try:
+                            self.context.close()
+                        except Exception as e:
+                            self.logger.debug(f"⚠️ Error closing previous context: {e}")
+                    
                     self.context = self.browser.new_context(
                         user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                         extra_http_headers={
@@ -2473,7 +2511,6 @@ class ImprovedCTJobScraper:
             description = job_details.get('description', '')
             if description:
                 # Look for common facility name patterns in descriptions
-                import re
                 
                 # Pattern 1: "Facility Name is a..." pattern
                 patterns = [
@@ -2569,7 +2606,7 @@ def main():
             # Print summary
             scraper.print_summary()
             
-            print("✅ Scraper completed successfully!")
+            print(f"✅ Scraper completed successfully!")
             break
             
         except KeyboardInterrupt:

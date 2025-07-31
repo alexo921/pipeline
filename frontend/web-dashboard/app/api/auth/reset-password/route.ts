@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getApiUrl } from "@/lib/api-utils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     const backendRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`,
+      getApiUrl("/auth/reset-password"),
       {
         method: "POST",
         headers: {

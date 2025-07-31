@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getApiUrl } from "@/lib/api-utils";
 
 export async function GET(request: NextRequest) {
   try {
     // Forward the request to backend with cookies
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/profile`,
+      getApiUrl("/auth/profile"),
       {
         method: "GET",
         headers: {

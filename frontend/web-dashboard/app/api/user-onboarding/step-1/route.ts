@@ -1,13 +1,14 @@
 // app/api/user-onboarding/step-1/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
+import { getApiUrl } from "@/lib/api-utils";
 
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
 
     const backendResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/candidate/onboarding/`,
+      getApiUrl("/candidate/onboarding/"),
       {
         method: "PUT",
         headers: {

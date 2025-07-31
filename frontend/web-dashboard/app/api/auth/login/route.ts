@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getApiUrl } from "@/lib/api-utils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     // Call backend API
     const backendRes = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+      getApiUrl("/auth/login"),
       {
         method: "POST",
         headers: {

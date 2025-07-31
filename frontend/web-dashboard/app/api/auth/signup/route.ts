@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+import { getApiUrl } from "@/lib/api-utils";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     
     // Forward the request to the backend API
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+    const response = await fetch(getApiUrl("/auth/signup"), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

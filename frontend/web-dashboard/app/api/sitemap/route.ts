@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getApiUrl } from "@/lib/api-utils";
 
 interface JobSitemapData {
   id: string;
@@ -8,7 +9,7 @@ interface JobSitemapData {
 export async function GET() {
   try {
     // Fetch active job listings from backend API
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs?status=active`, {
+    const response = await fetch(getApiUrl("/jobs?status=active"), {
       headers: {
         'Content-Type': 'application/json',
       },
