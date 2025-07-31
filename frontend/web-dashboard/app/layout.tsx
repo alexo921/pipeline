@@ -46,11 +46,11 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" 
           rel="stylesheet" 
         />
-        <link rel="icon" type="image/png" href="/pipeline_logo_p.png?v=5" />
-        <link rel="icon" type="image/png" href="/favicon-pipeline.png?v=5" />
-        <link rel="shortcut icon" href="/pipeline_logo_p.png?v=5" />
-        <link rel="apple-touch-icon" href="/pipeline_logo_p.png?v=5" />
-        <meta name="msapplication-TileImage" content="/pipeline_logo_p.png?v=5" />
+        <link rel="icon" type="image/png" href="/favicon-32x32.png?v=6" />
+        <link rel="icon" type="image/png" href="/pipeline_logo_p.png?v=6" />
+        <link rel="shortcut icon" href="/favicon-32x32.png?v=6" />
+        <link rel="apple-touch-icon" href="/pipeline_logo_p.png?v=6" />
+        <meta name="msapplication-TileImage" content="/pipeline_logo_p.png?v=6" />
       </head>
       <body className={baloo.className + ' font-avenir'} style={{ fontFamily: `var(--font-avenir), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif` }}>
         <AuthProvider>
