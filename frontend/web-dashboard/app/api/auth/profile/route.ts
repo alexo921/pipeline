@@ -4,7 +4,7 @@ export async function GET(request: NextRequest) {
   try {
     // Forward the request to backend with cookies
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/profile`,
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/profile`,
       {
         method: "GET",
         headers: {
