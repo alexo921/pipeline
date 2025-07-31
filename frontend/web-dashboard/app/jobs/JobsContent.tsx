@@ -1173,18 +1173,23 @@ export default function JobsPage() {
     console.log('Total jobs before filtering:', jobs.length);
     
     const filtered = jobs.filter(job => {
-      // Enhanced search functionality - search across all relevant fields
-      const searchLower = searchTerm.toLowerCase();
-      const matchesSearch = searchTerm === '' || 
-                           job.title.toLowerCase().includes(searchLower) ||
-                           job.company.toLowerCase().includes(searchLower) ||
-                           job.location.toLowerCase().includes(searchLower) ||
-                           (job.description && job.description.toLowerCase().includes(searchLower)) ||
-                           (job.requirements && Array.isArray(job.requirements) && 
-                            job.requirements.some(req => req.toLowerCase().includes(searchLower))) ||
-                           (job.requirements && typeof job.requirements === 'string' && 
-                            job.requirements.toLowerCase().includes(searchLower)) ||
-                           (job.tags && job.tags.some(tag => tag.label.toLowerCase().includes(searchLower)));
+      // Enhanced search functionality - search across all relevant fields with AND logic
+      const searchTerms = searchTerm.toLowerCase().split(/\s+/).filter(term => term.length > 0);
+      const matchesSearch = searchTerm === '' || searchTerms.length === 0 || 
+                           searchTerms.every(term => {
+                             const jobText = [
+                               job.title.toLowerCase(),
+                               job.company.toLowerCase(),
+                               job.location.toLowerCase(),
+                               job.description?.toLowerCase() || '',
+                               ...(job.requirements && Array.isArray(job.requirements) ? 
+                                   job.requirements.map(req => req.toLowerCase()) : []),
+                               ...(job.requirements && typeof job.requirements === 'string' ? 
+                                   [job.requirements.toLowerCase()] : []),
+                               ...(job.tags ? job.tags.map(tag => tag.label.toLowerCase()) : [])
+                             ].join(' ');
+                             return jobText.includes(term);
+                           });
       
       // Enhanced location filtering - handle state-based filtering
       let matchesLocation = true;

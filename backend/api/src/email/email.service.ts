@@ -420,7 +420,7 @@ export class EmailService {
       if (this.isGmailAuthorized()) {
         try {
           const testEmails = this.getTestEmails(email);
-          const subject = this.TEST_MODE ? `You're up first! Pipeline is now live` : 'You\'re up first! Pipeline is now live';
+          const subject = this.TEST_MODE ? `Pipeline is now live!` : 'Pipeline is now live!';
           const result = await this.sendEmailViaGmailAPI(testEmails.join(', '), subject, emailTemplate);
           return result;
         } catch (error) {
@@ -433,7 +433,7 @@ export class EmailService {
       const mailOptions = {
         from: `"Pipeline" <${process.env.EMAIL_USER}>`,
         to: testEmails.join(', '),
-        subject: this.TEST_MODE ? `You're up first! Pipeline is now live` : 'You\'re up first! Pipeline is now live',
+        subject: this.TEST_MODE ? `Pipeline is now live!` : 'Pipeline is now live!',
         html: emailTemplate,
       };
 
