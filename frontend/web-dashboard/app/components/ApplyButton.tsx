@@ -40,6 +40,23 @@ export default function ApplyButton({ jobId, jobUrl }: ApplyButtonProps) {
         console.error('Failed to track application:', response.status);
       }
 
+      // Track analytics click
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/analytics/track/apply`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jobId: jobId.toString(),
+            userId: user.id,
+          }),
+          credentials: "include",
+        });
+      } catch (analyticsError) {
+        console.error('Failed to track analytics:', analyticsError);
+      }
+
       // Open the job application URL
       window.open(jobUrl, '_blank', 'noopener,noreferrer');
     } catch (error) {

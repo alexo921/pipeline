@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { LogOut, User, ChevronDown } from "lucide-react";
+import { LogOut, User, ChevronDown, BarChart3 } from "lucide-react";
 
 type NavbarProps = {
   onLoginClick: () => void;
@@ -98,6 +98,17 @@ const Navbar: React.FC<NavbarProps> = ({
                   {/* Dropdown Menu */}
                   {isUserDropdownOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
+                      {/* Analytics Dashboard (Admin Only) */}
+                      {user.role === 'ADMIN' && (
+                        <Link
+                          href="/analytics"
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                          onClick={() => setIsUserDropdownOpen(false)}
+                        >
+                          <BarChart3 className="w-4 h-4" />
+                          <span>Analytics</span>
+                        </Link>
+                      )}
                       {/* Sign Out Option */}
                       <button
                         onClick={onLogoutClick}

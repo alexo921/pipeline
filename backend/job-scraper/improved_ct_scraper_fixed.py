@@ -1490,8 +1490,140 @@ class ImprovedCTJobScraper:
         
         return None
     
+    def _go_to_next_page(self) -> bool:
+        """Navigate to the next page of job listings. Handles SPA pagination with container-based navigation."""
+        try:
+            # Common pagination selectors for SPA applications
+            pagination_selectors = [
+                # Next button selectors
+                'button[aria-label*="next" i]',
+                'button[aria-label*="Next" i]',
+                'a[aria-label*="next" i]',
+                'a[aria-label*="Next" i]',
+                'button[title*="next" i]',
+                'button[title*="Next" i]',
+                'a[title*="next" i]',
+                'a[title*="Next" i]',
+                
+                # Text-based next buttons
+                'button:has-text("Next")',
+                'button:has-text("next")',
+                'a:has-text("Next")',
+                'a:has-text("next")',
+                'button:has-text(">")',
+                'a:has-text(">")',
+                'button:has-text("→")',
+                'a:has-text("→")',
+                
+                # Class-based selectors
+                '[class*="next"]',
+                '[class*="Next"]',
+                '[class*="pagination-next"]',
+                '[class*="pagination__next"]',
+                '[class*="page-next"]',
+                '[class*="btn-next"]',
+                '[class*="button-next"]',
+                
+                # ID-based selectors
+                '[id*="next"]',
+                '[id*="Next"]',
+                '[id*="pagination-next"]',
+                '[id*="page-next"]',
+                
+                # Data attribute selectors
+                '[data-testid*="next"]',
+                '[data-testid*="Next"]',
+                '[data-cy*="next"]',
+                '[data-cy*="Next"]',
+                
+                # Apploi-specific selectors
+                '[class*="pagination"] button:last-child',
+                '[class*="pagination"] a:last-child',
+                '[class*="pagination"] [class*="next"]',
+                
+                # Generic pagination container selectors
+                '[class*="pagination"] button:not([disabled])',
+                '[class*="pagination"] a:not([aria-disabled="true"])',
+                '[class*="pagination"] [class*="page"]:not([class*="active"])',
+            ]
+            
+            # Try to find and click the next button
+            for selector in pagination_selectors:
+                try:
+                    next_button = self.page.query_selector(selector)
+                    if next_button:
+                        # Check if the button is clickable (not disabled)
+                        is_disabled = (
+                            next_button.get_attribute('disabled') is not None or
+                            next_button.get_attribute('aria-disabled') == 'true' or
+                            'disabled' in (next_button.get_attribute('class') or '').lower() or
+                            'inactive' in (next_button.get_attribute('class') or '').lower()
+                        )
+                        
+                        if not is_disabled:
+                            # Check if it's actually a "next" button by text content
+                            button_text = next_button.inner_text().strip().lower()
+                            if any(keyword in button_text for keyword in ['next', '>', '→', 'forward']):
+                                self.logger.info(f"📄 Found next button with selector: {selector}")
+                                next_button.click()
+                                time.sleep(3)  # Wait for page to load
+                                return True
+                except Exception as e:
+                    self.logger.debug(f"⚠️ Error with pagination selector {selector}: {e}")
+                    continue
+            
+            # If no next button found, try to find pagination numbers and click the next one
+            try:
+                # Look for pagination numbers
+                page_numbers = self.page.query_selector_all('[class*="pagination"] [class*="page"], [class*="pagination"] a, [class*="pagination"] button')
+                current_page = None
+                next_page = None
+                
+                for element in page_numbers:
+                    try:
+                        text = element.inner_text().strip()
+                        if text.isdigit():
+                            page_num = int(text)
+                            if current_page is None or page_num > current_page:
+                                # Check if this element is active/current
+                                is_active = (
+                                    'active' in (element.get_attribute('class') or '').lower() or
+                                    element.get_attribute('aria-current') == 'page' or
+                                    element.get_attribute('aria-selected') == 'true'
+                                )
+                                
+                                if is_active:
+                                    current_page = page_num
+                                elif next_page is None or page_num < next_page:
+                                    next_page = page_num
+                    except:
+                        continue
+                
+                # If we found a next page number, click it
+                if next_page is not None:
+                    for element in page_numbers:
+                        try:
+                            text = element.inner_text().strip()
+                            if text.isdigit() and int(text) == next_page:
+                                self.logger.info(f"📄 Clicking page number {next_page}")
+                                element.click()
+                                time.sleep(3)
+                                return True
+                        except:
+                            continue
+            except Exception as e:
+                self.logger.debug(f"⚠️ Error with pagination numbers: {e}")
+            
+            # If no pagination found, check if we're at the end
+            self.logger.info("📄 No next page button found - likely at the end of pagination")
+            return False
+            
+        except Exception as e:
+            self.logger.error(f"❌ Error navigating to next page: {e}")
+            return False
+
     def _scrape_site_jobs(self, site_config: Dict, max_jobs: int = 50) -> List[Dict]:
-        """Scrape jobs from a single site following the specified workflow."""
+        """Scrape jobs from a single site following the specified workflow with pagination support."""
         site_jobs = []
         site_name = site_config['source_site']
         job_board_type = site_config.get('job_board_type', 'generic')
@@ -1503,7 +1635,41 @@ class ImprovedCTJobScraper:
             self.logger.info(f"🌐 Accessing site: {site_config['search_url']}")
             self.page.goto(site_config['search_url'], wait_until='domcontentloaded')
             time.sleep(3)
-            job_cards = self._find_job_cards(self.page, job_board_type)
+            
+            # Collect all job cards across all pages
+            all_job_cards = []
+            page_number = 1
+            max_pages = 20  # Safety limit to prevent infinite loops
+            
+            while page_number <= max_pages and len(all_job_cards) < max_jobs:
+                self.logger.info(f"📄 Processing page {page_number} for {site_name}")
+                
+                # Wait for page to load and find job cards
+                time.sleep(2)
+                job_cards = self._find_job_cards(self.page, job_board_type)
+                
+                if not job_cards:
+                    self.logger.info(f"📄 No job cards found on page {page_number}, stopping pagination")
+                    break
+                
+                # Add job cards from this page
+                all_job_cards.extend(job_cards)
+                self.logger.info(f"📄 Found {len(job_cards)} job cards on page {page_number}, total: {len(all_job_cards)}")
+                
+                # Try to go to next page if we haven't reached max_jobs yet
+                if len(all_job_cards) < max_jobs:
+                    if not self._go_to_next_page():
+                        self.logger.info(f"📄 No more pages available, stopping pagination")
+                        break
+                    page_number += 1
+                else:
+                    self.logger.info(f"📄 Reached max_jobs limit ({max_jobs}), stopping pagination")
+                    break
+            
+            # Limit to max_jobs
+            job_cards = all_job_cards[:max_jobs]
+            self.logger.info(f"📄 Total job cards collected: {len(job_cards)} from {page_number-1} pages")
+            
             if not job_cards:
                 self.logger.warning(f"⚠️ No job cards found on {site_name}")
                 return []
@@ -2393,7 +2559,7 @@ def main():
                 print(f"📂 Resuming from previous run: Site {scraper.current_site_index + 1}, {len(scraper.scraped_jobs)} jobs already scraped")
             
             # Scrape all sites
-            jobs = scraper.scrape_all_sites(max_jobs_per_site=50)
+            jobs = scraper.scrape_all_sites(max_jobs_per_site=200)
                     
                 # Save results
             if jobs:

@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tag } from '../types/job';
 import { Calendar, MapPin, Building, ExternalLink } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 interface JobCardProps {
   title: string;
@@ -36,6 +37,33 @@ export default function JobCard({
   organization_name,
   industry
 }: JobCardProps) {
+  const { user } = useAuth();
+
+  // Track job view when card is clicked
+  const trackJobView = async () => {
+    if (!jobId) return;
+    
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/analytics/track/view`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          jobId,
+          userId: user?.id,
+        }),
+        credentials: 'include',
+      });
+    } catch (error) {
+      console.error('Failed to track job view:', error);
+    }
+  };
+
+  const handleClick = () => {
+    trackJobView();
+    if (onClick) onClick();
+  };
   // Format employment type for display
   const formatEmploymentType = (type: string[] | string): string => {
     if (Array.isArray(type)) {
@@ -64,7 +92,7 @@ export default function JobCard({
 
   return (
     <div 
-      onClick={onClick}
+      onClick={handleClick}
       className={`
         bg-white rounded-lg border transition-all cursor-pointer
         ${isSelected 

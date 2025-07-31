@@ -48,6 +48,9 @@ model users {
   candidate       candidates?
   saved_jobs      saved_jobs[]
   tasks           tasks[]        @relation("UserTasks")
+  job_views       job_views[]
+  apply_clicks    apply_clicks[]
+  user_sessions   user_sessions[]
 
   @@unique([email, role])
   @@index([email])
@@ -117,6 +120,8 @@ model jobs {
   updatedAt    DateTime       @updatedAt
   applied_jobs applied_jobs[]
   saved_jobs   saved_jobs[]
+  job_views    job_views[]
+  apply_clicks apply_clicks[]
 
   @@index([zipCode])
 }
@@ -145,6 +150,50 @@ model saved_jobs {
   @@unique([userId, jobId])
   @@index([userId])
   @@index([jobId])
+}
+
+// Analytics tracking models
+model job_views {
+  id        String   @id @default(uuid())
+  jobId     String
+  userId    String?
+  ipAddress String?
+  userAgent String?
+  viewedAt  DateTime @default(now())
+  job       jobs     @relation(fields: [jobId], references: [id])
+  user      users?   @relation(fields: [userId], references: [id])
+
+  @@index([jobId])
+  @@index([userId])
+  @@index([viewedAt])
+}
+
+model apply_clicks {
+  id        String   @id @default(uuid())
+  jobId     String
+  userId    String?
+  ipAddress String?
+  userAgent String?
+  clickedAt DateTime @default(now())
+  job       jobs     @relation(fields: [jobId], references: [id])
+  user      users?   @relation(fields: [userId], references: [id])
+
+  @@index([jobId])
+  @@index([userId])
+  @@index([clickedAt])
+}
+
+model user_sessions {
+  id        String   @id @default(uuid())
+  userId    String?
+  ipAddress String?
+  userAgent String?
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+  user      users?   @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([startedAt])
 }
 
 enum Role {
