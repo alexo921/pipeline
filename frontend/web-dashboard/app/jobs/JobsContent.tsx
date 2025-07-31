@@ -1417,8 +1417,8 @@ export default function JobsPage() {
     const maxVisible = 5;
     
     if (total <= maxVisible) {
-      // If total pages is 5 or less, show all pages
-      for (let i = 1; i <= total; i++) {
+      // If total pages is 5 or less, show all pages except the last one
+      for (let i = 1; i <= Math.min(total - 1, maxVisible); i++) {
         numbers.push(i);
       }
     } else {
