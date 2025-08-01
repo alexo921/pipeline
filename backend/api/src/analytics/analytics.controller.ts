@@ -3,7 +3,6 @@ import { AnalyticsService } from './analytics.service';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('analytics')
-@UseGuards(AuthGuard('jwt'))
 export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) {}
 
@@ -12,11 +11,6 @@ export class AnalyticsController {
     @Body() body: { jobId: string; userId?: string },
     @Req() req: any,
   ) {
-    // Check if user is admin
-    if (req.user?.role !== 'ADMIN') {
-      throw new ForbiddenException('Admin access required');
-    }
-
     const ipAddress = req.ip || req.connection.remoteAddress;
     const userAgent = req.headers['user-agent'];
     
@@ -33,11 +27,6 @@ export class AnalyticsController {
     @Body() body: { jobId: string; userId?: string },
     @Req() req: any,
   ) {
-    // Check if user is admin
-    if (req.user?.role !== 'ADMIN') {
-      throw new ForbiddenException('Admin access required');
-    }
-
     const ipAddress = req.ip || req.connection.remoteAddress;
     const userAgent = req.headers['user-agent'];
     
@@ -54,11 +43,6 @@ export class AnalyticsController {
     @Body() body: { userId?: string },
     @Req() req: any,
   ) {
-    // Check if user is admin
-    if (req.user?.role !== 'ADMIN') {
-      throw new ForbiddenException('Admin access required');
-    }
-
     const ipAddress = req.ip || req.connection.remoteAddress;
     const userAgent = req.headers['user-agent'];
     
@@ -71,15 +55,11 @@ export class AnalyticsController {
 
   @Post('track/session/end')
   async endUserSession(@Body() body: { sessionId: string }, @Req() req: any) {
-    // Check if user is admin
-    if (req.user?.role !== 'ADMIN') {
-      throw new ForbiddenException('Admin access required');
-    }
-
     return await this.analyticsService.endUserSession(body.sessionId);
   }
 
   @Get('summary')
+  @UseGuards(AuthGuard('jwt'))
   async getAnalyticsSummary(@Req() req: any, @Query('days') days?: string) {
     // Check if user is admin
     if (req.user?.role !== 'ADMIN') {
@@ -91,6 +71,7 @@ export class AnalyticsController {
   }
 
   @Get('job/:jobId')
+  @UseGuards(AuthGuard('jwt'))
   async getJobAnalytics(
     @Req() req: any,
     @Param('jobId') jobId: string,
@@ -106,6 +87,7 @@ export class AnalyticsController {
   }
 
   @Get('details')
+  @UseGuards(AuthGuard('jwt'))
   async getAnalyticsDetails(@Req() req: any, @Query('days') days?: string) {
     // Check if user is admin
     if (req.user?.role !== 'ADMIN') {
@@ -117,6 +99,7 @@ export class AnalyticsController {
   }
 
   @Get('details/job-views')
+  @UseGuards(AuthGuard('jwt'))
   async getDetailedJobViews(@Req() req: any, @Query('days') days?: string, @Query('limit') limit?: string) {
     // Check if user is admin
     if (req.user?.role !== 'ADMIN') {
@@ -129,6 +112,7 @@ export class AnalyticsController {
   }
 
   @Get('details/apply-clicks')
+  @UseGuards(AuthGuard('jwt'))
   async getDetailedApplyClicks(@Req() req: any, @Query('days') days?: string, @Query('limit') limit?: string) {
     // Check if user is admin
     if (req.user?.role !== 'ADMIN') {
@@ -141,6 +125,7 @@ export class AnalyticsController {
   }
 
   @Get('details/user-sessions')
+  @UseGuards(AuthGuard('jwt'))
   async getDetailedUserSessions(@Req() req: any, @Query('days') days?: string, @Query('limit') limit?: string) {
     // Check if user is admin
     if (req.user?.role !== 'ADMIN') {
