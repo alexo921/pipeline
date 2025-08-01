@@ -2,10 +2,12 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function GoogleCallbackPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { refreshUser } = useAuth();
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -33,10 +35,14 @@ export default function GoogleCallbackPage() {
         const response = await fetch(backendUrl, {
           method: 'GET',
           credentials: 'include',
+          redirect: 'manual', // Don't follow redirects automatically
         });
 
-        if (response.ok) {
-          // Success - redirect to jobs page
+        if (response.ok || response.status === 302) {
+          // Success - the backend has set the cookie and redirected
+          // Refresh the user authentication state
+          await refreshUser();
+          // Redirect to jobs page
           router.push('/jobs?signed_in=true');
         } else {
           // Error - redirect with error
