@@ -217,17 +217,41 @@ class ImprovedCTJobScraper:
     
     def _setup_browser(self) -> bool:
         """Setup Playwright browser with anti-bot detection measures."""
-        try:
-            self.logger.info("🔧 Setting up Playwright browser...")
-            self.playwright = sync_playwright().start()
-            
-            # Use only Chromium for better compatibility
+        max_retries = 3
+        for attempt in range(max_retries):
             try:
+                self.logger.info(f"🔧 Setting up Playwright browser (attempt {attempt + 1}/{max_retries})...")
+                
+                # Check system resources before launching
+                if attempt == 0:  # Only check on first attempt
+                    try:
+                        import psutil
+                        memory = psutil.virtual_memory()
+                        if memory.available < 500 * 1024 * 1024:  # Less than 500MB available
+                            self.logger.warning(f"⚠️ Low memory available: {memory.available / (1024*1024):.1f}MB")
+                            # Kill any existing Chrome processes
+                            for proc in psutil.process_iter(['pid', 'name']):
+                                try:
+                                    if 'chrome' in proc.info['name'].lower() or 'chromium' in proc.info['name'].lower():
+                                        proc.kill()
+                                        self.logger.info(f"🧹 Killed existing Chrome process: {proc.info['name']}")
+                                except:
+                                    pass
+                    except ImportError:
+                        self.logger.debug("⚠️ psutil not available, skipping resource check")
+                    except Exception as e:
+                        self.logger.debug(f"⚠️ Error checking system resources: {e}")
+                
+                self.playwright = sync_playwright().start()
+                
+                # Use only Chromium for better compatibility
                 self.logger.info("🔧 Launching Chromium browser...")
                 self.browser = self.playwright.chromium.launch(
                     headless=self.headless,
+                    timeout=60000,  # 60 second timeout for browser launch
                     args=[
                         '--no-sandbox',
+                        '--disable-setuid-sandbox',
                         '--disable-blink-features=AutomationControlled',
                         '--disable-dev-shm-usage',
                         '--disable-web-security',
@@ -248,7 +272,11 @@ class ImprovedCTJobScraper:
                         '--disable-features=TranslateUI',
                         '--disable-ipc-flooding-protection',
                         '--memory-pressure-off',
-                        '--max_old_space_size=2048'
+                        '--max_old_space_size=2048',
+                        '--disable-accelerated-2d-canvas',
+                        '--no-first-run',
+                        '--no-zygote',
+                        '--disable-gpu'
                     ]
                 )
                 
@@ -277,7 +305,8 @@ class ImprovedCTJobScraper:
                 
                 # Test that the browser is working by navigating to a simple page
                 try:
-                    self.page.goto('https://example.com', wait_until='domcontentloaded', timeout=10000)
+                    # Use a simple local test instead of external website
+                    self.page.set_content('<html><head><title>Test Page</title></head><body><h1>Browser Test</h1></body></html>')
                     test_title = self.page.title()
                     self.logger.info(f"✅ Browser test successful - page title: {test_title}")
                 except Exception as e:
@@ -288,12 +317,16 @@ class ImprovedCTJobScraper:
                 return True
                 
             except Exception as e:
-                self.logger.error(f"❌ Failed to setup Chromium browser: {e}")
-                return False
-                
-        except Exception as e:
-            self.logger.error(f"❌ Failed to setup Playwright browser: {e}")
-            return False
+                self.logger.error(f"❌ Failed to setup browser (attempt {attempt + 1}): {e}")
+                if attempt < max_retries - 1:
+                    wait_time = 2 ** attempt  # Exponential backoff: 1s, 2s, 4s
+                    self.logger.info(f"🔄 Retrying in {wait_time} seconds...")
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    return False
+        
+        return False
     
     def _ensure_valid_page(self) -> bool:
         """Ensure self.page is a valid Playwright Page object, recreate if necessary."""

@@ -1,10 +1,14 @@
 import { Controller, Get, Post, Body, Param, Query, UseGuards, Req, ForbiddenException } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
+import { AnalyticsTrackingService } from './analytics-tracking.service';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('analytics')
 export class AnalyticsController {
-  constructor(private readonly analyticsService: AnalyticsService) {}
+  constructor(
+    private readonly analyticsService: AnalyticsService,
+    private readonly analyticsTrackingService: AnalyticsTrackingService,
+  ) {}
 
   @Post('track/view')
   async trackJobView(
@@ -58,6 +62,117 @@ export class AnalyticsController {
     return await this.analyticsService.endUserSession(body.sessionId);
   }
 
+  @Post('track')
+  async trackEvent(
+    @Body() body: { 
+      eventType: string; 
+      eventData: Record<string, any>; 
+      userId?: string; 
+      sessionId?: string; 
+      timestamp?: string;
+    },
+    @Req() req: any,
+  ) {
+    const ipAddress = req.ip || req.connection.remoteAddress;
+    const userAgent = req.headers['user-agent'];
+    
+    // Create the appropriate event based on eventType
+    switch (body.eventType) {
+      case 'job_view':
+        return await this.analyticsTrackingService.trackJobView(
+          body.eventData.jobId,
+          body.eventData.jobTitle,
+          body.eventData.companyName,
+          body.eventData.location,
+          body.eventData.salary,
+          body.eventData.tags || [],
+          body.eventData.source || 'job_list',
+          body.userId,
+          body.sessionId,
+          ipAddress,
+          userAgent,
+        );
+        
+      case 'job_apply':
+        return await this.analyticsTrackingService.trackJobApply(
+          body.eventData.jobId,
+          body.eventData.jobTitle,
+          body.eventData.companyName,
+          body.eventData.location,
+          body.eventData.salary,
+          body.eventData.tags || [],
+          body.eventData.source || 'job_details',
+          body.userId,
+          body.sessionId,
+          ipAddress,
+          userAgent,
+        );
+        
+      case 'search':
+        return await this.analyticsTrackingService.trackSearch(
+          body.eventData.searchTerm,
+          body.eventData.filters || {},
+          body.eventData.resultCount,
+          body.userId,
+          body.sessionId,
+          ipAddress,
+          userAgent,
+        );
+        
+      case 'filter':
+        return await this.analyticsTrackingService.trackFilter(
+          body.eventData.filterType,
+          body.eventData.filterValue,
+          body.eventData.resultCount,
+          body.userId,
+          body.sessionId,
+          ipAddress,
+          userAgent,
+        );
+        
+      case 'user_registration':
+        return await this.analyticsTrackingService.trackUserRegistration(
+          body.eventData.registrationMethod,
+          body.eventData.source,
+          body.userId!,
+          ipAddress,
+          userAgent,
+        );
+        
+      case 'job_save':
+        return await this.analyticsTrackingService.trackJobSave(
+          body.eventData.jobId,
+          body.eventData.action,
+          body.userId!,
+          ipAddress,
+          userAgent,
+        );
+        
+      case 'session':
+        return await this.analyticsTrackingService.trackUserSession(
+          body.eventData.action,
+          body.eventData.sessionDuration,
+          body.eventData.pagesVisited,
+          body.userId,
+          body.sessionId,
+          ipAddress,
+          userAgent,
+        );
+        
+      default:
+        // For custom events, use the generic trackEvent method
+        const { AnalyticsEvent } = await import('./analytics-tracking.service');
+        const event = new AnalyticsEvent(
+          body.eventType,
+          body.eventData,
+          body.userId,
+          body.sessionId,
+          body.timestamp ? new Date(body.timestamp) : new Date(),
+        );
+        return await this.analyticsTrackingService.trackEvent(event, ipAddress, userAgent);
+    }
+  }
+
   @Get('summary')
   @UseGuards(AuthGuard('jwt'))
   async getAnalyticsSummary(@Req() req: any, @Query('days') days?: string) {
@@ -96,6 +211,20 @@ export class AnalyticsController {
 
     const daysNumber = days ? parseInt(days) : 30;
     return await this.analyticsService.getAnalyticsDetails(daysNumber);
+  }
+
+  @Get('internal/config')
+  @UseGuards(AuthGuard('jwt'))
+  async getInternalAnalyticsConfig(@Req() req: any) {
+    // Check if user is admin
+    if (req.user?.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
+    }
+
+    return {
+      status: 'success',
+      data: this.analyticsTrackingService['internalAnalytics'].getConfigurationStatus(),
+    };
   }
 
   @Get('details/job-views')

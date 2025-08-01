@@ -6,6 +6,7 @@ import { Job, Tag, TagType } from '../types/job';
 import { Search, MapPin, Filter, ChevronDown, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { env } from 'process';
+import { analyticsService } from '../services/analytics.service';
 
 // Load job data from multiple enhanced JSON files
 const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
@@ -1272,6 +1273,19 @@ export default function JobsPage() {
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
+    
+    // Track search if term is not empty
+    if (term.trim()) {
+      analyticsService.trackSearch({
+        searchTerm: term,
+        filters: {
+          location: selectedLocation,
+          activeFilters: activeFilters.map(f => ({ type: f.type, label: f.label })),
+        },
+        resultCount: filteredJobs.length,
+        userId: user?.id,
+      });
+    }
   };
 
   const handleLocationToggle = () => {
@@ -1302,11 +1316,21 @@ export default function JobsPage() {
       type: filter.type 
     };
     
+    const isAdding = !activeFilters.some(f => f.label === filter.label);
+    
     setActiveFilters(prev => 
-      prev.some(f => f.label === filter.label)
-        ? prev.filter(f => f.label !== filter.label)
-        : [...prev, newFilter]
+      isAdding
+        ? [...prev, newFilter]
+        : prev.filter(f => f.label !== filter.label)
     );
+
+    // Track filter event
+    analyticsService.trackFilter({
+      filterType: filter.type,
+      filterValue: filter.label,
+      resultCount: filteredJobs.length,
+      userId: user?.id,
+    });
   };
 
   const removeFilter = (filter: Tag) => {
@@ -1315,6 +1339,18 @@ export default function JobsPage() {
 
   const handleJobClick = (job: Job) => {
     setSelectedJob(job);
+    
+    // Track job view
+    analyticsService.trackJobView({
+      jobId: String(job.id),
+      jobTitle: job.title,
+      companyName: job.company,
+      location: job.location,
+      salary: job.salary,
+      tags: job.tags?.map(tag => tag.label) || [],
+      source: 'job_list',
+      userId: user?.id,
+    });
     
     // Scroll desktop job details to top when switching jobs
     if (desktopJobDetailsRef.current) {
@@ -1390,6 +1426,18 @@ export default function JobsPage() {
       if (!response.ok) {
         console.error('Failed to track application:', response.status);
       }
+
+      // Track job apply analytics
+      analyticsService.trackJobApply({
+        jobId: String(selectedJob.id),
+        jobTitle: selectedJob.title,
+        companyName: selectedJob.company,
+        location: selectedJob.location,
+        salary: selectedJob.salary,
+        tags: selectedJob.tags?.map(tag => tag.label) || [],
+        source: 'job_details',
+        userId: user.id,
+      });
 
       // Open the job application URL
       window.open(selectedJob.url, '_blank', 'noopener,noreferrer');

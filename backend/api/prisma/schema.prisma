@@ -51,6 +51,7 @@ model users {
   job_views       job_views[]
   apply_clicks    apply_clicks[]
   user_sessions   user_sessions[]
+  analytics_events analytics_events[]
 
   @@unique([email, role])
   @@index([email])
@@ -194,6 +195,24 @@ model user_sessions {
 
   @@index([userId])
   @@index([startedAt])
+}
+
+// Enhanced analytics events table for comprehensive tracking
+model analytics_events {
+  id         String   @id @default(uuid())
+  eventType  String
+  eventData  Json
+  userId     String?
+  sessionId  String?
+  ipAddress  String?
+  userAgent  String?
+  timestamp  DateTime @default(now())
+  user       users?   @relation(fields: [userId], references: [id])
+
+  @@index([eventType])
+  @@index([userId])
+  @@index([sessionId])
+  @@index([timestamp])
 }
 
 enum Role {
