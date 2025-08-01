@@ -19,7 +19,6 @@ Add these environment variables to your `.env` file:
 # Internal Analytics Configuration
 INTERNAL_ANALYTICS_ENABLED=true
 INTERNAL_ANALYTICS_URL=https://your-internal-dashboard.com
-INTERNAL_ANALYTICS_API_KEY=your_api_key_here
 ```
 
 ### Configuration Options
@@ -28,7 +27,6 @@ INTERNAL_ANALYTICS_API_KEY=your_api_key_here
 |----------|-------------|----------|---------|
 | `INTERNAL_ANALYTICS_ENABLED` | Enable/disable internal analytics | No | `true` |
 | `INTERNAL_ANALYTICS_URL` | Base URL of your internal dashboard | Yes | - |
-| `INTERNAL_ANALYTICS_API_KEY` | API key for authentication | Yes | - |
 
 ## API Endpoints
 
@@ -38,7 +36,6 @@ Your internal dashboard should implement these endpoints:
 ```http
 POST /api/analytics/events
 Content-Type: application/json
-Authorization: Bearer your_api_key_here
 X-Source: pipeline_web
 X-Version: 1.0.0
 
@@ -68,7 +65,6 @@ X-Version: 1.0.0
 ```http
 POST /api/analytics/events/batch
 Content-Type: application/json
-Authorization: Bearer your_api_key_here
 X-Source: pipeline_web
 X-Version: 1.0.0
 
@@ -255,10 +251,10 @@ Common error codes:
 
 ## Security Considerations
 
-1. **API Key Security**
-   - Use strong, randomly generated API keys
-   - Rotate keys regularly
-   - Store keys securely in environment variables
+1. **Internal Network Security**
+   - Ensure your internal dashboard is properly secured
+   - Use HTTPS for data transmission
+   - Implement proper firewall rules
 
 2. **Rate Limiting**
    - Implement rate limiting on your endpoints
@@ -288,7 +284,6 @@ Expected response:
   "data": {
     "enabled": true,
     "urlConfigured": true,
-    "apiKeyConfigured": true,
     "url": "https://your-internal-dashboard.com"
   }
 }
@@ -339,22 +334,16 @@ Set up alerts for:
 ### Common Issues
 
 1. **Events not reaching dashboard**
-   - Check API key configuration
-   - Verify dashboard URL is correct
-   - Check network connectivity
+   - Check dashboard URL configuration
+   - Verify network connectivity
    - Review firewall settings
 
-2. **Authentication errors**
-   - Verify API key is correct
-   - Check key permissions
-   - Ensure key hasn't expired
-
-3. **Rate limiting**
+2. **Rate limiting**
    - Implement exponential backoff
    - Reduce event frequency
    - Contact dashboard provider
 
-4. **Data format errors**
+3. **Data format errors**
    - Validate event structure
    - Check required fields
    - Review data types

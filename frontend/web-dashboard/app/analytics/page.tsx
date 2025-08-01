@@ -1,536 +1,280 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from 'react';
 import { useAuth } from "@/app/contexts/AuthContext";
-import { 
-  BarChart3, 
-  Users, 
-  Eye, 
-  MousePointer, 
-  TrendingUp, 
-  Calendar,
-  ArrowLeft,
-  RefreshCw
-} from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-interface AnalyticsData {
-  summary: {
-    totalJobViews: number;
-    totalApplyClicks: number;
-    totalUsers: number;
-    conversionRate: string;
-  };
-  trends: {
-    jobViewsByDay: Array<{ date: string; count: number }>;
-    applyClicksByDay: Array<{ date: string; count: number }>;
-  };
-  topJobs: {
-    viewed: Array<{ jobId: string; _count: { jobId: number }; job?: any }>;
-    applied: Array<{ jobId: string; _count: { jobId: number }; job?: any }>;
-  };
+interface AnalyticsEvent {
+  eventType: string;
+  eventData: Record<string, any>;
+  userId?: string;
+  sessionId?: string;
+  timestamp: string;
+  ipAddress?: string;
+  userAgent?: string;
+  source: 'pipeline_web';
+  version: string;
 }
 
-interface DetailedAnalyticsData {
-  jobViews: Array<{
-    id: string;
-    jobId: string;
-    userId?: string;
-    ipAddress?: string;
-    userAgent?: string;
-    viewedAt: string;
-    job?: {
-      id: string;
-      title: string;
-      company: string;
-      location: string;
-    };
-    user?: {
-      id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-    };
-  }>;
-  applyClicks: Array<{
-    id: string;
-    jobId: string;
-    userId?: string;
-    ipAddress?: string;
-    userAgent?: string;
-    clickedAt: string;
-    job?: {
-      id: string;
-      title: string;
-      company: string;
-      location: string;
-    };
-    user?: {
-      id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-    };
-  }>;
-  userSessions: Array<{
-    id: string;
-    userId?: string;
-    ipAddress?: string;
-    userAgent?: string;
-    startedAt: string;
-    endedAt?: string;
-    user?: {
-      id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-    };
-  }>;
-  summary: {
-    totalJobViews: number;
-    totalApplyClicks: number;
-    totalUserSessions: number;
-    uniqueUsers: number;
-  };
+interface AnalyticsSummary {
+  totalEvents: number;
+  uniqueUsers: number;
+  jobViews: number;
+  jobApplies: number;
+  searches: number;
+  filters: number;
+  registrations: number;
+  sessions: number;
 }
 
 export default function AnalyticsPage() {
-  const router = useRouter();
   const { user } = useAuth();
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
-  const [detailedData, setDetailedData] = useState<DetailedAnalyticsData | null>(null);
+  const router = useRouter();
+  const [events, setEvents] = useState<AnalyticsEvent[]>([]);
+  const [summary, setSummary] = useState<AnalyticsSummary>({
+    totalEvents: 0,
+    uniqueUsers: 0,
+    jobViews: 0,
+    jobApplies: 0,
+    searches: 0,
+    filters: 0,
+    registrations: 0,
+    sessions: 0,
+  });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [timeRange, setTimeRange] = useState(30);
-  const [activeTab, setActiveTab] = useState<'summary' | 'details'>('summary');
+  const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Redirect if not admin
+  // Check authentication
   useEffect(() => {
-    if (user && user.role !== 'ADMIN') {
-      router.push("/jobs");
+    if (!user) {
+      router.push('/auth/login');
+      return;
+    }
+    
+    // Check if user is admin
+    if (user.role !== 'ADMIN') {
+      router.push('/dashboard');
+      return;
     }
   }, [user, router]);
 
-  const fetchAnalytics = async () => {
+  // Fetch analytics events
+  const fetchEvents = async () => {
     try {
       setLoading(true);
-      setError(null);
+      const response = await fetch('/api/analytics/events?limit=1000');
+      const data = await response.json();
       
-      const [summaryResponse, detailsResponse] = await Promise.all([
-        fetch(`/api/analytics/summary?days=${timeRange}`, {
-          credentials: "include",
-        }),
-        fetch(`/api/analytics/details?days=${timeRange}`, {
-          credentials: "include",
-        }),
-      ]);
-
-      if (!summaryResponse.ok) {
-        throw new Error('Failed to fetch analytics summary data');
+      if (data.success) {
+        setEvents(data.data.events);
+        calculateSummary(data.data.events);
       }
-
-      if (!detailsResponse.ok) {
-        throw new Error('Failed to fetch analytics details data');
-      }
-
-      const summaryData = await summaryResponse.json();
-      const detailsData = await detailsResponse.json();
-      
-      setAnalyticsData(summaryData.data);
-      setDetailedData(detailsData.data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+    } catch (error) {
+      console.error('Error fetching analytics events:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (user?.role === 'ADMIN') {
-      fetchAnalytics();
+  // Calculate summary statistics
+  const calculateSummary = (eventList: AnalyticsEvent[]) => {
+    const uniqueUsers = new Set(eventList.map(e => e.userId).filter(Boolean)).size;
+    const jobViews = eventList.filter(e => e.eventType === 'job_view').length;
+    const jobApplies = eventList.filter(e => e.eventType === 'job_apply').length;
+    const searches = eventList.filter(e => e.eventType === 'search').length;
+    const filters = eventList.filter(e => e.eventType === 'filter').length;
+    const registrations = eventList.filter(e => e.eventType === 'user_registration').length;
+    const sessions = eventList.filter(e => e.eventType === 'session').length;
+
+    setSummary({
+      totalEvents: eventList.length,
+      uniqueUsers,
+      jobViews,
+      jobApplies,
+      searches,
+      filters,
+      registrations,
+      sessions,
+    });
+  };
+
+  // Filter events based on selected criteria
+  const filteredEvents = events.filter(event => {
+    if (filter !== 'all' && event.eventType !== filter) return false;
+    if (searchTerm && !JSON.stringify(event).toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    return true;
+  });
+
+  // Get event type color
+  const getEventTypeColor = (eventType: string) => {
+    switch (eventType) {
+      case 'job_view': return 'bg-blue-100 text-blue-800';
+      case 'job_apply': return 'bg-green-100 text-green-800';
+      case 'search': return 'bg-purple-100 text-purple-800';
+      case 'filter': return 'bg-orange-100 text-orange-800';
+      case 'user_registration': return 'bg-pink-100 text-pink-800';
+      case 'session': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
-  }, [user, timeRange]);
+  };
+
+  // Format timestamp
+  const formatTimestamp = (timestamp: string) => {
+    return new Date(timestamp).toLocaleString();
+  };
+
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    if (user && user.role === 'ADMIN') {
+      fetchEvents();
+      const interval = setInterval(fetchEvents, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [user]);
 
   if (!user || user.role !== 'ADMIN') {
     return (
-      <div className="min-h-screen bg-[#F4F4F4] flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Access Denied
-          </h1>
-          <p className="text-gray-600 mb-6">
-            You don't have permission to access the analytics dashboard.
-          </p>
-          <Link 
-            href="/jobs"
-            className="inline-flex items-center space-x-2 bg-[#01253F] text-white px-6 py-3 rounded-lg hover:bg-[#011a2e] transition-colors font-medium"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Jobs</span>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F4F4F4]">
-        <div className="container mx-auto px-6 py-8">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2466D0] mx-auto mb-4"></div>
-              <p className="text-[#7691A4] text-lg">Loading analytics...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-[#F4F4F4]">
-        <div className="container mx-auto px-6 py-8">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-            <p className="text-red-600 mb-4">{error}</p>
-            <button
-              onClick={fetchAnalytics}
-              className="inline-flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
-            >
-              <RefreshCw className="w-4 h-4" />
-              <span>Retry</span>
-            </button>
-          </div>
+      <div className="min-h-screen bg-[#F4F4F4] font-baloo flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+          <p className="text-gray-600">You need admin privileges to view analytics.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F4F4] font-avenir">
-      <div className="container mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-[#01253F] mb-2">Analytics Dashboard</h1>
-            <p className="text-[#7691A4]">Track job performance and user engagement</p>
+    <div className="min-h-screen bg-[#F4F4F4] font-baloo">
+      <div className="container mx-auto p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-[#2466D0]">Analytics Dashboard</h1>
+          <button 
+            onClick={fetchEvents} 
+            disabled={loading}
+            className="px-4 py-2 bg-[#2466D0] text-white rounded-lg hover:bg-[#1e5bb8] disabled:opacity-50 transition-colors"
+          >
+            {loading ? 'Loading...' : 'Refresh'}
+          </button>
+        </div>
+
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500 mb-2">Total Events</h3>
+            <p className="text-3xl font-bold text-[#2466D0]">{summary.totalEvents.toLocaleString()}</p>
           </div>
-          <div className="flex items-center space-x-4">
-            <select
-              value={timeRange}
-              onChange={(e) => setTimeRange(Number(e.target.value))}
-              className="border border-gray-300 rounded-lg px-4 py-2 bg-white"
+
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500 mb-2">Unique Users</h3>
+            <p className="text-3xl font-bold text-[#2466D0]">{summary.uniqueUsers.toLocaleString()}</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500 mb-2">Job Views</h3>
+            <p className="text-3xl font-bold text-[#2466D0]">{summary.jobViews.toLocaleString()}</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500 mb-2">Job Applications</h3>
+            <p className="text-3xl font-bold text-[#2466D0]">{summary.jobApplies.toLocaleString()}</p>
+            <p className="text-sm text-gray-500 mt-1">
+              {summary.jobViews > 0 ? `${((summary.jobApplies / summary.jobViews) * 100).toFixed(1)}% conversion` : '0% conversion'}
+            </p>
+          </div>
+        </div>
+
+        {/* Additional Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500 mb-2">Searches</h3>
+            <p className="text-2xl font-bold text-[#2466D0]">{summary.searches.toLocaleString()}</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500 mb-2">Filters Used</h3>
+            <p className="text-2xl font-bold text-[#2466D0]">{summary.filters.toLocaleString()}</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500 mb-2">Registrations</h3>
+            <p className="text-2xl font-bold text-[#2466D0]">{summary.registrations.toLocaleString()}</p>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+          <h3 className="text-lg font-semibold mb-4 text-[#2466D0]">Filters</h3>
+          <div className="flex gap-4 flex-wrap">
+            <div className="flex-1 min-w-[200px]">
+              <input
+                type="text"
+                placeholder="Search events..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2466D0] focus:border-[#2466D0]"
+              />
+            </div>
+            <select 
+              value={filter} 
+              onChange={(e) => setFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2466D0] focus:border-[#2466D0]"
             >
-              <option value={7}>Last 7 days</option>
-              <option value={30}>Last 30 days</option>
-              <option value={90}>Last 90 days</option>
+              <option value="all">All Events</option>
+              <option value="job_view">Job Views</option>
+              <option value="job_apply">Job Applications</option>
+              <option value="search">Searches</option>
+              <option value="filter">Filters</option>
+              <option value="user_registration">Registrations</option>
+              <option value="session">Sessions</option>
             </select>
-            <button
-              onClick={fetchAnalytics}
-              className="inline-flex items-center space-x-2 bg-[#2466D0] text-white px-4 py-2 rounded-lg hover:bg-[#1e52a8] transition-colors"
-            >
-              <RefreshCw className="w-4 h-4" />
-              <span>Refresh</span>
-            </button>
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
-          <button
-            onClick={() => setActiveTab('summary')}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
-              activeTab === 'summary'
-                ? 'bg-white text-[#01253F] shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            Summary
-          </button>
-          <button
-            onClick={() => setActiveTab('details')}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
-              activeTab === 'details'
-                ? 'bg-white text-[#01253F] shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            Detailed Data
-          </button>
-        </div>
-
-        {analyticsData && (
-          <>
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[#7691A4] text-sm font-medium">Total Job Views</p>
-                    <p className="text-3xl font-bold text-[#01253F]">{analyticsData.summary.totalJobViews.toLocaleString()}</p>
-                  </div>
-                  <div className="bg-blue-100 p-3 rounded-lg">
-                    <Eye className="w-6 h-6 text-blue-600" />
-                  </div>
-                </div>
+        {/* Events List */}
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+          <h3 className="text-lg font-semibold mb-4 text-[#2466D0]">Recent Events ({filteredEvents.length})</h3>
+          <div className="max-h-[600px] overflow-y-auto space-y-4">
+            {filteredEvents.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                {loading ? 'Loading events...' : 'No events found'}
               </div>
-
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[#7691A4] text-sm font-medium">Apply Clicks</p>
-                    <p className="text-3xl font-bold text-[#01253F]">{analyticsData.summary.totalApplyClicks.toLocaleString()}</p>
-                  </div>
-                  <div className="bg-green-100 p-3 rounded-lg">
-                    <MousePointer className="w-6 h-6 text-green-600" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[#7691A4] text-sm font-medium">New Users</p>
-                    <p className="text-3xl font-bold text-[#01253F]">{analyticsData.summary.totalUsers.toLocaleString()}</p>
-                  </div>
-                  <div className="bg-purple-100 p-3 rounded-lg">
-                    <Users className="w-6 h-6 text-purple-600" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[#7691A4] text-sm font-medium">Conversion Rate</p>
-                    <p className="text-3xl font-bold text-[#01253F]">{analyticsData.summary.conversionRate}%</p>
-                  </div>
-                  <div className="bg-orange-100 p-3 rounded-lg">
-                    <TrendingUp className="w-6 h-6 text-orange-600" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Top Jobs */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              {/* Top Viewed Jobs */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h3 className="text-xl font-bold text-[#01253F] mb-4 flex items-center">
-                  <Eye className="w-5 h-5 mr-2 text-blue-600" />
-                  Top Viewed Jobs
-                </h3>
-                <div className="space-y-4">
-                  {analyticsData.topJobs.viewed.slice(0, 5).map((item, index) => (
-                    <div key={item.jobId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex-1">
-                        <p className="font-medium text-[#01253F]">
-                          {item.job?.title || `Job ${item.jobId.slice(0, 8)}`}
-                        </p>
-                        <p className="text-sm text-[#7691A4]">
-                          {item.job?.company || 'Unknown Company'} • {item.job?.location || 'Unknown Location'}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-[#01253F]">{item._count.jobId}</p>
-                        <p className="text-xs text-[#7691A4]">views</p>
-                      </div>
+            ) : (
+              filteredEvents.map((event, index) => (
+                <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-2 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getEventTypeColor(event.eventType)}`}>
+                        {event.eventType.replace('_', ' ')}
+                      </span>
+                      {event.userId && (
+                        <span className="px-2 py-1 border border-gray-300 rounded text-xs bg-gray-50">
+                          User: {event.userId}
+                        </span>
+                      )}
                     </div>
-                  ))}
-                </div>
-              </div>
+                    <span className="text-sm text-gray-500">
+                      {formatTimestamp(event.timestamp)}
+                    </span>
+                  </div>
+                  
+                  <div className="text-sm">
+                    <strong className="text-[#2466D0]">Data:</strong>
+                    <pre className="mt-1 p-2 bg-gray-50 rounded text-xs overflow-x-auto border">
+                      {JSON.stringify(event.eventData, null, 2)}
+                    </pre>
+                  </div>
 
-              {/* Top Applied Jobs */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h3 className="text-xl font-bold text-[#01253F] mb-4 flex items-center">
-                  <MousePointer className="w-5 h-5 mr-2 text-green-600" />
-                  Top Applied Jobs
-                </h3>
-                <div className="space-y-4">
-                  {analyticsData.topJobs.applied.slice(0, 5).map((item, index) => (
-                    <div key={item.jobId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex-1">
-                        <p className="font-medium text-[#01253F]">
-                          {item.job?.title || `Job ${item.jobId.slice(0, 8)}`}
-                        </p>
-                        <p className="text-sm text-[#7691A4]">
-                          {item.job?.company || 'Unknown Company'} • {item.job?.location || 'Unknown Location'}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-[#01253F]">{item._count.jobId}</p>
-                        <p className="text-xs text-[#7691A4]">clicks</p>
-                      </div>
+                  {event.ipAddress && (
+                    <div className="text-xs text-gray-500">
+                      IP: {event.ipAddress}
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
-            </div>
-
-            {/* Trends Chart Placeholder */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-xl font-bold text-[#01253F] mb-4 flex items-center">
-                <BarChart3 className="w-5 h-5 mr-2 text-[#2466D0]" />
-                Trends (Last {timeRange} Days)
-              </h3>
-              <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-                <div className="text-center">
-                  <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-500">Chart visualization coming soon</p>
-                  <p className="text-sm text-gray-400">Data available: {analyticsData.trends.jobViewsByDay.length} days</p>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Detailed Data View */}
-        {activeTab === 'details' && detailedData && (
-          <div className="space-y-8">
-            {/* Job Views Details */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-xl font-bold text-[#01253F] mb-4 flex items-center">
-                <Eye className="w-5 h-5 mr-2 text-blue-600" />
-                Job Views Details ({detailedData.jobViews.length} records)
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {detailedData.jobViews.map((view) => (
-                      <tr key={view.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {new Date(view.viewedAt).toLocaleString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          <div>
-                            <div className="font-medium">{view.job?.title || 'Unknown Job'}</div>
-                            <div className="text-gray-500">{view.job?.company} • {view.job?.location}</div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {view.user ? (
-                            <div>
-                              <div className="font-medium">{view.user.firstName} {view.user.lastName}</div>
-                              <div className="text-gray-500">{view.user.email}</div>
-                            </div>
-                          ) : (
-                            <span className="text-gray-400">Anonymous</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {view.ipAddress || 'N/A'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Apply Clicks Details */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-xl font-bold text-[#01253F] mb-4 flex items-center">
-                <MousePointer className="w-5 h-5 mr-2 text-green-600" />
-                Apply Clicks Details ({detailedData.applyClicks.length} records)
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {detailedData.applyClicks.map((click) => (
-                      <tr key={click.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {new Date(click.clickedAt).toLocaleString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          <div>
-                            <div className="font-medium">{click.job?.title || 'Unknown Job'}</div>
-                            <div className="text-gray-500">{click.job?.company} • {click.job?.location}</div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {click.user ? (
-                            <div>
-                              <div className="font-medium">{click.user.firstName} {click.user.lastName}</div>
-                              <div className="text-gray-500">{click.user.email}</div>
-                            </div>
-                          ) : (
-                            <span className="text-gray-400">Anonymous</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {click.ipAddress || 'N/A'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* User Sessions Details */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="text-xl font-bold text-[#01253F] mb-4 flex items-center">
-                <Users className="w-5 h-5 mr-2 text-purple-600" />
-                User Sessions Details ({detailedData.userSessions.length} records)
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Started</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ended</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {detailedData.userSessions.map((session) => (
-                      <tr key={session.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {new Date(session.startedAt).toLocaleString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {session.endedAt ? new Date(session.endedAt).toLocaleString() : 'Active'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {session.user ? (
-                            <div>
-                              <div className="font-medium">{session.user.firstName} {session.user.lastName}</div>
-                              <div className="text-gray-500">{session.user.email}</div>
-                            </div>
-                          ) : (
-                            <span className="text-gray-400">Anonymous</span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {session.ipAddress || 'N/A'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+              ))
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

@@ -17,12 +17,10 @@ export interface InternalAnalyticsEvent {
 export class InternalAnalyticsService {
   private readonly logger = new Logger(InternalAnalyticsService.name);
   private readonly internalDashboardUrl: string | undefined;
-  private readonly internalDashboardApiKey: string | undefined;
   private readonly isEnabled: boolean;
 
   constructor(private configService: ConfigService) {
     this.internalDashboardUrl = this.configService.get<string>('INTERNAL_ANALYTICS_URL');
-    this.internalDashboardApiKey = this.configService.get<string>('INTERNAL_ANALYTICS_API_KEY');
     this.isEnabled = this.configService.get<boolean>('INTERNAL_ANALYTICS_ENABLED', true);
   }
 
@@ -40,7 +38,6 @@ export class InternalAnalyticsService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.internalDashboardApiKey}`,
           'X-Source': 'pipeline_web',
           'X-Version': '1.0.0',
         },
@@ -340,7 +337,6 @@ export class InternalAnalyticsService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.internalDashboardApiKey}`,
           'X-Source': 'pipeline_web',
           'X-Version': '1.0.0',
         },
@@ -398,7 +394,6 @@ export class InternalAnalyticsService {
     return {
       enabled: this.isEnabled,
       urlConfigured: !!this.internalDashboardUrl,
-      apiKeyConfigured: !!this.internalDashboardApiKey,
       url: this.internalDashboardUrl,
     };
   }

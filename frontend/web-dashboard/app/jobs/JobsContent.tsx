@@ -15,12 +15,15 @@ const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
     
     // List of all enhanced JSON files to load
     const jsonFiles = [
+      '/improved_ct_jobs_20250725_054659.json',
       '/live_data.json',
       '/new_manual_jobs.json',
       '/fixed_apploi_jobs.json',
       '/site_Athena_Health_Care_Systems_20250716_221638_enhanced.json',
       '/site_National_Healthcare_Associates_20250716_204858_enhanced.json',
       '/site_Genesis_20250716_222027_enhanced.json',
+      '/brightstar_ct_jobs_1000_20250625_002803_enhanced_descriptions.json', // Brightstar jobs (enhanced)
+      '/ct_healthcare_jobs_1000_20250623_165457.json',
       '/site_iCare_Health_Network_20250716_204824_enhanced.json',
       '/site_RydersHealth_20250716_181012_enhanced.json'
     ];
