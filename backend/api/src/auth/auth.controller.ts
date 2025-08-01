@@ -174,8 +174,8 @@ export class AuthController {
         maxAge: 1000 * 60 * 60 * 24, // 1 day
       });
 
-      // Redirect to homepage with signed_in parameter
-      return res.redirect(`${process.env.FRONTEND_URL}/?signed_in=true`);
+      // Redirect to jobs page with signed_in parameter
+      return res.redirect(`${process.env.FRONTEND_URL}/jobs?signed_in=true`);
     } catch (err: unknown) {
       error('Google OAuth error', (err as Error).stack);
       return res.status(500).send({
