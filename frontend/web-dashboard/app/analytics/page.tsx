@@ -28,7 +28,7 @@ interface AnalyticsSummary {
 }
 
 export default function AnalyticsPage() {
-  const { user } = useAuth();
+  const { user, showLoginModal } = useAuth();
   const router = useRouter();
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
   const [summary, setSummary] = useState<AnalyticsSummary>({
@@ -47,17 +47,23 @@ export default function AnalyticsPage() {
 
   // Check authentication
   useEffect(() => {
+    console.log('Analytics auth check - user:', user);
+    
     if (!user) {
-      router.push('/auth/login');
+      console.log('No user found, showing login modal');
+      showLoginModal();
       return;
     }
     
     // Check if user is admin
     if (user.role !== 'ADMIN') {
-      router.push('/dashboard');
+      console.log('User is not admin, showing access denied');
+      // Don't redirect, just show access denied with login button
       return;
     }
-  }, [user, router]);
+    
+    console.log('User is admin, proceeding to analytics');
+  }, [user, router, showLoginModal]);
 
   // Fetch analytics events
   const fetchEvents = async () => {
@@ -138,7 +144,13 @@ export default function AnalyticsPage() {
       <div className="min-h-screen bg-[#F4F4F4] font-baloo flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-          <p className="text-gray-600">You need admin privileges to view analytics.</p>
+          <p className="text-gray-600 mb-4">You need admin privileges to view analytics.</p>
+          <button 
+            onClick={showLoginModal}
+            className="px-4 py-2 bg-[#2466D0] text-white rounded-lg hover:bg-[#1e5bb8] transition-colors"
+          >
+            Login as Admin
+          </button>
         </div>
       </div>
     );
