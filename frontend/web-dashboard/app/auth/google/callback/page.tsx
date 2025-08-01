@@ -31,23 +31,8 @@ export default function GoogleCallbackPage() {
         // Forward the request to the backend
         const backendUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google/callback?${searchParams.toString()}`;
         
-        // Make a request to the backend to handle the OAuth
-        const response = await fetch(backendUrl, {
-          method: 'GET',
-          credentials: 'include',
-          redirect: 'manual', // Don't follow redirects automatically
-        });
-
-        if (response.ok || response.status === 302) {
-          // Success - the backend has set the cookie and redirected
-          // Refresh the user authentication state
-          await refreshUser();
-          // Redirect to jobs page
-          router.push('/jobs?signed_in=true');
-        } else {
-          // Error - redirect with error
-          router.push('/jobs?error=google_auth_failed');
-        }
+        // Let the backend handle the redirect completely
+        window.location.href = backendUrl;
       } catch (error) {
         console.error('Google callback error:', error);
         router.push('/jobs?error=google_auth_failed');
