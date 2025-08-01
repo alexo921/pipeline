@@ -32,13 +32,78 @@ interface AnalyticsData {
   };
 }
 
+interface DetailedAnalyticsData {
+  jobViews: Array<{
+    id: string;
+    jobId: string;
+    userId?: string;
+    ipAddress?: string;
+    userAgent?: string;
+    viewedAt: string;
+    job?: {
+      id: string;
+      title: string;
+      company: string;
+      location: string;
+    };
+    user?: {
+      id: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+    };
+  }>;
+  applyClicks: Array<{
+    id: string;
+    jobId: string;
+    userId?: string;
+    ipAddress?: string;
+    userAgent?: string;
+    clickedAt: string;
+    job?: {
+      id: string;
+      title: string;
+      company: string;
+      location: string;
+    };
+    user?: {
+      id: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+    };
+  }>;
+  userSessions: Array<{
+    id: string;
+    userId?: string;
+    ipAddress?: string;
+    userAgent?: string;
+    startedAt: string;
+    endedAt?: string;
+    user?: {
+      id: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+    };
+  }>;
+  summary: {
+    totalJobViews: number;
+    totalApplyClicks: number;
+    totalUserSessions: number;
+    uniqueUsers: number;
+  };
+}
+
 export default function AnalyticsPage() {
   const router = useRouter();
   const { user } = useAuth();
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [detailedData, setDetailedData] = useState<DetailedAnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [timeRange, setTimeRange] = useState(30);
+  const [activeTab, setActiveTab] = useState<'summary' | 'details'>('summary');
 
   // Redirect if not admin
   useEffect(() => {
@@ -52,16 +117,28 @@ export default function AnalyticsPage() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`/api/analytics/summary?days=${timeRange}`, {
-        credentials: "include",
-      });
+      const [summaryResponse, detailsResponse] = await Promise.all([
+        fetch(`/api/analytics/summary?days=${timeRange}`, {
+          credentials: "include",
+        }),
+        fetch(`/api/analytics/details?days=${timeRange}`, {
+          credentials: "include",
+        }),
+      ]);
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch analytics data');
+      if (!summaryResponse.ok) {
+        throw new Error('Failed to fetch analytics summary data');
       }
 
-      const data = await response.json();
-      setAnalyticsData(data.data);
+      if (!detailsResponse.ok) {
+        throw new Error('Failed to fetch analytics details data');
+      }
+
+      const summaryData = await summaryResponse.json();
+      const detailsData = await detailsResponse.json();
+      
+      setAnalyticsData(summaryData.data);
+      setDetailedData(detailsData.data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -158,6 +235,30 @@ export default function AnalyticsPage() {
               <span>Refresh</span>
             </button>
           </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
+          <button
+            onClick={() => setActiveTab('summary')}
+            className={`px-4 py-2 rounded-md font-medium transition-colors ${
+              activeTab === 'summary'
+                ? 'bg-white text-[#01253F] shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Summary
+          </button>
+          <button
+            onClick={() => setActiveTab('details')}
+            className={`px-4 py-2 rounded-md font-medium transition-colors ${
+              activeTab === 'details'
+                ? 'bg-white text-[#01253F] shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Detailed Data
+          </button>
         </div>
 
         {analyticsData && (
@@ -283,6 +384,152 @@ export default function AnalyticsPage() {
               </div>
             </div>
           </>
+        )}
+
+        {/* Detailed Data View */}
+        {activeTab === 'details' && detailedData && (
+          <div className="space-y-8">
+            {/* Job Views Details */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h3 className="text-xl font-bold text-[#01253F] mb-4 flex items-center">
+                <Eye className="w-5 h-5 mr-2 text-blue-600" />
+                Job Views Details ({detailedData.jobViews.length} records)
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {detailedData.jobViews.map((view) => (
+                      <tr key={view.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {new Date(view.viewedAt).toLocaleString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <div>
+                            <div className="font-medium">{view.job?.title || 'Unknown Job'}</div>
+                            <div className="text-gray-500">{view.job?.company} • {view.job?.location}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {view.user ? (
+                            <div>
+                              <div className="font-medium">{view.user.firstName} {view.user.lastName}</div>
+                              <div className="text-gray-500">{view.user.email}</div>
+                            </div>
+                          ) : (
+                            <span className="text-gray-400">Anonymous</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {view.ipAddress || 'N/A'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Apply Clicks Details */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h3 className="text-xl font-bold text-[#01253F] mb-4 flex items-center">
+                <MousePointer className="w-5 h-5 mr-2 text-green-600" />
+                Apply Clicks Details ({detailedData.applyClicks.length} records)
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {detailedData.applyClicks.map((click) => (
+                      <tr key={click.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {new Date(click.clickedAt).toLocaleString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          <div>
+                            <div className="font-medium">{click.job?.title || 'Unknown Job'}</div>
+                            <div className="text-gray-500">{click.job?.company} • {click.job?.location}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {click.user ? (
+                            <div>
+                              <div className="font-medium">{click.user.firstName} {click.user.lastName}</div>
+                              <div className="text-gray-500">{click.user.email}</div>
+                            </div>
+                          ) : (
+                            <span className="text-gray-400">Anonymous</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {click.ipAddress || 'N/A'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* User Sessions Details */}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <h3 className="text-xl font-bold text-[#01253F] mb-4 flex items-center">
+                <Users className="w-5 h-5 mr-2 text-purple-600" />
+                User Sessions Details ({detailedData.userSessions.length} records)
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Started</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ended</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {detailedData.userSessions.map((session) => (
+                      <tr key={session.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {new Date(session.startedAt).toLocaleString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {session.endedAt ? new Date(session.endedAt).toLocaleString() : 'Active'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {session.user ? (
+                            <div>
+                              <div className="font-medium">{session.user.firstName} {session.user.lastName}</div>
+                              <div className="text-gray-500">{session.user.email}</div>
+                            </div>
+                          ) : (
+                            <span className="text-gray-400">Anonymous</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {session.ipAddress || 'N/A'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

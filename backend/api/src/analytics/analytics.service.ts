@@ -168,4 +168,85 @@ export class AnalyticsService {
       conversionRate: views > 0 ? (clicks / views * 100).toFixed(2) : '0',
     };
   }
+
+  async getDetailedJobViews(days: number = 30, limit: number = 50) {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    return await this.prisma.job_views.findMany({
+      where: { viewedAt: { gte: startDate } },
+      include: {
+        job: {
+          select: { id: true, title: true, company: true, location: true },
+        },
+        user: {
+          select: { id: true, email: true, firstName: true, lastName: true },
+        },
+      },
+      orderBy: { viewedAt: 'desc' },
+      take: limit,
+    });
+  }
+
+  async getDetailedApplyClicks(days: number = 30, limit: number = 50) {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    return await this.prisma.apply_clicks.findMany({
+      where: { clickedAt: { gte: startDate } },
+      include: {
+        job: {
+          select: { id: true, title: true, company: true, location: true },
+        },
+        user: {
+          select: { id: true, email: true, firstName: true, lastName: true },
+        },
+      },
+      orderBy: { clickedAt: 'desc' },
+      take: limit,
+    });
+  }
+
+  async getDetailedUserSessions(days: number = 30, limit: number = 50) {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    return await this.prisma.user_sessions.findMany({
+      where: { startedAt: { gte: startDate } },
+      include: {
+        user: {
+          select: { id: true, email: true, firstName: true, lastName: true },
+        },
+      },
+      orderBy: { startedAt: 'desc' },
+      take: limit,
+    });
+  }
+
+  async getAnalyticsDetails(days: number = 30) {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+
+    const [jobViews, applyClicks, userSessions] = await Promise.all([
+      this.getDetailedJobViews(days, 100),
+      this.getDetailedApplyClicks(days, 100),
+      this.getDetailedUserSessions(days, 100),
+    ]);
+
+    return {
+      jobViews,
+      applyClicks,
+      userSessions,
+      summary: {
+        totalJobViews: jobViews.length,
+        totalApplyClicks: applyClicks.length,
+        totalUserSessions: userSessions.length,
+        uniqueUsers: new Set([
+          ...jobViews.map(v => v.userId).filter(Boolean),
+          ...applyClicks.map(c => c.userId).filter(Boolean),
+          ...userSessions.map(s => s.userId).filter(Boolean),
+        ]).size,
+      },
+    };
+  }
 } 

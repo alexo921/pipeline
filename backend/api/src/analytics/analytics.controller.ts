@@ -104,4 +104,51 @@ export class AnalyticsController {
     const daysNumber = days ? parseInt(days) : 30;
     return await this.analyticsService.getJobAnalytics(jobId, daysNumber);
   }
+
+  @Get('details')
+  async getAnalyticsDetails(@Req() req: any, @Query('days') days?: string) {
+    // Check if user is admin
+    if (req.user?.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
+    }
+
+    const daysNumber = days ? parseInt(days) : 30;
+    return await this.analyticsService.getAnalyticsDetails(daysNumber);
+  }
+
+  @Get('details/job-views')
+  async getDetailedJobViews(@Req() req: any, @Query('days') days?: string, @Query('limit') limit?: string) {
+    // Check if user is admin
+    if (req.user?.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
+    }
+
+    const daysNumber = days ? parseInt(days) : 30;
+    const limitNumber = limit ? parseInt(limit) : 50;
+    return await this.analyticsService.getDetailedJobViews(daysNumber, limitNumber);
+  }
+
+  @Get('details/apply-clicks')
+  async getDetailedApplyClicks(@Req() req: any, @Query('days') days?: string, @Query('limit') limit?: string) {
+    // Check if user is admin
+    if (req.user?.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
+    }
+
+    const daysNumber = days ? parseInt(days) : 30;
+    const limitNumber = limit ? parseInt(limit) : 50;
+    return await this.analyticsService.getDetailedApplyClicks(daysNumber, limitNumber);
+  }
+
+  @Get('details/user-sessions')
+  async getDetailedUserSessions(@Req() req: any, @Query('days') days?: string, @Query('limit') limit?: string) {
+    // Check if user is admin
+    if (req.user?.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
+    }
+
+    const daysNumber = days ? parseInt(days) : 30;
+    const limitNumber = limit ? parseInt(limit) : 50;
+    return await this.analyticsService.getDetailedUserSessions(daysNumber, limitNumber);
+  }
 } 
