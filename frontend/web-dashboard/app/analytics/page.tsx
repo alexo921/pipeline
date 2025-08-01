@@ -52,7 +52,7 @@ export default function AnalyticsPage() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/analytics/summary?days=${timeRange}`, {
+      const response = await fetch(`/api/analytics/summary?days=${timeRange}`, {
         credentials: "include",
       });
 

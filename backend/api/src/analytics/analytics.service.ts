@@ -71,19 +71,19 @@ export class AnalyticsService {
       }),
       // Job views by day
       this.prisma.$queryRaw`
-        SELECT DATE(viewed_at) as date, COUNT(*) as count
+        SELECT DATE("viewedAt") as date, COUNT(*) as count
         FROM job_views
-        WHERE viewed_at >= ${startDate}
-        GROUP BY DATE(viewed_at)
+        WHERE "viewedAt" >= ${startDate}
+        GROUP BY DATE("viewedAt")
         ORDER BY date DESC
         LIMIT ${days}
       `,
       // Apply clicks by day
       this.prisma.$queryRaw`
-        SELECT DATE(clicked_at) as date, COUNT(*) as count
+        SELECT DATE("clickedAt") as date, COUNT(*) as count
         FROM apply_clicks
-        WHERE clicked_at >= ${startDate}
-        GROUP BY DATE(clicked_at)
+        WHERE "clickedAt" >= ${startDate}
+        GROUP BY DATE("clickedAt")
         ORDER BY date DESC
         LIMIT ${days}
       `,
