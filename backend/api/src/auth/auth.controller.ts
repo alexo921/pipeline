@@ -56,6 +56,7 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      domain: process.env.NODE_ENV === 'production' ? '.pipelineworkforce.com' : undefined,
       maxAge: 1000 * 60 * 60 * 24, // 1 day
     });
 
@@ -77,6 +78,7 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      domain: process.env.NODE_ENV === 'production' ? '.pipelineworkforce.com' : undefined,
       maxAge: 1000 * 60 * 60 * 24, // 1 day
     });
 
@@ -90,6 +92,7 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      domain: process.env.NODE_ENV === 'production' ? '.pipelineworkforce.com' : undefined,
     });
 
     return { message: 'Logged out successfully' };
@@ -171,6 +174,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
+        domain: process.env.NODE_ENV === 'production' ? '.pipelineworkforce.com' : undefined,
         maxAge: 1000 * 60 * 60 * 24, // 1 day
       });
 
