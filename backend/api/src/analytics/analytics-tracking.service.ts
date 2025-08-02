@@ -561,4 +561,58 @@ export class AnalyticsTrackingService {
       console.error('Error sending to internal analytics:', error);
     }
   }
+
+  async getAnalyticsEventsBatch(
+    limit: number = 100,
+    offset: number = 0,
+    eventType?: string,
+    days: number = 30
+  ) {
+    try {
+      const whereClause: any = {
+        timestamp: {
+          gte: new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+        }
+      };
+
+      if (eventType) {
+        whereClause.eventType = eventType;
+      }
+
+      const events = await this.prisma.analytics_events.findMany({
+        where: whereClause,
+        orderBy: {
+          timestamp: 'desc'
+        },
+        skip: offset,
+        take: limit,
+        include: {
+          user: {
+            select: {
+              id: true,
+              email: true,
+              firstName: true,
+              lastName: true
+            }
+          }
+        }
+      });
+
+      return events.map(event => ({
+        eventType: event.eventType,
+        eventData: event.eventData as Record<string, any>,
+        userId: event.userId,
+        sessionId: event.sessionId,
+        timestamp: event.timestamp.toISOString(),
+        ipAddress: event.ipAddress,
+        userAgent: event.userAgent,
+        source: 'pipeline_web',
+        version: '1.0.0',
+        user: event.user
+      }));
+    } catch (error) {
+      console.error('Error fetching analytics events batch:', error);
+      return [];
+    }
+  }
 } 

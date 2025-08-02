@@ -265,4 +265,97 @@ export class AnalyticsController {
     const limitNumber = limit ? parseInt(limit) : 50;
     return await this.analyticsService.getDetailedUserSessions(daysNumber, limitNumber);
   }
+
+  @Get('events/batch')
+  @UseGuards(AuthGuard('jwt'))
+  async getAnalyticsEventsBatch(
+    @Req() req: any, 
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+    @Query('eventType') eventType?: string,
+    @Query('days') days?: string
+  ) {
+    // Check if user is admin
+    if (req.user?.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
+    }
+
+    const limitNumber = limit ? parseInt(limit) : 100;
+    const offsetNumber = offset ? parseInt(offset) : 0;
+    const daysNumber = days ? parseInt(days) : 30;
+
+    try {
+      const events = await this.analyticsTrackingService.getAnalyticsEventsBatch(
+        limitNumber,
+        offsetNumber,
+        eventType,
+        daysNumber
+      );
+
+      return {
+        success: true,
+        data: {
+          events: events,
+          pagination: {
+            limit: limitNumber,
+            offset: offsetNumber,
+            total: events.length
+          }
+        }
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        data: {
+          events: [],
+          pagination: {
+            limit: limitNumber,
+            offset: offsetNumber,
+            total: 0
+          }
+        }
+      };
+    }
+  }
+
+  @Post('events/batch')
+  @UseGuards(AuthGuard('jwt'))
+  async postAnalyticsEventsBatch(
+    @Req() req: any,
+    @Body() body: { events: any[] }
+  ) {
+    // Check if user is admin
+    if (req.user?.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
+    }
+
+    try {
+      const ipAddress = req.ip || req.connection.remoteAddress;
+      const userAgent = req.headers['user-agent'];
+
+      const results = await Promise.all(
+        body.events.map(event => 
+          this.analyticsTrackingService.trackEvent(event, ipAddress, userAgent)
+        )
+      );
+
+      return {
+        success: true,
+        data: {
+          processed: results.length,
+          results: results
+        }
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        data: {
+          processed: 0,
+          results: []
+        }
+      };
+    }
+  }
 } 
