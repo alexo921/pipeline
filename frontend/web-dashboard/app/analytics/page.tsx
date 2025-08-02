@@ -69,15 +69,29 @@ export default function AnalyticsPage() {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/analytics/events?limit=1000');
+      console.log('🔍 Fetching analytics events...');
+      
+      // Get the API URL from environment
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/analytics/events/batch?limit=1000`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
       const data = await response.json();
       
+      console.log('📊 Analytics API response:', data);
+      
       if (data.success) {
+        console.log('✅ Setting events:', data.data.events.length, 'events');
         setEvents(data.data.events);
         calculateSummary(data.data.events);
+      } else {
+        console.log('❌ API returned error:', data);
       }
     } catch (error) {
-      console.error('Error fetching analytics events:', error);
+      console.error('❌ Error fetching analytics events:', error);
     } finally {
       setLoading(false);
     }
