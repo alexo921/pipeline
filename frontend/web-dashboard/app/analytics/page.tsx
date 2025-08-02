@@ -73,7 +73,7 @@ export default function AnalyticsPage() {
       
       // Get the API URL from environment
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      const response = await fetch(`${apiUrl}/api/analytics/events/batch?limit=1000`, {
+      const response = await fetch(`${apiUrl}/analytics/events/batch?limit=1000`, {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
