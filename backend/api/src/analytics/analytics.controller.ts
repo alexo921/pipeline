@@ -358,6 +358,55 @@ export class AnalyticsController {
     }
   }
 
+  @Get('users')
+  @UseGuards(AuthGuard('jwt'))
+  async getAllUsers(
+    @Req() req: any,
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+    @Query('search') search?: string,
+    @Query('role') role?: string
+  ) {
+    // Check if user is admin
+    if (req.user?.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
+    }
+
+    const limitNumber = limit ? parseInt(limit) : 100;
+    const offsetNumber = offset ? parseInt(offset) : 0;
+
+    try {
+      const users = await this.analyticsTrackingService.getAllUsers(limitNumber, offsetNumber, search, role);
+
+      return {
+        success: true,
+        data: {
+          users: users.users,
+          total: users.total,
+          pagination: {
+            limit: limitNumber,
+            offset: offsetNumber,
+            total: users.total
+          }
+        }
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        data: {
+          users: [],
+          total: 0,
+          pagination: {
+            limit: limitNumber,
+            offset: offsetNumber,
+            total: 0
+          }
+        }
+      };
+    }
+  }
+
   @Post('events/batch')
   @UseGuards(AuthGuard('jwt'))
   async postAnalyticsEventsBatch(

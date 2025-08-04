@@ -49,11 +49,29 @@ interface ActiveUser {
   lastActivity: string | null;
 }
 
+interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+  emailSubscribed: boolean;
+  emailVerified: boolean;
+  googleId?: string;
+  googlePicture?: string;
+  eventCount: number;
+  lastActivity: string | null;
+  lastEventType: string | null;
+}
+
 export default function AnalyticsPage() {
   const { user, showLoginModal } = useAuth();
   const router = useRouter();
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
   const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
   const [summary, setSummary] = useState<AnalyticsSummary>({
     totalEvents: 0,
     uniqueUsers: 0,
@@ -66,8 +84,11 @@ export default function AnalyticsPage() {
   });
   const [loading, setLoading] = useState(true);
   const [activeUsersLoading, setActiveUsersLoading] = useState(true);
+  const [usersLoading, setUsersLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [userSearchTerm, setUserSearchTerm] = useState('');
+  const [userRoleFilter, setUserRoleFilter] = useState('all');
 
   // Check authentication
   useEffect(() => {
@@ -162,6 +183,47 @@ export default function AnalyticsPage() {
     }
   };
 
+  // Fetch all users
+  const fetchAllUsers = async () => {
+    try {
+      setUsersLoading(true);
+      console.log('👥 Fetching all users...');
+      
+      const queryParams = new URLSearchParams({
+        limit: '100',
+        offset: '0'
+      });
+      
+      if (userSearchTerm) {
+        queryParams.append('search', userSearchTerm);
+      }
+      if (userRoleFilter !== 'all') {
+        queryParams.append('role', userRoleFilter);
+      }
+      
+      const response = await fetch(`/api/analytics/users?${queryParams.toString()}`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      const data = await response.json();
+      
+      console.log('👥 All users API response:', data);
+      
+      if (data.success) {
+        console.log('✅ Setting all users:', data.data.users.length, 'users');
+        setAllUsers(data.data.users);
+      } else {
+        console.log('❌ All users API returned error:', data);
+      }
+    } catch (error) {
+      console.error('❌ Error fetching all users:', error);
+    } finally {
+      setUsersLoading(false);
+    }
+  };
+
   // Calculate summary statistics
   const calculateSummary = (eventList: AnalyticsEvent[]) => {
     const uniqueUsers = new Set(eventList.map(e => e.userId).filter(Boolean)).size;
@@ -214,13 +276,22 @@ export default function AnalyticsPage() {
     if (user && user.role === 'ADMIN') {
       fetchEvents();
       fetchActiveUsers();
+      fetchAllUsers();
       const interval = setInterval(() => {
         fetchEvents();
         fetchActiveUsers();
+        fetchAllUsers();
       }, 30000);
       return () => clearInterval(interval);
     }
   }, [user]);
+
+  // Fetch users when search or role filter changes
+  useEffect(() => {
+    if (user && user.role === 'ADMIN') {
+      fetchAllUsers();
+    }
+  }, [userSearchTerm, userRoleFilter]);
 
   if (!user || user.role !== 'ADMIN') {
     return (
@@ -246,11 +317,18 @@ export default function AnalyticsPage() {
           <h1 className="text-3xl font-bold text-[#2466D0]">Analytics Dashboard</h1>
           <div className="flex gap-2">
             <button 
+              onClick={fetchAllUsers} 
+              disabled={usersLoading}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
+            >
+              {usersLoading ? 'Loading...' : 'Refresh All Users'}
+            </button>
+            <button 
               onClick={fetchActiveUsers} 
               disabled={activeUsersLoading}
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
             >
-              {activeUsersLoading ? 'Loading...' : 'Refresh Users'}
+              {activeUsersLoading ? 'Loading...' : 'Refresh Active Users'}
             </button>
             <button 
               onClick={fetchEvents} 
@@ -352,6 +430,96 @@ export default function AnalyticsPage() {
                           </div>
                         ))}
                       </div>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* All Users Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+          <h3 className="text-lg font-semibold mb-4 text-[#2466D0]">All Users</h3>
+          
+          {/* User Filters */}
+          <div className="mb-4 flex gap-4 flex-wrap">
+            <div className="flex-1 min-w-[200px]">
+              <input
+                type="text"
+                placeholder="Search users by name or email..."
+                value={userSearchTerm}
+                onChange={(e) => setUserSearchTerm(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2466D0] focus:border-[#2466D0]"
+              />
+            </div>
+            <select 
+              value={userRoleFilter} 
+              onChange={(e) => setUserRoleFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#2466D0] focus:border-[#2466D0]"
+            >
+              <option value="all">All Roles</option>
+              <option value="ADMIN">Admin</option>
+              <option value="CANDIDATE">Candidate</option>
+              <option value="EMPLOYER">Employer</option>
+            </select>
+          </div>
+
+          <div className="max-h-[500px] overflow-y-auto space-y-4">
+            {usersLoading ? (
+              <div className="text-center py-8 text-gray-500">Loading users...</div>
+            ) : allUsers.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">No users found</div>
+            ) : (
+              allUsers.map((user) => (
+                <div key={user.id} className="border border-gray-200 rounded-lg p-4 space-y-3 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                        {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">
+                          {user.firstName} {user.lastName}
+                        </h4>
+                        <p className="text-sm text-gray-600">{user.email}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            user.role === 'ADMIN' ? 'bg-red-100 text-red-800' :
+                            user.role === 'CANDIDATE' ? 'bg-blue-100 text-blue-800' :
+                            'bg-green-100 text-green-800'
+                          }`}>
+                            {user.role}
+                          </span>
+                          {user.emailVerified && (
+                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                              Verified
+                            </span>
+                          )}
+                          {user.googleId && (
+                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                              Google
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-medium text-purple-600">{user.eventCount} events</div>
+                      <div className="text-xs text-gray-500">
+                        Joined: {formatTimestamp(user.createdAt)}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        Last: {user.lastActivity ? formatTimestamp(user.lastActivity) : 'Never'}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {user.lastEventType && (
+                    <div className="mt-2">
+                      <span className="text-xs text-gray-600">
+                        Last activity: <span className="font-medium">{user.lastEventType.replace('_', ' ')}</span>
+                      </span>
                     </div>
                   )}
                 </div>

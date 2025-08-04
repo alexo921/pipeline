@@ -665,6 +665,102 @@ export class AnalyticsTrackingService {
     }
   }
 
+  async getAllUsers(
+    limit: number = 100,
+    offset: number = 0,
+    search?: string,
+    role?: string
+  ) {
+    try {
+      // Build where clause
+      const whereClause: any = {};
+      
+      if (search) {
+        whereClause.OR = [
+          { email: { contains: search, mode: 'insensitive' } },
+          { firstName: { contains: search, mode: 'insensitive' } },
+          { lastName: { contains: search, mode: 'insensitive' } }
+        ];
+      }
+      
+      if (role) {
+        whereClause.role = role;
+      }
+
+      // Get total count
+      const total = await this.prisma.users.count({
+        where: whereClause
+      });
+
+      // Get users with pagination
+      const users = await this.prisma.users.findMany({
+        where: whereClause,
+        orderBy: {
+          createdAt: 'desc'
+        },
+        skip: offset,
+        take: limit,
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+          emailSubscribed: true,
+          emailVerified: true,
+          googleId: true,
+          googlePicture: true
+        }
+      });
+
+      // Get analytics data for each user
+      const usersWithAnalytics = await Promise.all(
+        users.map(async (user) => {
+          // Get total events for this user
+          const eventCount = await this.prisma.analytics_events.count({
+            where: {
+              userId: user.id
+            }
+          });
+
+          // Get last activity
+          const lastEvent = await this.prisma.analytics_events.findFirst({
+            where: {
+              userId: user.id
+            },
+            orderBy: {
+              timestamp: 'desc'
+            },
+            select: {
+              timestamp: true,
+              eventType: true
+            }
+          });
+
+          return {
+            ...user,
+            eventCount,
+            lastActivity: lastEvent?.timestamp || null,
+            lastEventType: lastEvent?.eventType || null
+          };
+        })
+      );
+
+      return {
+        users: usersWithAnalytics,
+        total
+      };
+    } catch (error) {
+      console.error('Error fetching all users:', error);
+      return {
+        users: [],
+        total: 0
+      };
+    }
+  }
+
   async getAnalyticsEventsBatch(
     limit: number = 100,
     offset: number = 0,
