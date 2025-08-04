@@ -73,10 +73,16 @@ class AnalyticsService {
   private pagesVisited: number = 0;
 
   constructor() {
-    this.initializeSession();
+    // Only initialize on client side
+    if (typeof window !== 'undefined') {
+      this.initializeSession();
+    }
   }
 
   private initializeSession() {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Generate or retrieve session ID
     this.sessionId = localStorage.getItem('analytics_session_id') || this.generateSessionId();
     localStorage.setItem('analytics_session_id', this.sessionId);
@@ -99,6 +105,9 @@ class AnalyticsService {
   }
 
   private getUserId(): string | undefined {
+    // Only run on client side
+    if (typeof window === 'undefined') return undefined;
+    
     // Get user ID from localStorage or context
     const userStr = localStorage.getItem('user');
     if (userStr) {
@@ -219,6 +228,9 @@ class AnalyticsService {
 
   // Public tracking methods
   async trackJobView(data: JobViewEvent) {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const event: AnalyticsEvent = {
       eventType: 'job_view',
       eventData: data,
@@ -231,6 +243,9 @@ class AnalyticsService {
   }
 
   async trackJobApply(data: JobApplyEvent) {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const event: AnalyticsEvent = {
       eventType: 'job_apply',
       eventData: data,
@@ -243,6 +258,9 @@ class AnalyticsService {
   }
 
   async trackSearch(data: SearchEvent) {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const event: AnalyticsEvent = {
       eventType: 'search',
       eventData: data,
@@ -255,6 +273,9 @@ class AnalyticsService {
   }
 
   async trackFilter(data: FilterEvent) {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const event: AnalyticsEvent = {
       eventType: 'filter',
       eventData: data,
@@ -267,6 +288,9 @@ class AnalyticsService {
   }
 
   async trackUserRegistration(data: UserRegistrationEvent) {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const event: AnalyticsEvent = {
       eventType: 'user_registration',
       eventData: data,
@@ -279,6 +303,9 @@ class AnalyticsService {
   }
 
   async trackJobSave(data: JobSaveEvent) {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const event: AnalyticsEvent = {
       eventType: 'job_save',
       eventData: data,
@@ -291,6 +318,9 @@ class AnalyticsService {
   }
 
   private async trackPageView() {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     this.pagesVisited++;
     
     const event: AnalyticsEvent = {
@@ -308,13 +338,16 @@ class AnalyticsService {
     return await this.trackEvent(event);
   }
 
-  private async trackSession(action: 'start' | 'end') {
+    private async trackSession(action: 'start' | 'end') {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     let sessionDuration: number | undefined;
     
     if (action === 'end' && this.sessionStartTime) {
       sessionDuration = Math.floor((Date.now() - this.sessionStartTime) / 1000);
     }
-
+    
     const event: AnalyticsEvent = {
       eventType: 'session',
       eventData: {
@@ -332,6 +365,9 @@ class AnalyticsService {
 
   // Utility method to track custom events
   async trackCustomEvent(eventType: string, eventData: Record<string, any>) {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     const event: AnalyticsEvent = {
       eventType,
       eventData,
