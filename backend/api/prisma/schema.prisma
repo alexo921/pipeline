@@ -44,6 +44,9 @@ model users {
   lastName        String
   emailSubscribed Boolean        @default(true)
   unsubscribedAt  DateTime?
+  googleId        String?        @unique // Google OAuth ID
+  googlePicture   String?        // Google profile picture URL
+  emailVerified   Boolean        @default(false) // Whether email is verified by Google
   applied_jobs    applied_jobs[]
   candidate       candidates?
   saved_jobs      saved_jobs[]

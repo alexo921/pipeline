@@ -94,8 +94,9 @@ export class AuthService {
   }
 
   async findOrCreateUser(userInfo: GoogleUserInfo): Promise<users> {
-    const existingUser = await this.prismaService.users.findUnique({
-      where: { email: userInfo.email },
+    // First try to find by Google ID if available
+    let existingUser = userInfo.id ? await this.prismaService.users.findUnique({
+      where: { googleId: userInfo.id },
       include: {
         candidate: {
           select: {
@@ -103,9 +104,34 @@ export class AuthService {
           },
         },
       },
-    });
+    }) : null;
+
+    // If not found by Google ID, try by email
+    if (!existingUser) {
+      existingUser = await this.prismaService.users.findUnique({
+        where: { email: userInfo.email },
+        include: {
+          candidate: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
+    }
 
     if (existingUser) {
+      // Update existing user with Google information if not already set
+      if (!existingUser.googleId && userInfo.id) {
+        await this.prismaService.users.update({
+          where: { id: existingUser.id },
+          data: {
+            googleId: userInfo.id,
+            googlePicture: userInfo.picture,
+            emailVerified: userInfo.verified_email,
+          },
+        });
+      }
       return existingUser;
     }
 
@@ -119,7 +145,10 @@ export class AuthService {
         firstName,
         lastName,
         email: userInfo.email,
-        password: '',
+        password: '', // Google OAuth users don't need a password
+        googleId: userInfo.id,
+        googlePicture: userInfo.picture,
+        emailVerified: userInfo.verified_email,
       },
       include: {
         candidate: {
