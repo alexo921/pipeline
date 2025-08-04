@@ -82,10 +82,10 @@ export default function AnalyticsPage() {
       
       console.log('📊 Analytics API response:', data);
       
-      if (data.success) {
-        console.log('✅ Setting events:', data.data.events.length, 'events');
-        setEvents(data.data.events);
-        calculateSummary(data.data.events);
+      if (data.isSuccess || data.success) {
+        console.log('✅ Setting events:', data.data.data.events.length, 'events');
+        setEvents(data.data.data.events);
+        calculateSummary(data.data.data.events);
       } else {
         console.log('❌ API returned error:', data);
       }
