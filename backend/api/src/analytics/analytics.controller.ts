@@ -319,6 +319,45 @@ export class AnalyticsController {
     }
   }
 
+  @Get('active-users')
+  @UseGuards(AuthGuard('jwt'))
+  async getActiveUsers(
+    @Req() req: any,
+    @Query('days') days?: string,
+    @Query('limit') limit?: string
+  ) {
+    // Check if user is admin
+    if (req.user?.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required');
+    }
+
+    const daysNumber = days ? parseInt(days) : 7; // Default to 7 days for active users
+    const limitNumber = limit ? parseInt(limit) : 50;
+
+    try {
+      const activeUsers = await this.analyticsTrackingService.getActiveUsers(daysNumber, limitNumber);
+
+      return {
+        success: true,
+        data: {
+          activeUsers: activeUsers,
+          total: activeUsers.length,
+          period: `${daysNumber} days`
+        }
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        data: {
+          activeUsers: [],
+          total: 0,
+          period: `${daysNumber} days`
+        }
+      };
+    }
+  }
+
   @Post('events/batch')
   @UseGuards(AuthGuard('jwt'))
   async postAnalyticsEventsBatch(

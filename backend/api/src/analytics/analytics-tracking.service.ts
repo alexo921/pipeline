@@ -562,6 +562,109 @@ export class AnalyticsTrackingService {
     }
   }
 
+  async getActiveUsers(
+    days: number = 7,
+    limit: number = 50
+  ) {
+    try {
+      const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+      // Get users who have had activity in the last N days
+      const activeUsers = await this.prisma.analytics_events.groupBy({
+        by: ['userId'],
+        where: {
+          userId: {
+            not: null
+          },
+          timestamp: {
+            gte: cutoffDate
+          }
+        },
+        _count: {
+          eventType: true
+        },
+        orderBy: {
+          _count: {
+            eventType: 'desc'
+          }
+        },
+        take: limit
+      });
+
+      // Get user details for active users
+      const userIds = activeUsers.map(user => user.userId).filter((id): id is string => id !== null);
+      
+      if (userIds.length === 0) {
+        return [];
+      }
+
+      const userDetails = await this.prisma.users.findMany({
+        where: {
+          id: {
+            in: userIds
+          }
+        },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          createdAt: true,
+          updatedAt: true
+        }
+      });
+
+      // Get recent activity for each user
+      const userActivity = await Promise.all(
+        userIds.map(async (userId) => {
+          const recentEvents = await this.prisma.analytics_events.findMany({
+            where: {
+              userId: userId,
+              timestamp: {
+                gte: cutoffDate
+              }
+            },
+            orderBy: {
+              timestamp: 'desc'
+            },
+            take: 5, // Last 5 events
+            select: {
+              eventType: true,
+              timestamp: true,
+              eventData: true
+            }
+          });
+
+          return {
+            userId,
+            recentEvents
+          };
+        })
+      );
+
+      // Combine user details with activity data
+      return userDetails.map(user => {
+        const activity = userActivity.find(a => a.userId === user.id);
+        const userStats = activeUsers.find(u => u.userId === user.id);
+        
+        return {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          createdAt: user.createdAt,
+          lastLoginAt: user.updatedAt, // Using updatedAt as proxy for lastLoginAt
+          eventCount: userStats?._count.eventType || 0,
+          recentEvents: activity?.recentEvents || [],
+          lastActivity: activity?.recentEvents[0]?.timestamp || null
+        };
+      });
+    } catch (error) {
+      console.error('Error fetching active users:', error);
+      return [];
+    }
+  }
+
   async getAnalyticsEventsBatch(
     limit: number = 100,
     offset: number = 0,

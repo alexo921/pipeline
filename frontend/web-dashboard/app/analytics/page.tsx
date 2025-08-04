@@ -14,6 +14,12 @@ interface AnalyticsEvent {
   userAgent?: string;
   source: 'pipeline_web';
   version: string;
+  user?: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
 }
 
 interface AnalyticsSummary {
@@ -27,10 +33,27 @@ interface AnalyticsSummary {
   sessions: number;
 }
 
+interface ActiveUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  createdAt: string;
+  lastLoginAt: string;
+  eventCount: number;
+  recentEvents: Array<{
+    eventType: string;
+    timestamp: string;
+    eventData: Record<string, any>;
+  }>;
+  lastActivity: string | null;
+}
+
 export default function AnalyticsPage() {
   const { user, showLoginModal } = useAuth();
   const router = useRouter();
   const [events, setEvents] = useState<AnalyticsEvent[]>([]);
+  const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);
   const [summary, setSummary] = useState<AnalyticsSummary>({
     totalEvents: 0,
     uniqueUsers: 0,
@@ -42,6 +65,7 @@ export default function AnalyticsPage() {
     sessions: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [activeUsersLoading, setActiveUsersLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -84,8 +108,21 @@ export default function AnalyticsPage() {
       
       if (data.isSuccess || data.success) {
         console.log('✅ Setting events:', data.data.data.events.length, 'events');
-        setEvents(data.data.data.events);
-        calculateSummary(data.data.data.events);
+        // Filter out analytics page events to avoid self-tracking
+        const filteredEvents = data.data.data.events.filter((event: AnalyticsEvent) => {
+          const eventData = event.eventData;
+          // Exclude events from analytics page
+          if (eventData.pagePath && eventData.pagePath.includes('/analytics')) {
+            return false;
+          }
+          // Exclude events from analytics dashboard
+          if (eventData.pageTitle && eventData.pageTitle.toLowerCase().includes('analytics')) {
+            return false;
+          }
+          return true;
+        });
+        setEvents(filteredEvents);
+        calculateSummary(filteredEvents);
       } else {
         console.log('❌ API returned error:', data);
       }
@@ -93,6 +130,35 @@ export default function AnalyticsPage() {
       console.error('❌ Error fetching analytics events:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Fetch active users
+  const fetchActiveUsers = async () => {
+    try {
+      setActiveUsersLoading(true);
+      console.log('👥 Fetching active users...');
+      
+      const response = await fetch(`/api/analytics/active-users?days=7&limit=50`, {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      const data = await response.json();
+      
+      console.log('👥 Active users API response:', data);
+      
+      if (data.success) {
+        console.log('✅ Setting active users:', data.data.activeUsers.length, 'users');
+        setActiveUsers(data.data.activeUsers);
+      } else {
+        console.log('❌ Active users API returned error:', data);
+      }
+    } catch (error) {
+      console.error('❌ Error fetching active users:', error);
+    } finally {
+      setActiveUsersLoading(false);
     }
   };
 
@@ -147,7 +213,11 @@ export default function AnalyticsPage() {
   useEffect(() => {
     if (user && user.role === 'ADMIN') {
       fetchEvents();
-      const interval = setInterval(fetchEvents, 30000);
+      fetchActiveUsers();
+      const interval = setInterval(() => {
+        fetchEvents();
+        fetchActiveUsers();
+      }, 30000);
       return () => clearInterval(interval);
     }
   }, [user]);
@@ -174,13 +244,22 @@ export default function AnalyticsPage() {
       <div className="container mx-auto p-6 space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-[#2466D0]">Analytics Dashboard</h1>
-          <button 
-            onClick={fetchEvents} 
-            disabled={loading}
-            className="px-4 py-2 bg-[#2466D0] text-white rounded-lg hover:bg-[#1e5bb8] disabled:opacity-50 transition-colors"
-          >
-            {loading ? 'Loading...' : 'Refresh'}
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={fetchActiveUsers} 
+              disabled={activeUsersLoading}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+            >
+              {activeUsersLoading ? 'Loading...' : 'Refresh Users'}
+            </button>
+            <button 
+              onClick={fetchEvents} 
+              disabled={loading}
+              className="px-4 py-2 bg-[#2466D0] text-white rounded-lg hover:bg-[#1e5bb8] disabled:opacity-50 transition-colors"
+            >
+              {loading ? 'Loading...' : 'Refresh Events'}
+            </button>
+          </div>
         </div>
 
         {/* Summary Cards */}
@@ -224,6 +303,60 @@ export default function AnalyticsPage() {
           <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
             <h3 className="text-sm font-medium text-gray-500 mb-2">Registrations</h3>
             <p className="text-2xl font-bold text-[#2466D0]">{summary.registrations.toLocaleString()}</p>
+          </div>
+        </div>
+
+        {/* Active Users Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+          <h3 className="text-lg font-semibold mb-4 text-[#2466D0]">Active Users (Last 7 Days)</h3>
+          <div className="max-h-[400px] overflow-y-auto space-y-4">
+            {activeUsersLoading ? (
+              <div className="text-center py-8 text-gray-500">Loading active users...</div>
+            ) : activeUsers.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">No active users found</div>
+            ) : (
+              activeUsers.map((user) => (
+                <div key={user.id} className="border border-gray-200 rounded-lg p-4 space-y-3 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-[#2466D0] rounded-full flex items-center justify-center text-white font-semibold">
+                        {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900">
+                          {user.firstName} {user.lastName}
+                        </h4>
+                        <p className="text-sm text-gray-600">{user.email}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-medium text-[#2466D0]">{user.eventCount} events</div>
+                      <div className="text-xs text-gray-500">
+                        Last: {user.lastActivity ? formatTimestamp(user.lastActivity) : 'Never'}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {user.recentEvents.length > 0 && (
+                    <div className="mt-3">
+                      <h5 className="text-sm font-medium text-gray-700 mb-2">Recent Activity:</h5>
+                      <div className="space-y-1">
+                        {user.recentEvents.slice(0, 3).map((event, index) => (
+                          <div key={index} className="flex items-center gap-2 text-xs">
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getEventTypeColor(event.eventType)}`}>
+                              {event.eventType.replace('_', ' ')}
+                            </span>
+                            <span className="text-gray-600">
+                              {formatTimestamp(event.timestamp)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
           </div>
         </div>
 
@@ -272,9 +405,19 @@ export default function AnalyticsPage() {
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getEventTypeColor(event.eventType)}`}>
                         {event.eventType.replace('_', ' ')}
                       </span>
-                      {event.userId && (
+                      {event.user && (
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-1 border border-gray-300 rounded text-xs bg-blue-50 text-blue-700">
+                            {event.user.firstName} {event.user.lastName}
+                          </span>
+                          <span className="px-2 py-1 border border-gray-300 rounded text-xs bg-gray-50 text-gray-600">
+                            {event.user.email}
+                          </span>
+                        </div>
+                      )}
+                      {event.userId && !event.user && (
                         <span className="px-2 py-1 border border-gray-300 rounded text-xs bg-gray-50">
-                          User: {event.userId}
+                          User ID: {event.userId}
                         </span>
                       )}
                     </div>
