@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "../contexts/AuthContext";
 import { signupBasicSchema } from "../schemas/AuthSchema";
+import { analyticsService } from "../services/analytics.service";
 
 // Basic signup schema
 type SignupBasicSchema = z.infer<typeof signupBasicSchema>;
@@ -88,6 +89,14 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
       }
 
       await refreshUser();
+      
+      // Track user registration analytics
+      analyticsService.trackUserRegistration({
+        registrationMethod: 'email',
+        source: 'job_board',
+        userId: result.data?.user?.id || 'unknown',
+      });
+      
       setIsStep1(false); // Move to step 2 after successful signup
       onStep2?.(); // Call onStep2 callback when moving to step 2
     } catch (error: unknown) {

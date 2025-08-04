@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useAuth } from '../contexts/AuthContext';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { analyticsService } from '../services/analytics.service';
 
 interface BaseAuthModalFormProps {
     onClose: () => void;
@@ -57,6 +58,13 @@ const AuthModalForm: React.FC<BaseAuthModalFormProps> = ({ onClose, onSwitchToSi
       }
 
       await refreshUser();
+
+      // Track successful login analytics
+      analyticsService.trackCustomEvent('user_login', {
+        method: 'email',
+        source: 'job_board',
+        userId: result.data?.user?.id || 'unknown',
+      });
 
       handleClose();
     } catch (error: unknown) {
