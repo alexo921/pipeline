@@ -23,7 +23,12 @@ const loadJobData = async (shouldShuffle: boolean = true): Promise<Job[]> => {
       '/site_Genesis_20250716_222027_enhanced.json', // Brightstar jobs (enhanced)
       '/ct_healthcare_jobs_1000_20250623_165457.json', 
       '/site_iCare_Health_Network_20250716_204824_enhanced.json',
-      '/site_RydersHealth_20250716_181012_enhanced.json'
+      '/site_RydersHealth_20250716_181012_enhanced.json',
+      // New Atlas Healthcare job files
+      '/apploi_jobs_Atlas_Healthcare_20250804_184000.json',
+      '/apploi_jobs_Atlas_Healthcare_20250801_153346.json',
+      '/apploi_jobs_Atlas_Healthcare_20250731_170017.json',
+      '/apploi_jobs_Atlas_Healthcare_20250730_012126.json'
     ];
     
     // Load data from each file
