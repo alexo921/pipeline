@@ -1,0 +1,87 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+xgboost-env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# PyTorch
+*.pth
+*.pt
+
+# Data files (large files)
+*.csv
+*.json
+*.parquet
+*.h5
+*.hdf5
+
+# Model checkpoints
+experiments/*/best_model.pth
+experiments/*/training_history.png
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# AWS
+.aws/
+
+# SSH
+.ssh/
+
+# Cache
+.cache/
+.keras/
+
+# Cursor
+.cursor-server/
+
+# History files
+.bash_history
+.python_history
+.sudo_as_admin_successful

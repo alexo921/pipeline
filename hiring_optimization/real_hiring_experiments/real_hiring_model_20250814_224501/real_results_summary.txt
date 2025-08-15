@@ -1,0 +1,21 @@
+Real Hiring Data Model Results
+=========================================
+Experiment: real_hiring_model_20250814_224501
+Date: 2025-08-14 22:45:31
+
+Data Summary:
+  Real candidates: 961
+  Real jobs: 75
+  Training pairs: 30,000
+  Positive rate: 3.2%
+
+Model Configuration:
+  Candidate features: 524
+  Job features: 504
+  Embedding dimension: 128
+  Model parameters: 925,441
+
+Final Results:
+  Test Loss: 0.3416
+  Test AUC-ROC: 0.8088
+  Test Average Precision: 0.2012

@@ -1,0 +1,34 @@
+Improved Healthcare Hiring Model Results
+===================================================
+Experiment: improved_healthcare_model_20250814_230258
+Date: 2025-08-14 23:44:58
+
+Improvements Made:
+  ✅ Data balancing with 5x positive pair oversampling
+  ✅ Temperature scaling for better similarity distribution
+  ✅ Gradient clipping for training stability
+  ✅ Enhanced model architecture (256D embeddings)
+  ✅ Improved learning rate scheduling
+
+Data Summary:
+  Healthcare candidates: 961
+  Healthcare jobs: 75
+  Training pairs: 30,000
+  Original positive rate: 3.2%
+  Balanced positive rate: ~16.0%
+
+Model Configuration:
+  Candidate features: 524
+  Job features: 504
+  Embedding dimension: 256
+  Model parameters: 2,637,313
+
+Final Results:
+  Test Loss: 0.0241
+  Test AUC-ROC: 0.9980
+  Test Average Precision: 0.9993
+
+Healthcare Focus:
+  Target roles: CNA, RN, LPN, Physical Therapist, etc.
+  Settings: Nursing homes, hospitals, home health
+  Skills matching: Medical terminology, patient care, certifications

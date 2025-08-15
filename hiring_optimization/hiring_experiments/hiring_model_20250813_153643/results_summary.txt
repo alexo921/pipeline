@@ -1,0 +1,25 @@
+Hiring Optimization Model Results
+=========================================
+Experiment: hiring_model_20250813_153643
+Date: 2025-08-13 15:37:04
+
+Model Configuration:
+  Candidate features: 34
+  Job features: 46
+  Embedding dimension: 128
+  Model parameters: 154,753
+
+Training Configuration:
+  Epochs: 18
+  Batch size: 128
+  Learning rate: 0.001
+  Training samples: 14,000
+  Validation samples: 3,000
+  Test samples: 3,000
+
+Final Results:
+  Test Loss: 0.4535
+  Test AUC-ROC: 0.6845
+  Test Average Precision: 0.2407
+  Total candidates: 1000
+  Total jobs: 50
