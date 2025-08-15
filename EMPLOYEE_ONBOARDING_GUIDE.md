@@ -146,13 +146,39 @@ two_tower_model/
 
 ## 🚀 Getting Started
 
+### Repository Setup
+This project is part of the [Pipeline repository](https://github.com/alexo921/pipeline) under the `hiring-optimization` branch.
+
+#### **Clone the Repository**
+```bash
+# Clone the main pipeline repository
+git clone https://github.com/alexo921/pipeline.git
+cd pipeline
+
+# Switch to the hiring optimization branch
+git checkout hiring-optimization
+```
+
+#### **Repository Structure**
+```
+pipeline/
+├── hiring-optimization/          # 🎯 HIRING SYSTEM (this project)
+│   ├── hiring_model.py          # Core two-tower model
+│   ├── hiring_trainer.py        # Training pipeline
+│   ├── data_loader.py           # Data processing utilities
+│   └── ...                      # All hiring optimization files
+├── frontend/                     # Web dashboard
+├── backend/                      # API services
+└── ...                          # Other pipeline components
+```
+
 ### Prerequisites
 ```bash
 # Python environment (already set up)
 source xgboost-env/bin/activate
 
-# Navigate to project
-cd two_tower_model
+# Navigate to hiring optimization project
+cd hiring-optimization
 ```
 
 ### Quick Start
@@ -385,6 +411,79 @@ model.debug_mode = True
 2. **Train the model**: `cd hiring_optimization && python train_hiring_model.py`
 3. **Test inference**: `python use_trained_model.py`
 4. **Review results**: Check `experiments/` directory
+
+### Creating Pull Requests (Git Workflow)
+When contributing to the project, follow this workflow:
+
+#### 1. **Create a Feature Branch**
+```bash
+# Make sure you're on main and up to date
+git checkout main
+git pull origin main
+
+# Create and switch to a new feature branch
+git checkout -b feature/your-feature-name
+```
+
+#### 2. **Make Your Changes**
+```bash
+# Edit files, run tests, etc.
+# Then stage and commit your changes
+git add .
+git commit -m "feat: add your feature description"
+```
+
+#### 3. **Push Your Branch**
+```bash
+# Push your feature branch to GitHub
+git push -u origin feature/your-feature-name
+```
+
+#### 4. **Create Pull Request**
+- Go to: https://github.com/alexo921/pipeline
+- Click "Compare & pull request" button (appears after pushing)
+- Or manually create: https://github.com/alexo921/pipeline/pull/new/feature/your-feature-name
+
+#### 5. **PR Template**
+Use this format for your pull request:
+```markdown
+## 🎯 What does this PR do?
+Brief description of changes
+
+## 🔍 What was changed?
+- [ ] Feature A
+- [ ] Bug fix B
+- [ ] Documentation update C
+
+## 🧪 How was it tested?
+- [ ] Unit tests
+- [ ] Integration tests
+- [ ] Manual testing
+
+## 📸 Screenshots (if applicable)
+Add screenshots here
+
+## ✅ Checklist
+- [ ] Code follows project style guidelines
+- [ ] Self-review completed
+- [ ] Documentation updated
+- [ ] Tests added/updated
+```
+
+#### 6. **Code Review Process**
+1. **Self-Review**: Review your own code first
+2. **Team Review**: Request reviews from team members
+3. **Address Feedback**: Make requested changes
+4. **Merge**: Once approved, merge to main branch
+
+#### 7. **Clean Up**
+```bash
+# After successful merge, clean up your branch
+git checkout main
+git pull origin main
+git branch -d feature/your-feature-name
+git push origin --delete feature/your-feature-name
+```
 
 ### Short-term Goals (Month 1)
 1. **Data Integration**: Connect to your actual hiring data sources
