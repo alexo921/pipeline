@@ -218,6 +218,52 @@ model analytics_events {
   @@index([timestamp])
 }
 
+// Intake form models
+model employer_intake_forms {
+  id                    String   @id @default(uuid())
+  companyName           String
+  contactName           String
+  email                 String
+  phone                 String?
+  companySize           String?
+  industry              String?
+  hiringNeeds          String?
+  location              String?
+  additionalInfo        String?
+  submittedAt           DateTime @default(now())
+  status               String   @default("pending") // pending, reviewed, contacted, archived
+  notes                String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([submittedAt])
+}
+
+model employee_intake_forms {
+  id                    String   @id @default(uuid())
+  firstName             String
+  lastName              String
+  email                 String
+  phone                 String?
+  currentRole           String?
+  experience            String?
+  preferredLocation     String?
+  availability          String?
+  salaryExpectations    String?
+  additionalInfo        String?
+  submittedAt           DateTime @default(now())
+  status               String   @default("pending") // pending, reviewed, contacted, archived
+  notes                String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([submittedAt])
+}
+
 enum Role {
   CANDIDATE
   EMPLOYER

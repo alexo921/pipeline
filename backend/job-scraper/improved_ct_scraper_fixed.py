@@ -808,17 +808,24 @@ class ImprovedCTJobScraper:
             # IMMEDIATE CORRUPTION CHECK - catch it before any processing
             if isinstance(page, dict):
                 self.logger.error("❌ Page is corrupted (dict) in _extract_apploi_job_data, skipping job")
-                return job_details
+                raise Exception("PAGE_CORRUPTION_DETECTED")
             
             # Check for page corruption first
             if isinstance(page, dict):
                 self.logger.error("❌ Page is corrupted (dict) in _extract_apploi_job_data, skipping job")
-                return job_details
+                raise Exception("PAGE_CORRUPTION_DETECTED")
             
             # Validate that page is actually a Playwright Page object
             if not hasattr(page, 'query_selector'):
                 self.logger.error(f"❌ page is not a Playwright Page object in _extract_apploi_job_data: {type(page)}")
-                return job_details
+                raise Exception("PAGE_CORRUPTION_DETECTED")
+                
+            # Wait for Apploi content to load
+            try:
+                page.wait_for_selector('script[type="application/ld+json"]', timeout=5000)
+            except Exception as e:
+                self.logger.error(f"❌ Page corruption detected during Apploi content wait, skipping job")
+                raise Exception("PAGE_CORRUPTION_DETECTED")
             
             # Try to extract JSON-LD data
             json_ld_data = self._extract_json_ld_data(page)
@@ -2230,6 +2237,13 @@ class ImprovedCTJobScraper:
                             self.failed_urls.add(job_url)
                             self.logger.info(f"📝 Added {job_url} to failed URLs list")
                             job_corrupted = True
+                            
+                            # Force browser recreation on corruption
+                            if self._recreate_browser_context():
+                                self.logger.info("✅ Successfully recreated browser context after corruption")
+                            else:
+                                self.logger.error("❌ Failed to recreate browser context, stopping scraper")
+                                return site_jobs
                             break
                             
                         try:

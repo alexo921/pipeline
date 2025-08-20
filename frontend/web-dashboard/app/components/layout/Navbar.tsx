@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { LogOut, User, ChevronDown, BarChart3 } from "lucide-react";
+import { LogOut, User, ChevronDown, BarChart3, FileText } from "lucide-react";
 
 type NavbarProps = {
   onLoginClick: () => void;
@@ -81,6 +81,28 @@ const Navbar: React.FC<NavbarProps> = ({
               >
                 Find Jobs
               </Link>
+              
+              <Link
+                href="/employer-intake"
+                className={`text-sm font-medium transition-colors px-4 py-2 rounded-full font-avenir ${
+                  pathname === "/employer-intake"
+                    ? "bg-[#01253F] text-white"
+                    : "text-slate-700"
+                }`}
+              >
+                Hire Talent
+              </Link>
+              
+              <Link
+                href="/employee-intake"
+                className={`text-sm font-medium transition-colors px-4 py-2 rounded-full font-avenir ${
+                  pathname === "/employee-intake"
+                    ? "bg-[#01253F] text-white"
+                    : "text-slate-700"
+                }`}
+              >
+                Find Work
+              </Link>
 
               {/* User Icon with Dropdown or Login Button */}
               {user ? (
@@ -107,6 +129,18 @@ const Navbar: React.FC<NavbarProps> = ({
                         >
                           <BarChart3 className="w-4 h-4" />
                           <span>Analytics</span>
+                        </Link>
+                      )}
+                      
+                      {/* Intake Forms Dashboard (Admin Only) */}
+                      {user.role === 'ADMIN' && (
+                        <Link
+                          href="/admin/intake-forms"
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                          onClick={() => setIsUserDropdownOpen(false)}
+                        >
+                          <FileText className="w-4 h-4" />
+                          <span>Intake Forms</span>
                         </Link>
                       )}
                       {/* Sign Out Option */}

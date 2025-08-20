@@ -1,14 +1,9 @@
 {
-  "current_site_index": 0,
-  "current_job_index": 14,
-  "current_site_name": "RydersHealth",
+  "current_site_index": 26,
+  "current_job_index": 0,
+  "current_site_name": "Aaron Manor Nursing and Rehabilitation Center",
   "scraped_jobs": [],
   "site_jobs": [],
-  "failed_urls": [
-    "https://jobs.apploi.com/view/877843?utm_campaign=jobs_snippet&utm_source=Ryders_Health_Management-career-page&utm_medium=client-web-site&utm_term=apploi-snippet&_=1753468527.5839765",
-    "https://jobs.apploi.com/view/1439065?utm_campaign=jobs_snippet&utm_source=Ryders_Health_Management-career-page&utm_medium=client-web-site&utm_term=apploi-snippet&_=1753468274.059498",
-    "https://jobs.apploi.com/view/1439065?utm_campaign=jobs_snippet&utm_source=Ryders_Health_Management-career-page&utm_medium=client-web-site&utm_term=apploi-snippet&_=1753467150.221748",
-    "https://jobs.apploi.com/view/877843?utm_campaign=jobs_snippet&utm_source=Ryders_Health_Management-career-page&utm_medium=client-web-site&utm_term=apploi-snippet&_=1753469271.0406475"
-  ],
-  "last_activity_time": 1754330938.2058997
+  "failed_urls": [],
+  "last_activity_time": 1754366271.4901466
 }

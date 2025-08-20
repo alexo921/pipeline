@@ -15,6 +15,7 @@ import { JobsService } from './email/jobs.service';
 import { QueueModule } from './queue/queue.module';
 import { UnsubscribeModule } from './unsubscribe/unsubscribe.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { IntakeFormsModule } from './intake-forms/intake-forms.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
     EmailModule,
     UnsubscribeModule,
     AnalyticsModule,
+    IntakeFormsModule,
     EventEmitterModule.forRoot(),
   ],
   providers: [UserEventsListener, JobsService],

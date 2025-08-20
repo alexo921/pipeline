@@ -101,6 +101,22 @@ export default function MobileMenu({ isOpen, onClose, onLoginClick }: MobileMenu
               Find Jobs
             </Link>
             
+            <Link
+              href="/employer-intake"
+              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
+              onClick={onClose}
+            >
+              Hire Talent
+            </Link>
+            
+            <Link
+              href="/employee-intake"
+              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
+              onClick={onClose}
+            >
+              Find Work
+            </Link>
+            
             {user ? (
               <>
                 <Link
