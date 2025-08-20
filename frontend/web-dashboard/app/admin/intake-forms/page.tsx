@@ -62,7 +62,7 @@ export default function AdminIntakeFormsPage() {
 
   const fetchIntakeForms = async () => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://18.119.0.100:3005';
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
       
       // Fetch employer forms
       const employerResponse = await fetch(`${backendUrl}/intake-forms/employer`);
@@ -86,7 +86,7 @@ export default function AdminIntakeFormsPage() {
 
   const updateFormStatus = async (type: 'employer' | 'employee', id: string, status: string, notes?: string) => {
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://18.119.0.100:3005';
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
       const response = await fetch(`${backendUrl}/intake-forms/${type}/${id}/status`, {
         method: 'PUT',
         headers: {

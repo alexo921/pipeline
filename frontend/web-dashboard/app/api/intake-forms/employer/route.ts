@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     
     // Get the backend URL from environment variable or use default
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://18.119.0.100:3005';
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
     
     const response = await fetch(`${backendUrl}/intake-forms/employer`, {
       method: 'POST',
