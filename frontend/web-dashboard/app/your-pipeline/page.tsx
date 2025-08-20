@@ -24,13 +24,15 @@ const YourPipelinePage = () => {
       return;
     }
     
-    // If user IS an employer (and not admin), redirect to MyPipeline
+    // Only redirect non-admin employers to MyPipeline
+    // Admin users should be able to access both pages
     if (user.role === 'EMPLOYER') {
       router.push('/my-pipeline');
     }
   }, [user, router]);
 
   // Show loading while checking user role
+  // Allow admin users and employees/users, only block employers
   if (!user || user.role === 'EMPLOYER') {
     return (
       <BaseLayout>

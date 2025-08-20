@@ -21,21 +21,14 @@ const MyPipelinePage = () => {
 
   // Check if user is logged in and is an employer OR admin
   useEffect(() => {
-    console.log('MyPipeline auth check - user:', user);
-    console.log('MyPipeline auth check - user role:', user?.role);
-    
     if (!user) {
-      console.log('No user found, redirecting to home');
       router.push('/');
       return;
     }
     
     // Allow access if user is employer OR admin
     if (user.role !== 'EMPLOYER' && user.role !== 'ADMIN') {
-      console.log('User is not employer or admin, redirecting to your-pipeline');
       router.push('/your-pipeline');
-    } else {
-      console.log('User is employer or admin, allowing access to my-pipeline');
     }
   }, [user, router]);
 
