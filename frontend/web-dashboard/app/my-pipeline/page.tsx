@@ -52,36 +52,42 @@ const MyPipelinePage = () => {
   // Force grid layout on desktop
   useEffect(() => {
     console.log('Grid layout effect running, window width:', window.innerWidth);
+    console.log('Grid ref available:', !!gridRef.current);
     
-    if (gridRef.current && window.innerWidth >= 1024) {
-      console.log('Forcing desktop grid layout');
-      const grid = gridRef.current;
-      
-      // Force the grid layout
-      grid.style.display = 'grid';
-      grid.style.gridTemplateColumns = '1fr 2fr';
-      grid.style.gap = '2rem';
-      grid.style.width = '100%';
-      
-      // Also force the column spans
-      const leftCol = grid.querySelector('[data-col="left"]') as HTMLElement;
-      const rightCol = grid.querySelector('[data-col="right"]') as HTMLElement;
-      
-      if (leftCol) {
-        leftCol.style.gridColumn = '1 / 2';
-        leftCol.style.width = '100%';
+    // Wait for next tick to ensure DOM is ready
+    const timer = setTimeout(() => {
+      if (gridRef.current && window.innerWidth >= 1024) {
+        console.log('Forcing desktop grid layout');
+        const grid = gridRef.current;
+        
+        // Force the grid layout
+        grid.style.display = 'grid';
+        grid.style.gridTemplateColumns = '1fr 2fr';
+        grid.style.gap = '2rem';
+        grid.style.width = '100%';
+        
+        // Also force the column spans
+        const leftCol = grid.querySelector('[data-col="left"]') as HTMLElement;
+        const rightCol = grid.querySelector('[data-col="right"]') as HTMLElement;
+        
+        if (leftCol) {
+          leftCol.style.gridColumn = '1 / 2';
+          leftCol.style.width = '100%';
+        }
+        
+        if (rightCol) {
+          rightCol.style.gridColumn = '2 / 3';
+          rightCol.style.width = '100%';
+        }
+        
+        console.log('Grid layout applied:', grid.style.display, grid.style.gridTemplateColumns);
+      } else {
+        console.log('Not desktop or grid ref not found. Width:', window.innerWidth, 'Ref:', !!gridRef.current);
       }
-      
-      if (rightCol) {
-        rightCol.style.gridColumn = '2 / 3';
-        rightCol.style.width = '100%';
-      }
-      
-      console.log('Grid layout applied:', grid.style.display, grid.style.gridTemplateColumns);
-    } else {
-      console.log('Not desktop or grid ref not found');
-    }
-  }, []);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [gridRef.current]); // Add dependency on the ref
 
   // Show loading while checking user role or if still loading
   if (isLoading || !user || (user.role !== 'EMPLOYER' && user.role !== 'ADMIN')) {
