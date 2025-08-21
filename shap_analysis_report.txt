@@ -1,0 +1,143 @@
+================================================================================
+SHAP ANALYSIS REPORT - TWO-TOWER MODELS
+================================================================================
+
+MODEL: PYTORCH
+----------------------------------------
+Feature Importance (Mean |SHAP|):
+  Feature 0: 0.0087
+  Feature 1: 0.0058
+Query Tower Weight Magnitudes: 0.0793
+Candidate Tower Weight Magnitudes: 0.0774
+
+MODEL: XGBOOST
+----------------------------------------
+Feature Importance (Mean |SHAP|):
+  query_emb_0: 0.0219
+  query_emb_1: 0.0370
+  query_emb_2: 0.0146
+  query_emb_3: 0.0208
+  query_emb_4: 0.0416
+  query_emb_5: 0.0136
+  query_emb_6: 0.0226
+  query_emb_7: 0.0787
+  query_emb_8: 0.0903
+  query_emb_9: 0.0313
+  query_emb_10: 0.0236
+  query_emb_11: 0.0561
+  query_emb_12: 0.0423
+  query_emb_13: 0.0128
+  query_emb_14: 0.0196
+  query_emb_15: 0.0266
+  query_emb_16: 0.0205
+  query_emb_17: 0.0141
+  query_emb_18: 0.0130
+  query_emb_19: 0.0663
+  query_emb_20: 0.0410
+  query_emb_21: 0.0811
+  query_emb_22: 0.0431
+  query_emb_23: 0.0318
+  query_emb_24: 0.0178
+  query_emb_25: 0.0322
+  query_emb_26: 0.0624
+  query_emb_27: 0.0000
+  query_emb_28: 0.0361
+  query_emb_29: 0.0000
+  query_emb_30: 0.0518
+  query_emb_31: 0.0515
+  candidate_emb_0: 0.2125
+  candidate_emb_1: 0.0446
+  candidate_emb_2: 0.0096
+  candidate_emb_3: 0.0123
+  candidate_emb_4: 0.0156
+  candidate_emb_5: 0.0224
+  candidate_emb_6: 0.0344
+  candidate_emb_7: 0.0368
+  candidate_emb_8: 0.0146
+  candidate_emb_9: 0.0307
+  candidate_emb_10: 0.1302
+  candidate_emb_11: 0.0252
+  candidate_emb_12: 0.0145
+  candidate_emb_13: 0.0151
+  candidate_emb_14: 0.0328
+  candidate_emb_15: 0.0485
+  candidate_emb_16: 0.0511
+  candidate_emb_17: 0.0193
+  candidate_emb_18: 0.0229
+  candidate_emb_19: 0.0927
+  candidate_emb_20: 0.0094
+  candidate_emb_21: 0.0388
+  candidate_emb_22: 0.0111
+  candidate_emb_23: 0.0207
+  candidate_emb_24: 0.0320
+  candidate_emb_25: 0.1158
+  candidate_emb_26: 0.0956
+  candidate_emb_27: 0.0846
+  candidate_emb_28: 0.0132
+  candidate_emb_29: 0.0362
+  candidate_emb_30: 0.0744
+  candidate_emb_31: 0.2274
+  product_0: 0.0259
+  product_1: 0.0245
+  product_2: 0.0353
+  product_3: 0.0199
+  product_4: 0.0623
+  product_5: 0.0856
+  product_6: 0.0564
+  product_7: 0.0076
+  product_8: 0.0236
+  product_9: 0.0916
+  product_10: 0.0248
+  product_11: 0.0420
+  product_12: 0.0993
+  product_13: 0.0088
+  product_14: 0.0510
+  product_15: 0.0382
+  product_16: 0.1388
+  product_17: 0.4040
+  product_18: 0.0430
+  product_19: 0.0449
+  product_20: 0.0059
+  product_21: 0.1895
+  product_22: 0.3070
+  product_23: 0.0565
+  product_24: 0.1039
+  product_25: 0.0339
+  product_26: 0.2951
+  product_27: 0.0251
+  product_28: 0.0829
+  product_29: 0.2012
+  product_30: 0.0089
+  product_31: 0.0379
+  diff_0: 0.0146
+  diff_1: 0.0437
+  diff_2: 0.1613
+  diff_3: 0.0748
+  diff_4: 0.0443
+  diff_5: 0.0874
+  diff_6: 0.1086
+  diff_7: 0.0226
+  diff_8: 0.0042
+  diff_9: 0.0180
+  diff_10: 0.0158
+  diff_11: 0.2423
+  diff_12: 0.0497
+  diff_13: 0.0335
+  diff_14: 0.0365
+  diff_15: 0.0253
+  diff_16: 0.0266
+  diff_17: 0.0119
+  diff_18: 0.0554
+  diff_19: 0.0504
+  diff_20: 0.0260
+  diff_21: 0.0000
+  diff_22: 0.0198
+  diff_23: 0.0297
+  diff_24: 0.0075
+  diff_25: 0.0642
+  diff_26: 0.0622
+  diff_27: 0.1013
+  diff_28: 0.0052
+  diff_29: 0.0439
+  diff_30: 0.0363
+  diff_31: 0.0693

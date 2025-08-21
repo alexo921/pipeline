@@ -357,6 +357,150 @@ analyze_predictions(model, test_data)
 
 ---
 
+## 🧪 Testing Strategy
+
+### Testing Philosophy
+Our testing strategy ensures the hiring optimization model is **reliable, performant, and maintainable**. We use a multi-layered approach:
+
+1. **Unit Tests**: Test individual components in isolation
+2. **Integration Tests**: Test component interactions and training pipeline
+3. **Performance Tests**: Ensure speed and resource requirements are met
+4. **Regression Tests**: Prevent accuracy degradation over time
+
+### Test Categories
+
+#### 1. **Model Architecture Tests** (`tests/test_hiring_model.py`)
+- **Model Initialization**: Verify correct architecture setup
+- **Forward Pass**: Test candidate and job tower outputs
+- **Gradient Flow**: Ensure backpropagation works correctly
+- **Device Transfer**: Test CPU/GPU compatibility
+- **Weight Initialization**: Verify proper parameter setup
+
+#### 2. **Training Pipeline Tests** (`tests/test_training_pipeline.py`)
+- **Dataset Creation**: Test data loading and preprocessing
+- **Training Steps**: Verify parameter updates during training
+- **Validation**: Test evaluation metrics computation
+- **Model Checkpointing**: Test save/load functionality
+- **Early Stopping**: Verify training termination logic
+
+#### 3. **Performance Tests** (`tests/test_performance.py`)
+- **Inference Speed**: Ensure <1ms per candidate-job match
+- **Memory Usage**: Verify reasonable resource consumption
+- **Batch Scaling**: Test performance with different batch sizes
+- **Concurrent Inference**: Handle multiple simultaneous requests
+- **Model Size**: Keep parameters and file size manageable
+
+### Running Tests
+
+#### **Run All Tests**
+```bash
+# From project root
+python run_tests.py
+
+# Verbose output
+python run_tests.py --verbose
+```
+
+#### **Run Specific Test Categories**
+```bash
+# Model architecture tests only
+python run_tests.py --category model
+
+# Training pipeline tests only
+python run_tests.py --category training
+
+# Performance tests only
+python run_tests.py --category performance
+```
+
+#### **Run Tests with Pattern Matching**
+```bash
+# Run only speed-related tests
+python run_tests.py --pattern "*speed*"
+
+# Run only initialization tests
+python run_tests.py --pattern "*init*"
+```
+
+#### **Individual Test Files**
+```bash
+# Run specific test file
+python -m unittest tests.test_hiring_model -v
+
+# Run specific test method
+python -m unittest tests.test_hiring_model.TestHiringModel.test_model_initialization -v
+```
+
+### Test Coverage
+
+#### **What We Test**
+- ✅ **Model Architecture**: All layers, activations, and connections
+- ✅ **Data Pipeline**: Loading, preprocessing, and batching
+- ✅ **Training Process**: Forward/backward passes, optimization
+- ✅ **Performance Metrics**: Speed, memory, and accuracy
+- ✅ **Edge Cases**: Extreme values, different batch sizes
+- ✅ **Integration**: End-to-end training and inference
+
+#### **Performance Benchmarks**
+- **Inference Speed**: <1ms per candidate-job match
+- **Memory Usage**: <500MB increase for large batches
+- **Model Size**: <1M parameters, <50MB file size
+- **Accuracy**: >0.5 AUC for synthetic data
+- **Scalability**: Linear scaling with batch size
+
+### Continuous Testing
+
+#### **Pre-commit Testing**
+```bash
+# Run tests before committing
+python run_tests.py --category model
+python run_tests.py --category training
+```
+
+#### **CI/CD Integration**
+```bash
+# Example GitHub Actions workflow
+name: Test Hiring Model
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: pip install torch numpy scikit-learn
+      - name: Run tests
+        run: python run_tests.py
+```
+
+### Debugging Tests
+
+#### **Common Test Issues**
+1. **Import Errors**: Check Python path and module structure
+2. **CUDA Issues**: Use CPU for testing, GPU for production
+3. **Memory Problems**: Reduce batch sizes in test data
+4. **Timing Issues**: Increase tolerance for performance tests
+
+#### **Test Data Management**
+```python
+# Use temporary directories for test artifacts
+import tempfile
+import shutil
+
+class TestExample(unittest.TestCase):
+    def setUp(self):
+        self.temp_dir = tempfile.mkdtemp()
+        
+    def tearDown(self):
+        shutil.rmtree(self.temp_dir)
+```
+
+---
+
 ## 🚨 Troubleshooting
 
 ### Common Issues
