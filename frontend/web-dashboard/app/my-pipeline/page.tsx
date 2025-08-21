@@ -84,9 +84,9 @@ const MyPipelinePage = () => {
       {user.role === 'ADMIN' && <AdminDashboardNav />}
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Title and Actions */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">MyPipeline</h1>
             <p className="text-xl text-gray-600">St. Mary's Hospital</p>
@@ -157,9 +157,9 @@ const MyPipelinePage = () => {
         </div>
 
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Open Jobs Section */}
-          <div className="lg:col-span-1 bg-white rounded-lg shadow-sm border p-6">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          {/* Open Jobs Section - Left Column */}
+          <div className="xl:col-span-1 bg-white rounded-lg shadow-sm border p-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
             <div className="space-y-4">
               {[1, 2, 3, 4].map((item) => (
@@ -189,8 +189,8 @@ const MyPipelinePage = () => {
             </div>
           </div>
 
-          {/* Right Column */}
-          <div className="lg:col-span-2 space-y-8">
+          {/* Right Column - Matches and Applicants */}
+          <div className="xl:col-span-2 space-y-8">
             {/* Matches Section */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Matches</h2>
