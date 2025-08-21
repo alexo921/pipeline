@@ -13,27 +13,43 @@ import BaseLayout from '../components/layout/BaseLayout';
 import AdminDashboardNav from '../components/AdminDashboardNav';
 import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const MyPipelinePage = () => {
   const { user } = useAuth();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
   // Check if user is logged in and is an employer OR admin
   useEffect(() => {
-    if (!user) {
-      router.push('/');
-      return;
-    }
-    
-    // Allow access if user is employer OR admin
-    if (user.role !== 'EMPLOYER' && user.role !== 'ADMIN') {
-      router.push('/your-pipeline');
-    }
+    // Wait a bit for auth to load
+    const timer = setTimeout(() => {
+      if (user === null) {
+        // User is still loading, don't redirect yet
+        return;
+      }
+      
+      if (!user) {
+        // User is not logged in
+        router.push('/jobs');
+        return;
+      }
+      
+      // Allow access if user is employer OR admin
+      if (user.role !== 'EMPLOYER' && user.role !== 'ADMIN') {
+        router.push('/your-pipeline');
+        return;
+      }
+      
+      // User is authorized, stop loading
+      setIsLoading(false);
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [user, router]);
 
-  // Show loading while checking user role
-  if (!user || (user.role !== 'EMPLOYER' && user.role !== 'ADMIN')) {
+  // Show loading while checking user role or if still loading
+  if (isLoading || !user || (user.role !== 'EMPLOYER' && user.role !== 'ADMIN')) {
     return (
       <BaseLayout>
         <div className="flex items-center justify-center min-h-[400px]">
