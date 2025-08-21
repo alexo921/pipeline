@@ -22,6 +22,32 @@ const MyPipelinePage = () => {
   const [isRendered, setIsRendered] = useState(false);
   const [gridElement, setGridElement] = useState<HTMLDivElement | null>(null);
 
+  // Add CSS styles for forced desktop layout
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .force-desktop-layout {
+        display: grid !important;
+        grid-template-columns: 1fr 2fr !important;
+        gap: 2rem !important;
+        width: 100% !important;
+      }
+      .force-left-col {
+        grid-column: 1 / 2 !important;
+        width: 100% !important;
+      }
+      .force-right-col {
+        grid-column: 2 / 3 !important;
+        width: 100% !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   // Check if user is logged in and is an employer OR admin
   useEffect(() => {
     // Wait a bit for auth to load
@@ -66,6 +92,9 @@ const MyPipelinePage = () => {
     if (gridElement && window.innerWidth >= 1024) {
       console.log('Forcing desktop grid layout');
       
+      // Add CSS class to force desktop layout
+      gridElement.classList.add('force-desktop-layout');
+      
       // Force the grid layout
       gridElement.style.display = 'grid';
       gridElement.style.gridTemplateColumns = '1fr 2fr';
@@ -79,11 +108,13 @@ const MyPipelinePage = () => {
       if (leftCol) {
         leftCol.style.gridColumn = '1 / 2';
         leftCol.style.width = '100%';
+        leftCol.classList.add('force-left-col');
       }
       
       if (rightCol) {
         rightCol.style.gridColumn = '2 / 3';
         rightCol.style.width = '100%';
+        rightCol.classList.add('force-right-col');
       }
       
       console.log('Grid layout applied:', gridElement.style.display, gridElement.style.gridTemplateColumns);
@@ -114,22 +145,6 @@ const MyPipelinePage = () => {
     );
   }
 
-  const analyticsData = {
-    metrics: [
-      { value: "77/100", label: "Environment Score", color: "blue" },
-      { value: "64/100", label: "Continuity of Care Index", color: "blue" },
-      { value: "86%", label: "Strong Matches", color: "blue" },
-      { value: "+34%", label: "Pulse Trends", color: "green", showTrend: true, trendValue: "+34%" }
-    ],
-    insights: [
-      { label: "Work Environment Score", percentage: 75, color: "blue" },
-      { label: "High Retention Forecast", percentage: 80, color: "green" },
-      { label: "Telemedicine Fill Rate", percentage: 50, color: "yellow" },
-      { label: "Work Performance Score", percentage: 60, color: "blue" },
-      { label: "Culture Fit Average", percentage: 80, color: "green" }
-    ]
-  };
-
   return (
     <BaseLayout>
       {/* Admin Navigation - Only show for admin users */}
@@ -158,52 +173,28 @@ const MyPipelinePage = () => {
         </div>
 
         {/* Analytics Section */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Analytics</h2>
-          
-          {/* Metric Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            {analyticsData.metrics.map((metric, index) => (
-              <div key={index} className="text-center p-4 border rounded-lg">
-                {metric.showTrend && metric.trendValue ? (
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <h3 className={`text-2xl font-bold ${metric.color === 'green' ? 'text-green-600' : 'text-blue-600'}`}>
-                      {metric.value}
-                    </h3>
-                    <TrendingUp className="w-5 h-5 text-green-600" />
-                  </div>
-                ) : (
-                  <h3 className={`text-2xl font-bold ${metric.color === 'green' ? 'text-green-600' : 'text-blue-600'}`}>
-                    {metric.value}
-                  </h3>
-                )}
-                <p className="text-gray-600 text-sm">{metric.label}</p>
-              </div>
-            ))}
+        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Analytics</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">77/100</div>
+              <div className="text-sm text-gray-600">Environment Score</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">64/100</div>
+              <div className="text-sm text-gray-600">Continuity of Care Index</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">86%</div>
+              <div className="text-sm text-gray-600">Strong Matches</div>
+            </div>
           </div>
-
-          {/* Insights */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Insights</h3>
-            <div className="space-y-3">
-              {analyticsData.insights.map((insight, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <span className="text-gray-700">{insight.label}</span>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-32 h-3 bg-gray-200 rounded-full">
-                      <div 
-                        className={`h-3 rounded-full transition-all duration-300 ${
-                          insight.color === 'blue' ? 'bg-blue-500' : 
-                          insight.color === 'green' ? 'bg-green-500' : 
-                          insight.color === 'yellow' ? 'bg-yellow-500' : 'bg-blue-500'
-                        }`}
-                        style={{ width: `${insight.percentage}%` }}
-                      ></div>
-                    </div>
-                    <span className="text-sm text-gray-600">{insight.percentage}%</span>
-                  </div>
-                </div>
-              ))}
+          <div className="mt-4 text-center">
+            <div className="inline-flex items-center text-green-600 font-medium">
+              <span className="text-lg">+34%</span>
+              <svg className="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
             </div>
           </div>
         </div>
