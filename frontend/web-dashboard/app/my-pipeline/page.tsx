@@ -157,9 +157,9 @@ const MyPipelinePage = () => {
         </div>
 
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 border-2 border-red-500 p-4">
           {/* Open Jobs Section - Left Column */}
-          <div className="xl:col-span-1 bg-white rounded-lg shadow-sm border p-6">
+          <div className="lg:col-span-1 bg-blue-50 rounded-lg shadow-sm border p-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
             <div className="space-y-4">
               {[1, 2, 3, 4].map((item) => (
@@ -190,7 +190,7 @@ const MyPipelinePage = () => {
           </div>
 
           {/* Right Column - Matches and Applicants */}
-          <div className="xl:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-8 bg-green-50 p-4">
             {/* Matches Section */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Matches</h2>
