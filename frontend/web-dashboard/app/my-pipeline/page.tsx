@@ -13,14 +13,14 @@ import BaseLayout from '../components/layout/BaseLayout';
 import AdminDashboardNav from '../components/AdminDashboardNav';
 import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import { useEffect, useState, useRef, useLayoutEffect, useCallback } from 'react';
 
 const MyPipelinePage = () => {
   const { user } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [isRendered, setIsRendered] = useState(false);
-  const gridRef = useRef<HTMLDivElement>(null);
+  const [gridElement, setGridElement] = useState<HTMLDivElement | null>(null);
 
   // Check if user is logged in and is an employer OR admin
   useEffect(() => {
@@ -55,27 +55,26 @@ const MyPipelinePage = () => {
     setIsRendered(true);
   }, []);
 
-  // Force grid layout on desktop - use useLayoutEffect for DOM manipulation
-  useLayoutEffect(() => {
-    if (!isRendered) return;
+  // Force grid layout on desktop when grid element is available
+  useEffect(() => {
+    if (!isRendered || !gridElement) return;
     
     console.log('Grid layout effect running, window width:', window.innerWidth);
-    console.log('Grid ref available:', !!gridRef.current);
+    console.log('Grid element available:', !!gridElement);
     console.log('Component rendered:', isRendered);
     
-    if (gridRef.current && window.innerWidth >= 1024) {
+    if (gridElement && window.innerWidth >= 1024) {
       console.log('Forcing desktop grid layout');
-      const grid = gridRef.current;
       
       // Force the grid layout
-      grid.style.display = 'grid';
-      grid.style.gridTemplateColumns = '1fr 2fr';
-      grid.style.gap = '2rem';
-      grid.style.width = '100%';
+      gridElement.style.display = 'grid';
+      gridElement.style.gridTemplateColumns = '1fr 2fr';
+      gridElement.style.gap = '2rem';
+      gridElement.style.width = '100%';
       
       // Also force the column spans
-      const leftCol = grid.querySelector('[data-col="left"]') as HTMLElement;
-      const rightCol = grid.querySelector('[data-col="right"]') as HTMLElement;
+      const leftCol = gridElement.querySelector('[data-col="left"]') as HTMLElement;
+      const rightCol = gridElement.querySelector('[data-col="right"]') as HTMLElement;
       
       if (leftCol) {
         leftCol.style.gridColumn = '1 / 2';
@@ -87,11 +86,19 @@ const MyPipelinePage = () => {
         rightCol.style.width = '100%';
       }
       
-      console.log('Grid layout applied:', grid.style.display, grid.style.gridTemplateColumns);
+      console.log('Grid layout applied:', gridElement.style.display, gridElement.style.gridTemplateColumns);
     } else {
-      console.log('Not desktop or grid ref not found. Width:', window.innerWidth, 'Ref:', !!gridRef.current, 'Rendered:', isRendered);
+      console.log('Not desktop or grid element not found. Width:', window.innerWidth, 'Element:', !!gridElement, 'Rendered:', isRendered);
     }
-  }, [isRendered]); // Only run when component is rendered
+  }, [isRendered, gridElement]); // Run when either changes
+
+  // Callback ref to capture the grid element
+  const gridRef = useCallback((node: HTMLDivElement | null) => {
+    if (node) {
+      console.log('Grid ref callback triggered, element:', !!node);
+      setGridElement(node);
+    }
+  }, []);
 
   // Show loading while checking user role or if still loading
   if (isLoading || !user || (user.role !== 'EMPLOYER' && user.role !== 'ADMIN')) {
