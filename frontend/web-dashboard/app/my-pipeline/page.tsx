@@ -13,12 +13,13 @@ import BaseLayout from '../components/layout/BaseLayout';
 import AdminDashboardNav from '../components/AdminDashboardNav';
 import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const MyPipelinePage = () => {
   const { user } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   // Check if user is logged in and is an employer OR admin
   useEffect(() => {
@@ -47,6 +48,16 @@ const MyPipelinePage = () => {
 
     return () => clearTimeout(timer);
   }, [user, router]);
+
+  // Force grid layout on desktop
+  useEffect(() => {
+    if (gridRef.current && window.innerWidth >= 1024) {
+      const grid = gridRef.current;
+      grid.style.display = 'grid';
+      grid.style.gridTemplateColumns = '1fr 2fr';
+      grid.style.gap = '2rem';
+    }
+  }, []);
 
   // Show loading while checking user role or if still loading
   if (isLoading || !user || (user.role !== 'EMPLOYER' && user.role !== 'ADMIN')) {
@@ -157,9 +168,9 @@ const MyPipelinePage = () => {
         </div>
 
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 border-2 border-red-500 p-4">
+        <div ref={gridRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8 border-2 border-red-500 p-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(1, minmax(0, 1fr))' }}>
           {/* Open Jobs Section - Left Column */}
-          <div className="lg:col-span-1 bg-blue-50 rounded-lg shadow-sm border p-6">
+          <div className="lg:col-span-1 bg-blue-50 rounded-lg shadow-sm border p-6" style={{ gridColumn: 'span 1 / span 1' }}>
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
             <div className="space-y-4">
               {[1, 2, 3, 4].map((item) => (
@@ -190,7 +201,7 @@ const MyPipelinePage = () => {
           </div>
 
           {/* Right Column - Matches and Applicants */}
-          <div className="lg:col-span-2 space-y-8 bg-green-50 p-4">
+          <div className="lg:col-span-2 space-y-8 bg-green-50 p-4" style={{ gridColumn: 'span 2 / span 2' }}>
             {/* Matches Section */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Matches</h2>
