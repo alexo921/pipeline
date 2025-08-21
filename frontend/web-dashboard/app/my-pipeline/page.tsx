@@ -51,11 +51,35 @@ const MyPipelinePage = () => {
 
   // Force grid layout on desktop
   useEffect(() => {
+    console.log('Grid layout effect running, window width:', window.innerWidth);
+    
     if (gridRef.current && window.innerWidth >= 1024) {
+      console.log('Forcing desktop grid layout');
       const grid = gridRef.current;
+      
+      // Force the grid layout
       grid.style.display = 'grid';
       grid.style.gridTemplateColumns = '1fr 2fr';
       grid.style.gap = '2rem';
+      grid.style.width = '100%';
+      
+      // Also force the column spans
+      const leftCol = grid.querySelector('[data-col="left"]') as HTMLElement;
+      const rightCol = grid.querySelector('[data-col="right"]') as HTMLElement;
+      
+      if (leftCol) {
+        leftCol.style.gridColumn = '1 / 2';
+        leftCol.style.width = '100%';
+      }
+      
+      if (rightCol) {
+        rightCol.style.gridColumn = '2 / 3';
+        rightCol.style.width = '100%';
+      }
+      
+      console.log('Grid layout applied:', grid.style.display, grid.style.gridTemplateColumns);
+    } else {
+      console.log('Not desktop or grid ref not found');
     }
   }, []);
 
@@ -170,7 +194,7 @@ const MyPipelinePage = () => {
         {/* Dashboard Grid */}
         <div ref={gridRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8 border-2 border-red-500 p-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(1, minmax(0, 1fr))' }}>
           {/* Open Jobs Section - Left Column */}
-          <div className="lg:col-span-1 bg-blue-50 rounded-lg shadow-sm border p-6" style={{ gridColumn: 'span 1 / span 1' }}>
+          <div data-col="left" className="lg:col-span-1 bg-blue-50 rounded-lg shadow-sm border p-6" style={{ gridColumn: 'span 1 / span 1' }}>
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
             <div className="space-y-4">
               {[1, 2, 3, 4].map((item) => (
@@ -201,7 +225,7 @@ const MyPipelinePage = () => {
           </div>
 
           {/* Right Column - Matches and Applicants */}
-          <div className="lg:col-span-2 space-y-8 bg-green-50 p-4" style={{ gridColumn: 'span 2 / span 2' }}>
+          <div data-col="right" className="lg:col-span-2 space-y-8 bg-green-50 p-4" style={{ gridColumn: 'span 2 / span 2' }}>
             {/* Matches Section */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Matches</h2>
