@@ -38,7 +38,7 @@ const MyPipelinePage = () => {
 
     if (!user) {
       // User is not logged in, redirect to home
-      router.push('/');
+      router.push('/jobs');
       return;
     }
 
