@@ -16,39 +16,41 @@ import { useEffect, useState } from 'react';
 const YourPipelinePage = () => {
   const { user } = useAuth();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
-  // Check if user is logged in and is NOT an employer (i.e., is an employee/user) OR is admin
+  // Check authentication and authorization only once
   useEffect(() => {
-    // Wait a bit for auth to load
-    const timer = setTimeout(() => {
-      if (user === null) {
-        // User is still loading, don't redirect yet
-        setIsLoading(false);
-        return;
-      }
-      
-      if (!user) {
-        // User is not logged in, redirect to home
-        router.push('/');
-        return;
-      }
-      
-      // If user IS an employer (and not admin), redirect to MyPipeline
-      if (user.role === 'EMPLOYER') {
-        router.push('/my-pipeline');
-        return;
-      }
-      
-      // User is authorized, stop loading
-      setIsLoading(false);
-    }, 100);
+    // Don't do anything until we have a definitive user state
+    if (user === null) {
+      // Still loading, wait
+      return;
+    }
 
-    return () => clearTimeout(timer);
-  }, [user, router]);
+    // Only check once
+    if (authChecked) {
+      return;
+    }
 
-  // Show loading while checking user role or if still loading
-  if (isLoading || !user || user.role === 'EMPLOYER') {
+    setAuthChecked(true);
+
+    if (!user) {
+      // User is not logged in, redirect to home
+      router.push('/');
+      return;
+    }
+
+    // Check if user is authorized for this dashboard
+    if (user.role !== 'EMPLOYER') {
+      setIsAuthorized(true);
+    } else {
+      // User is an employer, redirect to employer dashboard
+      router.push('/my-pipeline');
+    }
+  }, [user, router, authChecked]);
+
+  // Show loading while checking authentication
+  if (!authChecked || user === null) {
     return (
       <BaseLayout>
         <div className="flex items-center justify-center min-h-[400px]">
@@ -61,6 +63,21 @@ const YourPipelinePage = () => {
     );
   }
 
+  // Show loading if user is not authorized (will redirect)
+  if (!isAuthorized) {
+    return (
+      <BaseLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2466D0] mx-auto mb-4"></div>
+            <p className="text-[#7691A4] text-lg">Redirecting...</p>
+          </div>
+        </div>
+      </BaseLayout>
+    );
+  }
+
+  // User is authorized, show the dashboard
   const profileData = {
     name: "Marvin Grant",
     location: "New Haven, CT",
