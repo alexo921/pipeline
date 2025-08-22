@@ -11,27 +11,44 @@ import BaseLayout from '../components/layout/BaseLayout';
 import AdminDashboardNav from '../components/AdminDashboardNav';
 import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const YourPipelinePage = () => {
   const { user } = useAuth();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
   // Check if user is logged in and is NOT an employer (i.e., is an employee/user) OR is admin
   useEffect(() => {
-    if (!user) {
-      router.push('/');
-      return;
-    }
-    
-    // If user IS an employer (and not admin), redirect to MyPipeline
-    if (user.role === 'EMPLOYER') {
-      router.push('/my-pipeline');
-    }
+    // Wait a bit for auth to load
+    const timer = setTimeout(() => {
+      if (user === null) {
+        // User is still loading, don't redirect yet
+        setIsLoading(false);
+        return;
+      }
+      
+      if (!user) {
+        // User is not logged in, redirect to home
+        router.push('/');
+        return;
+      }
+      
+      // If user IS an employer (and not admin), redirect to MyPipeline
+      if (user.role === 'EMPLOYER') {
+        router.push('/my-pipeline');
+        return;
+      }
+      
+      // User is authorized, stop loading
+      setIsLoading(false);
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [user, router]);
 
-  // Show loading while checking user role
-  if (!user || user.role === 'EMPLOYER') {
+  // Show loading while checking user role or if still loading
+  if (isLoading || !user || user.role === 'EMPLOYER') {
     return (
       <BaseLayout>
         <div className="flex items-center justify-center min-h-[400px]">
@@ -194,8 +211,8 @@ const YourPipelinePage = () => {
                     </button>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">Full-Time</span>
-                    <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">Entry Level</span>
+                    <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded">Full-Time</span>
+                    <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded">Entry Level</span>
                   </div>
                 </div>
               ))}
