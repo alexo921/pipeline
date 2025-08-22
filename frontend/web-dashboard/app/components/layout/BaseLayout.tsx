@@ -39,6 +39,44 @@ export default function BaseLayout({
 
   return (
     <div className={`${backgroundClass} relative`} style={backgroundStyle}>
+      {/* Top-right radial blue blur positioned in upper right */}
+      <div 
+        className="absolute pointer-events-none hidden md:block"
+        style={{
+          top: '-5%',
+          right: '-10%',
+          width: '1522px',
+          height: '2585px',
+          backgroundImage: 'url(/blur.svg)',
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          zIndex: 0
+        }}
+      ></div>
+      
+      {/* Mobile-only blur effect - smaller and properly contained */}
+      <div 
+        className="absolute pointer-events-none md:hidden"
+        style={{
+          top: '0',
+          right: '0',
+          width: '150px',
+          height: '200px',
+          background: `
+            radial-gradient(
+              ellipse at center,
+              rgba(36, 102, 208, 0.1) 0%,
+              rgba(36, 102, 208, 0.05) 40%,
+              transparent 70%
+            )
+          `,
+          filter: 'blur(30px)',
+          zIndex: 0,
+          overflow: 'hidden'
+        }}
+      ></div>
+
       {/* Navbar navigation */}
       {showNav && (
         <Navbar

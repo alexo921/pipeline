@@ -24,15 +24,13 @@ const YourPipelinePage = () => {
       return;
     }
     
-    // Only redirect non-admin employers to MyPipeline
-    // Admin users should be able to access both pages
+    // If user IS an employer (and not admin), redirect to MyPipeline
     if (user.role === 'EMPLOYER') {
       router.push('/my-pipeline');
     }
   }, [user, router]);
 
   // Show loading while checking user role
-  // Allow admin users and employees/users, only block employers
   if (!user || user.role === 'EMPLOYER') {
     return (
       <BaseLayout>
@@ -64,16 +62,20 @@ const YourPipelinePage = () => {
       {/* Admin Navigation - Only show for admin users */}
       {user.role === 'ADMIN' && <AdminDashboardNav />}
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Title */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">YourPipeline</h1>
+      {/* Page Header */}
+      <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
+        <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[76px] font-black leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
+            YourPipeline
+          </h1>
           {user.role === 'ADMIN' && (
-            <p className="text-sm text-blue-600 font-medium">Admin Access - Employee/User Dashboard</p>
+            <p className="text-sm text-blue-600 font-medium text-center lg:text-left mt-2">Admin Access - Employee/User Dashboard</p>
           )}
         </div>
+      </div>
 
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Profile Section */}
         <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
           <div className="flex items-start justify-between mb-6">
