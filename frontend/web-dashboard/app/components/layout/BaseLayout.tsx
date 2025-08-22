@@ -51,7 +51,7 @@ export default function BaseLayout({
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
-          zIndex: -1
+          zIndex: 0
         }}
       ></div>
       
@@ -72,7 +72,7 @@ export default function BaseLayout({
             )
           `,
           filter: 'blur(30px)',
-          zIndex: -1,
+          zIndex: 0,
           overflow: 'hidden'
         }}
       ></div>
@@ -85,7 +85,7 @@ export default function BaseLayout({
       )}
 
       {/* Main content */}
-      <div className="flex-1 relative" style={{ zIndex: 1 }}>
+      <div className="flex-1 relative" style={{ zIndex: 10 }}>
         {children}
       </div>
 
@@ -114,7 +114,7 @@ export default function BaseLayout({
                 )
               `,
               filter: 'blur(80px)',
-              zIndex: -1,
+              zIndex: 0,
             }}
           />
           
@@ -139,7 +139,7 @@ export default function BaseLayout({
                 )
               `,
               filter: 'blur(60px)',
-              zIndex: -1,
+              zIndex: 0,
             }}
           />
           <Footer />
