@@ -51,7 +51,7 @@ export default function BaseLayout({
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
-          zIndex: 0
+          zIndex: -1
         }}
       ></div>
       
@@ -72,7 +72,7 @@ export default function BaseLayout({
             )
           `,
           filter: 'blur(30px)',
-          zIndex: 0,
+          zIndex: -1,
           overflow: 'hidden'
         }}
       ></div>
@@ -85,7 +85,7 @@ export default function BaseLayout({
       )}
 
       {/* Main content */}
-      <div className="flex-1">
+      <div className="flex-1 relative" style={{ zIndex: 1 }}>
         {children}
       </div>
 
