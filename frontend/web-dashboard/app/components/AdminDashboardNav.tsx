@@ -27,8 +27,8 @@ const AdminDashboardNav: React.FC = () => {
                   : 'text-blue-700 hover:bg-blue-100'
               }`}
             >
-              <Building2 className="w-4 h-4" />
-              <span>Employer Dashboard</span>
+              <User className="w-4 h-4" />
+              <span>Employee Dashboard</span>
             </Link>
             
             <Link
@@ -39,8 +39,8 @@ const AdminDashboardNav: React.FC = () => {
                   : 'text-blue-700 hover:bg-blue-100'
               }`}
             >
-              <User className="w-4 h-4" />
-              <span>Employee Dashboard</span>
+              <Building2 className="w-4 h-4" />
+              <span>Employer Dashboard</span>
             </Link>
           </div>
         </div>
