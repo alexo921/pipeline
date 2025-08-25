@@ -262,9 +262,9 @@ const YourPipelinePage = () => {
           </div>
 
           {/* Bottom Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
             {/* Open Jobs Section - Left Side (Full Height) */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
+            <div className="bg-white rounded-lg shadow-sm border p-6" style={{ minWidth: '300px' }}>
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
               <div className="space-y-4">
                 {[1, 2, 3, 4].map((item) => (
@@ -299,7 +299,7 @@ const YourPipelinePage = () => {
             </div>
 
             {/* Right Side - Matches and Applicants Stacked */}
-            <div className="space-y-6">
+            <div className="space-y-6" style={{ minWidth: '300px' }}>
               {/* Matches Section - Top Right (Half Height) */}
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between mb-4">
