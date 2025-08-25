@@ -5,7 +5,8 @@ import {
   Building2, 
   CheckCircle, 
   User,
-  Edit3
+  Edit3,
+  ChevronRight
 } from 'lucide-react';
 import BaseLayout from '../components/layout/BaseLayout';
 import AdminDashboardNav from '../components/AdminDashboardNav';
@@ -185,9 +186,9 @@ const MyPipelinePage = () => {
               </div>
             </div>
 
-            {/* Dashboard Grid */}
+            {/* Dashboard Grid - 2x2 Layout */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Matches Section */}
+              {/* Row 1: Matches and Recommended Jobs */}
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">Matches</h2>
                 <div className="space-y-4">
@@ -196,32 +197,31 @@ const MyPipelinePage = () => {
                       <div className="flex items-center space-x-3">
                         <Building2 className="w-8 h-8 text-blue-600" />
                         <div>
-                          <h4 className="font-medium text-gray-900">St. Mary's Hospital</h4>
+                          <h4 className="font-medium text-gray-900">St. Mary's Health Center</h4>
                           <p className="text-gray-600 text-sm">Registered Nurse</p>
                           <p className="text-gray-500 text-sm">New Haven, CT</p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-green-600 text-sm font-medium">Matched ✔</span>
                         <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
                           View Employer
                         </button>
-                        <CheckCircle className="w-5 h-5 text-green-500" />
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Recommended Jobs Section */}
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">Recommended Jobs</h2>
                 <div className="space-y-4">
-                  {[1, 2, 3].map((item) => (
+                  {[1, 2, 3, 4].map((item) => (
                     <div key={item} className="p-4 border rounded-lg">
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <h4 className="font-medium text-gray-900">Registered Nurse</h4>
-                          <p className="text-gray-600 text-sm">St. Mary's Hospital</p>
+                          <p className="text-gray-600 text-sm">St. Mary's Health Center</p>
                           <p className="text-gray-500 text-sm">New Haven, CT</p>
                         </div>
                         <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
@@ -229,15 +229,16 @@ const MyPipelinePage = () => {
                         </button>
                       </div>
                       <div className="flex flex-wrap gap-2">
+                        <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded">Nurse</span>
                         <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded">Full-Time</span>
-                        <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded">Entry Level</span>
+                        <span className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded">Entry-Level</span>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Expressed Interest Section */}
+              {/* Row 2: Expressed Interest and Applications */}
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">Expressed Interest</h2>
                 <div className="space-y-4">
@@ -246,20 +247,22 @@ const MyPipelinePage = () => {
                       <div className="flex items-center space-x-3">
                         <Building2 className="w-8 h-8 text-blue-600" />
                         <div>
-                          <h4 className="font-medium text-gray-900">St. Mary's Hospital</h4>
+                          <h4 className="font-medium text-gray-900">St. Mary's Health Center</h4>
                           <p className="text-gray-600 text-sm">Registered Nurse</p>
                           <p className="text-gray-500 text-sm">New Haven, CT</p>
                         </div>
                       </div>
-                      <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
-                        View Employer
-                      </button>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-blue-600 text-sm font-medium">Interested 🔔</span>
+                        <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
+                          View Employer
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Applications Section */}
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">Applications</h2>
                 <div className="space-y-3">
@@ -270,7 +273,9 @@ const MyPipelinePage = () => {
                         <span className="text-gray-600">Registered Nurse</span>
                         <span className="text-gray-500 text-sm">08/14/25</span>
                       </div>
-                      <CheckCircle className="w-5 h-5 text-green-500" />
+                      <button className="p-2 hover:bg-gray-100 rounded transition-colors">
+                        <ChevronRight className="w-4 h-4 text-gray-500" />
+                      </button>
                     </div>
                   ))}
                 </div>
