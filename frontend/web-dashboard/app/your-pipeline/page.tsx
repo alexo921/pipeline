@@ -130,7 +130,7 @@ const YourPipelinePage = () => {
           </div>
           
           {/* Analytics and Insights Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             {/* Analytics Section */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <div className="flex items-center justify-between mb-6">
@@ -262,7 +262,7 @@ const YourPipelinePage = () => {
           </div>
 
           {/* Bottom Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Open Jobs Section - Left Column */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
