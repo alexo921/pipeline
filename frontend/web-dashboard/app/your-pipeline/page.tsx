@@ -91,36 +91,43 @@ const YourPipelinePage = () => {
       {/* Page Header */}
       <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[76px] font-black leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
-                YourPipeline
-              </h1>
-              <p className="text-xl text-gray-600 text-center lg:text-left mt-2">St. Mary's Health Center</p>
-              {user.role === 'ADMIN' && (
-                <p className="text-sm text-blue-600 font-medium text-center lg:text-left mt-1">Admin Access - Employee/User Dashboard</p>
-              )}
-            </div>
-            
-            {/* Header Actions */}
-            <div className="flex items-center space-x-4 mt-4 lg:mt-0">
-              <button className="relative px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-200 font-medium transition-colors flex items-center space-x-2">
-                <Bell className="w-4 h-4" />
-                <span>Notifications</span>
-                <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">4</span>
-              </button>
-              <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 font-medium flex items-center space-x-2 transition-colors">
-                <Edit3 className="w-4 h-4" />
-                <span>New Job Post</span>
-              </button>
-            </div>
-          </div>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[76px] font-black leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
+            YourPipeline
+          </h1>
+          {user.role === 'ADMIN' && (
+            <p className="text-sm text-blue-600 font-medium text-center lg:text-left mt-2">Admin Access - Employee/User Dashboard</p>
+          )}
         </div>
       </div>
 
       {/* Main Content */}
       <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12" style={{ position: 'relative', zIndex: 1 }}>
         <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative">
+          
+          {/* Company Header and Actions */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
+            <div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 font-baloo">
+                St. Mary's Health Center
+              </h2>
+              {user.role === 'ADMIN' && (
+                <p className="text-sm text-blue-600 font-medium mt-1">Admin Access - Employee/User Dashboard</p>
+              )}
+            </div>
+            
+            {/* Header Actions */}
+            <div className="flex items-center space-x-4">
+              <button className="relative px-4 py-2 bg-white text-gray-700 text-sm rounded-lg hover:bg-gray-50 font-medium transition-colors flex items-center space-x-2 shadow-sm border">
+                <Bell className="w-4 h-4" />
+                <span>Notifications</span>
+                <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">4</span>
+              </button>
+              <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 font-medium flex items-center space-x-2 transition-colors shadow-sm">
+                <Edit3 className="w-4 h-4" />
+                <span>New Job Post</span>
+              </button>
+            </div>
+          </div>
           
           {/* Analytics and Insights Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
