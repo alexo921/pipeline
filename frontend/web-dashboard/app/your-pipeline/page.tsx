@@ -262,9 +262,9 @@ const YourPipelinePage = () => {
           </div>
 
           {/* Bottom Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             {/* Open Jobs Section - Left Column */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
+            <div className="bg-white rounded-lg shadow-sm border p-6" style={{ minWidth: '300px' }}>
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
               <div className="space-y-4">
                 {[1, 2, 3, 4].map((item) => (
@@ -299,7 +299,7 @@ const YourPipelinePage = () => {
             </div>
 
             {/* Matches Section - Middle Column */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
+            <div className="bg-white rounded-lg shadow-sm border p-6" style={{ minWidth: '300px' }}>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-semibold text-gray-900">Matches</h2>
                 <div className="flex items-center space-x-2">
@@ -336,7 +336,7 @@ const YourPipelinePage = () => {
             </div>
 
             {/* Applicants Section - Right Column */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
+            <div className="bg-white rounded-lg shadow-sm border p-6" style={{ minWidth: '300px' }}>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-semibold text-gray-900">Applicants</h2>
                 <div className="flex items-center space-x-2">
