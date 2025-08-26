@@ -117,20 +117,16 @@ const YourPipelinePage = () => {
             
             {/* Header Actions */}
             <div className="flex items-center space-x-4">
-              <button className="relative px-4 py-2 bg-white text-gray-700 text-sm rounded-lg hover:bg-gray-50 font-medium transition-colors flex items-center space-x-2 shadow-sm border">
+              <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 font-medium flex items-center space-x-2 transition-colors shadow-sm relative">
                 <Bell className="w-4 h-4" />
                 <span>Notifications</span>
                 <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">4</span>
-              </button>
-              <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 font-medium flex items-center space-x-2 transition-colors shadow-sm">
-                <Edit3 className="w-4 h-4" />
-                <span>New Job Post</span>
               </button>
             </div>
           </div>
           
           {/* Analytics and Insights Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-2 gap-8 mb-8">
             {/* Analytics Section */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <div className="flex items-center justify-between mb-6">
