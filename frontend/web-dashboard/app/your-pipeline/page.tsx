@@ -103,9 +103,11 @@ const YourPipelinePage = () => {
       {/* Main Content */}
       <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12" style={{ position: 'relative', zIndex: 1 }}>
         
-        {/* Top Container - Company Header and Actions */}
-        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative mb-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        {/* Main Company Container - Holds both Analytics/Insights and Jobs/Matches/Applicants */}
+        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative">
+          
+          {/* Company Header and Actions */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
             <div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 font-baloo">
                 St. Mary's Health Center
@@ -124,77 +126,76 @@ const YourPipelinePage = () => {
               </button>
             </div>
           </div>
-        </div>
-        
-        {/* Top Container - Analytics and Insights Grid */}
-        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative mb-8">
-          <div className="grid grid-cols-2 gap-8">
-            {/* Analytics Section */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900">Analytics</h2>
-                <div className="flex items-center space-x-2">
-                  <button 
-                    onClick={() => setIsAnalyticsExpanded(!isAnalyticsExpanded)}
-                    className="p-2 hover:bg-gray-100 rounded transition-colors"
-                    title="Expand to full screen"
-                  >
-                    <Maximize2 className="w-4 h-4 text-gray-600" />
-                  </button>
-                  <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
-                    <Download className="w-4 h-4 text-gray-600" />
-                  </button>
+          
+          {/* Analytics and Insights Grid */}
+          <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+            <div className="grid grid-cols-2 gap-8">
+              {/* Analytics Section */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-900">Analytics</h2>
+                  <div className="flex items-center space-x-2">
+                    <button 
+                      onClick={() => setIsAnalyticsExpanded(!isAnalyticsExpanded)}
+                      className="p-2 hover:bg-gray-100 rounded transition-colors"
+                      title="Expand to full screen"
+                    >
+                      <Maximize2 className="w-4 h-4 text-gray-600" />
+                    </button>
+                    <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                      <Download className="w-4 h-4 text-gray-600" />
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Analytics Grid */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <h3 className="text-2xl font-bold text-blue-600">77/100</h3>
+                      <Info className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <p className="text-gray-600 text-sm">Environment Score</p>
+                  </div>
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <h3 className="text-2xl font-bold text-green-600">64/100</h3>
+                      <Info className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <p className="text-gray-600 text-sm">Continuity of Care Index</p>
+                  </div>
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <h3 className="text-2xl font-bold text-purple-600">86%</h3>
+                      <Info className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <p className="text-gray-600 text-sm">Strong Matches</p>
+                    {/* Small line graph */}
+                    <div className="flex items-end justify-center space-x-1 mt-2 h-8">
+                      <div className="w-1 bg-blue-400 h-2"></div>
+                      <div className="w-1 bg-blue-400 h-4"></div>
+                      <div className="w-1 bg-blue-400 h-6"></div>
+                      <div className="w-1 bg-blue-400 h-3"></div>
+                      <div className="w-1 bg-blue-400 h-5"></div>
+                    </div>
+                  </div>
+                  <div className="text-center p-4 border rounded-lg">
+                    <div className="flex items-center justify-center space-x-2 mb-2">
+                      <h3 className="text-2xl font-bold text-orange-600">+34%</h3>
+                      <Info className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <p className="text-gray-600 text-sm">Pulse Trends</p>
+                    {/* Small line graph */}
+                    <div className="flex items-end justify-center space-x-1 mt-2 h-8">
+                      <div className="w-1 bg-green-400 h-3"></div>
+                      <div className="w-1 bg-green-400 h-5"></div>
+                      <div className="w-1 bg-green-400 h-7"></div>
+                      <div className="w-1 bg-green-400 h-4"></div>
+                      <div className="w-1 bg-green-400 h-6"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              
-              {/* Analytics Grid */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <h3 className="text-2xl font-bold text-blue-600">77/100</h3>
-                    <Info className="w-4 h-4 text-gray-400" />
-                  </div>
-                  <p className="text-gray-600 text-sm">Environment Score</p>
-                </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <h3 className="text-2xl font-bold text-green-600">64/100</h3>
-                    <Info className="w-4 h-4 text-gray-400" />
-                  </div>
-                  <p className="text-gray-600 text-sm">Continuity of Care Index</p>
-                </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <h3 className="text-2xl font-bold text-purple-600">86%</h3>
-                    <Info className="w-4 h-4 text-gray-400" />
-                  </div>
-                  <p className="text-gray-600 text-sm">Strong Matches</p>
-                  {/* Small line graph */}
-                  <div className="flex items-end justify-center space-x-1 mt-2 h-8">
-                    <div className="w-1 bg-blue-400 h-2"></div>
-                    <div className="w-1 bg-blue-400 h-4"></div>
-                    <div className="w-1 bg-blue-400 h-6"></div>
-                    <div className="w-1 bg-blue-400 h-3"></div>
-                    <div className="w-1 bg-blue-400 h-5"></div>
-                  </div>
-                </div>
-                <div className="text-center p-4 border rounded-lg">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <h3 className="text-2xl font-bold text-orange-600">+34%</h3>
-                    <Info className="w-4 h-4 text-gray-400" />
-                  </div>
-                  <p className="text-gray-600 text-sm">Pulse Trends</p>
-                  {/* Small line graph */}
-                  <div className="flex items-end justify-center space-x-1 mt-2 h-8">
-                    <div className="w-1 bg-green-400 h-3"></div>
-                    <div className="w-1 bg-green-400 h-5"></div>
-                    <div className="w-1 bg-green-400 h-7"></div>
-                    <div className="w-1 bg-green-400 h-4"></div>
-                    <div className="w-1 bg-green-400 h-6"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             {/* Insights Section */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
