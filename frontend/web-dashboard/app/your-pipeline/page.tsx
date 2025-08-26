@@ -265,7 +265,7 @@ const YourPipelinePage = () => {
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
                 <div className="space-y-4">
                   {[1, 2, 3, 4].map((item) => (
-                    <div key={item} className="p-5 border rounded-xl">
+                    <div key={item} className="p-5 border rounded-xl bg-white">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
@@ -312,7 +312,7 @@ const YourPipelinePage = () => {
                   </div>
                   <div className="space-y-3">
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center justify-between p-4 border rounded-xl">
+                      <div key={item} className="flex items-center justify-between p-4 border rounded-xl bg-white">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                             <User className="w-5 h-5 text-blue-600" />
@@ -349,7 +349,7 @@ const YourPipelinePage = () => {
                   </div>
                   <div className="space-y-3">
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center justify-between p-4 border rounded-xl">
+                      <div key={item} className="flex items-center justify-between p-4 border rounded-xl bg-white">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                             <User className="w-5 h-5 text-blue-600" />
