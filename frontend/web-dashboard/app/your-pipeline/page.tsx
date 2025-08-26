@@ -127,25 +127,28 @@ const YourPipelinePage = () => {
             </div>
           </div>
           
-          {/* Analytics and Insights Container - Stacked on top */}
+          {/* Analytics Container - Holds both Metrics and Insights */}
           <div className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6 mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-semibold text-gray-900">Analytics</h2>
+              <div className="flex items-center space-x-2">
+                <button 
+                  onClick={() => setIsAnalyticsExpanded(!isAnalyticsExpanded)}
+                  className="p-2 hover:bg-gray-100 rounded transition-colors"
+                  title="Expand to full screen"
+                >
+                  <Maximize2 className="w-4 h-4 text-gray-600" />
+                </button>
+                <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                  <Download className="w-4 h-4 text-gray-600" />
+                </button>
+              </div>
+            </div>
             <div className="grid grid-cols-2 gap-8">
-              {/* Analytics Section */}
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-900">Analytics</h2>
-                  <div className="flex items-center space-x-2">
-                    <button 
-                      onClick={() => setIsAnalyticsExpanded(!isAnalyticsExpanded)}
-                      className="p-2 hover:bg-gray-100 rounded transition-colors"
-                      title="Expand to full screen"
-                    >
-                      <Maximize2 className="w-4 h-4 text-gray-600" />
-                    </button>
-                    <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
-                      <Download className="w-4 h-4 text-gray-600" />
-                    </button>
-                  </div>
+              {/* Metrics Section */}
+              <div className="rounded-lg shadow-sm border p-6">
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold text-gray-900">Metrics</h3>
                 </div>
                 
                 {/* Analytics Grid */}
@@ -198,7 +201,7 @@ const YourPipelinePage = () => {
               </div>
 
               {/* Insights Section */}
-              <div className="bg-white rounded-lg shadow-sm border p-6">
+              <div className="rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-semibold text-gray-900">Insights</h2>
                   <div className="flex items-center space-x-2">
