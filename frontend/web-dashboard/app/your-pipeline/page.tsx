@@ -91,7 +91,7 @@ const YourPipelinePage = () => {
       {/* Page Header */}
       <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[76px] font-black leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
+          <h1 className="text-[76.6971px] font-normal leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
             YourPipeline
           </h1>
           {user.role === 'ADMIN' && (
@@ -109,7 +109,7 @@ const YourPipelinePage = () => {
           {/* Company Header and Actions */}
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
             <div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 font-baloo">
+              <h2 className="text-[30px] font-black leading-[154%] text-[#01253F] font-avenir">
                 St. Mary's Health Center
               </h2>
               {user.role === 'ADMIN' && (
@@ -130,7 +130,7 @@ const YourPipelinePage = () => {
           {/* Analytics Container - Holds both Metrics and Insights */}
           <div className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6 mb-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 font-avenir">Analytics</h2>
+              <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Analytics</h2>
               <div className="flex items-center space-x-2">
                 <button 
                   onClick={() => setIsAnalyticsExpanded(!isAnalyticsExpanded)}
@@ -196,7 +196,7 @@ const YourPipelinePage = () => {
               {/* Insights Section */}
               <div className="bg-white rounded-xl shadow-sm border p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-900 font-avenir">Insights</h2>
+                  <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Insights</h2>
                   <div className="flex items-center space-x-2">
                     <button 
                       onClick={() => setIsInsightsExpanded(!isInsightsExpanded)}
@@ -262,22 +262,22 @@ const YourPipelinePage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
               {/* Open Jobs Section - Left Side (Full Height) */}
               <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6" style={{ minWidth: '300px' }}>
-                <h2 className="text-2xl font-semibold text-black mb-6 font-avenir">Open Jobs</h2>
+                <h2 className="text-[25px] font-black leading-[154%] text-[#01253F] mb-6 font-avenir">Open Jobs</h2>
                 <div className="space-y-4">
                   {[1, 2, 3, 4].map((item) => (
                     <div key={item} className="p-5 border rounded-xl bg-white">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="font-medium text-black">Registered Nurse</h4>
+                            <h4 className="font-black text-[25px] leading-[154%] text-[#2466D0]">Registered Nurse</h4>
                             <Edit3 className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" />
                           </div>
-                          <p className="text-black text-sm">St. Mary's Health Center, New Haven, CT</p>
-                          <p className="text-black text-sm">75k/yr - 85k/yr</p>
+                          <p className="text-[#01253F] text-[18px] font-black leading-[29px]">St. Mary's Health Center, New Haven, CT</p>
+                          <p className="text-[#01253F] text-[18px] font-black leading-[29px]">75k/yr - 85k/yr</p>
                         </div>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-black">4 Applicants</span>
+                        <span className="text-[15.3061px] font-black leading-[115%] text-[#01253F]">4 Applicants</span>
                         <button className="px-3 py-1 text-white text-sm rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
                           View Applicants
                         </button>
@@ -300,7 +300,7 @@ const YourPipelinePage = () => {
                 {/* Matches Section - Top Right (Half Height) */}
                 <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-gray-900 font-avenir">Matches</h2>
+                    <h2 className="text-[25px] font-black leading-[154%] text-[#2466D0] font-avenir">Matches</h2>
                     <div className="flex items-center space-x-2">
                       <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
                         <Download className="w-4 h-4 text-gray-600" />
@@ -337,7 +337,7 @@ const YourPipelinePage = () => {
                 {/* Applicants Section - Bottom Right (Half Height) */}
                 <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-gray-900 font-avenir">Applicants</h2>
+                    <h2 className="text-[25px] font-black leading-[154%] text-[#01253F] font-avenir">Applicants</h2>
                     <div className="flex items-center space-x-2">
                       <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
                         <Download className="w-4 h-4 text-gray-600" />
