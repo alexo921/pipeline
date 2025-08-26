@@ -102,10 +102,10 @@ const YourPipelinePage = () => {
 
       {/* Main Content */}
       <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative">
-          
-          {/* Company Header and Actions */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
+        
+        {/* Top Container - Company Header and Actions */}
+        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 font-baloo">
                 St. Mary's Health Center
@@ -124,9 +124,11 @@ const YourPipelinePage = () => {
               </button>
             </div>
           </div>
-          
-          {/* Analytics and Insights Grid */}
-          <div className="grid grid-cols-2 gap-8 mb-8">
+        </div>
+        
+        {/* Top Container - Analytics and Insights Grid */}
+        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative mb-8">
+          <div className="grid grid-cols-2 gap-8">
             {/* Analytics Section */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <div className="flex items-center justify-between mb-6">
@@ -257,7 +259,10 @@ const YourPipelinePage = () => {
             </div>
           </div>
 
-          {/* Bottom Grid */}
+        </div>
+        
+        {/* Bottom Container - Open Jobs, Matches, and Applicants */}
+        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
             {/* Open Jobs Section - Left Side (Full Height) */}
             <div className="bg-white rounded-lg shadow-sm border p-6" style={{ minWidth: '300px' }}>
