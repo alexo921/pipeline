@@ -130,7 +130,7 @@ const YourPipelinePage = () => {
           {/* Analytics Container - Holds both Metrics and Insights */}
           <div className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6 mb-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900">Analytics</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 font-avenir">Analytics</h2>
               <div className="flex items-center space-x-2">
                 <button 
                   onClick={() => setIsAnalyticsExpanded(!isAnalyticsExpanded)}
@@ -152,21 +152,21 @@ const YourPipelinePage = () => {
                     <h3 className="text-2xl font-bold text-blue-600">77/100</h3>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
-                  <p className="text-gray-600 text-sm">Environment Score</p>
+                  <p className="text-gray-600 text-sm font-avenir">Environment Score</p>
                 </div>
                 <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200">
                   <div className="flex items-center justify-center space-x-2 mb-2">
                     <h3 className="text-2xl font-bold text-green-600">64/100</h3>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
-                  <p className="text-gray-600 text-sm">Continuity of Care Index</p>
+                  <p className="text-gray-600 text-sm font-avenir">Continuity of Care Index</p>
                 </div>
                 <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200">
                   <div className="flex items-center justify-center space-x-2 mb-2">
                     <h3 className="text-2xl font-bold text-purple-600">86%</h3>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
-                  <p className="text-gray-600 text-sm">Strong Matches</p>
+                  <p className="text-gray-600 text-sm font-avenir">Strong Matches</p>
                   {/* Small line graph */}
                   <div className="flex items-end justify-center space-x-1 mt-2 h-8">
                     <div className="w-1 bg-blue-400 h-2"></div>
@@ -181,7 +181,7 @@ const YourPipelinePage = () => {
                     <h3 className="text-2xl font-bold text-orange-600">+34%</h3>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
-                  <p className="text-gray-600 text-sm">Pulse Trends</p>
+                  <p className="text-gray-600 text-sm font-avenir">Pulse Trends</p>
                   {/* Small line graph */}
                   <div className="flex items-end justify-center space-x-1 mt-2 h-8">
                     <div className="w-1 bg-green-400 h-3"></div>
@@ -196,7 +196,7 @@ const YourPipelinePage = () => {
               {/* Insights Section */}
               <div className="bg-white rounded-xl shadow-sm border p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-900">Insights</h2>
+                  <h2 className="text-2xl font-semibold text-gray-900 font-avenir">Insights</h2>
                   <div className="flex items-center space-x-2">
                     <button 
                       onClick={() => setIsInsightsExpanded(!isInsightsExpanded)}
@@ -262,23 +262,23 @@ const YourPipelinePage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
               {/* Open Jobs Section - Left Side (Full Height) */}
               <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6" style={{ minWidth: '300px' }}>
-                <h2 className="text-2xl font-semibold text-blue-600 mb-6 font-avenir">Open Jobs</h2>
+                <h2 className="text-2xl font-semibold text-black mb-6 font-avenir">Open Jobs</h2>
                 <div className="space-y-4">
                   {[1, 2, 3, 4].map((item) => (
                     <div key={item} className="p-5 border rounded-xl bg-white">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="font-medium text-gray-900">Registered Nurse</h4>
+                            <h4 className="font-medium text-black">Registered Nurse</h4>
                             <Edit3 className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" />
                           </div>
-                          <p className="text-gray-600 text-sm">St. Mary's Health Center, New Haven, CT</p>
-                          <p className="text-gray-500 text-sm">75k/yr - 85k/yr</p>
+                          <p className="text-black text-sm">St. Mary's Health Center, New Haven, CT</p>
+                          <p className="text-black text-sm">75k/yr - 85k/yr</p>
                         </div>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500">4 Applicants</span>
-                        <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors">
+                        <span className="text-sm text-black">4 Applicants</span>
+                        <button className="px-3 py-1 text-white text-sm rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
                           View Applicants
                         </button>
                       </div>
@@ -288,7 +288,7 @@ const YourPipelinePage = () => {
                 
                 {/* Pagination */}
                 <div className="flex items-center justify-center space-x-2 mt-6">
-                  <button className="px-3 py-1 bg-blue-600 text-white rounded">1</button>
+                  <button className="px-3 py-1 text-white rounded-full" style={{ backgroundColor: '#01253F' }}>1</button>
                   <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">2</button>
                   <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">3</button>
                   <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">Next &gt;</button>
@@ -300,7 +300,7 @@ const YourPipelinePage = () => {
                 {/* Matches Section - Top Right (Half Height) */}
                 <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-gray-900">Matches</h2>
+                    <h2 className="text-xl font-semibold text-gray-900 font-avenir">Matches</h2>
                     <div className="flex items-center space-x-2">
                       <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
                         <Download className="w-4 h-4 text-gray-600" />
@@ -325,7 +325,7 @@ const YourPipelinePage = () => {
                         </div>
                         <div className="flex items-center space-x-2">
                           <span className="text-green-600 text-xs font-medium">Matched ✔</span>
-                          <button className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors">
+                          <button className="px-3 py-1 text-white text-xs rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
                             View Profile
                           </button>
                         </div>
@@ -337,7 +337,7 @@ const YourPipelinePage = () => {
                 {/* Applicants Section - Bottom Right (Half Height) */}
                 <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-gray-900">Applicants</h2>
+                    <h2 className="text-xl font-semibold text-gray-900 font-avenir">Applicants</h2>
                     <div className="flex items-center space-x-2">
                       <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
                         <Download className="w-4 h-4 text-gray-600" />
@@ -360,7 +360,7 @@ const YourPipelinePage = () => {
                             <p className="text-gray-500 text-xs">New Haven, CT</p>
                           </div>
                         </div>
-                        <button className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors">
+                        <button className="px-3 py-1 text-white text-xs rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
                           View Profile
                         </button>
                       </div>
