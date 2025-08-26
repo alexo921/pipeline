@@ -197,178 +197,179 @@ const YourPipelinePage = () => {
                 </div>
               </div>
 
-            {/* Insights Section */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900">Insights</h2>
-                <div className="flex items-center space-x-2">
-                  <button 
-                    onClick={() => setIsInsightsExpanded(!isInsightsExpanded)}
-                    className="p-2 hover:bg-gray-100 rounded transition-colors"
-                    title="Expand to full screen"
-                  >
-                    <Maximize2 className="w-4 h-4 text-gray-600" />
-                  </button>
-                  <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
-                    <Download className="w-4 h-4 text-gray-600" />
-                  </button>
-                </div>
-              </div>
-              
-              {/* Progress Bars */}
-              <div className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Work Environment Score</span>
-                    <span className="text-sm text-gray-600">74%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '74%' }}></div>
+              {/* Insights Section */}
+              <div className="bg-white rounded-lg shadow-sm border p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-900">Insights</h2>
+                  <div className="flex items-center space-x-2">
+                    <button 
+                      onClick={() => setIsInsightsExpanded(!isInsightsExpanded)}
+                      className="p-2 hover:bg-gray-100 rounded transition-colors"
+                      title="Expand to full screen"
+                    >
+                      <Maximize2 className="w-4 h-4 text-gray-600" />
+                    </button>
+                    <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                      <Download className="w-4 h-4 text-gray-600" />
+                    </button>
                   </div>
                 </div>
                 
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">High Retention Forecast</span>
-                    <span className="text-sm text-gray-600">52%</span>
+                {/* Progress Bars */}
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">Work Environment Score</span>
+                      <span className="text-sm text-gray-600">74%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '74%' }}></div>
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '52%' }}></div>
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">High Retention Forecast</span>
+                      <span className="text-sm text-gray-600">52%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '52%' }}></div>
+                    </div>
                   </div>
-                </div>
-                
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Behavioral Risk Flags</span>
-                    <span className="text-sm text-gray-600">36%</span>
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">Behavioral Risk Flags</span>
+                      <span className="text-sm text-gray-600">36%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '36%' }}></div>
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '36%' }}></div>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Culture Fit Alignment</span>
-                    <span className="text-sm text-gray-600">36%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '36%' }}></div>
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">Culture Fit Alignment</span>
+                      <span className="text-sm text-gray-600">36%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '36%' }}></div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
           
           {/* Bottom Container - Open Jobs, Matches, and Applicants */}
           <div className="bg-white rounded-lg shadow-sm border p-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-            {/* Open Jobs Section - Left Side (Full Height) */}
-            <div className="bg-white rounded-lg shadow-sm border p-6" style={{ minWidth: '300px' }}>
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
-              <div className="space-y-4">
-                {[1, 2, 3, 4].map((item) => (
-                  <div key={item} className="p-4 border rounded-lg">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-1">
-                          <h4 className="font-medium text-gray-900">Registered Nurse</h4>
-                          <Edit3 className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" />
-                        </div>
-                        <p className="text-gray-600 text-sm">St. Mary's Health Center, New Haven, CT</p>
-                        <p className="text-gray-500 text-sm">75k/yr - 85k/yr</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">4 Applicants</span>
-                      <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
-                        View Applicants
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Pagination */}
-              <div className="flex items-center justify-center space-x-2 mt-6">
-                <button className="px-3 py-1 bg-blue-600 text-white rounded">1</button>
-                <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">2</button>
-                <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">3</button>
-                <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">Next &gt;</button>
-              </div>
-            </div>
-
-            {/* Right Side - Matches and Applicants Stacked */}
-            <div className="space-y-6" style={{ minWidth: '300px' }}>
-              {/* Matches Section - Top Right (Half Height) */}
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900">Matches</h2>
-                  <div className="flex items-center space-x-2">
-                    <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
-                      <Download className="w-4 h-4 text-gray-600" />
-                    </button>
-                    <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Expand to full screen">
-                      <Maximize2 className="w-4 h-4 text-gray-600" />
-                    </button>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  {[1, 2].map((item) => (
-                    <div key={item} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <User className="w-5 h-5 text-blue-600" />
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-gray-900 text-sm">Marvin Grant</h4>
-                          <p className="text-gray-600 text-xs">5+ years experience</p>
-                          <p className="text-gray-500 text-xs">New Haven, CT</p>
+              {/* Open Jobs Section - Left Side (Full Height) */}
+              <div className="bg-white rounded-lg shadow-sm border p-6" style={{ minWidth: '300px' }}>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
+                <div className="space-y-4">
+                  {[1, 2, 3, 4].map((item) => (
+                    <div key={item} className="p-4 border rounded-lg">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <h4 className="font-medium text-gray-900">Registered Nurse</h4>
+                            <Edit3 className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" />
+                          </div>
+                          <p className="text-gray-600 text-sm">St. Mary's Health Center, New Haven, CT</p>
+                          <p className="text-gray-500 text-sm">75k/yr - 85k/yr</p>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-green-600 text-xs font-medium">Matched ✔</span>
-                        <button className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
-                          View Profile
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-500">4 Applicants</span>
+                        <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
+                          View Applicants
                         </button>
                       </div>
                     </div>
                   ))}
                 </div>
+                
+                {/* Pagination */}
+                <div className="flex items-center justify-center space-x-2 mt-6">
+                  <button className="px-3 py-1 bg-blue-600 text-white rounded">1</button>
+                  <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">2</button>
+                  <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">3</button>
+                  <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">Next &gt;</button>
+                </div>
               </div>
 
-              {/* Applicants Section - Bottom Right (Half Height) */}
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900">Applicants</h2>
-                  <div className="flex items-center space-x-2">
-                    <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
-                      <Download className="w-4 h-4 text-gray-600" />
-                    </button>
-                    <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Expand to full screen">
-                      <Maximize2 className="w-4 h-4 text-gray-600" />
-                    </button>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  {[1, 2].map((item) => (
-                    <div key={item} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <User className="w-5 h-5 text-blue-600" />
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-gray-900 text-sm">Marvin Grant</h4>
-                          <p className="text-gray-600 text-xs">5+ years experience</p>
-                          <p className="text-gray-500 text-xs">New Haven, CT</p>
-                        </div>
-                      </div>
-                      <button className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
-                        View Profile
+              {/* Right Side - Matches and Applicants Stacked */}
+              <div className="space-y-6" style={{ minWidth: '300px' }}>
+                {/* Matches Section - Top Right (Half Height) */}
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-semibold text-gray-900">Matches</h2>
+                    <div className="flex items-center space-x-2">
+                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                        <Download className="w-4 h-4 text-gray-600" />
+                      </button>
+                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Expand to full screen">
+                        <Maximize2 className="w-4 h-4 text-gray-600" />
                       </button>
                     </div>
-                  ))}
+                  </div>
+                  <div className="space-y-3">
+                    {[1, 2].map((item) => (
+                      <div key={item} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <User className="w-5 h-5 text-blue-600" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-gray-900 text-sm">Marvin Grant</h4>
+                            <p className="text-gray-600 text-xs">5+ years experience</p>
+                            <p className="text-gray-500 text-xs">New Haven, CT</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-green-600 text-xs font-medium">Matched ✔</span>
+                          <button className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
+                            View Profile
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Applicants Section - Bottom Right (Half Height) */}
+                <div className="bg-white rounded-lg shadow-sm border p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-semibold text-gray-900">Applicants</h2>
+                    <div className="flex items-center space-x-2">
+                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                        <Download className="w-4 h-4 text-gray-600" />
+                      </button>
+                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Expand to full screen">
+                        <Maximize2 className="w-4 h-4 text-gray-600" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    {[1, 2].map((item) => (
+                      <div key={item} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <User className="w-5 h-5 text-blue-600" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-gray-900 text-sm">Marvin Grant</h4>
+                            <p className="text-gray-600 text-xs">5+ years experience</p>
+                            <p className="text-gray-500 text-xs">New Haven, CT</p>
+                          </div>
+                        </div>
+                        <button className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
+                          View Profile
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
