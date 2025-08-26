@@ -145,60 +145,56 @@ const YourPipelinePage = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-8">
-              {/* Data Cards Section */}
-              <div className="rounded-lg shadow-sm border p-6">
-                
-                {/* Analytics Grid */}
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-gray-200">
-                    <div className="flex items-center justify-center space-x-2 mb-2">
-                      <h3 className="text-2xl font-bold text-blue-600">77/100</h3>
-                      <Info className="w-4 h-4 text-gray-400" />
-                    </div>
-                    <p className="text-gray-600 text-sm">Environment Score</p>
+              {/* Data Cards Grid */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <h3 className="text-2xl font-bold text-blue-600">77/100</h3>
+                    <Info className="w-4 h-4 text-gray-400" />
                   </div>
-                  <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-gray-200">
-                    <div className="flex items-center justify-center space-x-2 mb-2">
-                      <h3 className="text-2xl font-bold text-green-600">64/100</h3>
-                      <Info className="w-4 h-4 text-gray-400" />
-                    </div>
-                    <p className="text-gray-600 text-sm">Continuity of Care Index</p>
+                  <p className="text-gray-600 text-sm">Environment Score</p>
+                </div>
+                <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <h3 className="text-2xl font-bold text-green-600">64/100</h3>
+                    <Info className="w-4 h-4 text-gray-400" />
                   </div>
-                  <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-gray-200">
-                    <div className="flex items-center justify-center space-x-2 mb-2">
-                      <h3 className="text-2xl font-bold text-purple-600">86%</h3>
-                      <Info className="w-4 h-4 text-gray-400" />
-                    </div>
-                    <p className="text-gray-600 text-sm">Strong Matches</p>
-                    {/* Small line graph */}
-                    <div className="flex items-end justify-center space-x-1 mt-2 h-8">
-                      <div className="w-1 bg-blue-400 h-2"></div>
-                      <div className="w-1 bg-blue-400 h-4"></div>
-                      <div className="w-1 bg-blue-400 h-6"></div>
-                      <div className="w-1 bg-blue-400 h-3"></div>
-                      <div className="w-1 bg-blue-400 h-5"></div>
-                    </div>
+                  <p className="text-gray-600 text-sm">Continuity of Care Index</p>
+                </div>
+                <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <h3 className="text-2xl font-bold text-purple-600">86%</h3>
+                    <Info className="w-4 h-4 text-gray-400" />
                   </div>
-                  <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-gray-200">
-                    <div className="flex items-center justify-center space-x-2 mb-2">
-                      <h3 className="text-2xl font-bold text-orange-600">+34%</h3>
-                      <Info className="w-4 h-4 text-gray-400" />
-                    </div>
-                    <p className="text-gray-600 text-sm">Pulse Trends</p>
-                    {/* Small line graph */}
-                    <div className="flex items-end justify-center space-x-1 mt-2 h-8">
-                      <div className="w-1 bg-green-400 h-3"></div>
-                      <div className="w-1 bg-green-400 h-5"></div>
-                      <div className="w-1 bg-green-400 h-7"></div>
-                      <div className="w-1 bg-green-400 h-4"></div>
-                      <div className="w-1 bg-green-400 h-6"></div>
-                    </div>
+                  <p className="text-gray-600 text-sm">Strong Matches</p>
+                  {/* Small line graph */}
+                  <div className="flex items-end justify-center space-x-1 mt-2 h-8">
+                    <div className="w-1 bg-blue-400 h-2"></div>
+                    <div className="w-1 bg-blue-400 h-4"></div>
+                    <div className="w-1 bg-blue-400 h-6"></div>
+                    <div className="w-1 bg-blue-400 h-3"></div>
+                    <div className="w-1 bg-blue-400 h-5"></div>
+                  </div>
+                </div>
+                <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <h3 className="text-2xl font-bold text-orange-600">+34%</h3>
+                    <Info className="w-4 h-4 text-gray-400" />
+                  </div>
+                  <p className="text-gray-600 text-sm">Pulse Trends</p>
+                  {/* Small line graph */}
+                  <div className="flex items-end justify-center space-x-1 mt-2 h-8">
+                    <div className="w-1 bg-green-400 h-3"></div>
+                    <div className="w-1 bg-green-400 h-5"></div>
+                    <div className="w-1 bg-green-400 h-7"></div>
+                    <div className="w-1 bg-green-400 h-4"></div>
+                    <div className="w-1 bg-green-400 h-6"></div>
                   </div>
                 </div>
               </div>
 
               {/* Insights Section */}
-              <div className="rounded-lg shadow-sm border p-6">
+              <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-semibold text-gray-900">Insights</h2>
                   <div className="flex items-center space-x-2">
