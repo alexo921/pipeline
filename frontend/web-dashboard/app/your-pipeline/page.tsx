@@ -262,7 +262,7 @@ const YourPipelinePage = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
               {/* Open Jobs Section - Left Side (Full Height) */}
               <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6" style={{ minWidth: '300px' }}>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
+                <h2 className="text-2xl font-semibold text-blue-600 mb-6 font-avenir">Open Jobs</h2>
                 <div className="space-y-4">
                   {[1, 2, 3, 4].map((item) => (
                     <div key={item} className="p-5 border rounded-xl bg-white">
@@ -278,7 +278,7 @@ const YourPipelinePage = () => {
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-500">4 Applicants</span>
-                        <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
+                        <button className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors">
                           View Applicants
                         </button>
                       </div>
@@ -325,7 +325,7 @@ const YourPipelinePage = () => {
                         </div>
                         <div className="flex items-center space-x-2">
                           <span className="text-green-600 text-xs font-medium">Matched ✔</span>
-                          <button className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
+                          <button className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors">
                             View Profile
                           </button>
                         </div>
@@ -360,7 +360,7 @@ const YourPipelinePage = () => {
                             <p className="text-gray-500 text-xs">New Haven, CT</p>
                           </div>
                         </div>
-                        <button className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
+                        <button className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors">
                           View Profile
                         </button>
                       </div>
