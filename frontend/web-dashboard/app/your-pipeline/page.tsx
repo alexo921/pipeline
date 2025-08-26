@@ -150,21 +150,21 @@ const YourPipelinePage = () => {
                 
                 {/* Analytics Grid */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="text-center p-4 border rounded-lg">
+                  <div className="text-center p-4 rounded-lg">
                     <div className="flex items-center justify-center space-x-2 mb-2">
                       <h3 className="text-2xl font-bold text-blue-600">77/100</h3>
                       <Info className="w-4 h-4 text-gray-400" />
                     </div>
                     <p className="text-gray-600 text-sm">Environment Score</p>
                   </div>
-                  <div className="text-center p-4 border rounded-lg">
+                  <div className="text-center p-4 rounded-lg">
                     <div className="flex items-center justify-center space-x-2 mb-2">
                       <h3 className="text-2xl font-bold text-green-600">64/100</h3>
                       <Info className="w-4 h-4 text-gray-400" />
                     </div>
                     <p className="text-gray-600 text-sm">Continuity of Care Index</p>
                   </div>
-                  <div className="text-center p-4 border rounded-lg">
+                  <div className="text-center p-4 rounded-lg">
                     <div className="flex items-center justify-center space-x-2 mb-2">
                       <h3 className="text-2xl font-bold text-purple-600">86%</h3>
                       <Info className="w-4 h-4 text-gray-400" />
@@ -179,7 +179,7 @@ const YourPipelinePage = () => {
                       <div className="w-1 bg-blue-400 h-5"></div>
                     </div>
                   </div>
-                  <div className="text-center p-4 border rounded-lg">
+                  <div className="text-center p-4 rounded-lg">
                     <div className="flex items-center justify-center space-x-2 mb-2">
                       <h3 className="text-2xl font-bold text-orange-600">+34%</h3>
                       <Info className="w-4 h-4 text-gray-400" />
