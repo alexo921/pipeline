@@ -260,10 +260,9 @@ const YourPipelinePage = () => {
             </div>
           </div>
 
-        </div>
-        
-        {/* Bottom Container - Open Jobs, Matches, and Applicants */}
-        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative">
+          
+          {/* Bottom Container - Open Jobs, Matches, and Applicants */}
+          <div className="bg-white rounded-lg shadow-sm border p-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
             {/* Open Jobs Section - Left Side (Full Height) */}
             <div className="bg-white rounded-lg shadow-sm border p-6" style={{ minWidth: '300px' }}>
