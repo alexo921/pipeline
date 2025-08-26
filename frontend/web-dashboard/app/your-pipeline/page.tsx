@@ -145,11 +145,8 @@ const YourPipelinePage = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-8">
-              {/* Metrics Section */}
+              {/* Data Cards Section */}
               <div className="rounded-lg shadow-sm border p-6">
-                <div className="mb-6">
-                  <h3 className="text-xl font-semibold text-gray-900">Metrics</h3>
-                </div>
                 
                 {/* Analytics Grid */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
