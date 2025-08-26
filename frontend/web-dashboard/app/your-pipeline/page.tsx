@@ -131,7 +131,7 @@ const YourPipelinePage = () => {
           <div className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6 mb-8">
             <div className="grid grid-cols-2 gap-8">
               {/* Analytics Section */}
-              <div className="rounded-lg shadow-sm border p-6">
+              <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-semibold text-gray-900">Analytics</h2>
                   <div className="flex items-center space-x-2">
@@ -198,7 +198,7 @@ const YourPipelinePage = () => {
               </div>
 
               {/* Insights Section */}
-              <div className="rounded-lg shadow-sm border p-6">
+              <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-semibold text-gray-900">Insights</h2>
                   <div className="flex items-center space-x-2">
@@ -265,7 +265,7 @@ const YourPipelinePage = () => {
           <div className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
               {/* Open Jobs Section - Left Side (Full Height) */}
-              <div className="rounded-lg shadow-sm border p-6" style={{ minWidth: '300px' }}>
+              <div className="bg-white rounded-lg shadow-sm border p-6" style={{ minWidth: '300px' }}>
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">Open Jobs</h2>
                 <div className="space-y-4">
                   {[1, 2, 3, 4].map((item) => (
@@ -302,7 +302,7 @@ const YourPipelinePage = () => {
               {/* Right Side - Matches and Applicants Stacked */}
               <div className="space-y-6" style={{ minWidth: '300px' }}>
                 {/* Matches Section - Top Right (Half Height) */}
-                <div className="rounded-lg shadow-sm border p-6">
+                <div className="bg-white rounded-lg shadow-sm border p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-semibold text-gray-900">Matches</h2>
                     <div className="flex items-center space-x-2">
@@ -339,7 +339,7 @@ const YourPipelinePage = () => {
                 </div>
 
                 {/* Applicants Section - Bottom Right (Half Height) */}
-                <div className="rounded-lg shadow-sm border p-6">
+                <div className="bg-white rounded-lg shadow-sm border p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-semibold text-gray-900">Applicants</h2>
                     <div className="flex items-center space-x-2">
