@@ -103,7 +103,7 @@ const YourPipelinePage = () => {
       {/* Main Content */}
       <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12" style={{ position: 'relative', zIndex: 1 }}>
         
-        {/* Main Company Container - Contains both Analytics/Insights and Jobs/Matches/Applicants */}
+        {/* Main Company Container - Wraps both Analytics/Insights and Jobs/Matches/Applicants */}
         <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative">
           
           {/* Company Header and Actions */}
@@ -127,9 +127,8 @@ const YourPipelinePage = () => {
             </div>
           </div>
           
-          {/* Second Container - Analytics and Insights Grid */}
+          {/* Analytics and Insights Container - Stacked on top */}
           <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-          <div className="grid grid-cols-2 gap-8">
             <div className="grid grid-cols-2 gap-8">
               {/* Analytics Section */}
               <div className="bg-white rounded-lg shadow-sm border p-6">
@@ -262,9 +261,7 @@ const YourPipelinePage = () => {
             </div>
           </div>
           
-          
-          {/* Third Container - Open Jobs, Matches, and Applicants */}
-          <div className="bg-white rounded-lg shadow-sm border p-6">
+          {/* Jobs/Matches/Applicants Container - Stacked below */}
           <div className="bg-white rounded-lg shadow-sm border p-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
               {/* Open Jobs Section - Left Side (Full Height) */}
