@@ -128,7 +128,7 @@ const YourPipelinePage = () => {
           </div>
           
           {/* Analytics and Insights Container - Stacked on top */}
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+          <div className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6 mb-8">
             <div className="grid grid-cols-2 gap-8">
               {/* Analytics Section */}
               <div className="bg-white rounded-lg shadow-sm border p-6">
@@ -262,7 +262,7 @@ const YourPipelinePage = () => {
           </div>
           
           {/* Jobs/Matches/Applicants Container - Stacked below */}
-          <div className="bg-white rounded-lg shadow-sm border p-6">
+          <div className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
               {/* Open Jobs Section - Left Side (Full Height) */}
               <div className="bg-white rounded-lg shadow-sm border p-6" style={{ minWidth: '300px' }}>
