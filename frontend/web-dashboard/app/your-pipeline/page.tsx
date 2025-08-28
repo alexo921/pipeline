@@ -266,19 +266,17 @@ const YourPipelinePage = () => {
                 <div className="space-y-4">
                   {[1, 2, 3, 4].map((item) => (
                     <div key={item} className="p-4 border rounded-xl bg-white">
-                      <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
                             <h4 className="font-bold text-[25px] leading-[154%] text-[#2466D0]">Registered Nurse</h4>
                             <Edit3 className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" />
                           </div>
                           <p className="text-[#01253F] text-[18px] font-bold leading-[29px] font-avenir">St. Mary's Health Center</p>
-                          <p className="text-[#01253F] text-[18px] font-normal leading-[29px] font-avenir">New Haven, CT</p>
-                          <p className="text-[#01253F] text-[18px] font-normal leading-[29px] font-avenir">75k/yr - 85k/yr</p>
+                          <p className="text-[#01253F] text-[16px] font-normal leading-[29px] font-avenir">New Haven, CT</p>
+                          <p className="text-[#01253F] text-[16px] font-normal leading-[29px] font-avenir">75k/yr - 85k/yr</p>
                         </div>
-                      </div>
-                      <div className="flex items-center justify-end">
-                        <div className="relative">
+                        <div className="relative flex flex-col justify-between h-full">
                           <button className="px-3 py-1 text-white text-sm rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
                             View Applicants
                           </button>
