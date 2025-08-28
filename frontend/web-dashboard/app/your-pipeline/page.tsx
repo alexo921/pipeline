@@ -530,13 +530,13 @@ const YourPipelinePage = () => {
                   <div className="space-y-2">
                     {[1, 2].map((item) => (
                       <div key={item} className="flex items-center justify-between p-4 border bg-white" style={{ width: '100%', height: '140px', borderRadius: '16px' }}>
-                        <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 rounded-full overflow-hidden">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-12 h-12 rounded-full overflow-hidden">
                             <img src="/user-icon.png" alt="User Profile" className="w-full h-full object-cover" />
                           </div>
                           <div>
-                            <h4 className="font-medium text-gray-900 text-sm">Marvin Grant</h4>
-                            <p className="text-gray-600 text-xs">5+ years experience</p>
+                            <h4 className="font-bold text-[#01253F] text-sm mb-1">Marvin Grant</h4>
+                            <p className="font-bold text-[#01253F] text-xs mb-2">5+ years experience</p>
                             <p className="text-gray-500 text-xs">New Haven, CT</p>
                           </div>
                         </div>
@@ -605,13 +605,13 @@ const YourPipelinePage = () => {
                   <div className="space-y-2">
                     {[1, 2].map((item) => (
                       <div key={item} className="flex items-center justify-between p-4 border bg-white" style={{ width: '100%', height: '140px', borderRadius: '16px' }}>
-                        <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 rounded-full overflow-hidden">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-12 h-12 rounded-full overflow-hidden">
                             <img src="/user-icon.png" alt="User Profile" className="w-full h-full object-cover" />
                           </div>
                           <div>
-                            <h4 className="font-medium text-gray-900 text-sm">Marvin Grant</h4>
-                            <p className="text-gray-600 text-xs">5+ years experience</p>
+                            <h4 className="font-bold text-[#01253F] text-sm mb-1">Marvin Grant</h4>
+                            <p className="font-bold text-[#01253F] text-xs mb-2">5+ years experience</p>
                             <p className="text-gray-500 text-xs">New Haven, CT</p>
                           </div>
                         </div>
