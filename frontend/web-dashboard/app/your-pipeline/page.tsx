@@ -519,9 +519,37 @@ const YourPipelinePage = () => {
                             <p className="text-gray-500 text-xs">New Haven, CT</p>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-green-600 text-xs font-medium">Matched ✔</span>
-                          <button className="px-3 py-1 text-white text-xs rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
+                        <div className="flex flex-col items-end space-y-2">
+                          <div 
+                            className="flex items-center justify-center px-[15px] py-[12.27px] rounded-[81.82px]"
+                            style={{
+                              width: '136px',
+                              height: '41px',
+                              backgroundColor: '#2466D0',
+                              gap: '9.82px'
+                            }}
+                          >
+                            <span 
+                              className="text-white font-avenir font-extrabold text-[18px] leading-[114.99999999999999%]"
+                              style={{
+                                fontFamily: 'Avenir',
+                                fontWeight: 800,
+                                fontStyle: 'normal',
+                                letterSpacing: '0%'
+                              }}
+                            >
+                              Matched
+                            </span>
+                            <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center">
+                              <svg className="w-2.5 h-2.5 text-[#2466D0]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          </div>
+                          <button 
+                            className="px-3 py-1 text-white text-xs rounded transition-colors" 
+                            style={{ backgroundColor: '#2CB3BF' }}
+                          >
                             View Profile
                           </button>
                         </div>
