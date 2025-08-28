@@ -508,7 +508,7 @@ const YourPipelinePage = () => {
                   </div>
                   <div className="space-y-3">
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center justify-between p-4 border rounded-xl bg-white">
+                      <div key={item} className="flex items-center justify-between p-6 border rounded-3xl bg-white">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                             <User className="w-5 h-5 text-blue-600" />
@@ -521,16 +521,16 @@ const YourPipelinePage = () => {
                         </div>
                         <div className="flex flex-col items-end space-y-2">
                           <div 
-                            className="flex items-center justify-center px-[15px] py-[12.27px] rounded-[81.82px]"
+                            className="flex items-center justify-center px-[11.25px] py-[9.2px] rounded-[61.37px]"
                             style={{
-                              width: '136px',
-                              height: '41px',
-                              backgroundColor: '#2466D0',
-                              gap: '9.82px'
+                              width: '102px',
+                              height: '30.75px',
+                              backgroundColor: '#F4F4F4',
+                              gap: '7.36px'
                             }}
                           >
                             <span 
-                              className="text-white font-avenir font-extrabold text-[18px] leading-[114.99999999999999%]"
+                              className="text-[#2466D0] font-avenir font-extrabold text-[13.5px] leading-[114.99999999999999%]"
                               style={{
                                 fontFamily: 'Avenir',
                                 fontWeight: 800,
@@ -540,14 +540,14 @@ const YourPipelinePage = () => {
                             >
                               Matched
                             </span>
-                            <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center">
-                              <svg className="w-2.5 h-2.5 text-[#2466D0]" fill="currentColor" viewBox="0 0 20 20">
+                            <div className="w-3 h-3 bg-[#2466D0] rounded-full flex items-center justify-center">
+                              <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
                             </div>
                           </div>
                           <button 
-                            className="px-3 py-1 text-white text-xs rounded transition-colors" 
+                            className="px-2.7 py-1 text-white text-xs rounded transition-colors" 
                             style={{ backgroundColor: '#2CB3BF' }}
                           >
                             View Profile
@@ -573,7 +573,7 @@ const YourPipelinePage = () => {
                   </div>
                   <div className="space-y-3">
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center justify-between p-4 border rounded-xl bg-white">
+                      <div key={item} className="flex items-center justify-between p-6 border rounded-3xl bg-white">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                             <User className="w-5 h-5 text-blue-600" />
@@ -584,7 +584,7 @@ const YourPipelinePage = () => {
                             <p className="text-gray-500 text-xs">New Haven, CT</p>
                           </div>
                         </div>
-                        <button className="px-3 py-1 text-white text-xs rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
+                        <button className="px-2.7 py-1 text-white text-xs rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
                           View Profile
                         </button>
                       </div>
