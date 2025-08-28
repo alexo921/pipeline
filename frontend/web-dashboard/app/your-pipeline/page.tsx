@@ -8,7 +8,13 @@ import {
   Download,
   Maximize2,
   CheckCircle,
-  Info
+  Info,
+  Briefcase,
+  TrendingUp,
+  MapPin,
+  Users,
+  MessageSquare,
+  Phone
 } from 'lucide-react';
 import BaseLayout from '../components/layout/BaseLayout';
 import AdminDashboardNav from '../components/AdminDashboardNav';
@@ -23,6 +29,142 @@ const YourPipelinePage = () => {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isAnalyticsExpanded, setIsAnalyticsExpanded] = useState(false);
   const [isInsightsExpanded, setIsInsightsExpanded] = useState(false);
+  
+  // Demo state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [notifications, setNotifications] = useState(4);
+  const [showNotification, setShowNotification] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [showJobModal, setShowJobModal] = useState(false);
+  const [showApplicantsModal, setShowApplicantsModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedMatch, setSelectedMatch] = useState<any>(null);
+  const [selectedApplicant, setSelectedApplicant] = useState<any>(null);
+
+  // Demo data
+  const demoJobs = [
+    {
+      id: 1,
+      title: "Registered Nurse",
+      company: "St. Mary's Health Center",
+      location: "New Haven, CT",
+      salary: "75k/yr - 85k/yr",
+      applicants: 4,
+      status: "Active"
+    },
+    {
+      id: 2,
+      title: "Physical Therapist",
+      company: "St. Mary's Health Center",
+      location: "New Haven, CT",
+      salary: "80k/yr - 95k/yr",
+      applicants: 7,
+      status: "Active"
+    },
+    {
+      id: 3,
+      title: "Medical Assistant",
+      company: "St. Mary's Health Center",
+      location: "New Haven, CT",
+      salary: "45k/yr - 55k/yr",
+      applicants: 12,
+      status: "Active"
+    },
+    {
+      id: 4,
+      title: "Respiratory Therapist",
+      company: "St. Mary's Health Center",
+      location: "New Haven, CT",
+      salary: "70k/yr - 85k/yr",
+      applicants: 3,
+      status: "Active"
+    }
+  ];
+
+  const demoMatches = [
+    {
+      id: 1,
+      name: "Marvin Grant",
+      role: "Registered Nurse",
+      experience: "5+ years experience",
+      location: "New Haven, CT",
+      matchScore: 94,
+      status: "Matched"
+    },
+    {
+      id: 2,
+      name: "Sarah Johnson",
+      role: "Physical Therapist",
+      experience: "3+ years experience",
+      location: "Hartford, CT",
+      matchScore: 87,
+      status: "Matched"
+    },
+    {
+      id: 3,
+      name: "Michael Chen",
+      role: "Medical Assistant",
+      experience: "2+ years experience",
+      location: "Bridgeport, CT",
+      matchScore: 92,
+      status: "Matched"
+    }
+  ];
+
+  const demoApplicants = [
+    {
+      id: 1,
+      name: "Emily Rodriguez",
+      role: "Registered Nurse",
+      experience: "4+ years experience",
+      location: "New Haven, CT",
+      status: "Applied",
+      appliedDate: "2 days ago"
+    },
+    {
+      id: 2,
+      name: "David Thompson",
+      role: "Registered Nurse",
+      experience: "6+ years experience",
+      location: "Milford, CT",
+      status: "Applied",
+      appliedDate: "1 day ago"
+    },
+    {
+      id: 3,
+      name: "Lisa Park",
+      role: "Registered Nurse",
+      experience: "3+ years experience",
+      location: "West Haven, CT",
+      status: "Applied",
+      appliedDate: "3 days ago"
+    }
+  ];
+
+  // Demo functions
+  const handleNotificationClick = () => {
+    setShowNotification(!showNotification);
+    setNotifications(0);
+  };
+
+  const handleJobEdit = (job: any) => {
+    setSelectedJob(job);
+    setShowJobModal(true);
+  };
+
+  const handleViewApplicants = (job: any) => {
+    setSelectedJob(job);
+    setShowApplicantsModal(true);
+  };
+
+  const handleViewProfile = (person: any) => {
+    setSelectedMatch(person);
+    setShowProfileModal(true);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   // Check authentication and authorization only once
   useEffect(() => {
@@ -119,11 +261,16 @@ const YourPipelinePage = () => {
             
             {/* Header Actions */}
             <div className="flex items-center space-x-4">
-              <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 font-medium flex items-center space-x-2 transition-colors shadow-sm relative">
-                <Bell className="w-4 h-4" />
-                <span>Notifications</span>
-                <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">4</span>
-              </button>
+                                  <button 
+                      onClick={handleNotificationClick}
+                      className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 font-medium flex items-center space-x-2 transition-colors shadow-sm relative"
+                    >
+                      <Bell className="w-4 h-4" />
+                      <span>Notifications</span>
+                      <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {notifications}
+                      </span>
+                    </button>
             </div>
           </div>
           
@@ -264,28 +411,35 @@ const YourPipelinePage = () => {
               <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6" style={{ minWidth: '300px' }}>
                 <h2 className="text-[25px] font-black leading-[154%] text-[#01253F] mb-6 font-avenir">Open Jobs</h2>
                 <div className="space-y-4">
-                  {[1, 2, 3, 4].map((item) => (
-                    <div key={item} className="p-4 border rounded-xl bg-white">
+                  {demoJobs.map((job) => (
+                    <div key={job.id} className="p-4 border rounded-xl bg-white">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="font-bold text-[25px] leading-[154%] text-[#2466D0]">Registered Nurse</h4>
-                            <Edit3 className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" />
+                            <h4 className="font-bold text-[25px] leading-[154%] text-[#2466D0]">{job.title}</h4>
+                            <Edit3 
+                              className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" 
+                              onClick={() => handleJobEdit(job)}
+                            />
                           </div>
-                          <p className="text-[#01253F] text-[18px] font-bold leading-[29px] font-avenir">St. Mary's Health Center</p>
+                          <p className="text-[#01253F] text-[18px] font-bold leading-[29px] font-avenir">{job.company}</p>
                         </div>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <p className="text-[#01253F] text-[16px] font-normal leading-[29px] font-avenir">New Haven, CT</p>
-                          <p className="text-[#01253F] text-[16px] font-normal leading-[29px] font-avenir">75k/yr - 85k/yr</p>
+                          <p className="text-[#01253F] text-[16px] font-normal leading-[29px] font-avenir">{job.location}</p>
+                          <p className="text-[#01253F] text-[16px] font-normal leading-[29px] font-avenir">{job.salary}</p>
                         </div>
                         <div className="relative">
-                          <button className="px-3 py-1 text-white text-sm rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
+                          <button 
+                            onClick={() => handleViewApplicants(job)}
+                            className="px-3 py-1 text-white text-sm rounded transition-colors hover:opacity-90" 
+                            style={{ backgroundColor: '#2CB3BF' }}
+                          >
                             View Applicants
                           </button>
                           <span className="absolute -top-2 -right-2 bg-[#01253F] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center text-[15.3061px] font-bold leading-[115%]">
-                            4
+                            {job.applicants}
                           </span>
                         </div>
                       </div>
@@ -295,10 +449,45 @@ const YourPipelinePage = () => {
                 
                 {/* Pagination */}
                 <div className="flex items-center justify-center space-x-2 mt-6">
-                  <button className="px-3 py-1 text-white rounded-full" style={{ backgroundColor: '#01253F' }}>1</button>
-                  <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">2</button>
-                  <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">3</button>
-                  <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">Next &gt;</button>
+                  <button 
+                    onClick={() => handlePageChange(1)}
+                    className={`px-3 py-1 rounded-full transition-colors ${
+                      currentPage === 1 
+                        ? 'text-white' 
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                    style={currentPage === 1 ? { backgroundColor: '#01253F' } : {}}
+                  >
+                    1
+                  </button>
+                  <button 
+                    onClick={() => handlePageChange(2)}
+                    className={`px-3 py-1 rounded-full transition-colors ${
+                      currentPage === 2 
+                        ? 'text-white' 
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                    style={currentPage === 2 ? { backgroundColor: '#01253F' } : {}}
+                  >
+                    2
+                  </button>
+                  <button 
+                    onClick={() => handlePageChange(3)}
+                    className={`px-3 py-1 rounded-full transition-colors ${
+                      currentPage === 3 
+                        ? 'text-white' 
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                    style={currentPage === 3 ? { backgroundColor: '#01253F' } : {}}
+                  >
+                    3
+                  </button>
+                  <button 
+                    onClick={() => handlePageChange(currentPage < 3 ? currentPage + 1 : 3)}
+                    className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+                  >
+                    Next &gt;
+                  </button>
                 </div>
               </div>
 
@@ -379,6 +568,142 @@ const YourPipelinePage = () => {
           </div>
         </div>
       </div>
+
+      {/* Notification Toast */}
+      {showNotification && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in slide-in-from-right">
+          <div className="flex items-center space-x-2">
+            <CheckCircle className="w-5 h-5" />
+            <span>All notifications cleared!</span>
+          </div>
+        </div>
+      )}
+
+      {/* Job Edit Modal */}
+      {showJobModal && selectedJob && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold mb-4">Edit Job: {selectedJob.title}</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+                <input 
+                  type="text" 
+                  defaultValue={selectedJob.title}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
+                <input 
+                  type="text" 
+                  defaultValue={selectedJob.salary}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+            <div className="flex space-x-3 mt-6">
+              <button 
+                onClick={() => setShowJobModal(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => setShowJobModal(false)}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* View Applicants Modal */}
+      {showApplicantsModal && selectedJob && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+            <h3 className="text-xl font-bold mb-4">Applicants for {selectedJob.title}</h3>
+            <div className="space-y-4">
+              {demoApplicants.map((applicant) => (
+                <div key={applicant.id} className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold text-lg">{applicant.name}</h4>
+                      <p className="text-gray-600">{applicant.role}</p>
+                      <p className="text-gray-600">{applicant.experience}</p>
+                      <p className="text-gray-600">{applicant.location}</p>
+                      <p className="text-sm text-gray-500">Applied {applicant.appliedDate}</p>
+                    </div>
+                    <div className="flex space-x-2">
+                      <button className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                        View Profile
+                      </button>
+                      <button className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+                        Contact
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6">
+              <button 
+                onClick={() => setShowApplicantsModal(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Profile View Modal */}
+      {showProfileModal && selectedMatch && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold mb-4">Profile: {selectedMatch.name}</h3>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Briefcase className="w-5 h-5 text-gray-600" />
+                <span>{selectedMatch.role}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <TrendingUp className="w-5 h-5 text-gray-600" />
+                <span>Match Score: {selectedMatch.matchScore}%</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-5 h-5 text-gray-600" />
+                <span>{selectedMatch.location}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Users className="w-5 h-5 text-gray-600" />
+                <span>{selectedMatch.experience}</span>
+              </div>
+            </div>
+            <div className="flex space-x-2 mt-6">
+              <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2">
+                <MessageSquare className="w-4 h-4" />
+                <span>Message</span>
+              </button>
+              <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2">
+                <Phone className="w-4 h-4" />
+                <span>Call</span>
+              </button>
+            </div>
+            <div className="mt-4">
+              <button 
+                onClick={() => setShowProfileModal(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </BaseLayout>
   );
 };
