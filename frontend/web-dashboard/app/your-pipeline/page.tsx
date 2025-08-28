@@ -263,7 +263,7 @@ const YourPipelinePage = () => {
             <div className="flex items-center space-x-4">
                                   <button 
                       onClick={handleNotificationClick}
-                      className="text-white text-sm font-medium flex items-center transition-colors shadow-sm relative"
+                      className="text-sm font-medium flex items-center transition-colors shadow-sm relative"
                       style={{
                         width: '244px',
                         height: '59px',
@@ -273,7 +273,7 @@ const YourPipelinePage = () => {
                         paddingBottom: '15px',
                         paddingLeft: '33px',
                         gap: '12px',
-                        backgroundColor: '#7691A4'
+                        backgroundColor: 'white'
                       }}
                     >
                       <Bell className="w-4 h-4" style={{ color: '#7691A4' }} />
@@ -423,7 +423,7 @@ const YourPipelinePage = () => {
                 <h2 className="text-[25px] font-black leading-[154%] text-[#01253F] mb-6 font-avenir">Open Jobs</h2>
                 <div className="space-y-4">
                   {demoJobs.map((job) => (
-                    <div key={job.id} className="p-4 border bg-white" style={{ width: '656px', height: '212px', borderRadius: '20px' }}>
+                    <div key={job.id} className="p-4 border bg-white" style={{ width: '80%', height: '212px', borderRadius: '20px' }}>
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
@@ -529,7 +529,7 @@ const YourPipelinePage = () => {
                   </div>
                   <div className="space-y-3">
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center justify-between p-6 border bg-white" style={{ width: '656px', height: '184px', borderRadius: '20px' }}>
+                      <div key={item} className="flex items-center justify-between p-6 border bg-white" style={{ width: '80%', height: '184px', borderRadius: '20px' }}>
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 rounded-full overflow-hidden">
                             <img src="/user-icon.png" alt="User Profile" className="w-full h-full object-cover" />
@@ -604,7 +604,7 @@ const YourPipelinePage = () => {
                   </div>
                   <div className="space-y-3">
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center justify-between p-6 border bg-white" style={{ width: '656px', height: '184px', borderRadius: '20px' }}>
+                      <div key={item} className="flex items-center justify-between p-6 border bg-white" style={{ width: '80%', height: '184px', borderRadius: '20px' }}>
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 rounded-full overflow-hidden">
                             <img src="/user-icon.png" alt="User Profile" className="w-full h-full object-cover" />
