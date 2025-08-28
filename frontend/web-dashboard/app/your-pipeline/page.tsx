@@ -269,18 +269,22 @@ const YourPipelinePage = () => {
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="font-normal text-[25px] leading-[154%] text-[#2466D0]">Registered Nurse</h4>
+                            <h4 className="font-bold text-[25px] leading-[154%] text-[#2466D0]">Registered Nurse</h4>
                             <Edit3 className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" />
                           </div>
-                          <p className="text-[#01253F] text-[18px] font-normal leading-[29px]">St. Mary's Health Center, New Haven, CT</p>
-                          <p className="text-[#01253F] text-[18px] font-normal leading-[29px]">75k/yr - 85k/yr</p>
+                          <p className="text-[#01253F] text-[18px] font-bold leading-[29px] font-avenir">St. Mary's Health Center, New Haven, CT</p>
+                          <p className="text-[#01253F] text-[18px] font-normal leading-[29px] font-avenir">75k/yr - 85k/yr</p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-[15.3061px] font-black leading-[115%] text-[#01253F]">4 Applicants</span>
-                        <button className="px-3 py-1 text-white text-sm rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
-                          View Applicants
-                        </button>
+                      <div className="flex items-center justify-end">
+                        <div className="relative">
+                          <button className="px-3 py-1 text-white text-sm rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
+                            View Applicants
+                          </button>
+                          <span className="absolute -top-2 -right-2 bg-[#01253F] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center text-[15.3061px] font-bold leading-[115%]">
+                            4
+                          </span>
+                        </div>
                       </div>
                     </div>
                   ))}
