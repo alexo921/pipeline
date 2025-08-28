@@ -433,8 +433,18 @@ const YourPipelinePage = () => {
                         <div className="relative">
                           <button 
                             onClick={() => handleViewApplicants(job)}
-                            className="px-3 py-1 text-white text-sm rounded transition-colors hover:opacity-90" 
-                            style={{ backgroundColor: '#2CB3BF' }}
+                            className="text-white text-sm rounded transition-colors hover:opacity-90" 
+                            style={{ 
+                              backgroundColor: '#2CB3BF',
+                              width: '194px',
+                              height: '49px',
+                              borderRadius: '9px',
+                              paddingTop: '10px',
+                              paddingRight: '20px',
+                              paddingBottom: '10px',
+                              paddingLeft: '20px',
+                              gap: '10px'
+                            }}
                           >
                             View Applicants
                           </button>
@@ -510,8 +520,8 @@ const YourPipelinePage = () => {
                     {[1, 2].map((item) => (
                       <div key={item} className="flex items-center justify-between p-6 border rounded-3xl bg-white">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <User className="w-5 h-5 text-blue-600" />
+                          <div className="w-10 h-10 rounded-full overflow-hidden">
+                            <img src="/user-icon.png" alt="User Profile" className="w-full h-full object-cover" />
                           </div>
                           <div>
                             <h4 className="font-medium text-gray-900 text-sm">Marvin Grant</h4>
@@ -547,8 +557,18 @@ const YourPipelinePage = () => {
                             </div>
                           </div>
                           <button 
-                            className="px-2.835 py-1.05 text-white text-xs rounded transition-colors" 
-                            style={{ backgroundColor: '#2CB3BF' }}
+                            className="text-white text-xs rounded transition-colors" 
+                            style={{ 
+                              backgroundColor: '#2CB3BF',
+                              width: '144px',
+                              height: '41px',
+                              borderRadius: '9px',
+                              paddingTop: '10px',
+                              paddingRight: '20px',
+                              paddingBottom: '10px',
+                              paddingLeft: '20px',
+                              gap: '10px'
+                            }}
                           >
                             View Profile
                           </button>
@@ -575,8 +595,8 @@ const YourPipelinePage = () => {
                     {[1, 2].map((item) => (
                       <div key={item} className="flex items-center justify-between p-6 border rounded-3xl bg-white">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                            <User className="w-5 h-5 text-blue-600" />
+                          <div className="w-10 h-10 rounded-full overflow-hidden">
+                            <img src="/user-icon.png" alt="User Profile" className="w-full h-full object-cover" />
                           </div>
                           <div>
                             <h4 className="font-medium text-gray-900 text-sm">Marvin Grant</h4>
@@ -584,7 +604,17 @@ const YourPipelinePage = () => {
                             <p className="text-gray-500 text-xs">New Haven, CT</p>
                           </div>
                         </div>
-                        <button className="px-2.835 py-1.05 text-white text-xs rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
+                        <button className="text-white text-xs rounded transition-colors" style={{ 
+                          backgroundColor: '#2CB3BF',
+                          width: '144px',
+                          height: '41px',
+                          borderRadius: '9px',
+                          paddingTop: '10px',
+                          paddingRight: '20px',
+                          paddingBottom: '10px',
+                          paddingLeft: '20px',
+                          gap: '10px'
+                        }}>
                           View Profile
                         </button>
                       </div>
