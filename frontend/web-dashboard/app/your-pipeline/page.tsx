@@ -265,8 +265,8 @@ const YourPipelinePage = () => {
                 <h2 className="text-[25px] font-black leading-[154%] text-[#01253F] mb-6 font-avenir">Open Jobs</h2>
                 <div className="space-y-4">
                   {[1, 2, 3, 4].map((item) => (
-                    <div key={item} className="p-5 border rounded-xl bg-white">
-                      <div className="flex items-start justify-between mb-3">
+                    <div key={item} className="p-4 border rounded-xl bg-white">
+                      <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
                             <h4 className="font-bold text-[25px] leading-[154%] text-[#2466D0]">Registered Nurse</h4>
