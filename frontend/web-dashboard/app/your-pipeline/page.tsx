@@ -263,11 +263,22 @@ const YourPipelinePage = () => {
             <div className="flex items-center space-x-4">
                                   <button 
                       onClick={handleNotificationClick}
-                      className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 font-medium flex items-center space-x-2 transition-colors shadow-sm relative"
+                      className="text-white text-sm font-medium flex items-center transition-colors shadow-sm relative"
+                      style={{
+                        width: '244px',
+                        height: '59px',
+                        borderRadius: '100px',
+                        paddingTop: '15px',
+                        paddingRight: '33px',
+                        paddingBottom: '15px',
+                        paddingLeft: '33px',
+                        gap: '12px',
+                        backgroundColor: '#7691A4'
+                      }}
                     >
-                      <Bell className="w-4 h-4" />
-                      <span>Notifications</span>
-                      <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      <Bell className="w-4 h-4" style={{ color: '#7691A4' }} />
+                      <span style={{ color: '#7691A4' }}>Notifications</span>
+                      <span className="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" style={{ backgroundColor: '#01253F' }}>
                         {notifications}
                       </span>
                     </button>
