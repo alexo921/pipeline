@@ -91,7 +91,7 @@ const YourPipelinePage = () => {
       {/* Page Header */}
       <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
-          <h1 className="text-[76.6971px] font-normal leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
+          <h1 className="text-[76.6971px] font-bold leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
             YourPipeline
           </h1>
           {user.role === 'ADMIN' && (
@@ -269,11 +269,11 @@ const YourPipelinePage = () => {
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="font-black text-[25px] leading-[154%] text-[#2466D0]">Registered Nurse</h4>
+                            <h4 className="font-normal text-[25px] leading-[154%] text-[#2466D0]">Registered Nurse</h4>
                             <Edit3 className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" />
                           </div>
-                          <p className="text-[#01253F] text-[18px] font-black leading-[29px]">St. Mary's Health Center, New Haven, CT</p>
-                          <p className="text-[#01253F] text-[18px] font-black leading-[29px]">75k/yr - 85k/yr</p>
+                          <p className="text-[#01253F] text-[18px] font-normal leading-[29px]">St. Mary's Health Center, New Haven, CT</p>
+                          <p className="text-[#01253F] text-[18px] font-normal leading-[29px]">75k/yr - 85k/yr</p>
                         </div>
                       </div>
                       <div className="flex items-center justify-between">

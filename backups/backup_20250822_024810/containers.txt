@@ -1,0 +1,6 @@
+NAMES               IMAGE                    STATUS
+pipeline-api        pipeline_api             Up 6 hours
+pipeline-postgres   postgres:15              Up 6 hours (healthy)
+pipeline-redis      redis:7-alpine           Up 6 hours (healthy)
+pipeline-admin      pipeline_admin-panel     Up 6 hours
+pipeline-web        pipeline_web-dashboard   Up 6 hours
