@@ -366,7 +366,7 @@ const YourPipelinePage = () => {
                       <span className="text-sm text-gray-600">74%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '74%' }}></div>
+                      <div className="h-2 rounded-full" style={{ width: '74%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
                     </div>
                   </div>
                   
@@ -376,7 +376,7 @@ const YourPipelinePage = () => {
                       <span className="text-sm text-gray-600">52%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '52%' }}></div>
+                      <div className="h-2 rounded-full" style={{ width: '52%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
                     </div>
                   </div>
                   
@@ -386,7 +386,7 @@ const YourPipelinePage = () => {
                       <span className="text-sm text-gray-600">36%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '36%' }}></div>
+                      <div className="h-2 rounded-full" style={{ width: '36%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
                     </div>
                   </div>
                   
@@ -396,7 +396,7 @@ const YourPipelinePage = () => {
                       <span className="text-sm text-gray-600">36%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full" style={{ width: '36%' }}></div>
+                      <div className="h-2 rounded-full" style={{ width: '36%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
                     </div>
                   </div>
                 </div>
@@ -547,7 +547,7 @@ const YourPipelinePage = () => {
                             </div>
                           </div>
                           <button 
-                            className="px-2.7 py-1 text-white text-xs rounded transition-colors" 
+                            className="px-2.835 py-1.05 text-white text-xs rounded transition-colors" 
                             style={{ backgroundColor: '#2CB3BF' }}
                           >
                             View Profile
@@ -584,7 +584,7 @@ const YourPipelinePage = () => {
                             <p className="text-gray-500 text-xs">New Haven, CT</p>
                           </div>
                         </div>
-                        <button className="px-2.7 py-1 text-white text-xs rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
+                        <button className="px-2.835 py-1.05 text-white text-xs rounded transition-colors" style={{ backgroundColor: '#2CB3BF' }}>
                           View Profile
                         </button>
                       </div>
