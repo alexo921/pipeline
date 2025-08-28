@@ -421,45 +421,45 @@ const YourPipelinePage = () => {
               {/* Open Jobs Section - Left Side (Full Height) */}
               <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6" style={{ minWidth: '300px' }}>
                 <h2 className="text-[25px] font-black leading-[154%] text-[#01253F] mb-6 font-avenir">Open Jobs</h2>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {demoJobs.map((job) => (
-                    <div key={job.id} className="p-4 border bg-white" style={{ width: '100%', height: '212px', borderRadius: '20px' }}>
+                    <div key={job.id} className="p-3 border bg-white" style={{ width: '100%', height: '160px', borderRadius: '16px' }}>
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="font-bold text-[25px] leading-[154%] text-[#2466D0]">{job.title}</h4>
+                            <h4 className="font-bold text-[20px] leading-[130%] text-[#2466D0]">{job.title}</h4>
                             <Edit3 
-                              className="w-4 h-4 text-gray-400 cursor-pointer hover:text-gray-600" 
+                              className="w-3 h-3 text-gray-400 cursor-pointer hover:text-gray-600" 
                               onClick={() => handleJobEdit(job)}
                             />
                           </div>
-                          <p className="text-[#01253F] text-[18px] font-bold leading-[29px] font-avenir">{job.company}</p>
+                          <p className="text-[#01253F] text-[14px] font-bold leading-[20px] font-avenir">{job.company}</p>
                         </div>
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <p className="text-[#01253F] text-[16px] font-normal leading-[29px] font-avenir">{job.location}</p>
-                          <p className="text-[#01253F] text-[16px] font-normal leading-[29px] font-avenir">{job.salary}</p>
+                          <p className="text-[#01253F] text-[13px] font-normal leading-[18px] font-avenir">{job.location}</p>
+                          <p className="text-[#01253F] text-[13px] font-normal leading-[18px] font-avenir">{job.salary}</p>
                         </div>
                         <div className="relative">
                           <button 
                             onClick={() => handleViewApplicants(job)}
-                            className="text-white text-sm rounded transition-colors hover:opacity-90" 
+                            className="text-white text-xs rounded transition-colors hover:opacity-90" 
                             style={{ 
                               backgroundColor: '#2CB3BF',
-                              width: '194px',
-                              height: '49px',
-                              borderRadius: '9px',
-                              paddingTop: '10px',
-                              paddingRight: '20px',
-                              paddingBottom: '10px',
-                              paddingLeft: '20px',
-                              gap: '10px'
+                              width: '160px',
+                              height: '40px',
+                              borderRadius: '8px',
+                              paddingTop: '8px',
+                              paddingRight: '16px',
+                              paddingBottom: '8px',
+                              paddingLeft: '16px',
+                              gap: '8px'
                             }}
                           >
                             View Applicants
                           </button>
-                          <span className="absolute -top-2 -right-2 bg-[#01253F] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center text-[15.3061px] font-bold leading-[115%]">
+                          <span className="absolute -top-1.5 -right-1.5 bg-[#01253F] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[12px] font-bold leading-[100%]">
                             {job.applicants}
                           </span>
                         </div>
@@ -527,11 +527,11 @@ const YourPipelinePage = () => {
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center justify-between p-6 border bg-white" style={{ width: '100%', height: '184px', borderRadius: '20px' }}>
+                      <div key={item} className="flex items-center justify-between p-4 border bg-white" style={{ width: '100%', height: '140px', borderRadius: '16px' }}>
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 rounded-full overflow-hidden">
+                          <div className="w-8 h-8 rounded-full overflow-hidden">
                             <img src="/user-icon.png" alt="User Profile" className="w-full h-full object-cover" />
                           </div>
                           <div>
@@ -542,16 +542,16 @@ const YourPipelinePage = () => {
                         </div>
                         <div className="flex flex-col items-end space-y-2">
                           <div 
-                            className="flex items-center justify-center px-[11.25px] py-[9.2px] rounded-[61.37px]"
+                            className="flex items-center justify-center px-[8px] py-[6px] rounded-[40px]"
                             style={{
-                              width: '102px',
-                              height: '30.75px',
+                              width: '80px',
+                              height: '24px',
                               backgroundColor: '#F4F4F4',
-                              gap: '7.36px'
+                              gap: '6px'
                             }}
                           >
                             <span 
-                              className="text-[#2466D0] font-avenir font-extrabold text-[13.5px] leading-[114.99999999999999%]"
+                              className="text-[#2466D0] font-avenir font-extrabold text-[11px] leading-[100%]"
                               style={{
                                 fontFamily: 'Avenir',
                                 fontWeight: 800,
@@ -561,8 +561,8 @@ const YourPipelinePage = () => {
                             >
                               Matched
                             </span>
-                            <div className="w-3 h-3 bg-[#2466D0] rounded-full flex items-center justify-center">
-                              <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <div className="w-2.5 h-2.5 bg-[#2466D0] rounded-full flex items-center justify-center">
+                              <svg className="w-1.5 h-1.5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
                             </div>
@@ -571,14 +571,14 @@ const YourPipelinePage = () => {
                             className="text-white text-xs rounded transition-colors" 
                             style={{ 
                               backgroundColor: '#2CB3BF',
-                              width: '144px',
-                              height: '41px',
-                              borderRadius: '9px',
-                              paddingTop: '10px',
-                              paddingRight: '20px',
-                              paddingBottom: '10px',
-                              paddingLeft: '20px',
-                              gap: '10px'
+                              width: '120px',
+                              height: '32px',
+                              borderRadius: '8px',
+                              paddingTop: '8px',
+                              paddingRight: '16px',
+                              paddingBottom: '8px',
+                              paddingLeft: '16px',
+                              gap: '8px'
                             }}
                           >
                             View Profile
@@ -602,11 +602,11 @@ const YourPipelinePage = () => {
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center justify-between p-6 border bg-white" style={{ width: '100%', height: '184px', borderRadius: '20px' }}>
+                      <div key={item} className="flex items-center justify-between p-4 border bg-white" style={{ width: '100%', height: '140px', borderRadius: '16px' }}>
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 rounded-full overflow-hidden">
+                          <div className="w-8 h-8 rounded-full overflow-hidden">
                             <img src="/user-icon.png" alt="User Profile" className="w-full h-full object-cover" />
                           </div>
                           <div>
@@ -617,14 +617,14 @@ const YourPipelinePage = () => {
                         </div>
                         <button className="text-white text-xs rounded transition-colors" style={{ 
                           backgroundColor: '#2CB3BF',
-                          width: '144px',
-                          height: '41px',
-                          borderRadius: '9px',
-                          paddingTop: '10px',
-                          paddingRight: '20px',
-                          paddingBottom: '10px',
-                          paddingLeft: '20px',
-                          gap: '10px'
+                          width: '120px',
+                          height: '32px',
+                          borderRadius: '8px',
+                          paddingTop: '8px',
+                          paddingRight: '16px',
+                          paddingBottom: '8px',
+                          paddingLeft: '16px',
+                          gap: '8px'
                         }}>
                           View Profile
                         </button>
