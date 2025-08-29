@@ -297,74 +297,33 @@ const YourPipelinePage = () => {
             </div>
             <div className="grid grid-cols-2 gap-8">
               {/* Data Cards Grid */}
-              <div 
-                className="grid grid-cols-2 gap-4 mb-6"
-                style={{
-                  width: '625px',
-                  height: '570px',
-                  marginTop: '100px',
-                  marginLeft: '32px',
-                  border: '1.77px solid #e5e7eb'
-                }}
-              >
-                <div 
-                  className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200"
-                  style={{
-                    width: '302px',
-                    height: '270px',
-                    borderRadius: '35px',
-                    border: '1.77px solid #e5e7eb'
-                  }}
-                >
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="text-center p-4 rounded-xl bg-white shadow-sm border border-gray-200">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-2xl font-bold text-[#01253F]">77</h3>
-                    <span className="text-gray-400 text-lg">/100</span>
+                    <h3 className="text-xl font-bold text-[#01253F]">77</h3>
+                    <span className="text-gray-400 text-base">/100</span>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
                   <p className="text-gray-600 text-sm font-avenir">Environment Score</p>
                 </div>
-                <div 
-                  className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200"
-                  style={{
-                    width: '302px',
-                    height: '270px',
-                    borderRadius: '35px',
-                    border: '1.77px solid #e5e7eb'
-                  }}
-                >
+                <div className="text-center p-4 rounded-xl bg-white shadow-sm border border-gray-200">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-2xl font-bold text-[#01253F]">64</h3>
-                    <span className="text-gray-400 text-lg">/100</span>
+                    <h3 className="text-xl font-bold text-[#01253F]">64</h3>
+                    <span className="text-gray-400 text-base">/100</span>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
                   <p className="text-gray-600 text-sm font-avenir">Continuity of Care Index</p>
                 </div>
-                <div 
-                  className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200"
-                  style={{
-                    width: '302px',
-                    height: '270px',
-                    borderRadius: '35px',
-                    border: '1.77px solid #e5e7eb'
-                  }}
-                >
+                <div className="text-center p-4 rounded-xl bg-white shadow-sm border border-gray-200">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-2xl font-bold text-[#01253F]">86%</h3>
+                    <h3 className="text-xl font-bold text-[#01253F]">86%</h3>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
                   <p className="text-gray-600 text-sm font-avenir">Strong Matches</p>
                 </div>
-                <div 
-                  className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200"
-                  style={{
-                    width: '302px',
-                    height: '270px',
-                    borderRadius: '35px',
-                    border: '1.77px solid #e5e7eb'
-                  }}
-                >
+                <div className="text-center p-4 rounded-xl bg-white shadow-sm border border-gray-200">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-2xl font-bold text-[#01253F]">+34%</h3>
+                    <h3 className="text-xl font-bold text-[#01253F]">+34%</h3>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
                   <p className="text-gray-600 text-sm font-avenir">Pulse Trends</p>
