@@ -300,97 +300,97 @@ const YourPipelinePage = () => {
               <div 
                 className="grid grid-cols-2 gap-4"
                 style={{
-                  width: '625.78px',
-                  height: '569.52px',
-                  marginTop: '100px',
-                  marginLeft: '32px'
+                  width: '312.89px',
+                  height: '284.76px',
+                  marginTop: '50px',
+                  marginLeft: '16px'
                 }}
               >
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '302.69px',
-                    height: '269.55px',
+                    width: '151.35px',
+                    height: '134.78px',
                     borderRadius: '35.37px',
                     border: '1.77px solid #e5e7eb'
                   }}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xl font-bold text-[#01253F]">77</h3>
-                    <span className="text-gray-400 text-base">/100</span>
+                    <h3 className="text-lg font-bold text-[#01253F]">77</h3>
+                    <span className="text-gray-400 text-sm">/100</span>
                     <div className="relative group">
-                      <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                      <Info className="w-3 h-3 text-gray-400 cursor-help" />
                       <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
                         Measures the overall workplace environment quality and employee satisfaction
                         <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-sm font-avenir">Environment Score</p>
+                  <p className="text-gray-600 text-xs font-avenir">Environment Score</p>
                 </div>
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '302.69px',
-                    height: '269.55px',
+                    width: '151.35px',
+                    height: '134.78px',
                     borderRadius: '35.37px',
                     border: '1.77px solid #e5e7eb'
                   }}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xl font-bold text-[#01253F]">64</h3>
-                    <span className="text-gray-400 text-base">/100</span>
+                    <h3 className="text-lg font-bold text-[#01253F]">64</h3>
+                    <span className="text-gray-400 text-sm">/100</span>
                     <div className="relative group">
-                      <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                      <Info className="w-3 h-3 text-gray-400 cursor-help" />
                       <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
                         Tracks how consistently patients receive care from the same healthcare providers
                         <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-sm font-avenir">Continuity of Care Index</p>
+                  <p className="text-gray-600 text-xs font-avenir">Continuity of Care Index</p>
                 </div>
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '302.69px',
-                    height: '269.55px',
+                    width: '151.35px',
+                    height: '134.78px',
                     borderRadius: '35.37px',
                     border: '1.77px solid #e5e7eb'
                   }}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xl font-bold text-[#01253F]">86%</h3>
+                    <h3 className="text-lg font-bold text-[#01253F]">86%</h3>
                     <div className="relative group">
-                      <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                      <Info className="w-3 h-3 text-gray-400 cursor-help" />
                       <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
                         Percentage of job candidates with high compatibility scores
                         <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-sm font-avenir">Strong Matches</p>
+                  <p className="text-gray-600 text-xs font-avenir">Strong Matches</p>
                 </div>
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '302.69px',
-                    height: '269.55px',
+                    width: '151.35px',
+                    height: '134.78px',
                     borderRadius: '35.37px',
                     border: '1.77px solid #e5e7eb'
                   }}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xl font-bold text-[#01253F]">+34%</h3>
+                    <h3 className="text-lg font-bold text-[#01253F]">+34%</h3>
                     <div className="relative group">
-                      <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                      <Info className="w-3 h-3 text-gray-400 cursor-help" />
                       <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
                         Positive trend in overall organizational performance and engagement
                         <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-sm font-avenir">Pulse Trends</p>
+                  <p className="text-gray-600 text-xs font-avenir">Pulse Trends</p>
                 </div>
               </div>
 
