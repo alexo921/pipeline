@@ -1,0 +1,1243 @@
+{
+    "$comment": "This is structural design data exported by the Figma Raw plugin. It is formatted to help LLMs (Large Language Models) understand design structures and components from Figma designs.",
+    "name": "Group 288874",
+    "type": "GROUP",
+    "width": 625.77783203125,
+    "height": 569.5184326171875,
+    "effects": [
+      {
+        "type": "DROP_SHADOW",
+        "radius": 35.37384033203125,
+        "spread": 0,
+        "offset": {
+          "x": 0,
+          "y": 8.843460083007812
+        },
+        "color": {
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 0.05000000074505806,
+          "hex": "#0000000d"
+        }
+      }
+    ],
+    "children": [
+      {
+        "name": "Group 288703",
+        "type": "GROUP",
+        "width": 624.92431640625,
+        "height": 269.54913330078125,
+        "children": [
+          {
+            "name": "Bounds",
+            "type": "RECTANGLE",
+            "width": 302.6860046386719,
+            "height": 269.54913330078125,
+            "cornerRadius": 35.37384033203125,
+            "fills": [
+              {
+                "type": "SOLID",
+                "opacity": 1,
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1,
+                  "hex": "#ffffff"
+                }
+              }
+            ],
+            "strokes": [
+              {
+                "type": "SOLID",
+                "opacity": 1,
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1,
+                  "hex": "#ffffff"
+                }
+              }
+            ],
+            "strokeWeight": 1.768691897392273,
+            "strokeAlign": "INSIDE",
+            "strokeCap": "NONE",
+            "strokeJoin": "MITER",
+            "effects": [
+              {
+                "type": "DROP_SHADOW",
+                "radius": 35.37384033203125,
+                "spread": 0,
+                "offset": {
+                  "x": 0,
+                  "y": 8.843460083007812
+                },
+                "color": {
+                  "r": 0,
+                  "g": 0,
+                  "b": 0,
+                  "a": 0.05000000074505806,
+                  "hex": "#0000000d"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Bounds",
+            "type": "RECTANGLE",
+            "width": 302.6860046386719,
+            "height": 269.54913330078125,
+            "cornerRadius": 35.37384033203125,
+            "fills": [
+              {
+                "type": "SOLID",
+                "opacity": 1,
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1,
+                  "hex": "#ffffff"
+                }
+              }
+            ],
+            "strokes": [
+              {
+                "type": "SOLID",
+                "opacity": 1,
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1,
+                  "hex": "#ffffff"
+                }
+              }
+            ],
+            "strokeWeight": 1.768691897392273,
+            "strokeAlign": "INSIDE",
+            "strokeCap": "NONE",
+            "strokeJoin": "MITER",
+            "effects": [
+              {
+                "type": "DROP_SHADOW",
+                "radius": 35.37384033203125,
+                "spread": 0,
+                "offset": {
+                  "x": 0,
+                  "y": 8.843460083007812
+                },
+                "color": {
+                  "r": 0,
+                  "g": 0,
+                  "b": 0,
+                  "a": 0.05000000074505806,
+                  "hex": "#0000000d"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Small Graph",
+            "type": "FRAME",
+            "width": 249.72442626953125,
+            "height": 188.47125244140625,
+            "layoutMode": "NONE",
+            "primaryAxisSizingMode": "AUTO",
+            "counterAxisSizingMode": "FIXED",
+            "primaryAxisAlignItems": "MIN",
+            "counterAxisAlignItems": "MIN",
+            "strokeWeight": 1.768691897392273,
+            "strokeAlign": "INSIDE",
+            "strokeCap": "NONE",
+            "strokeJoin": "MITER",
+            "children": [
+              {
+                "name": "Metric",
+                "type": "TEXT",
+                "width": 111.61835479736328,
+                "height": 48.798545837402344,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "opacity": 1,
+                    "color": {
+                      "r": 0.003921568859368563,
+                      "g": 0.14509804546833038,
+                      "b": 0.24705882370471954,
+                      "a": 1,
+                      "hex": "#01253f"
+                    }
+                  }
+                ],
+                "strokeWeight": 0,
+                "strokeAlign": "CENTER",
+                "strokeCap": "NONE",
+                "strokeJoin": "MITER",
+                "characters": "86%",
+                "fontSize": 42,
+                "fontName": {
+                  "family": "Avenir",
+                  "style": "Black"
+                },
+                "fontWeight": 900,
+                "letterSpacing": {
+                  "unit": "PIXELS",
+                  "value": 0
+                },
+                "lineHeight": {
+                  "unit": "AUTO"
+                },
+                "textAlignHorizontal": "LEFT",
+                "textAlignVertical": "CENTER",
+                "textAutoResize": "NONE",
+                "textCase": "ORIGINAL",
+                "textDecoration": "NONE"
+              },
+              {
+                "name": "Title",
+                "type": "FRAME",
+                "width": 176,
+                "height": 34,
+                "layoutMode": "HORIZONTAL",
+                "primaryAxisSizingMode": "AUTO",
+                "counterAxisSizingMode": "AUTO",
+                "primaryAxisAlignItems": "MIN",
+                "counterAxisAlignItems": "MIN",
+                "itemSpacing": 14.149535179138184,
+                "strokeWeight": 1.768691897392273,
+                "strokeAlign": "INSIDE",
+                "strokeCap": "NONE",
+                "strokeJoin": "MITER",
+                "children": [
+                  {
+                    "name": "Primary Title",
+                    "type": "TEXT",
+                    "width": 176,
+                    "height": 34,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.003921568859368563,
+                          "g": 0.14509804546833038,
+                          "b": 0.24705882370471954,
+                          "a": 1,
+                          "hex": "#01253f"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0,
+                    "strokeAlign": "CENTER",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER",
+                    "characters": "Strong Matches",
+                    "fontSize": 25,
+                    "fontName": {
+                      "family": "Avenir",
+                      "style": "Medium"
+                    },
+                    "fontWeight": 500,
+                    "letterSpacing": {
+                      "unit": "PIXELS",
+                      "value": -0.2723785638809204
+                    },
+                    "lineHeight": {
+                      "unit": "AUTO"
+                    },
+                    "textAlignHorizontal": "LEFT",
+                    "textAlignVertical": "TOP",
+                    "textAutoResize": "WIDTH_AND_HEIGHT",
+                    "textCase": "ORIGINAL",
+                    "textDecoration": "NONE"
+                  }
+                ]
+              },
+              {
+                "name": "Graph",
+                "type": "GROUP",
+                "width": 242.8423309326172,
+                "height": 59.07267761230469,
+                "children": [
+                  {
+                    "name": "Path 2",
+                    "type": "VECTOR",
+                    "width": 242.8423309326172,
+                    "height": 53.16120910644531,
+                    "fills": [
+                      {
+                        "type": "GRADIENT_LINEAR",
+                        "opacity": 1,
+                        "gradientType": "GRADIENT_LINEAR",
+                        "gradientStops": [
+                          {
+                            "position": 0,
+                            "color": {
+                              "r": 0.1411764770746231,
+                              "g": 0.4000000059604645,
+                              "b": 0.8156862854957581,
+                              "a": 1,
+                              "hex": "#2466d0"
+                            }
+                          },
+                          {
+                            "position": 1,
+                            "color": {
+                              "r": 1,
+                              "g": 1,
+                              "b": 1,
+                              "a": 0.00009999999747378752,
+                              "hex": "#ffffff00"
+                            }
+                          }
+                        ],
+                        "gradientTransform": [
+                          [
+                            0,
+                            2.0300674438476562,
+                            -1.0300674438476562
+                          ],
+                          [
+                            -1.5660524368286133,
+                            0,
+                            0.7830262184143066
+                          ]
+                        ]
+                      }
+                    ],
+                    "strokes": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0,
+                          "g": 0.3843137323856354,
+                          "b": 1,
+                          "a": 1,
+                          "hex": "#0062ff"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0,
+                    "strokeAlign": "CENTER",
+                    "strokeCap": "ROUND",
+                    "strokeJoin": "ROUND"
+                  },
+                  {
+                    "name": "Path 2",
+                    "type": "VECTOR",
+                    "width": 242.8423309326172,
+                    "height": 39.785186767578125,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.847000002861023,
+                          "g": 0.847000002861023,
+                          "b": 0.847000002861023,
+                          "a": 1,
+                          "hex": "#d8d8d8"
+                        }
+                      }
+                    ],
+                    "strokes": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.1411764770746231,
+                          "g": 0.4000000059604645,
+                          "b": 0.8156862854957581,
+                          "a": 1,
+                          "hex": "#2466d0"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 3.537383794784546,
+                    "strokeAlign": "CENTER",
+                    "strokeCap": "ROUND",
+                    "strokeJoin": "ROUND"
+                  }
+                ]
+              },
+              {
+                "name": "Group 289204",
+                "type": "GROUP",
+                "width": 25.029294967651367,
+                "height": 25,
+                "children": [
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 25.029294967651367,
+                    "height": 25,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  },
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 2.18112850189209,
+                    "height": 11.404173851013184,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  },
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 2.780484437942505,
+                    "height": 2.8096916675567627,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Small Graph",
+            "type": "FRAME",
+            "width": 249.72442626953125,
+            "height": 188.47125244140625,
+            "layoutMode": "NONE",
+            "primaryAxisSizingMode": "AUTO",
+            "counterAxisSizingMode": "FIXED",
+            "primaryAxisAlignItems": "MIN",
+            "counterAxisAlignItems": "MIN",
+            "strokeWeight": 1.768691897392273,
+            "strokeAlign": "INSIDE",
+            "strokeCap": "NONE",
+            "strokeJoin": "MITER",
+            "children": [
+              {
+                "name": "Metric",
+                "type": "TEXT",
+                "width": 139.0936737060547,
+                "height": 48.798545837402344,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "opacity": 1,
+                    "color": {
+                      "r": 0.003921568859368563,
+                      "g": 0.14509804546833038,
+                      "b": 0.24705882370471954,
+                      "a": 1,
+                      "hex": "#01253f"
+                    }
+                  }
+                ],
+                "strokeWeight": 0,
+                "strokeAlign": "CENTER",
+                "strokeCap": "NONE",
+                "strokeJoin": "MITER",
+                "characters": "+34%",
+                "fontSize": 42,
+                "fontName": {
+                  "family": "Avenir",
+                  "style": "Black"
+                },
+                "fontWeight": 900,
+                "letterSpacing": {
+                  "unit": "PIXELS",
+                  "value": 0
+                },
+                "lineHeight": {
+                  "unit": "AUTO"
+                },
+                "textAlignHorizontal": "LEFT",
+                "textAlignVertical": "CENTER",
+                "textAutoResize": "NONE",
+                "textCase": "ORIGINAL",
+                "textDecoration": "NONE"
+              },
+              {
+                "name": "Title",
+                "type": "FRAME",
+                "width": 139,
+                "height": 34,
+                "layoutMode": "HORIZONTAL",
+                "primaryAxisSizingMode": "AUTO",
+                "counterAxisSizingMode": "AUTO",
+                "primaryAxisAlignItems": "MIN",
+                "counterAxisAlignItems": "MIN",
+                "itemSpacing": 14.149535179138184,
+                "strokeWeight": 1.768691897392273,
+                "strokeAlign": "INSIDE",
+                "strokeCap": "NONE",
+                "strokeJoin": "MITER",
+                "children": [
+                  {
+                    "name": "Primary Title",
+                    "type": "TEXT",
+                    "width": 139,
+                    "height": 34,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.003921568859368563,
+                          "g": 0.14509804546833038,
+                          "b": 0.24705882370471954,
+                          "a": 1,
+                          "hex": "#01253f"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0,
+                    "strokeAlign": "CENTER",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER",
+                    "characters": "Pulse Trends",
+                    "fontSize": 25,
+                    "fontName": {
+                      "family": "Avenir",
+                      "style": "Medium"
+                    },
+                    "fontWeight": 500,
+                    "letterSpacing": {
+                      "unit": "PIXELS",
+                      "value": -0.2723785638809204
+                    },
+                    "lineHeight": {
+                      "unit": "AUTO"
+                    },
+                    "textAlignHorizontal": "LEFT",
+                    "textAlignVertical": "TOP",
+                    "textAutoResize": "WIDTH_AND_HEIGHT",
+                    "textCase": "ORIGINAL",
+                    "textDecoration": "NONE"
+                  }
+                ]
+              },
+              {
+                "name": "Graph",
+                "type": "GROUP",
+                "width": 242.8423309326172,
+                "height": 59.07267761230469,
+                "children": [
+                  {
+                    "name": "Path 2",
+                    "type": "VECTOR",
+                    "width": 242.8423309326172,
+                    "height": 53.16120910644531,
+                    "fills": [
+                      {
+                        "type": "GRADIENT_LINEAR",
+                        "opacity": 1,
+                        "gradientType": "GRADIENT_LINEAR",
+                        "gradientStops": [
+                          {
+                            "position": 0,
+                            "color": {
+                              "r": 0.1411764770746231,
+                              "g": 0.4000000059604645,
+                              "b": 0.8156862854957581,
+                              "a": 1,
+                              "hex": "#2466d0"
+                            }
+                          },
+                          {
+                            "position": 1,
+                            "color": {
+                              "r": 1,
+                              "g": 1,
+                              "b": 1,
+                              "a": 0.00009999999747378752,
+                              "hex": "#ffffff00"
+                            }
+                          }
+                        ],
+                        "gradientTransform": [
+                          [
+                            0,
+                            2.0300674438476562,
+                            -1.0300674438476562
+                          ],
+                          [
+                            -1.5660524368286133,
+                            0,
+                            0.7830262184143066
+                          ]
+                        ]
+                      }
+                    ],
+                    "strokes": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0,
+                          "g": 0.3843137323856354,
+                          "b": 1,
+                          "a": 1,
+                          "hex": "#0062ff"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0,
+                    "strokeAlign": "CENTER",
+                    "strokeCap": "ROUND",
+                    "strokeJoin": "ROUND"
+                  },
+                  {
+                    "name": "Path 2",
+                    "type": "VECTOR",
+                    "width": 242.8423309326172,
+                    "height": 39.785186767578125,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.847000002861023,
+                          "g": 0.847000002861023,
+                          "b": 0.847000002861023,
+                          "a": 1,
+                          "hex": "#d8d8d8"
+                        }
+                      }
+                    ],
+                    "strokes": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.1411764770746231,
+                          "g": 0.4000000059604645,
+                          "b": 0.8156862854957581,
+                          "a": 1,
+                          "hex": "#2466d0"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 3.537383794784546,
+                    "strokeAlign": "CENTER",
+                    "strokeCap": "ROUND",
+                    "strokeJoin": "ROUND"
+                  }
+                ]
+              },
+              {
+                "name": "Group 289204",
+                "type": "GROUP",
+                "width": 25.029294967651367,
+                "height": 25,
+                "children": [
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 25.029294967651367,
+                    "height": 25,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  },
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 2.18112850189209,
+                    "height": 11.404173851013184,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  },
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 2.780484437942505,
+                    "height": 2.8096916675567627,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Group 288704",
+        "type": "GROUP",
+        "width": 625.77783203125,
+        "height": 269.5491638183594,
+        "children": [
+          {
+            "name": "Bounds",
+            "type": "RECTANGLE",
+            "width": 302.6860046386719,
+            "height": 269.54913330078125,
+            "cornerRadius": 35.37384033203125,
+            "fills": [
+              {
+                "type": "SOLID",
+                "opacity": 1,
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1,
+                  "hex": "#ffffff"
+                }
+              }
+            ],
+            "strokes": [
+              {
+                "type": "SOLID",
+                "opacity": 1,
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1,
+                  "hex": "#ffffff"
+                }
+              }
+            ],
+            "strokeWeight": 1.768691897392273,
+            "strokeAlign": "INSIDE",
+            "strokeCap": "NONE",
+            "strokeJoin": "MITER"
+          },
+          {
+            "name": "Bounds",
+            "type": "RECTANGLE",
+            "width": 302.6860046386719,
+            "height": 269.54913330078125,
+            "cornerRadius": 35.37384033203125,
+            "fills": [
+              {
+                "type": "SOLID",
+                "opacity": 1,
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1,
+                  "hex": "#ffffff"
+                }
+              }
+            ],
+            "strokes": [
+              {
+                "type": "SOLID",
+                "opacity": 1,
+                "color": {
+                  "r": 1,
+                  "g": 1,
+                  "b": 1,
+                  "a": 1,
+                  "hex": "#ffffff"
+                }
+              }
+            ],
+            "strokeWeight": 1.768691897392273,
+            "strokeAlign": "INSIDE",
+            "strokeCap": "NONE",
+            "strokeJoin": "MITER"
+          },
+          {
+            "name": "Small Graph",
+            "type": "FRAME",
+            "width": 249.72442626953125,
+            "height": 188.47125244140625,
+            "layoutMode": "NONE",
+            "primaryAxisSizingMode": "AUTO",
+            "counterAxisSizingMode": "FIXED",
+            "primaryAxisAlignItems": "MIN",
+            "counterAxisAlignItems": "MIN",
+            "strokeWeight": 1.768691897392273,
+            "strokeAlign": "INSIDE",
+            "strokeCap": "NONE",
+            "strokeJoin": "MITER",
+            "children": [
+              {
+                "name": "Metric",
+                "type": "TEXT",
+                "width": 146.80142211914062,
+                "height": 47.75468444824219,
+                "fills": "Symbol(figma.mixed)",
+                "strokeWeight": 0,
+                "strokeAlign": "CENTER",
+                "strokeCap": "NONE",
+                "strokeJoin": "MITER",
+                "characters": "77/100",
+                "fontSize": "Symbol(figma.mixed)",
+                "fontName": "Symbol(figma.mixed)",
+                "fontWeight": "Symbol(figma.mixed)",
+                "letterSpacing": {
+                  "unit": "PIXELS",
+                  "value": 0
+                },
+                "lineHeight": "Symbol(figma.mixed)",
+                "textAlignHorizontal": "LEFT",
+                "textAlignVertical": "CENTER",
+                "textAutoResize": "NONE",
+                "textCase": "ORIGINAL",
+                "textDecoration": "NONE"
+              },
+              {
+                "name": "Title",
+                "type": "FRAME",
+                "width": 148,
+                "height": 68,
+                "layoutMode": "HORIZONTAL",
+                "primaryAxisSizingMode": "AUTO",
+                "counterAxisSizingMode": "AUTO",
+                "primaryAxisAlignItems": "MIN",
+                "counterAxisAlignItems": "MIN",
+                "itemSpacing": 14.149535179138184,
+                "strokeWeight": 1.768691897392273,
+                "strokeAlign": "INSIDE",
+                "strokeCap": "NONE",
+                "strokeJoin": "MITER",
+                "children": [
+                  {
+                    "name": "Primary Title",
+                    "type": "TEXT",
+                    "width": 148,
+                    "height": 68,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.003921568859368563,
+                          "g": 0.14509804546833038,
+                          "b": 0.24705882370471954,
+                          "a": 1,
+                          "hex": "#01253f"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0,
+                    "strokeAlign": "CENTER",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER",
+                    "characters": "Environment \nScore",
+                    "fontSize": 25,
+                    "fontName": {
+                      "family": "Avenir",
+                      "style": "Medium"
+                    },
+                    "fontWeight": 500,
+                    "letterSpacing": {
+                      "unit": "PIXELS",
+                      "value": -0.2723785638809204
+                    },
+                    "lineHeight": {
+                      "unit": "AUTO"
+                    },
+                    "textAlignHorizontal": "LEFT",
+                    "textAlignVertical": "CENTER",
+                    "textAutoResize": "WIDTH_AND_HEIGHT",
+                    "textCase": "ORIGINAL",
+                    "textDecoration": "NONE"
+                  }
+                ]
+              },
+              {
+                "name": "Group 289204",
+                "type": "GROUP",
+                "width": 25.029294967651367,
+                "height": 25,
+                "children": [
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 25.029294967651367,
+                    "height": 25,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  },
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 2.18112850189209,
+                    "height": 11.404173851013184,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  },
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 2.780484437942505,
+                    "height": 2.8096916675567627,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Small Graph",
+            "type": "FRAME",
+            "width": 249.72442626953125,
+            "height": 188.47125244140625,
+            "layoutMode": "NONE",
+            "primaryAxisSizingMode": "AUTO",
+            "counterAxisSizingMode": "FIXED",
+            "primaryAxisAlignItems": "MIN",
+            "counterAxisAlignItems": "MIN",
+            "strokeWeight": 1.768691897392273,
+            "strokeAlign": "INSIDE",
+            "strokeCap": "NONE",
+            "strokeJoin": "MITER",
+            "children": [
+              {
+                "name": "Metric",
+                "type": "TEXT",
+                "width": 146.80142211914062,
+                "height": 47.75468444824219,
+                "fills": "Symbol(figma.mixed)",
+                "strokeWeight": 0,
+                "strokeAlign": "CENTER",
+                "strokeCap": "NONE",
+                "strokeJoin": "MITER",
+                "characters": "64 /100",
+                "fontSize": "Symbol(figma.mixed)",
+                "fontName": "Symbol(figma.mixed)",
+                "fontWeight": "Symbol(figma.mixed)",
+                "letterSpacing": {
+                  "unit": "PIXELS",
+                  "value": 0
+                },
+                "lineHeight": "Symbol(figma.mixed)",
+                "textAlignHorizontal": "LEFT",
+                "textAlignVertical": "CENTER",
+                "textAutoResize": "NONE",
+                "textCase": "ORIGINAL",
+                "textDecoration": "NONE"
+              },
+              {
+                "name": "Title",
+                "type": "FRAME",
+                "width": 151,
+                "height": 68,
+                "layoutMode": "HORIZONTAL",
+                "primaryAxisSizingMode": "AUTO",
+                "counterAxisSizingMode": "AUTO",
+                "primaryAxisAlignItems": "MIN",
+                "counterAxisAlignItems": "MIN",
+                "itemSpacing": 14.149535179138184,
+                "strokeWeight": 1.768691897392273,
+                "strokeAlign": "INSIDE",
+                "strokeCap": "NONE",
+                "strokeJoin": "MITER",
+                "children": [
+                  {
+                    "name": "Primary Title",
+                    "type": "TEXT",
+                    "width": 151,
+                    "height": 68,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.003921568859368563,
+                          "g": 0.14509804546833038,
+                          "b": 0.24705882370471954,
+                          "a": 1,
+                          "hex": "#01253f"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0,
+                    "strokeAlign": "CENTER",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER",
+                    "characters": "Continuity of \nCare Index",
+                    "fontSize": 25,
+                    "fontName": {
+                      "family": "Avenir",
+                      "style": "Medium"
+                    },
+                    "fontWeight": 500,
+                    "letterSpacing": {
+                      "unit": "PIXELS",
+                      "value": -0.2723785638809204
+                    },
+                    "lineHeight": {
+                      "unit": "AUTO"
+                    },
+                    "textAlignHorizontal": "LEFT",
+                    "textAlignVertical": "CENTER",
+                    "textAutoResize": "WIDTH_AND_HEIGHT",
+                    "textCase": "ORIGINAL",
+                    "textDecoration": "NONE"
+                  }
+                ]
+              },
+              {
+                "name": "Group 289204",
+                "type": "GROUP",
+                "width": 25.029294967651367,
+                "height": 25,
+                "children": [
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 25.029294967651367,
+                    "height": 25,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  },
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 2.18112850189209,
+                    "height": 11.404173851013184,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  },
+                  {
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "width": 2.780484437942505,
+                    "height": 2.8096916675567627,
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "opacity": 1,
+                        "color": {
+                          "r": 0.4615526795387268,
+                          "g": 0.5671579837799072,
+                          "b": 0.6434285044670105,
+                          "a": 1,
+                          "hex": "#7691a4"
+                        }
+                      }
+                    ],
+                    "strokeWeight": 0.21724385023117065,
+                    "strokeAlign": "INSIDE",
+                    "strokeCap": "NONE",
+                    "strokeJoin": "MITER"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "textContent": [
+      {
+        "name": "Metric",
+        "text": "86%",
+        "path": "Group 288874/Group 288703/Small Graph/Metric",
+        "nodeType": "TEXT"
+      },
+      {
+        "name": "Primary Title",
+        "text": "Strong Matches",
+        "path": "Group 288874/Group 288703/Small Graph/Title/Primary Title",
+        "nodeType": "TEXT"
+      },
+      {
+        "name": "Metric",
+        "text": "+34%",
+        "path": "Group 288874/Group 288703/Small Graph/Metric",
+        "nodeType": "TEXT"
+      },
+      {
+        "name": "Primary Title",
+        "text": "Pulse Trends",
+        "path": "Group 288874/Group 288703/Small Graph/Title/Primary Title",
+        "nodeType": "TEXT"
+      },
+      {
+        "name": "Metric",
+        "text": "77/100",
+        "path": "Group 288874/Group 288704/Small Graph/Metric",
+        "nodeType": "TEXT"
+      },
+      {
+        "name": "Primary Title",
+        "text": "Environment \nScore",
+        "path": "Group 288874/Group 288704/Small Graph/Title/Primary Title",
+        "nodeType": "TEXT"
+      },
+      {
+        "name": "Metric",
+        "text": "64 /100",
+        "path": "Group 288874/Group 288704/Small Graph/Metric",
+        "nodeType": "TEXT"
+      },
+      {
+        "name": "Primary Title",
+        "text": "Continuity of \nCare Index",
+        "path": "Group 288874/Group 288704/Small Graph/Title/Primary Title",
+        "nodeType": "TEXT"
+      }
+    ]
+  }
