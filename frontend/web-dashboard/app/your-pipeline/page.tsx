@@ -306,48 +306,34 @@ const YourPipelinePage = () => {
               {/* Data Cards Grid */}
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <h3 className="text-2xl font-bold text-blue-600">77/100</h3>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-2xl font-bold text-[#01253F]">77</h3>
+                    <span className="text-gray-400 text-lg">/100</span>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
                   <p className="text-gray-600 text-sm font-avenir">Environment Score</p>
                 </div>
                 <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <h3 className="text-2xl font-bold text-green-600">64/100</h3>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-2xl font-bold text-[#01253F]">64</h3>
+                    <span className="text-gray-400 text-lg">/100</span>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
                   <p className="text-gray-600 text-sm font-avenir">Continuity of Care Index</p>
                 </div>
                 <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <h3 className="text-2xl font-bold text-purple-600">86%</h3>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-2xl font-bold text-[#01253F]">86%</h3>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
                   <p className="text-gray-600 text-sm font-avenir">Strong Matches</p>
-                  {/* Small line graph */}
-                  <div className="flex items-end justify-center space-x-1 mt-2 h-8">
-                    <div className="w-1 bg-blue-400 h-2"></div>
-                    <div className="w-1 bg-blue-400 h-4"></div>
-                    <div className="w-1 bg-blue-400 h-6"></div>
-                    <div className="w-1 bg-blue-400 h-3"></div>
-                    <div className="w-1 bg-blue-400 h-5"></div>
-                  </div>
                 </div>
                 <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200">
-                  <div className="flex items-center justify-center space-x-2 mb-2">
-                    <h3 className="text-2xl font-bold text-orange-600">+34%</h3>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-2xl font-bold text-[#01253F]">+34%</h3>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
                   <p className="text-gray-600 text-sm font-avenir">Pulse Trends</p>
-                  {/* Small line graph */}
-                  <div className="flex items-end justify-center space-x-1 mt-2 h-8">
-                    <div className="w-1 bg-green-400 h-3"></div>
-                    <div className="w-1 bg-green-400 h-5"></div>
-                    <div className="w-1 bg-green-400 h-7"></div>
-                    <div className="w-1 bg-green-400 h-4"></div>
-                    <div className="w-1 bg-green-400 h-6"></div>
-                  </div>
                 </div>
               </div>
 
