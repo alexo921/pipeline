@@ -263,21 +263,14 @@ const YourPipelinePage = () => {
             <div className="flex items-center space-x-4">
                                   <button 
                       onClick={handleNotificationClick}
-                      className="text-sm font-medium flex items-center transition-colors shadow-sm relative"
+                      className="text-sm font-medium flex items-center transition-colors shadow-sm relative bg-white hover:bg-gray-50 px-4 py-2 rounded-lg border border-gray-200"
                       style={{
-                        width: '244px',
-                        height: '59px',
-                        borderRadius: '100px',
-                        paddingTop: '15px',
-                        paddingRight: '33px',
-                        paddingBottom: '15px',
-                        paddingLeft: '33px',
-                        gap: '12px',
-                        backgroundColor: 'white'
+                        gap: '8px',
+                        fontFamily: 'Avenir'
                       }}
                     >
-                      <Bell className="w-4 h-4" style={{ color: '#7691A4' }} />
-                      <span style={{ color: '#7691A4' }}>Notifications</span>
+                      <Bell className="w-4 h-4 text-gray-500 fill-current" />
+                      <span className="text-gray-600 font-avenir">Notifications</span>
                       <span className="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" style={{ backgroundColor: '#01253F' }}>
                         {notifications}
                       </span>
@@ -304,8 +297,25 @@ const YourPipelinePage = () => {
             </div>
             <div className="grid grid-cols-2 gap-8">
               {/* Data Cards Grid */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200">
+              <div 
+                className="grid grid-cols-2 gap-4 mb-6"
+                style={{
+                  width: '625px',
+                  height: '570px',
+                  marginTop: '100px',
+                  marginLeft: '32px',
+                  border: '1.77px solid #e5e7eb'
+                }}
+              >
+                <div 
+                  className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200"
+                  style={{
+                    width: '302px',
+                    height: '270px',
+                    borderRadius: '35px',
+                    border: '1.77px solid #e5e7eb'
+                  }}
+                >
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-2xl font-bold text-[#01253F]">77</h3>
                     <span className="text-gray-400 text-lg">/100</span>
@@ -313,7 +323,15 @@ const YourPipelinePage = () => {
                   </div>
                   <p className="text-gray-600 text-sm font-avenir">Environment Score</p>
                 </div>
-                <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200">
+                <div 
+                  className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200"
+                  style={{
+                    width: '302px',
+                    height: '270px',
+                    borderRadius: '35px',
+                    border: '1.77px solid #e5e7eb'
+                  }}
+                >
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-2xl font-bold text-[#01253F]">64</h3>
                     <span className="text-gray-400 text-lg">/100</span>
@@ -321,14 +339,30 @@ const YourPipelinePage = () => {
                   </div>
                   <p className="text-gray-600 text-sm font-avenir">Continuity of Care Index</p>
                 </div>
-                <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200">
+                <div 
+                  className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200"
+                  style={{
+                    width: '302px',
+                    height: '270px',
+                    borderRadius: '35px',
+                    border: '1.77px solid #e5e7eb'
+                  }}
+                >
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-2xl font-bold text-[#01253F]">86%</h3>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
                   <p className="text-gray-600 text-sm font-avenir">Strong Matches</p>
                 </div>
-                <div className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200">
+                <div 
+                  className="text-center p-6 rounded-xl bg-white shadow-sm border border-gray-200"
+                  style={{
+                    width: '302px',
+                    height: '270px',
+                    borderRadius: '35px',
+                    border: '1.77px solid #e5e7eb'
+                  }}
+                >
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-2xl font-bold text-[#01253F]">+34%</h3>
                     <Info className="w-4 h-4 text-gray-400" />
