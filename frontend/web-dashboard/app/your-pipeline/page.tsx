@@ -285,7 +285,7 @@ const YourPipelinePage = () => {
               width: '100%',
               maxWidth: '1200px',
               minHeight: 'auto',
-              padding: '1.5rem',
+              padding: '1rem',
               borderRadius: '20px',
               boxShadow: '0px 0px 20px rgba(0,0,0,0.08)',
               backgroundColor: 'rgba(244,244,244,0.6)',
@@ -297,7 +297,7 @@ const YourPipelinePage = () => {
               style={{
                 width: '100%',
                 minHeight: '60px',
-                padding: '1.5rem',
+                padding: '1rem',
                 gap: '1.5rem'
               }}
             >
@@ -307,7 +307,7 @@ const YourPipelinePage = () => {
                   width: 'auto',
                   minHeight: '34px',
                   fontFamily: 'Avenir',
-                  fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)',
+                  fontSize: 'clamp(1.25rem, 2.5vw, 2rem)',
                   fontWeight: 500,
                   lineHeight: '1.4',
                   letterSpacing: '0%',
@@ -379,8 +379,8 @@ const YourPipelinePage = () => {
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
                     width: '100%',
-                    minHeight: '200px',
-                    padding: '1.5rem',
+                    minHeight: '150px',
+                    padding: '1rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                     backgroundColor: '#ffffff',
@@ -401,7 +401,7 @@ const YourPipelinePage = () => {
                         width: 'auto',
                         minHeight: '40px',
                         fontFamily: 'Avenir',
-                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                        fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
                         fontWeight: 700,
                         lineHeight: '1.4',
                         letterSpacing: '0%',
@@ -468,9 +468,9 @@ const YourPipelinePage = () => {
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
                     width: '100%',
-                    minHeight: '200px',
-                    maxWidth: '374px',
-                    padding: '1.5rem',
+                    minHeight: '150px',
+                    maxWidth: '280px',
+                    padding: '1rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                     backgroundColor: '#ffffff',
@@ -491,7 +491,7 @@ const YourPipelinePage = () => {
                         width: 'auto',
                         minHeight: '40px',
                         fontFamily: 'Avenir',
-                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                        fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
                         fontWeight: 700,
                         lineHeight: '1.4',
                         letterSpacing: '0%',
@@ -558,9 +558,9 @@ const YourPipelinePage = () => {
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
                     width: '100%',
-                    minHeight: '200px',
-                    maxWidth: '374px',
-                    padding: '1.5rem',
+                    minHeight: '150px',
+                    maxWidth: '280px',
+                    padding: '1rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                     backgroundColor: '#ffffff',
@@ -581,7 +581,7 @@ const YourPipelinePage = () => {
                         width: 'auto',
                         minHeight: '40px',
                         fontFamily: 'Avenir',
-                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                        fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
                         fontWeight: 700,
                         lineHeight: '1.4',
                         letterSpacing: '0%',
@@ -632,9 +632,9 @@ const YourPipelinePage = () => {
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
                     width: '100%',
-                    minHeight: '200px',
-                    maxWidth: '374px',
-                    padding: '1.5rem',
+                    minHeight: '150px',
+                    maxWidth: '280px',
+                    padding: '1rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                     backgroundColor: '#ffffff',
@@ -655,7 +655,7 @@ const YourPipelinePage = () => {
                         width: 'auto',
                         minHeight: '40px',
                         fontFamily: 'Avenir',
-                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                        fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)',
                         fontWeight: 700,
                         lineHeight: '1.4',
                         letterSpacing: '0%',
@@ -723,7 +723,7 @@ const YourPipelinePage = () => {
                   style={{
                     width: '100%',
                     minHeight: '60px',
-                    padding: '1.5rem',
+                    padding: '1rem',
                     gap: '1.5rem'
                   }}
                 >
@@ -733,7 +733,7 @@ const YourPipelinePage = () => {
                       width: 'auto',
                       minHeight: '34px',
                       fontFamily: 'Avenir',
-                      fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)',
+                      fontSize: 'clamp(1.25rem, 2.5vw, 2rem)',
                       fontWeight: 500,
                       lineHeight: '1.4',
                       letterSpacing: '0%',
@@ -789,7 +789,7 @@ const YourPipelinePage = () => {
                     width: '100%',
                     minHeight: 'auto',
                     gap: '2rem',
-                    padding: '1.5rem'
+                    padding: '1rem'
                   }}
                 >
                   <div 
@@ -1094,7 +1094,7 @@ const YourPipelinePage = () => {
             style={{
               width: '100%',
               minHeight: 'auto',
-              padding: '1.5rem',
+              padding: '1rem',
               gap: '1.5rem',
               maxWidth: '1160px'
             }}
@@ -1131,7 +1131,7 @@ const YourPipelinePage = () => {
                     width: '100%',
                     minHeight: '40px',
                     fontFamily: 'Avenir',
-                    fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)',
+                    fontSize: 'clamp(1.25rem, 2.5vw, 2rem)',
                     fontWeight: 900,
                     lineHeight: '1.4',
                     letterSpacing: '0%',
@@ -1155,10 +1155,10 @@ const YourPipelinePage = () => {
                       className="p-3 border bg-white" 
                       style={{ 
                         width: '100%', 
-                        minHeight: '200px',
+                        minHeight: '150px',
                         maxWidth: '520px',
                         borderRadius: '16px',
-                        padding: '1.5rem',
+                        padding: '1rem',
                         backgroundColor: '#ffffff',
                         border: '1px solid #e5e7eb',
                         boxShadow: '0px 4px 16px rgba(0,0,0,0.05)'
@@ -1340,7 +1340,7 @@ const YourPipelinePage = () => {
                     width: '100%',
                     minHeight: '80px',
                     gap: '1rem',
-                    padding: '1.5rem'
+                    padding: '1rem'
                   }}
                 >
                   <button 
@@ -1488,7 +1488,7 @@ const YourPipelinePage = () => {
                   style={{
                     width: '100%',
                     minHeight: 'auto',
-                    padding: '1.5rem',
+                    padding: '1rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                     backgroundColor: 'rgba(244,244,244,0.6)',
@@ -1500,7 +1500,7 @@ const YourPipelinePage = () => {
                     style={{
                       width: '100%',
                       minHeight: '60px',
-                      padding: '1.5rem',
+                      padding: '1rem',
                       gap: '1.5rem'
                     }}
                   >
@@ -1510,7 +1510,7 @@ const YourPipelinePage = () => {
                         width: 'auto',
                         minHeight: '40px',
                         fontFamily: 'Avenir',
-                        fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)',
+                        fontSize: 'clamp(1.25rem, 2.5vw, 2rem)',
                         fontWeight: 900,
                         lineHeight: '1.4',
                         letterSpacing: '0%',
