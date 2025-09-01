@@ -281,21 +281,20 @@ const YourPipelinePage = () => {
           {/* Analytics Container - Holds both Metrics and Insights */}
           <div 
             className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6 mb-8"
-            style={{
-              width: '100%', maxWidth: '100%', overflow: 'hidden',
-              maxWidth: '1200px',
-              minHeight: 'auto',
-              padding: '1rem',
-              borderRadius: '20px',
-              boxShadow: '0px 0px 20px rgba(0,0,0,0.08)',
-              backgroundColor: 'rgba(244,244,244,0.6)',
-              border: '1px solid #e5e7eb'
-            }}
+                          style={{
+                width: '100%', maxWidth: '1200px', overflow: 'hidden',
+                minHeight: 'auto',
+                padding: '1rem',
+                borderRadius: '20px',
+                boxShadow: '0px 0px 20px rgba(0,0,0,0.08)',
+                backgroundColor: 'rgba(244,244,244,0.6)',
+                border: '1px solid #e5e7eb'
+              }}
           >
             <div 
               className="flex items-center justify-between mb-6"
               style={{
-                width: '100%', maxWidth: '100%', overflow: 'hidden',
+                width: '100%', overflow: 'hidden',
                 minHeight: '60px',
                 padding: '1rem',
                 gap: '1.5rem'
@@ -358,7 +357,7 @@ const YourPipelinePage = () => {
             <div 
               className="grid grid-cols-1 lg:grid-cols-2 gap-8"
               style={{
-                width: '100%', maxWidth: '100%', overflow: 'hidden',
+                width: '100%', overflow: 'hidden',
                 minHeight: 'auto',
                 gap: '1.5rem',
                 maxWidth: '1160px',
@@ -370,7 +369,7 @@ const YourPipelinePage = () => {
               <div 
                 className="grid grid-cols-2 gap-4"
                 style={{
-                  width: '100%', maxWidth: '100%', overflow: 'hidden',
+                  width: '100%', overflow: 'hidden',
                   minHeight: 'auto',
                   gap: '1rem',
                   padding: '1rem',
@@ -382,7 +381,7 @@ const YourPipelinePage = () => {
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '100%', maxWidth: '100%', overflow: 'hidden',
+                    width: '100%', overflow: 'hidden',
                     minHeight: '150px',
                     padding: '1rem',
                     borderRadius: '20px',
@@ -394,7 +393,7 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center justify-between mb-2"
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: '40px',
                       gap: '1rem'
                     }}
@@ -454,7 +453,7 @@ const YourPipelinePage = () => {
                   <p 
                     className="text-gray-600 text-xs font-avenir"
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: '24px',
                       fontFamily: 'Avenir',
                       fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
@@ -471,7 +470,7 @@ const YourPipelinePage = () => {
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '100%', maxWidth: '100%', overflow: 'hidden',
+                    width: '100%', overflow: 'hidden',
                     minHeight: '150px',
                     maxWidth: '100%',
                     padding: '1rem',
@@ -484,7 +483,7 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center justify-between mb-2"
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: '40px',
                       gap: '1rem'
                     }}
@@ -544,7 +543,7 @@ const YourPipelinePage = () => {
                   <p 
                     className="text-gray-600 text-xs font-avenir"
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: '24px',
                       fontFamily: 'Avenir',
                       fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
@@ -561,7 +560,7 @@ const YourPipelinePage = () => {
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '100%', maxWidth: '100%', overflow: 'hidden',
+                    width: '100%', overflow: 'hidden',
                     minHeight: '150px',
                     maxWidth: '100%',
                     padding: '1rem',
@@ -574,7 +573,7 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center justify-between mb-2"
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: '40px',
                       gap: '1rem'
                     }}
@@ -618,7 +617,7 @@ const YourPipelinePage = () => {
                   <p 
                     className="text-gray-600 text-xs font-avenir"
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: '24px',
                       fontFamily: 'Avenir',
                       fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
@@ -635,7 +634,7 @@ const YourPipelinePage = () => {
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '100%', maxWidth: '100%', overflow: 'hidden',
+                    width: '100%', overflow: 'hidden',
                     minHeight: '150px',
                     maxWidth: '100%',
                     padding: '1rem',
@@ -648,7 +647,7 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center justify-between mb-2"
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: '40px',
                       gap: '1rem'
                     }}
@@ -692,7 +691,7 @@ const YourPipelinePage = () => {
                   <p 
                     className="text-gray-600 text-xs font-avenir"
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: '24px',
                       fontFamily: 'Avenir',
                       fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
@@ -712,7 +711,7 @@ const YourPipelinePage = () => {
               <div 
                 className="bg-white rounded-xl shadow-sm border p-6"
                 style={{
-                  width: '100%', maxWidth: '100%', overflow: 'hidden',
+                  width: '100%', overflow: 'hidden',
                   minHeight: 'auto',
                   padding: '1rem',
                   borderRadius: '20px',
@@ -726,7 +725,7 @@ const YourPipelinePage = () => {
                 <div 
                   className="flex items-center justify-between mb-6"
                   style={{
-                    width: '100%', maxWidth: '100%', overflow: 'hidden',
+                    width: '100%', overflow: 'hidden',
                     minHeight: '60px',
                     padding: '1rem',
                     gap: '1.5rem'
@@ -791,7 +790,7 @@ const YourPipelinePage = () => {
                 <div 
                   className="space-y-4"
                   style={{
-                    width: '100%', maxWidth: '100%', overflow: 'hidden',
+                    width: '100%', overflow: 'hidden',
                     minHeight: 'auto',
                     gap: '2rem',
                     padding: '1rem',
@@ -801,7 +800,7 @@ const YourPipelinePage = () => {
                 >
                   <div 
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: 'auto',
                       gap: '1rem'
                     }}
@@ -809,7 +808,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="flex items-center justify-between mb-2"
                       style={{
-                        width: '100%', maxWidth: '100%', overflow: 'hidden',
+                        width: '100%', overflow: 'hidden',
                         minHeight: '40px',
                         gap: '1rem'
                       }}
@@ -850,7 +849,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="w-full bg-gray-200 rounded-full h-2"
                       style={{
-                        width: '100%', maxWidth: '100%', overflow: 'hidden',
+                        width: '100%', overflow: 'hidden',
                         height: '8px',
                         backgroundColor: '#f3f4f6',
                         borderRadius: '4px'
@@ -870,7 +869,7 @@ const YourPipelinePage = () => {
                   
                   <div 
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: 'auto',
                       gap: '1rem'
                     }}
@@ -878,7 +877,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="flex items-center justify-between mb-2"
                       style={{
-                        width: '100%', maxWidth: '100%', overflow: 'hidden',
+                        width: '100%', overflow: 'hidden',
                         minHeight: '40px',
                         gap: '1rem'
                       }}
@@ -919,7 +918,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="w-full bg-gray-200 rounded-full h-2"
                       style={{
-                        width: '100%', maxWidth: '100%', overflow: 'hidden',
+                        width: '100%', overflow: 'hidden',
                         height: '8px',
                         backgroundColor: '#f3f4f6',
                         borderRadius: '4px'
@@ -939,7 +938,7 @@ const YourPipelinePage = () => {
                   
                   <div 
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: 'auto',
                       gap: '1rem'
                     }}
@@ -947,7 +946,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="flex items-center justify-between mb-2"
                       style={{
-                        width: '100%', maxWidth: '100%', overflow: 'hidden',
+                        width: '100%', overflow: 'hidden',
                         minHeight: '40px',
                         gap: '1rem'
                       }}
@@ -988,7 +987,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="w-full bg-gray-200 rounded-full h-2"
                       style={{
-                        width: '100%', maxWidth: '100%', overflow: 'hidden',
+                        width: '100%', overflow: 'hidden',
                         height: '8px',
                         backgroundColor: '#f3f4f6',
                         borderRadius: '4px'
@@ -1008,7 +1007,7 @@ const YourPipelinePage = () => {
                   
                   <div 
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: 'auto',
                       gap: '1rem'
                     }}
@@ -1016,7 +1015,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="flex items-center justify-between mb-2"
                       style={{
-                        width: '100%', maxWidth: '100%', overflow: 'hidden',
+                        width: '100%', overflow: 'hidden',
                         minHeight: '40px',
                         gap: '1rem'
                       }}
@@ -1057,7 +1056,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="w-full bg-gray-200 rounded-full h-2"
                       style={{
-                        width: '100%', maxWidth: '100%', overflow: 'hidden',
+                        width: '100%', overflow: 'hidden',
                         height: '8px',
                         backgroundColor: '#f3f4f6',
                         borderRadius: '4px'
@@ -1083,11 +1082,12 @@ const YourPipelinePage = () => {
           <div 
             className="p-6"
             style={{
-              width: '100%', maxWidth: '100%', overflow: 'hidden',
+              width: '100%', overflow: 'hidden',
               minHeight: 'auto',
               padding: '1rem',
               gap: '1.5rem',
-              maxWidth: '1160px'
+              maxWidth: '1160px',
+              maxHeight: '800px'
             }}
           >
             <div 
@@ -1096,7 +1096,7 @@ const YourPipelinePage = () => {
                 display: 'grid', 
                 gridTemplateColumns: '1fr 1fr', 
                 gap: '1.5rem',
-                width: '100%', maxWidth: '100%', overflow: 'hidden',
+                width: '100%', overflow: 'hidden',
                 minHeight: 'auto',
                 maxWidth: '1120px'
               }}
@@ -1106,7 +1106,7 @@ const YourPipelinePage = () => {
                 className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6" 
                 style={{ 
                   minWidth: '300px',
-                  width: '100%', maxWidth: '100%', overflow: 'hidden',
+                  width: '100%', overflow: 'hidden',
                   minHeight: 'auto',
                   padding: '1rem',
                   borderRadius: '20px',
@@ -1119,7 +1119,7 @@ const YourPipelinePage = () => {
                 <h2 
                   className="text-[25px] font-black leading-[154%] text-[#01253F] mb-6 font-avenir"
                   style={{
-                    width: '100%', maxWidth: '100%', overflow: 'hidden',
+                    width: '100%', overflow: 'hidden',
                     minHeight: '40px',
                     fontFamily: 'Avenir',
                     fontSize: 'clamp(1.25rem, 2.5vw, 2rem)',
@@ -1135,7 +1135,7 @@ const YourPipelinePage = () => {
                 <div 
                   className="space-y-3"
                   style={{
-                    width: '100%', maxWidth: '100%', overflow: 'hidden',
+                    width: '100%', overflow: 'hidden',
                     minHeight: 'auto',
                     gap: '1rem'
                   }}
@@ -1145,20 +1145,21 @@ const YourPipelinePage = () => {
                       key={job.id} 
                       className="p-3 border bg-white" 
                       style={{ 
-                        width: '100%', maxWidth: '100%', overflow: 'hidden', 
+                        width: '80%', overflow: 'hidden', 
                         minHeight: '150px',
-                        maxWidth: '100%',
+                        maxWidth: '80%',
                         borderRadius: '16px',
                         padding: '1rem',
                         backgroundColor: '#ffffff',
                         border: '1px solid #e5e7eb',
-                        boxShadow: '0px 4px 16px rgba(0,0,0,0.05)'
+                        boxShadow: '0px 4px 16px rgba(0,0,0,0.05)',
+                        margin: '0 auto'
                       }}
                     >
                       <div 
                         className="flex items-start justify-between mb-2"
                         style={{
-                          width: '100%', maxWidth: '100%', overflow: 'hidden',
+                          width: '100%', overflow: 'hidden',
                           minHeight: '80px',
                           gap: '1rem'
                         }}
@@ -1166,7 +1167,7 @@ const YourPipelinePage = () => {
                         <div 
                           className="flex-1"
                           style={{
-                            width: '100%', maxWidth: '100%', overflow: 'hidden',
+                            width: '100%', overflow: 'hidden',
                             minHeight: '80px',
                             gap: '1rem'
                           }}
@@ -1174,7 +1175,7 @@ const YourPipelinePage = () => {
                           <div 
                             className="flex items-center space-x-2 mb-1"
                             style={{
-                              width: '100%', maxWidth: '100%', overflow: 'hidden',
+                              width: '100%', overflow: 'hidden',
                               minHeight: '40px',
                               gap: '0.5rem'
                             }}
@@ -1208,7 +1209,7 @@ const YourPipelinePage = () => {
                           <p 
                             className="text-[#01253F] text-[14px] font-bold leading-[20px] font-avenir"
                             style={{
-                              width: '100%', maxWidth: '100%', overflow: 'hidden',
+                              width: '100%', overflow: 'hidden',
                               minHeight: '24px',
                               fontFamily: 'Avenir',
                               fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
@@ -1226,7 +1227,7 @@ const YourPipelinePage = () => {
                       <div 
                         className="flex items-center justify-between"
                         style={{
-                          width: '100%', maxWidth: '100%', overflow: 'hidden',
+                          width: '100%', overflow: 'hidden',
                           minHeight: '80px',
                           gap: '1rem'
                         }}
@@ -1234,7 +1235,7 @@ const YourPipelinePage = () => {
                         <div 
                           className="flex-1"
                           style={{
-                            width: '100%', maxWidth: '100%', overflow: 'hidden',
+                            width: '100%', overflow: 'hidden',
                             minHeight: '80px',
                             gap: '1rem'
                           }}
@@ -1242,7 +1243,7 @@ const YourPipelinePage = () => {
                           <p 
                             className="text-[#01253F] text-[13px] font-normal leading-[18px] font-avenir"
                             style={{
-                              width: '100%', maxWidth: '100%', overflow: 'hidden',
+                              width: '100%', overflow: 'hidden',
                               minHeight: '24px',
                               fontFamily: 'Avenir',
                               fontSize: 'clamp(0.75rem, 1.25vw, 0.875rem)',
@@ -1258,7 +1259,7 @@ const YourPipelinePage = () => {
                           <p 
                             className="text-[#01253F] text-[13px] font-normal leading-[18px] font-avenir"
                             style={{
-                              width: '100%', maxWidth: '100%', overflow: 'hidden',
+                              width: '100%', overflow: 'hidden',
                               minHeight: '24px',
                               fontFamily: 'Avenir',
                               fontSize: 'clamp(0.75rem, 1.25vw, 0.875rem)',
@@ -1328,7 +1329,7 @@ const YourPipelinePage = () => {
                 <div 
                   className="flex items-center justify-center space-x-2 mt-6"
                   style={{
-                    width: '100%', maxWidth: '100%', overflow: 'hidden',
+                    width: '100%', overflow: 'hidden',
                     minHeight: '80px',
                     gap: '1rem',
                     padding: '1rem'
@@ -1467,7 +1468,7 @@ const YourPipelinePage = () => {
                 className="space-y-6" 
                 style={{ 
                   minWidth: '300px',
-                  width: '100%', maxWidth: '100%', overflow: 'hidden',
+                  width: '100%', overflow: 'hidden',
                   minHeight: 'auto',
                   gap: '1.5rem',
                   maxWidth: '560px'
@@ -1477,7 +1478,7 @@ const YourPipelinePage = () => {
                 <div 
                   className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6"
                   style={{
-                    width: '100%', maxWidth: '100%', overflow: 'hidden',
+                    width: '100%', overflow: 'hidden',
                     minHeight: 'auto',
                     padding: '1rem',
                     borderRadius: '20px',
@@ -1489,7 +1490,7 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center justify-between mb-4"
                     style={{
-                      width: '100%', maxWidth: '100%', overflow: 'hidden',
+                      width: '100%', overflow: 'hidden',
                       minHeight: '60px',
                       padding: '1rem',
                       gap: '1.5rem'
@@ -1552,8 +1553,8 @@ const YourPipelinePage = () => {
                   <div 
                     className="space-y-2"
                     style={{
-                      width: '704px',
-                      height: '880px',
+                      width: '100%',
+                      height: 'auto',
                       gap: '16px',
                       padding: '20px'
                     }}
@@ -1563,7 +1564,7 @@ const YourPipelinePage = () => {
                         key={item} 
                         className="flex items-center justify-between p-4 border bg-white" 
                         style={{ 
-                          width: '664px', 
+                          width: '80%', 
                           height: '200px', 
                           borderRadius: '16px',
                           padding: '20px',
@@ -1736,7 +1737,7 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center justify-between mb-4"
                     style={{
-                      width: '704px',
+                      width: '100%',
                       height: '60px',
                       padding: '20px',
                       gap: '20px'
@@ -1799,8 +1800,8 @@ const YourPipelinePage = () => {
                   <div 
                     className="space-y-2"
                     style={{
-                      width: '704px',
-                      height: '880px',
+                      width: '100%',
+                      height: 'auto',
                       gap: '16px',
                       padding: '20px'
                     }}
@@ -1810,7 +1811,7 @@ const YourPipelinePage = () => {
                         key={item} 
                         className="flex items-center justify-between p-4 border bg-white" 
                         style={{ 
-                          width: '664px', 
+                          width: '80%', 
                           height: '200px', 
                           borderRadius: '16px',
                           padding: '20px',
