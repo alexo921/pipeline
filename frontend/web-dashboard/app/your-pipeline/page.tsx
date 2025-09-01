@@ -361,18 +361,22 @@ const YourPipelinePage = () => {
                 width: '100%',
                 minHeight: 'auto',
                 gap: '1.5rem',
-                maxWidth: '1160px'
+                maxWidth: '1160px',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr'
               }}
             >
-              {/* Data Cards Grid - Left Side */}
+              {/* Metrics Grid - Left Side (2x2) */}
               <div 
-                className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                className="grid grid-cols-2 gap-4"
                 style={{
                   width: '100%',
                   minHeight: 'auto',
-                  gap: '0.75rem',
+                  gap: '1rem',
                   padding: '1rem',
-                  maxWidth: '100%'
+                  maxWidth: '100%',
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr'
                 }}
               >
                 <div 
