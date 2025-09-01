@@ -153,8 +153,8 @@ const YourPipelinePage = () => {
   };
 
   const handleViewApplicants = (job: any) => {
-    setSelectedJob(job);
-    setShowApplicantsModal(true);
+    // Navigate to applicants page with job information
+    router.push(`/applicants?jobId=${job.id}&jobTitle=${encodeURIComponent(job.title)}&company=${encodeURIComponent(job.company)}`);
   };
 
   const handleViewProfile = (person: any) => {
@@ -268,10 +268,10 @@ const YourPipelinePage = () => {
             
             {/* Header Actions */}
             <div className="flex items-center space-x-4">
-                              <button 
-                  onClick={handleNotificationClick}
-                  className="bg-white hover:bg-gray-50 text-[#7691A4] font-medium px-4 py-2 rounded-lg transition-colors flex items-center space-x-3 relative border border-gray-200"
-                >
+              <button 
+                onClick={handleNotificationClick}
+                className="bg-white hover:bg-gray-50 text-[#7691A4] font-medium px-4 py-2 rounded-lg transition-colors flex items-center space-x-3 relative border border-gray-200"
+              >
                 <span className="text-[#7691A4] font-avenir">Notifications</span>
                 <Bell className="w-4 h-4 text-[#7691A4] fill-current" />
                 {notifications > 0 && (
@@ -711,39 +711,99 @@ const YourPipelinePage = () => {
 
       {/* View Applicants Modal */}
       {showApplicantsModal && selectedJob && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-            <h3 className="text-xl font-bold mb-4">Applicants for {selectedJob.title}</h3>
-            <div className="space-y-4">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setShowApplicantsModal(false)}
+        >
+          <div 
+            className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header Section */}
+            <div className="flex items-start justify-between mb-6">
+              {/* Left Side - Job Info */}
+              <div>
+                <h3 className="text-2xl font-bold text-[#01253F] mb-1">
+                  Applicants for {selectedJob.title}
+                </h3>
+                <p className="text-lg text-gray-600">
+                  {selectedJob.company} • {selectedJob.location}
+                </p>
+              </div>
+              
+              {/* Right Side - Actions */}
+              <div className="flex items-center space-x-4">
+                <button className="bg-[#4A90E2] hover:bg-[#357ABD] text-white px-6 py-3 rounded-lg font-bold text-base transition-colors">
+                  Contact All
+                </button>
+                <button 
+                  onClick={() => setShowApplicantsModal(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            {/* Divider */}
+            <div className="w-full h-px bg-gray-200 mb-8"></div>
+            
+            {/* Applicants List */}
+            <div className="space-y-6">
               {demoApplicants.map((applicant) => (
-                <div key={applicant.id} className="border rounded-lg p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-semibold text-lg">{applicant.name}</h4>
-                      <p className="text-gray-600">{applicant.role}</p>
-                      <p className="text-gray-600">{applicant.experience}</p>
-                      <p className="text-gray-600">{applicant.location}</p>
-                      <p className="text-sm text-gray-500">Applied {applicant.appliedDate}</p>
+                <div key={applicant.id} className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                  {/* Applicant Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    {/* Left Side - Avatar and Info */}
+                    <div className="flex items-start space-x-4">
+                      {/* Avatar */}
+                      <div className="w-16 h-16 rounded-full border-2 border-gray-200 overflow-hidden flex-shrink-0 flex items-center justify-center bg-gradient-to-b from-purple-100 to-blue-200">
+                        <User className="w-8 h-8 text-[#01253F]" strokeWidth={2} />
+                      </div>
+                      
+                      {/* Name and Details */}
+                      <div>
+                        <h4 className="text-xl font-bold text-[#01253F] mb-1">
+                          {applicant.name}
+                        </h4>
+                        <p className="text-base font-bold text-[#01253F] mb-1">
+                          {applicant.experience}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {applicant.location}
+                        </p>
+                        <p className="text-sm text-gray-500 mt-1">
+                          Applied {applicant.appliedDate}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex space-x-2">
-                      <button className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                        View Profile
+                    
+                    {/* Right Side - Actions */}
+                    <div className="flex items-center space-x-3">
+                      <button 
+                        onClick={() => handleViewProfile(applicant)}
+                        className="bg-[#2CB3BF] hover:bg-[#25a0ab] text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors"
+                      >
+                        View Profilexx
                       </button>
-                      <button className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+                      <button className="bg-[#4A90E2] hover:bg-[#357ABD] text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors">
                         Contact
                       </button>
                     </div>
                   </div>
+                  
+                  {/* Quick Bio Preview */}
+                  <div className="bg-white rounded-xl p-4 border border-gray-100">
+                    <h5 className="text-sm font-bold text-gray-600 mb-2">Quick Bio</h5>
+                    <p className="text-sm text-gray-800 leading-relaxed">
+                      Dedicated healthcare professional with strong patient care skills and experience in 
+                      long-term care settings. Committed to providing compassionate and quality care.
+                    </p>
+                  </div>
                 </div>
               ))}
-            </div>
-            <div className="mt-6">
-              <button 
-                onClick={() => setShowApplicantsModal(false)}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
-              >
-                Close
-              </button>
             </div>
           </div>
         </div>
@@ -751,44 +811,111 @@ const YourPipelinePage = () => {
 
       {/* Profile View Modal */}
       {showProfileModal && selectedMatch && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-xl font-bold mb-4">Profile: {selectedMatch.name}</h3>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Briefcase className="w-5 h-5 text-gray-600" />
-                <span>{selectedMatch.role}</span>
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setShowProfileModal(false)}
+        >
+          <div 
+            className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header Section */}
+            <div className="flex items-start justify-between mb-6">
+              {/* Left Side - Avatar and Info */}
+              <div className="flex items-start space-x-4">
+                {/* Avatar */}
+                <div className="w-20 h-20 rounded-full border-2 border-gray-200 overflow-hidden flex-shrink-0 flex items-center justify-center bg-gradient-to-b from-purple-100 to-blue-200">
+                  <User className="w-10 h-10 text-[#01253F]" strokeWidth={2} />
+                </div>
+                
+                {/* Name and Details */}
+                <div>
+                  <h3 className="text-2xl font-bold text-[#01253F] mb-1">
+                    {selectedMatch.name}
+                  </h3>
+                  <p className="text-lg font-bold text-[#01253F] mb-1">
+                    {selectedMatch.experience}
+                  </p>
+                  <p className="text-base text-gray-600">
+                    {selectedMatch.location}
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <TrendingUp className="w-5 h-5 text-gray-600" />
-                <span>Match Score: {selectedMatch.matchScore}%</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-5 h-5 text-gray-600" />
-                <span>{selectedMatch.location}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Users className="w-5 h-5 text-gray-600" />
-                <span>{selectedMatch.experience}</span>
+              
+              {/* Right Side - Actions */}
+              <div className="flex items-center space-x-4">
+                <button className="bg-[#4A90E2] hover:bg-[#357ABD] text-white px-6 py-3 rounded-lg font-bold text-base transition-colors">
+                  Express Interest
+                </button>
+                <button 
+                  onClick={() => setShowProfileModal(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
             </div>
-            <div className="flex space-x-2 mt-6">
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2">
-                <MessageSquare className="w-4 h-4" />
-                <span>Message</span>
-              </button>
-              <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2">
-                <Phone className="w-4 h-4" />
-                <span>Call</span>
-              </button>
+            
+            {/* Divider */}
+            <div className="w-full h-px bg-gray-200 mb-8"></div>
+            
+            {/* Bio Section */}
+            <div className="mb-8">
+              <h4 className="text-lg font-bold text-gray-600 mb-4">Bio</h4>
+              <p className="text-base text-gray-800 leading-relaxed">
+                Community Focused. Care Driven. Join Something Health, where your future is as promising 
+                as the care we provide. Our commitment to each other, our patients, and our community is 
+                more than a mission.
+              </p>
             </div>
-            <div className="mt-4">
-              <button 
-                onClick={() => setShowProfileModal(false)}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
-              >
-                Close
-              </button>
+            
+            {/* Experience Section */}
+            <div className="mb-8">
+              <h4 className="text-lg font-bold text-gray-600 mb-4">Experience</h4>
+              <ul className="space-y-3">
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full mr-4 flex-shrink-0"></div>
+                  <span className="text-base text-gray-800">
+                    Registered Nurse | St. Mary's | <span className="font-bold">3yrs</span>
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full mr-4 flex-shrink-0"></div>
+                  <span className="text-base text-gray-800">
+                    Registered Nurse | St. Mary's | <span className="font-bold">3yrs</span>
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full mr-4 flex-shrink-0"></div>
+                  <span className="text-base text-gray-800">
+                    Registered Nurse | St. Mary's | <span className="font-bold">3yrs</span>
+                  </span>
+                </li>
+                <li className="flex items-center">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full mr-4 flex-shrink-0"></div>
+                  <span className="text-base text-gray-800">
+                    Registered Nurse | St. Mary's | <span className="font-bold">3yrs</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
+            
+            {/* Skills Section */}
+            <div>
+              <h4 className="text-lg font-bold text-gray-600 mb-4">Skills</h4>
+              <div className="flex flex-wrap gap-3">
+                <span className="px-4 py-2 border-2 border-gray-300 rounded-full text-base text-gray-800 font-medium">
+                  Leadership
+                </span>
+                <span className="px-4 py-2 border-2 border-gray-300 rounded-full text-base text-gray-800 font-medium">
+                  Safety
+                </span>
+                <span className="px-4 py-2 border-2 border-gray-300 rounded-full text-base text-gray-800 font-medium">
+                  Adaptability
+                </span>
+              </div>
             </div>
           </div>
         </div>

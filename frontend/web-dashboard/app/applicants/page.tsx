@@ -24,12 +24,13 @@ import {
 import BaseLayout from '../components/layout/BaseLayout';
 import AdminDashboardNav from '../components/AdminDashboardNav';
 import { useAuth } from '../contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
 const ApplicantsPage = () => {
   const { user } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [authChecked, setAuthChecked] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -37,6 +38,13 @@ const ApplicantsPage = () => {
   const [sortBy, setSortBy] = useState('recent');
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState<any>(null);
+  
+  // Job information from URL parameters
+  const [jobInfo, setJobInfo] = useState({
+    id: searchParams.get('jobId') || '',
+    title: searchParams.get('jobTitle') || 'Registered Nurse I',
+    company: searchParams.get('company') || 'St. Mary\'s Health Center'
+  });
 
   // Demo data with matched status
   const demoApplicants = [
@@ -167,7 +175,7 @@ const ApplicantsPage = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
             <div>
               <h2 className="text-[30px] font-black leading-[154%] text-[#01253F] font-avenir">
-                Registered Nurse I
+                {jobInfo.title}
               </h2>
               <p className="text-[16px] text-[#7691A4] mt-2">You have <span className="text-[#2466D0] font-bold">15</span> new applicants</p>
               {user?.role === 'ADMIN' && (
@@ -201,6 +209,7 @@ const ApplicantsPage = () => {
             {/* Left Side - Applicants List in White Container */}
             <div className="flex-1 max-w-xl">
               {/* Applicants List */}
+              
               <div className="space-y-4">
                 {filteredApplicants.map((applicant) => (
                   <div 
