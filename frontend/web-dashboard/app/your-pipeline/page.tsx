@@ -232,7 +232,7 @@ const YourPipelinePage = () => {
 
       {/* Page Header */}
       <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
-        <div className="max-w-[1600px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
+        <div className="max-w-[1200px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
           <h1 className="text-[76.6971px] font-bold leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
             YourPipeline
           </h1>
@@ -243,10 +243,10 @@ const YourPipelinePage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-full max-w-[1600px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12" style={{ position: 'relative', zIndex: 1 }}>
+      <div className="w-full max-w-[1200px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12" style={{ position: 'relative', zIndex: 1 }}>
         
         {/* Main Company Container - Wraps both Analytics/Insights and Jobs/Matches/Applicants */}
-        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative" style={{ maxWidth: '1600px' }}>
+        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative" style={{ maxWidth: '1200px' }}>
           
           {/* Company Header and Actions */}
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
@@ -283,9 +283,9 @@ const YourPipelinePage = () => {
             className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6 mb-8"
             style={{
               width: '100%',
-              maxWidth: '1600px',
+              maxWidth: '1200px',
               minHeight: 'auto',
-              padding: '2rem',
+              padding: '1.5rem',
               borderRadius: '20px',
               boxShadow: '0px 0px 20px rgba(0,0,0,0.08)',
               backgroundColor: 'rgba(244,244,244,0.6)',
@@ -360,8 +360,8 @@ const YourPipelinePage = () => {
               style={{
                 width: '100%',
                 minHeight: 'auto',
-                gap: '2rem',
-                maxWidth: '1560px'
+                gap: '1.5rem',
+                maxWidth: '1160px'
               }}
             >
               {/* Data Cards Grid */}
@@ -370,9 +370,9 @@ const YourPipelinePage = () => {
                 style={{
                   width: '100%',
                   minHeight: 'auto',
-                  gap: '1rem',
-                  padding: '1.5rem',
-                  maxWidth: '764px'
+                  gap: '0.75rem',
+                  padding: '1rem',
+                  maxWidth: '570px'
                 }}
               >
                 <div 
@@ -710,12 +710,12 @@ const YourPipelinePage = () => {
                 style={{
                   width: '100%',
                   minHeight: 'auto',
-                  padding: '1.5rem',
+                  padding: '1rem',
                   borderRadius: '20px',
                   boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                   backgroundColor: '#ffffff',
                   border: '1px solid #e5e7eb',
-                  maxWidth: '764px'
+                  maxWidth: '570px'
                 }}
               >
                 <div 
@@ -1094,9 +1094,9 @@ const YourPipelinePage = () => {
             style={{
               width: '100%',
               minHeight: 'auto',
-              padding: '2rem',
-              gap: '2rem',
-              maxWidth: '1560px'
+              padding: '1.5rem',
+              gap: '1.5rem',
+              maxWidth: '1160px'
             }}
           >
             <div 
@@ -1104,10 +1104,10 @@ const YourPipelinePage = () => {
               style={{ 
                 display: 'grid', 
                 gridTemplateColumns: '1fr 1fr', 
-                gap: '2rem',
+                gap: '1.5rem',
                 width: '100%',
                 minHeight: 'auto',
-                maxWidth: '1520px'
+                maxWidth: '1120px'
               }}
             >
               {/* Open Jobs Section - Left Side (Full Height) */}
@@ -1117,12 +1117,12 @@ const YourPipelinePage = () => {
                   minWidth: '300px',
                   width: '100%',
                   minHeight: 'auto',
-                  padding: '1.5rem',
+                  padding: '1rem',
                   borderRadius: '20px',
                   boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                   backgroundColor: 'rgba(244,244,244,0.6)',
                   border: '1px solid #e5e7eb',
-                  maxWidth: '744px'
+                  maxWidth: '560px'
                 }}
               >
                 <h2 
@@ -1156,7 +1156,7 @@ const YourPipelinePage = () => {
                       style={{ 
                         width: '100%', 
                         minHeight: '200px',
-                        maxWidth: '704px',
+                        maxWidth: '520px',
                         borderRadius: '16px',
                         padding: '1.5rem',
                         backgroundColor: '#ffffff',
@@ -1478,8 +1478,8 @@ const YourPipelinePage = () => {
                   minWidth: '300px',
                   width: '100%',
                   minHeight: 'auto',
-                  gap: '2rem',
-                  maxWidth: '744px'
+                  gap: '1.5rem',
+                  maxWidth: '560px'
                 }}
               >
                 {/* Matches Section - Top Right (Half Height) */}
