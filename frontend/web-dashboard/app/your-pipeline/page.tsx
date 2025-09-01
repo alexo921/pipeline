@@ -469,6 +469,7 @@ const YourPipelinePage = () => {
                   style={{
                     width: '100%',
                     minHeight: '200px',
+                    maxWidth: '374px',
                     padding: '1.5rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
@@ -558,6 +559,7 @@ const YourPipelinePage = () => {
                   style={{
                     width: '100%',
                     minHeight: '200px',
+                    maxWidth: '374px',
                     padding: '1.5rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
@@ -631,6 +633,7 @@ const YourPipelinePage = () => {
                   style={{
                     width: '100%',
                     minHeight: '200px',
+                    maxWidth: '374px',
                     padding: '1.5rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
@@ -1152,7 +1155,8 @@ const YourPipelinePage = () => {
                       className="p-3 border bg-white" 
                       style={{ 
                         width: '100%', 
-                        minHeight: '200px', 
+                        minHeight: '200px',
+                        maxWidth: '704px',
                         borderRadius: '16px',
                         padding: '1.5rem',
                         backgroundColor: '#ffffff',
