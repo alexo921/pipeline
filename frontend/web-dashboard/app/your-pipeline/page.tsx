@@ -364,7 +364,7 @@ const YourPipelinePage = () => {
                 maxWidth: '1160px'
               }}
             >
-              {/* Data Cards Grid */}
+              {/* Data Cards Grid - Left Side */}
               <div 
                 className="grid grid-cols-1 sm:grid-cols-2 gap-4"
                 style={{
@@ -372,7 +372,7 @@ const YourPipelinePage = () => {
                   minHeight: 'auto',
                   gap: '0.75rem',
                   padding: '1rem',
-                  maxWidth: '570px'
+                  maxWidth: '100%'
                 }}
               >
                 <div 
@@ -469,7 +469,7 @@ const YourPipelinePage = () => {
                   style={{
                     width: '100%',
                     minHeight: '150px',
-                    maxWidth: '280px',
+                    maxWidth: '100%',
                     padding: '1rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
@@ -559,7 +559,7 @@ const YourPipelinePage = () => {
                   style={{
                     width: '100%',
                     minHeight: '150px',
-                    maxWidth: '280px',
+                    maxWidth: '100%',
                     padding: '1rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
@@ -633,7 +633,7 @@ const YourPipelinePage = () => {
                   style={{
                     width: '100%',
                     minHeight: '150px',
-                    maxWidth: '280px',
+                    maxWidth: '100%',
                     padding: '1rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
@@ -704,7 +704,7 @@ const YourPipelinePage = () => {
                 </div>
               </div>
 
-              {/* Insights Section */}
+              {/* Insights Section - Right Side */}
               <div 
                 className="bg-white rounded-xl shadow-sm border p-6"
                 style={{
@@ -715,7 +715,7 @@ const YourPipelinePage = () => {
                   boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                   backgroundColor: '#ffffff',
                   border: '1px solid #e5e7eb',
-                  maxWidth: '570px'
+                  maxWidth: '100%'
                 }}
               >
                 <div 
@@ -1156,7 +1156,7 @@ const YourPipelinePage = () => {
                       style={{ 
                         width: '100%', 
                         minHeight: '150px',
-                        maxWidth: '520px',
+                        maxWidth: '100%',
                         borderRadius: '16px',
                         padding: '1rem',
                         backgroundColor: '#ffffff',
