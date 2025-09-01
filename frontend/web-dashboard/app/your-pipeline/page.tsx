@@ -282,9 +282,9 @@ const YourPipelinePage = () => {
           <div 
             className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6 mb-8"
             style={{
-              width: '1600px',
-              height: '3414px',
-              padding: '20px',
+              width: '100%',
+              minHeight: '100vh',
+              padding: '2rem',
               borderRadius: '20px',
               boxShadow: '0px 0px 20px rgba(0,0,0,0.08)',
               backgroundColor: 'rgba(244,244,244,0.6)',
@@ -294,21 +294,21 @@ const YourPipelinePage = () => {
             <div 
               className="flex items-center justify-between mb-6"
               style={{
-                width: '1560px',
-                height: '60px',
-                padding: '20px',
-                gap: '20px'
+                width: '100%',
+                minHeight: '60px',
+                padding: '1.5rem',
+                gap: '1.5rem'
               }}
             >
               <h2 
                 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir"
                 style={{
-                  width: '200px',
-                  height: '34px',
+                  width: 'auto',
+                  minHeight: '34px',
                   fontFamily: 'Avenir',
-                  fontSize: '25px',
+                  fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)',
                   fontWeight: 500,
-                  lineHeight: '34px',
+                  lineHeight: '1.4',
                   letterSpacing: '0%',
                   textAlign: 'left'
                 }}
@@ -318,9 +318,9 @@ const YourPipelinePage = () => {
               <div 
                 className="flex items-center space-x-2"
                 style={{
-                  width: '120px',
-                  height: '40px',
-                  gap: '8px'
+                  width: 'auto',
+                  minHeight: '40px',
+                  gap: '0.5rem'
                 }}
               >
                 <button 
@@ -355,29 +355,29 @@ const YourPipelinePage = () => {
               </div>
             </div>
             <div 
-              className="grid grid-cols-2 gap-8"
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8"
               style={{
-                width: '1560px',
-                height: '3314px',
-                gap: '32px'
+                width: '100%',
+                minHeight: 'auto',
+                gap: '2rem'
               }}
             >
               {/* Data Cards Grid */}
               <div 
-                className="grid grid-cols-2 gap-4"
+                className="grid grid-cols-1 sm:grid-cols-2 gap-4"
                 style={{
-                  width: '764px',
-                  height: '3314px',
-                  gap: '16px',
-                  padding: '20px'
+                  width: '100%',
+                  minHeight: 'auto',
+                  gap: '1rem',
+                  padding: '1.5rem'
                 }}
               >
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '374px',
-                    height: '200px',
-                    padding: '20px',
+                    width: '100%',
+                    minHeight: '200px',
+                    padding: '1.5rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                     backgroundColor: '#ffffff',
@@ -387,20 +387,20 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center justify-between mb-2"
                     style={{
-                      width: '334px',
-                      height: '40px',
-                      gap: '16px'
+                      width: '100%',
+                      minHeight: '40px',
+                      gap: '1rem'
                     }}
                   >
                     <h3 
                       className="text-lg font-bold text-[#01253F]"
                       style={{
-                        width: '80px',
-                        height: '40px',
+                        width: 'auto',
+                        minHeight: '40px',
                         fontFamily: 'Avenir',
-                        fontSize: '32px',
+                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
                         fontWeight: 700,
-                        lineHeight: '40px',
+                        lineHeight: '1.4',
                         letterSpacing: '0%',
                         textAlign: 'left'
                       }}
@@ -410,12 +410,12 @@ const YourPipelinePage = () => {
                     <span 
                       className="text-gray-400 text-sm"
                       style={{
-                        width: '60px',
-                        height: '24px',
+                        width: 'auto',
+                        minHeight: '24px',
                         fontFamily: 'Avenir',
-                        fontSize: '16px',
+                        fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                         fontWeight: 400,
-                        lineHeight: '24px',
+                        lineHeight: '1.5',
                         letterSpacing: '0%',
                         textAlign: 'left',
                         color: '#6b7280'
@@ -426,15 +426,15 @@ const YourPipelinePage = () => {
                     <div 
                       className="relative group"
                       style={{
-                        width: '24px',
-                        height: '24px'
+                        width: 'auto',
+                        minHeight: '24px'
                       }}
                     >
                       <Info 
                         className="w-3 h-3 text-gray-400 cursor-help" 
                         style={{
-                          width: '24px',
-                          height: '24px',
+                          width: 'clamp(1rem, 2vw, 1.5rem)',
+                          height: 'clamp(1rem, 2vw, 1.5rem)',
                           color: '#6b7280'
                         }}
                       />
@@ -447,12 +447,12 @@ const YourPipelinePage = () => {
                   <p 
                     className="text-gray-600 text-xs font-avenir"
                     style={{
-                      width: '334px',
-                      height: '24px',
+                      width: '100%',
+                      minHeight: '24px',
                       fontFamily: 'Avenir',
-                      fontSize: '16px',
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                       fontWeight: 400,
-                      lineHeight: '24px',
+                      lineHeight: '1.5',
                       letterSpacing: '0%',
                       textAlign: 'left',
                       color: '#374151'
@@ -464,9 +464,9 @@ const YourPipelinePage = () => {
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '374px',
-                    height: '200px',
-                    padding: '20px',
+                    width: '100%',
+                    minHeight: '200px',
+                    padding: '1.5rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                     backgroundColor: '#ffffff',
@@ -476,20 +476,20 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center justify-between mb-2"
                     style={{
-                      width: '334px',
-                      height: '40px',
-                      gap: '16px'
+                      width: '100%',
+                      minHeight: '40px',
+                      gap: '1rem'
                     }}
                   >
                     <h3 
                       className="text-lg font-bold text-[#01253F]"
                       style={{
-                        width: '80px',
-                        height: '40px',
+                        width: 'auto',
+                        minHeight: '40px',
                         fontFamily: 'Avenir',
-                        fontSize: '32px',
+                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
                         fontWeight: 700,
-                        lineHeight: '40px',
+                        lineHeight: '1.4',
                         letterSpacing: '0%',
                         textAlign: 'left'
                       }}
@@ -499,12 +499,12 @@ const YourPipelinePage = () => {
                     <span 
                       className="text-gray-400 text-sm"
                       style={{
-                        width: '60px',
-                        height: '24px',
+                        width: 'auto',
+                        minHeight: '24px',
                         fontFamily: 'Avenir',
-                        fontSize: '16px',
+                        fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                         fontWeight: 400,
-                        lineHeight: '24px',
+                        lineHeight: '1.5',
                         letterSpacing: '0%',
                         textAlign: 'left',
                         color: '#6b7280'
@@ -515,15 +515,15 @@ const YourPipelinePage = () => {
                     <div 
                       className="relative group"
                       style={{
-                        width: '24px',
-                        height: '24px'
+                        width: 'auto',
+                        minHeight: '24px'
                       }}
                     >
                       <Info 
                         className="w-3 h-3 text-gray-400 cursor-help" 
                         style={{
-                          width: '24px',
-                          height: '24px',
+                          width: 'clamp(1rem, 2vw, 1.5rem)',
+                          height: 'clamp(1rem, 2vw, 1.5rem)',
                           color: '#6b7280'
                         }}
                       />
@@ -536,12 +536,12 @@ const YourPipelinePage = () => {
                   <p 
                     className="text-gray-600 text-xs font-avenir"
                     style={{
-                      width: '334px',
-                      height: '24px',
+                      width: '100%',
+                      minHeight: '24px',
                       fontFamily: 'Avenir',
-                      fontSize: '16px',
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                       fontWeight: 400,
-                      lineHeight: '24px',
+                      lineHeight: '1.5',
                       letterSpacing: '0%',
                       textAlign: 'left',
                       color: '#374151'
@@ -553,9 +553,9 @@ const YourPipelinePage = () => {
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '374px',
-                    height: '200px',
-                    padding: '20px',
+                    width: '100%',
+                    minHeight: '200px',
+                    padding: '1.5rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                     backgroundColor: '#ffffff',
@@ -565,20 +565,20 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center justify-between mb-2"
                     style={{
-                      width: '334px',
-                      height: '40px',
-                      gap: '16px'
+                      width: '100%',
+                      minHeight: '40px',
+                      gap: '1rem'
                     }}
                   >
                     <h3 
                       className="text-lg font-bold text-[#01253F]"
                       style={{
-                        width: '120px',
-                        height: '40px',
+                        width: 'auto',
+                        minHeight: '40px',
                         fontFamily: 'Avenir',
-                        fontSize: '32px',
+                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
                         fontWeight: 700,
-                        lineHeight: '40px',
+                        lineHeight: '1.4',
                         letterSpacing: '0%',
                         textAlign: 'left'
                       }}
@@ -588,15 +588,15 @@ const YourPipelinePage = () => {
                     <div 
                       className="relative group"
                       style={{
-                        width: '24px',
-                        height: '24px'
+                        width: 'auto',
+                        minHeight: '24px'
                       }}
                     >
                       <Info 
                         className="w-3 h-3 text-gray-400 cursor-help" 
                         style={{
-                          width: '24px',
-                          height: '24px',
+                          width: 'clamp(1rem, 2vw, 1.5rem)',
+                          height: 'clamp(1rem, 2vw, 1.5rem)',
                           color: '#6b7280'
                         }}
                       />
@@ -609,12 +609,12 @@ const YourPipelinePage = () => {
                   <p 
                     className="text-gray-600 text-xs font-avenir"
                     style={{
-                      width: '334px',
-                      height: '24px',
+                      width: '100%',
+                      minHeight: '24px',
                       fontFamily: 'Avenir',
-                      fontSize: '16px',
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                       fontWeight: 400,
-                      lineHeight: '24px',
+                      lineHeight: '1.5',
                       letterSpacing: '0%',
                       textAlign: 'left',
                       color: '#374151'
@@ -626,9 +626,9 @@ const YourPipelinePage = () => {
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '374px',
-                    height: '200px',
-                    padding: '20px',
+                    width: '100%',
+                    minHeight: '200px',
+                    padding: '1.5rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                     backgroundColor: '#ffffff',
@@ -638,20 +638,20 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center justify-between mb-2"
                     style={{
-                      width: '334px',
-                      height: '40px',
-                      gap: '16px'
+                      width: '100%',
+                      minHeight: '40px',
+                      gap: '1rem'
                     }}
                   >
                     <h3 
                       className="text-lg font-bold text-[#01253F]"
                       style={{
-                        width: '120px',
-                        height: '40px',
+                        width: 'auto',
+                        minHeight: '40px',
                         fontFamily: 'Avenir',
-                        fontSize: '32px',
+                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
                         fontWeight: 700,
-                        lineHeight: '40px',
+                        lineHeight: '1.4',
                         letterSpacing: '0%',
                         textAlign: 'left'
                       }}
@@ -661,15 +661,15 @@ const YourPipelinePage = () => {
                     <div 
                       className="relative group"
                       style={{
-                        width: '24px',
-                        height: '24px'
+                        width: 'auto',
+                        minHeight: '24px'
                       }}
                     >
                       <Info 
                         className="w-3 h-3 text-gray-400 cursor-help" 
                         style={{
-                          width: '24px',
-                          height: '24px',
+                          width: 'clamp(1rem, 2vw, 1.5rem)',
+                          height: 'clamp(1rem, 2vw, 1.5rem)',
                           color: '#6b7280'
                         }}
                       />
@@ -682,12 +682,12 @@ const YourPipelinePage = () => {
                   <p 
                     className="text-gray-600 text-xs font-avenir"
                     style={{
-                      width: '334px',
-                      height: '24px',
+                      width: '100%',
+                      minHeight: '24px',
                       fontFamily: 'Avenir',
-                      fontSize: '16px',
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                       fontWeight: 400,
-                      lineHeight: '24px',
+                      lineHeight: '1.5',
                       letterSpacing: '0%',
                       textAlign: 'left',
                       color: '#374151'
@@ -702,9 +702,9 @@ const YourPipelinePage = () => {
               <div 
                 className="bg-white rounded-xl shadow-sm border p-6"
                 style={{
-                  width: '764px',
-                  height: '3314px',
-                  padding: '20px',
+                  width: '100%',
+                  minHeight: 'auto',
+                  padding: '1.5rem',
                   borderRadius: '20px',
                   boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                   backgroundColor: '#ffffff',
@@ -714,21 +714,21 @@ const YourPipelinePage = () => {
                 <div 
                   className="flex items-center justify-between mb-6"
                   style={{
-                    width: '724px',
-                    height: '60px',
-                    padding: '20px',
-                    gap: '20px'
+                    width: '100%',
+                    minHeight: '60px',
+                    padding: '1.5rem',
+                    gap: '1.5rem'
                   }}
                 >
                   <h2 
                     className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir"
                     style={{
-                      width: '200px',
-                      height: '34px',
+                      width: 'auto',
+                      minHeight: '34px',
                       fontFamily: 'Avenir',
-                      fontSize: '25px',
+                      fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)',
                       fontWeight: 500,
-                      lineHeight: '34px',
+                      lineHeight: '1.4',
                       letterSpacing: '0%',
                       textAlign: 'left'
                     }}
@@ -738,9 +738,9 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center space-x-2"
                     style={{
-                      width: '120px',
-                      height: '40px',
-                      gap: '8px'
+                      width: 'auto',
+                      minHeight: '40px',
+                      gap: '0.5rem'
                     }}
                   >
                     <button 
@@ -779,36 +779,36 @@ const YourPipelinePage = () => {
                 <div 
                   className="space-y-4"
                   style={{
-                    width: '724px',
-                    height: '3200px',
-                    gap: '32px',
-                    padding: '20px'
+                    width: '100%',
+                    minHeight: 'auto',
+                    gap: '2rem',
+                    padding: '1.5rem'
                   }}
                 >
                   <div 
                     style={{
-                      width: '684px',
-                      height: '760px',
-                      gap: '16px'
+                      width: '100%',
+                      minHeight: 'auto',
+                      gap: '1rem'
                     }}
                   >
                     <div 
                       className="flex items-center justify-between mb-2"
                       style={{
-                        width: '684px',
-                        height: '40px',
-                        gap: '16px'
+                        width: '100%',
+                        minHeight: '40px',
+                        gap: '1rem'
                       }}
                     >
                       <span 
                         className="text-sm font-medium text-gray-700"
                         style={{
-                          width: '400px',
-                          height: '24px',
+                          width: 'auto',
+                          minHeight: '24px',
                           fontFamily: 'Avenir',
-                          fontSize: '16px',
+                          fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                           fontWeight: 500,
-                          lineHeight: '24px',
+                          lineHeight: '1.5',
                           letterSpacing: '0%',
                           textAlign: 'left',
                           color: '#374151'
@@ -819,12 +819,12 @@ const YourPipelinePage = () => {
                       <span 
                         className="text-sm text-gray-600"
                         style={{
-                          width: '80px',
-                          height: '24px',
+                          width: 'auto',
+                          minHeight: '24px',
                           fontFamily: 'Avenir',
-                          fontSize: '16px',
+                          fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                           fontWeight: 400,
-                          lineHeight: '24px',
+                          lineHeight: '1.5',
                           letterSpacing: '0%',
                           textAlign: 'right',
                           color: '#6b7280'
@@ -836,7 +836,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="w-full bg-gray-200 rounded-full h-2"
                       style={{
-                        width: '684px',
+                        width: '100%',
                         height: '8px',
                         backgroundColor: '#f3f4f6',
                         borderRadius: '4px'
@@ -856,28 +856,28 @@ const YourPipelinePage = () => {
                   
                   <div 
                     style={{
-                      width: '684px',
-                      height: '760px',
-                      gap: '16px'
+                      width: '100%',
+                      minHeight: 'auto',
+                      gap: '1rem'
                     }}
                   >
                     <div 
                       className="flex items-center justify-between mb-2"
                       style={{
-                        width: '684px',
-                        height: '40px',
-                        gap: '16px'
+                        width: '100%',
+                        minHeight: '40px',
+                        gap: '1rem'
                       }}
                     >
                       <span 
                         className="text-sm font-medium text-gray-700"
                         style={{
-                          width: '400px',
-                          height: '24px',
+                          width: 'auto',
+                          minHeight: '24px',
                           fontFamily: 'Avenir',
-                          fontSize: '16px',
+                          fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                           fontWeight: 500,
-                          lineHeight: '24px',
+                          lineHeight: '1.5',
                           letterSpacing: '0%',
                           textAlign: 'left',
                           color: '#374151'
@@ -888,12 +888,12 @@ const YourPipelinePage = () => {
                       <span 
                         className="text-sm text-gray-600"
                         style={{
-                          width: '80px',
-                          height: '24px',
+                          width: 'auto',
+                          minHeight: '24px',
                           fontFamily: 'Avenir',
-                          fontSize: '16px',
+                          fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                           fontWeight: 400,
-                          lineHeight: '24px',
+                          lineHeight: '1.5',
                           letterSpacing: '0%',
                           textAlign: 'right',
                           color: '#6b7280'
@@ -905,7 +905,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="w-full bg-gray-200 rounded-full h-2"
                       style={{
-                        width: '684px',
+                        width: '100%',
                         height: '8px',
                         backgroundColor: '#f3f4f6',
                         borderRadius: '4px'
@@ -925,28 +925,44 @@ const YourPipelinePage = () => {
                   
                   <div 
                     style={{
-                      width: '684px',
-                      height: '760px',
-                      gap: '16px'
+                      width: '100%',
+                      minHeight: 'auto',
+                      gap: '1rem'
                     }}
                   >
                     <div 
                       className="flex items-center justify-between mb-2"
                       style={{
-                        width: '684px',
-                        height: '40px',
-                        gap: '16px'
+                        width: '100%',
+                        minHeight: '40px',
+                        gap: '1rem'
                       }}
                     >
                       <span 
                         className="text-sm font-medium text-gray-700"
                         style={{
-                          width: '400px',
-                          height: '24px',
+                          width: 'auto',
+                          minHeight: '24px',
                           fontFamily: 'Avenir',
-                          fontSize: '16px',
+                          fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                           fontWeight: 500,
-                          lineHeight: '24px',
+                          lineHeight: '1.5',
+                          letterSpacing: '0%',
+                          textAlign: 'left',
+                          color: '#374151'
+                        }}
+                      >
+                        Behavioral Risk Flags
+                      </span>
+                      <span 
+                        className="text-sm font-medium text-gray-700"
+                        style={{
+                          width: 'auto',
+                          minHeight: '24px',
+                          fontFamily: 'Avenir',
+                          fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
+                          fontWeight: 500,
+                          lineHeight: '1.5',
                           letterSpacing: '0%',
                           textAlign: 'left',
                           color: '#374151'
@@ -957,12 +973,12 @@ const YourPipelinePage = () => {
                       <span 
                         className="text-sm text-gray-600"
                         style={{
-                          width: '80px',
-                          height: '24px',
+                          width: 'auto',
+                          minHeight: '24px',
                           fontFamily: 'Avenir',
-                          fontSize: '16px',
+                          fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                           fontWeight: 400,
-                          lineHeight: '24px',
+                          lineHeight: '1.5',
                           letterSpacing: '0%',
                           textAlign: 'right',
                           color: '#6b7280'
@@ -974,7 +990,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="w-full bg-gray-200 rounded-full h-2"
                       style={{
-                        width: '684px',
+                        width: '100%',
                         height: '8px',
                         backgroundColor: '#f3f4f6',
                         borderRadius: '4px'
@@ -994,28 +1010,28 @@ const YourPipelinePage = () => {
                   
                   <div 
                     style={{
-                      width: '684px',
-                      height: '760px',
-                      gap: '16px'
+                      width: '100%',
+                      minHeight: 'auto',
+                      gap: '1rem'
                     }}
                   >
                     <div 
                       className="flex items-center justify-between mb-2"
                       style={{
-                        width: '684px',
-                        height: '40px',
-                        gap: '16px'
+                        width: '100%',
+                        minHeight: '40px',
+                        gap: '1rem'
                       }}
                     >
                       <span 
                         className="text-sm font-medium text-gray-700"
                         style={{
-                          width: '400px',
-                          height: '24px',
+                          width: 'auto',
+                          minHeight: '24px',
                           fontFamily: 'Avenir',
-                          fontSize: '16px',
+                          fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                           fontWeight: 500,
-                          lineHeight: '24px',
+                          lineHeight: '1.5',
                           letterSpacing: '0%',
                           textAlign: 'left',
                           color: '#374151'
@@ -1026,12 +1042,12 @@ const YourPipelinePage = () => {
                       <span 
                         className="text-sm text-gray-600"
                         style={{
-                          width: '80px',
-                          height: '24px',
+                          width: 'auto',
+                          minHeight: '24px',
                           fontFamily: 'Avenir',
-                          fontSize: '16px',
+                          fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                           fontWeight: 400,
-                          lineHeight: '24px',
+                          lineHeight: '1.5',
                           letterSpacing: '0%',
                           textAlign: 'right',
                           color: '#6b7280'
@@ -1043,7 +1059,7 @@ const YourPipelinePage = () => {
                     <div 
                       className="w-full bg-gray-200 rounded-full h-2"
                       style={{
-                        width: '684px',
+                        width: '100%',
                         height: '8px',
                         backgroundColor: '#f3f4f6',
                         borderRadius: '4px'
@@ -1069,20 +1085,20 @@ const YourPipelinePage = () => {
           <div 
             className="p-6"
             style={{
-              width: '1560px',
-              height: '2000px',
-              padding: '20px',
-              gap: '32px'
+              width: '100%',
+              minHeight: 'auto',
+              padding: '2rem',
+              gap: '2rem'
             }}
           >
             <div 
-              className="grid grid-cols-1 sm:grid-cols-2 gap-8" 
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8" 
               style={{ 
                 display: 'grid', 
                 gridTemplateColumns: '1fr 1fr', 
-                gap: '32px',
-                width: '1520px',
-                height: '1960px'
+                gap: '2rem',
+                width: '100%',
+                minHeight: 'auto'
               }}
             >
               {/* Open Jobs Section - Left Side (Full Height) */}
@@ -1090,9 +1106,9 @@ const YourPipelinePage = () => {
                 className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6" 
                 style={{ 
                   minWidth: '300px',
-                  width: '744px',
-                  height: '1960px',
-                  padding: '20px',
+                  width: '100%',
+                  minHeight: 'auto',
+                  padding: '1.5rem',
                   borderRadius: '20px',
                   boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                   backgroundColor: 'rgba(244,244,244,0.6)',
@@ -1102,12 +1118,12 @@ const YourPipelinePage = () => {
                 <h2 
                   className="text-[25px] font-black leading-[154%] text-[#01253F] mb-6 font-avenir"
                   style={{
-                    width: '704px',
-                    height: '40px',
+                    width: '100%',
+                    minHeight: '40px',
                     fontFamily: 'Avenir',
-                    fontSize: '25px',
+                    fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)',
                     fontWeight: 900,
-                    lineHeight: '40px',
+                    lineHeight: '1.4',
                     letterSpacing: '0%',
                     textAlign: 'left',
                     color: '#01253F'
@@ -1118,9 +1134,9 @@ const YourPipelinePage = () => {
                 <div 
                   className="space-y-3"
                   style={{
-                    width: '704px',
-                    height: '1880px',
-                    gap: '16px'
+                    width: '100%',
+                    minHeight: 'auto',
+                    gap: '1rem'
                   }}
                 >
                   {demoJobs.map((job) => (
@@ -1128,10 +1144,10 @@ const YourPipelinePage = () => {
                       key={job.id} 
                       className="p-3 border bg-white" 
                       style={{ 
-                        width: '704px', 
-                        height: '200px', 
+                        width: '100%', 
+                        minHeight: '200px', 
                         borderRadius: '16px',
-                        padding: '20px',
+                        padding: '1.5rem',
                         backgroundColor: '#ffffff',
                         border: '1px solid #e5e7eb',
                         boxShadow: '0px 4px 16px rgba(0,0,0,0.05)'
@@ -1140,36 +1156,36 @@ const YourPipelinePage = () => {
                       <div 
                         className="flex items-start justify-between mb-2"
                         style={{
-                          width: '664px',
-                          height: '80px',
-                          gap: '16px'
+                          width: '100%',
+                          minHeight: '80px',
+                          gap: '1rem'
                         }}
                       >
                         <div 
                           className="flex-1"
                           style={{
-                            width: '400px',
-                            height: '80px',
-                            gap: '16px'
+                            width: '100%',
+                            minHeight: '80px',
+                            gap: '1rem'
                           }}
                         >
                           <div 
                             className="flex items-center space-x-2 mb-1"
                             style={{
-                              width: '400px',
-                              height: '40px',
-                              gap: '8px'
+                              width: '100%',
+                              minHeight: '40px',
+                              gap: '0.5rem'
                             }}
                           >
                             <h4 
                               className="font-bold text-[20px] leading-[130%] text-[#2466D0]"
                               style={{
-                                width: '300px',
-                                height: '40px',
+                                width: 'auto',
+                                minHeight: '40px',
                                 fontFamily: 'Avenir',
-                                fontSize: '20px',
+                                fontSize: 'clamp(1.125rem, 2vw, 1.25rem)',
                                 fontWeight: 700,
-                                lineHeight: '40px',
+                                lineHeight: '1.4',
                                 letterSpacing: '0%',
                                 textAlign: 'left',
                                 color: '#2466D0'
@@ -1181,8 +1197,8 @@ const YourPipelinePage = () => {
                               className="w-3 h-3 text-gray-400 cursor-pointer hover:text-gray-600" 
                               onClick={() => handleJobEdit(job)}
                               style={{
-                                width: '24px',
-                                height: '24px',
+                                width: 'clamp(1rem, 2vw, 1.5rem)',
+                                height: 'clamp(1rem, 2vw, 1.5rem)',
                                 color: '#6b7280'
                               }}
                             />
@@ -1190,12 +1206,12 @@ const YourPipelinePage = () => {
                           <p 
                             className="text-[#01253F] text-[14px] font-bold leading-[20px] font-avenir"
                             style={{
-                              width: '400px',
-                              height: '24px',
+                              width: '100%',
+                              minHeight: '24px',
                               fontFamily: 'Avenir',
-                              fontSize: '14px',
+                              fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                               fontWeight: 700,
-                              lineHeight: '24px',
+                              lineHeight: '1.5',
                               letterSpacing: '0%',
                               textAlign: 'left',
                               color: '#01253F'
@@ -1208,28 +1224,28 @@ const YourPipelinePage = () => {
                       <div 
                         className="flex items-center justify-between"
                         style={{
-                          width: '664px',
-                          height: '80px',
-                          gap: '16px'
+                          width: '100%',
+                          minHeight: '80px',
+                          gap: '1rem'
                         }}
                       >
                         <div 
                           className="flex-1"
                           style={{
-                            width: '400px',
-                            height: '80px',
-                            gap: '16px'
+                            width: '100%',
+                            minHeight: '80px',
+                            gap: '1rem'
                           }}
                         >
                           <p 
                             className="text-[#01253F] text-[13px] font-normal leading-[18px] font-avenir"
                             style={{
-                              width: '400px',
-                              height: '24px',
+                              width: '100%',
+                              minHeight: '24px',
                               fontFamily: 'Avenir',
-                              fontSize: '13px',
+                              fontSize: 'clamp(0.75rem, 1.25vw, 0.875rem)',
                               fontWeight: 400,
-                              lineHeight: '24px',
+                              lineHeight: '1.5',
                               letterSpacing: '0%',
                               textAlign: 'left',
                               color: '#01253F'
@@ -1240,12 +1256,12 @@ const YourPipelinePage = () => {
                           <p 
                             className="text-[#01253F] text-[13px] font-normal leading-[18px] font-avenir"
                             style={{
-                              width: '400px',
-                              height: '24px',
+                              width: '100%',
+                              minHeight: '24px',
                               fontFamily: 'Avenir',
-                              fontSize: '13px',
+                              fontSize: 'clamp(0.75rem, 1.25vw, 0.875rem)',
                               fontWeight: 400,
-                              lineHeight: '24px',
+                              lineHeight: '1.5',
                               letterSpacing: '0%',
                               textAlign: 'left',
                               color: '#01253F'
@@ -1257,8 +1273,8 @@ const YourPipelinePage = () => {
                         <div 
                           className="relative"
                           style={{
-                            width: '200px',
-                            height: '80px'
+                            width: 'auto',
+                            minHeight: '80px'
                           }}
                         >
                           <button 
@@ -1266,15 +1282,15 @@ const YourPipelinePage = () => {
                             className="text-white text-xs rounded transition-colors hover:opacity-90" 
                             style={{ 
                               backgroundColor: '#2CB3BF',
-                              width: '160px',
-                              height: '40px',
+                              width: 'auto',
+                              minHeight: '40px',
                               borderRadius: '8px',
-                              padding: '8px 16px',
-                              gap: '8px',
+                              padding: '0.5rem 1rem',
+                              gap: '0.5rem',
                               fontFamily: 'Avenir',
-                              fontSize: '14px',
+                              fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                               fontWeight: 500,
-                              lineHeight: '24px',
+                              lineHeight: '1.5',
                               letterSpacing: '0%',
                               textAlign: 'center',
                               color: '#ffffff'
@@ -1285,14 +1301,14 @@ const YourPipelinePage = () => {
                           <span 
                             className="absolute -top-1.5 -right-1.5 bg-[#01253F] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[12px] font-bold leading-[100%]"
                             style={{
-                              width: '24px',
-                              height: '24px',
+                              width: 'clamp(1.25rem, 2vw, 1.5rem)',
+                              height: 'clamp(1.25rem, 2vw, 1.5rem)',
                               backgroundColor: '#01253F',
-                              borderRadius: '12px',
+                              borderRadius: '50%',
                               fontFamily: 'Avenir',
-                              fontSize: '12px',
+                              fontSize: 'clamp(0.75rem, 1.25vw, 0.875rem)',
                               fontWeight: 700,
-                              lineHeight: '12px',
+                              lineHeight: '1',
                               letterSpacing: '0%',
                               textAlign: 'center',
                               color: '#ffffff'
@@ -1310,10 +1326,10 @@ const YourPipelinePage = () => {
                 <div 
                   className="flex items-center justify-center space-x-2 mt-6"
                   style={{
-                    width: '704px',
-                    height: '80px',
-                    gap: '16px',
-                    padding: '20px'
+                    width: '100%',
+                    minHeight: '80px',
+                    gap: '1rem',
+                    padding: '1.5rem'
                   }}
                 >
                   <button 
@@ -1325,25 +1341,25 @@ const YourPipelinePage = () => {
                     }`}
                     style={currentPage === 1 ? { 
                       backgroundColor: '#01253F',
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '20px',
+                      width: 'clamp(2rem, 4vw, 2.5rem)',
+                      height: 'clamp(2rem, 4vw, 2.5rem)',
+                      borderRadius: '50%',
                       fontFamily: 'Avenir',
-                      fontSize: '16px',
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                       fontWeight: 500,
-                      lineHeight: '24px',
+                      lineHeight: '1.5',
                       letterSpacing: '0%',
                       textAlign: 'center',
                       color: '#ffffff'
                     } : {
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '20px',
+                      width: 'clamp(2rem, 4vw, 2.5rem)',
+                      height: 'clamp(2rem, 4vw, 2.5rem)',
+                      borderRadius: '50%',
                       backgroundColor: '#f3f4f6',
                       fontFamily: 'Avenir',
-                      fontSize: '16px',
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                       fontWeight: 500,
-                      lineHeight: '24px',
+                      lineHeight: '1.5',
                       letterSpacing: '0%',
                       textAlign: 'center',
                       color: '#374151'
@@ -1360,25 +1376,25 @@ const YourPipelinePage = () => {
                     }`}
                     style={currentPage === 2 ? { 
                       backgroundColor: '#01253F',
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '20px',
+                      width: 'clamp(2rem, 4vw, 2.5rem)',
+                      height: 'clamp(2rem, 4vw, 2.5rem)',
+                      borderRadius: '50%',
                       fontFamily: 'Avenir',
-                      fontSize: '16px',
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                       fontWeight: 500,
-                      lineHeight: '24px',
+                      lineHeight: '1.5',
                       letterSpacing: '0%',
                       textAlign: 'center',
                       color: '#ffffff'
                     } : {
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '20px',
+                      width: 'clamp(2rem, 4vw, 2.5rem)',
+                      height: 'clamp(2rem, 4vw, 2.5rem)',
+                      borderRadius: '50%',
                       backgroundColor: '#f3f4f6',
                       fontFamily: 'Avenir',
-                      fontSize: '16px',
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                       fontWeight: 500,
-                      lineHeight: '24px',
+                      lineHeight: '1.5',
                       letterSpacing: '0%',
                       textAlign: 'center',
                       color: '#374151'
@@ -1395,25 +1411,25 @@ const YourPipelinePage = () => {
                     }`}
                     style={currentPage === 3 ? { 
                       backgroundColor: '#01253F',
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '20px',
+                      width: 'clamp(2rem, 4vw, 2.5rem)',
+                      height: 'clamp(2rem, 4vw, 2.5rem)',
+                      borderRadius: '50%',
                       fontFamily: 'Avenir',
-                      fontSize: '16px',
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                       fontWeight: 500,
-                      lineHeight: '24px',
+                      lineHeight: '1.5',
                       letterSpacing: '0%',
                       textAlign: 'center',
                       color: '#ffffff'
                     } : {
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '20px',
+                      width: 'clamp(2rem, 4vw, 2.5rem)',
+                      height: 'clamp(2rem, 4vw, 2.5rem)',
+                      borderRadius: '50%',
                       backgroundColor: '#f3f4f6',
                       fontFamily: 'Avenir',
-                      fontSize: '16px',
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                       fontWeight: 500,
-                      lineHeight: '24px',
+                      lineHeight: '1.5',
                       letterSpacing: '0%',
                       textAlign: 'center',
                       color: '#374151'
@@ -1425,17 +1441,18 @@ const YourPipelinePage = () => {
                     onClick={() => handlePageChange(currentPage < 3 ? currentPage + 1 : 3)}
                     className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
                     style={{
-                      width: '80px',
-                      height: '40px',
-                      borderRadius: '20px',
+                      width: 'auto',
+                      minHeight: 'clamp(2rem, 4vw, 2.5rem)',
+                      borderRadius: '50%',
                       backgroundColor: '#f3f4f6',
                       fontFamily: 'Avenir',
-                      fontSize: '16px',
+                      fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
                       fontWeight: 500,
-                      lineHeight: '24px',
+                      lineHeight: '1.5',
                       letterSpacing: '0%',
                       textAlign: 'center',
-                      color: '#374151'
+                      color: '#374151',
+                      padding: '0 1rem'
                     }}
                   >
                     Next &gt;
@@ -1448,18 +1465,18 @@ const YourPipelinePage = () => {
                 className="space-y-6" 
                 style={{ 
                   minWidth: '300px',
-                  width: '744px',
-                  height: '1960px',
-                  gap: '32px'
+                  width: '100%',
+                  minHeight: 'auto',
+                  gap: '2rem'
                 }}
               >
                 {/* Matches Section - Top Right (Half Height) */}
                 <div 
                   className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6"
                   style={{
-                    width: '744px',
-                    height: '960px',
-                    padding: '20px',
+                    width: '100%',
+                    minHeight: 'auto',
+                    padding: '1.5rem',
                     borderRadius: '20px',
                     boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
                     backgroundColor: 'rgba(244,244,244,0.6)',
@@ -1469,21 +1486,21 @@ const YourPipelinePage = () => {
                   <div 
                     className="flex items-center justify-between mb-4"
                     style={{
-                      width: '704px',
-                      height: '60px',
-                      padding: '20px',
-                      gap: '20px'
+                      width: '100%',
+                      minHeight: '60px',
+                      padding: '1.5rem',
+                      gap: '1.5rem'
                     }}
                   >
                     <h2 
                       className="text-[25px] font-black leading-[154%] text-[#2466D0] font-avenir"
                       style={{
-                        width: '200px',
-                        height: '40px',
+                        width: 'auto',
+                        minHeight: '40px',
                         fontFamily: 'Avenir',
-                        fontSize: '25px',
+                        fontSize: 'clamp(1.5rem, 2.5vw, 2.5rem)',
                         fontWeight: 900,
-                        lineHeight: '40px',
+                        lineHeight: '1.4',
                         letterSpacing: '0%',
                         textAlign: 'left',
                         color: '#2466D0'
