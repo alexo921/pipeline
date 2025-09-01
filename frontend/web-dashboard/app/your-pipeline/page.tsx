@@ -381,18 +381,6 @@ const YourPipelinePage = () => {
               <div className="w-1/2 bg-white rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Insights</h2>
-                  <div className="flex items-center space-x-2">
-                    <button 
-                      onClick={() => setIsInsightsExpanded(!isInsightsExpanded)}
-                      className="p-2 hover:bg-gray-100 rounded transition-colors"
-                      title="Expand to full screen"
-                    >
-                      <Maximize2 className="w-4 h-4 text-gray-600" />
-                    </button>
-                    <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
-                      <Download className="w-4 h-4 text-gray-600" />
-                    </button>
-                  </div>
                 </div>
                 
                 {/* Progress Bars */}
