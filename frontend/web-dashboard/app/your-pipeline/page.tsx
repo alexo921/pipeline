@@ -173,8 +173,13 @@ const YourPipelinePage = () => {
     console.log('New job post clicked');
   };
 
-  // Check authentication and authorization only once
+  // TEMPORARILY DISABLED: Check authentication and authorization only once
   useEffect(() => {
+    // TEMPORARILY DISABLED FOR DEVELOPMENT
+    setAuthChecked(true);
+    setIsAuthorized(true);
+    
+    /* ORIGINAL AUTH CODE - COMMENTED OUT
     // Don't do anything until we have a definitive user state
     if (user === null) {
       // Still loading, wait
@@ -201,9 +206,11 @@ const YourPipelinePage = () => {
       // User is an employer, redirect to employer dashboard
       router.push('/my-pipeline');
     }
+    */
   }, [user, router, authChecked]);
 
-  // Show loading while checking authentication
+  // TEMPORARILY DISABLED: Show loading while checking authentication
+  /* ORIGINAL AUTH LOADING - COMMENTED OUT
   if (!authChecked || user === null) {
     return (
       <BaseLayout>
@@ -230,12 +237,13 @@ const YourPipelinePage = () => {
       </BaseLayout>
     );
   }
+  */
 
   // User is authorized, show the dashboard
   return (
     <BaseLayout>
       {/* Admin Navigation - Only show for admin users */}
-      {user.role === 'ADMIN' && <AdminDashboardNav />}
+      {user?.role === 'ADMIN' && <AdminDashboardNav />}
 
       {/* Page Header */}
       <div className="w-full py-8 relative" style={{ zIndex: 1 }}>
@@ -243,7 +251,7 @@ const YourPipelinePage = () => {
           <h1 className="text-[76.6971px] font-bold leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
             YourPipeline
           </h1>
-          {user.role === 'ADMIN' && (
+          {user?.role === 'ADMIN' && (
             <p className="text-sm text-blue-600 font-medium text-center lg:text-left mt-2">Admin Access - Employee/User Dashboard</p>
           )}
         </div>
@@ -258,7 +266,7 @@ const YourPipelinePage = () => {
             <h2 className="text-[30px] font-black leading-[154%] text-[#01253F] font-avenir">
               St. Mary's Health Center
             </h2>
-            {user.role === 'ADMIN' && (
+            {user?.role === 'ADMIN' && (
               <p className="text-sm text-blue-600 font-medium mt-1">Admin Access - Employee/User Dashboard</p>
             )}
           </div>
