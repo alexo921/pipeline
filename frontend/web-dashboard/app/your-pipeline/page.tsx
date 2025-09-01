@@ -14,9 +14,7 @@ import {
   MapPin,
   Users,
   MessageSquare,
-  Phone,
-  Plus,
-  ExternalLink
+  Phone
 } from 'lucide-react';
 import BaseLayout from '../components/layout/BaseLayout';
 import AdminDashboardNav from '../components/AdminDashboardNav';
@@ -31,7 +29,7 @@ const YourPipelinePage = () => {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isAnalyticsExpanded, setIsAnalyticsExpanded] = useState(false);
   const [isInsightsExpanded, setIsInsightsExpanded] = useState(false);
-  
+
   // Demo state
   const [currentPage, setCurrentPage] = useState(1);
   const [notifications, setNotifications] = useState(4);
@@ -56,29 +54,29 @@ const YourPipelinePage = () => {
     },
     {
       id: 2,
-      title: "Registered Nurse",
+      title: "Physical Therapist", 
       company: "St. Mary's Health Center",
       location: "New Haven, CT",
-      salary: "75k/yr - 85k/yr",
-      applicants: 4,
+      salary: "80k/yr - 95k/yr",
+      applicants: 7,
       status: "Active"
     },
     {
       id: 3,
-      title: "Registered Nurse",
-      company: "St. Mary's Health Center",
+      title: "Medical Assistant",
+      company: "St. Mary's Health Center", 
       location: "New Haven, CT",
-      salary: "75k/yr - 85k/yr",
-      applicants: 4,
+      salary: "45k/yr - 55k/yr",
+      applicants: 12,
       status: "Active"
     },
     {
       id: 4,
-      title: "Registered Nurse",
+      title: "Respiratory Therapist",
       company: "St. Mary's Health Center",
-      location: "New Haven, CT",
-      salary: "75k/yr - 85k/yr",
-      applicants: 4,
+      location: "New Haven, CT", 
+      salary: "70k/yr - 85k/yr",
+      applicants: 3,
       status: "Active"
     }
   ];
@@ -95,19 +93,19 @@ const YourPipelinePage = () => {
     },
     {
       id: 2,
-      name: "Marvin Grant",
-      role: "Registered Nurse", 
-      experience: "5+ years experience",
-      location: "New Haven, CT",
+      name: "Sarah Johnson",
+      role: "Physical Therapist", 
+      experience: "3+ years experience",
+      location: "Hartford, CT",
       matchScore: 87,
       status: "Matched"
     },
     {
       id: 3,
-      name: "Marvin Grant",
-      role: "Registered Nurse",
-      experience: "5+ years experience",
-      location: "New Haven, CT",
+      name: "Michael Chen",
+      role: "Medical Assistant",
+      experience: "2+ years experience", 
+      location: "Bridgeport, CT",
       matchScore: 92,
       status: "Matched"
     }
@@ -116,28 +114,28 @@ const YourPipelinePage = () => {
   const demoApplicants = [
     {
       id: 1,
-      name: "Marvin Grant",
+      name: "Emily Rodriguez",
       role: "Registered Nurse",
-      experience: "5+ years experience",
+      experience: "4+ years experience",
       location: "New Haven, CT",
       status: "Applied",
       appliedDate: "2 days ago"
     },
     {
       id: 2,
-      name: "Marvin Grant",
+      name: "David Thompson",
       role: "Registered Nurse",
-      experience: "5+ years experience",
-      location: "New Haven, CT",
+      experience: "6+ years experience",
+      location: "Milford, CT",
       status: "Applied",
       appliedDate: "1 day ago"
     },
     {
       id: 3,
-      name: "Marvin Grant",
+      name: "Lisa Park",
       role: "Registered Nurse",
-      experience: "5+ years experience",
-      location: "New Haven, CT",
+      experience: "3+ years experience",
+      location: "West Haven, CT",
       status: "Applied",
       appliedDate: "3 days ago"
     }
@@ -168,76 +166,70 @@ const YourPipelinePage = () => {
     setCurrentPage(page);
   };
 
-  const handleNewJobPost = () => {
-    // Handle new job post functionality
-    console.log('New job post clicked');
-  };
+  // Check authentication and authorization only once
+  // useEffect(() => {
+  //   // Don't do anything until we have a definitive user state
+  //   if (user === null) {
+  //     // Still loading, wait
+  //     return;
+  //   }
 
-  // TEMPORARILY DISABLED: Check authentication and authorization only once
+  //   // Only check once
+  //   if (authChecked) {
+  //     return;
+  //   }
+
+  //   setAuthChecked(true);
+
+  //   if (!user) {
+  //     // User is not logged in, redirect to home
+  //     router.push('/');
+  //     return;
+  //   }
+
+  //   // Check if user is authorized for this dashboard
+  //   if (user.role !== 'EMPLOYER') {
+  //     setIsAuthorized(true);
+  //     return;
+  //   } else {
+  //     // User is an employer, redirect to employer dashboard
+  //     router.push('/my-pipeline');
+  //   }
+  // }, [user, router, authChecked]);
+
+  // Disable auth for development
   useEffect(() => {
-    // TEMPORARILY DISABLED FOR DEVELOPMENT
     setAuthChecked(true);
     setIsAuthorized(true);
-    
-    /* ORIGINAL AUTH CODE - COMMENTED OUT
-    // Don't do anything until we have a definitive user state
-    if (user === null) {
-      // Still loading, wait
-      return;
-    }
+  }, []);
 
-    // Only check once
-    if (authChecked) {
-      return;
-    }
-
-    setAuthChecked(true);
-
-    if (!user) {
-      // User is not logged in, redirect to home
-      router.push('/');
-      return;
-    }
-
-    // Check if user is authorized for this dashboard
-    if (user.role !== 'EMPLOYER') {
-      setIsAuthorized(true);
-    } else {
-      // User is an employer, redirect to employer dashboard
-      router.push('/my-pipeline');
-    }
-    */
-  }, [user, router, authChecked]);
-
-  // TEMPORARILY DISABLED: Show loading while checking authentication
-  /* ORIGINAL AUTH LOADING - COMMENTED OUT
-  if (!authChecked || user === null) {
-    return (
-      <BaseLayout>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2466D0] mx-auto mb-4"></div>
-            <p className="text-[#7691A4] text-lg">Loading...</p>
-          </div>
-        </div>
-      </BaseLayout>
-    );
-  }
+  // Show loading while checking authentication
+  // if (!authChecked || user === null) {
+  //   return (
+  //     <BaseLayout>
+  //       <div className="flex items-center justify-center min-h-[400px]">
+  //         <div className="text-center">
+  //           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2466D0] mx-auto mb-4"></div>
+  //           <p className="text-[#7691A4] text-lg">Loading...</p>
+  //         </div>
+  //       </div>
+  //     </BaseLayout>
+  //   );
+  // }
 
   // Show loading if user is not authorized (will redirect)
-  if (!isAuthorized) {
-    return (
-      <BaseLayout>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2466D0] mx-auto mb-4"></div>
-            <p className="text-[#7691A4] text-lg">Redirecting...</p>
-          </div>
-        </div>
-      </BaseLayout>
-    );
-  }
-  */
+  // if (!isAuthorized) {
+  //   return (
+  //     <BaseLayout>
+  //       <div className="flex items-center justify-center min-h-[400px]">
+  //         <div className="text-center">
+  //           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2466D0] mx-auto mb-4"></div>
+  //           <p className="text-[#7691A4] text-lg">Redirecting...</p>
+  //         </div>
+  //       </div>
+  //     </BaseLayout>
+  //   );
+  // }
 
   // User is authorized, show the dashboard
   return (
@@ -246,8 +238,8 @@ const YourPipelinePage = () => {
       {user?.role === 'ADMIN' && <AdminDashboardNav />}
 
       {/* Page Header */}
-      <div className="w-full py-8 relative" style={{ zIndex: 1 }}>
-        <div className="max-w-[1200px] mx-auto px-8">
+      <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
+        <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
           <h1 className="text-[76.6971px] font-bold leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
             YourPipeline
           </h1>
@@ -258,458 +250,421 @@ const YourPipelinePage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-full max-w-[1200px] mx-auto px-8 pb-12" style={{ position: 'relative', zIndex: 1 }}>
+      <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12" style={{ position: 'relative', zIndex: 1 }}>
         
-        {/* Company Header and Actions */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-[30px] font-black leading-[154%] text-[#01253F] font-avenir">
-              St. Mary's Health Center
-            </h2>
-            {user?.role === 'ADMIN' && (
-              <p className="text-sm text-blue-600 font-medium mt-1">Admin Access - Employee/User Dashboard</p>
-            )}
-          </div>
+        {/* Main Company Container - Wraps both Analytics/Insights and Jobs/Matches/Applicants */}
+        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative">
           
-          {/* Header Actions */}
-          <div className="flex items-center space-x-4">
-            <button 
-              onClick={handleNotificationClick}
-              className="text-sm font-medium flex items-center transition-colors shadow-sm relative bg-white hover:bg-gray-50 px-4 py-2 rounded-lg border border-gray-200 text-gray-600"
-              style={{
-                gap: '8px',
-                fontFamily: 'Avenir'
-              }}
-            >
-              <Bell className="w-4 h-4 text-gray-500" />
-              <span className="font-avenir">Notifications</span>
-              {notifications > 0 && (
-                <span className="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center" style={{ backgroundColor: '#01253F' }}>
-                  {notifications}
-                </span>
-              )}
-            </button>
-            <button 
-              onClick={handleNewJobPost}
-              className="text-sm font-medium flex items-center transition-colors shadow-sm bg-white hover:bg-gray-50 px-4 py-2 rounded-lg border border-gray-200 text-gray-600"
-              style={{
-                gap: '8px',
-                fontFamily: 'Avenir'
-              }}
-            >
-              <span className="font-avenir">New Job Post</span>
-              <ExternalLink className="w-4 h-4 text-gray-500" />
-            </button>
-          </div>
-        </div>
-        
-        {/* Analytics Section */}
-        <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">
-              Analytics
-            </h2>
-            <div className="flex items-center space-x-2">
-              <button 
-                className="p-2 hover:bg-gray-100 rounded transition-colors" 
-                title="Download data"
-              >
-                <Download className="w-4 h-4 text-gray-600" />
-              </button>
-              <button 
-                onClick={() => setIsAnalyticsExpanded(!isAnalyticsExpanded)}
-                className="p-2 hover:bg-gray-100 rounded transition-colors"
-                title="Expand to full screen"
-              >
-                <Maximize2 className="w-4 h-4 text-gray-600" />
-              </button>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-3 gap-6">
-            {/* Metrics Grid - Left Side (2x2) */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-4 rounded-xl bg-gray-50 border">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-2xl font-bold text-[#01253F]">77</h3>
-                  <span className="text-gray-400 text-sm">/100</span>
-                  <div className="relative group">
-                    <Info className="w-3 h-3 text-gray-400 cursor-help" />
-                    <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                      Measures the overall workplace environment quality and employee satisfaction
-                      <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-600 text-sm font-avenir">Environment Score</p>
-              </div>
-              
-              <div className="text-center p-4 rounded-xl bg-gray-50 border">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-2xl font-bold text-[#01253F]">64</h3>
-                  <span className="text-gray-400 text-sm">/100</span>
-                  <div className="relative group">
-                    <Info className="w-3 h-3 text-gray-400 cursor-help" />
-                    <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                      Tracks how consistently patients receive care from the same healthcare providers
-                      <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-600 text-sm font-avenir">Continuity of Care Index</p>
-              </div>
-              
-              <div className="text-center p-4 rounded-xl bg-gray-50 border">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-2xl font-bold text-[#01253F]">86%</h3>
-                  <div className="relative group">
-                    <Info className="w-3 h-3 text-gray-400 cursor-help" />
-                    <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                      Percentage of job candidates with high compatibility scores
-                      <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-600 text-sm font-avenir">Strong Matches</p>
-                <div className="mt-2">
-                  <svg className="w-full h-6" viewBox="0 0 100 20">
-                    <path d="M5,15 Q25,5 45,10 T85,8" stroke="#2466D0" strokeWidth="2" fill="none"/>
-                  </svg>
-                </div>
-              </div>
-              
-              <div className="text-center p-4 rounded-xl bg-gray-50 border">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-2xl font-bold text-[#01253F]">+34%</h3>
-                  <div className="relative group">
-                    <Info className="w-3 h-3 text-gray-400 cursor-help" />
-                    <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                      Positive trend in overall organizational performance and engagement
-                      <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                    </div>
-                  </div>
-                </div>
-                <p className="text-gray-600 text-sm font-avenir">Pulse Trends</p>
-                <div className="mt-2">
-                  <svg className="w-full h-6" viewBox="0 0 100 20">
-                    <path d="M5,15 Q25,8 45,12 T85,5" stroke="#2466D0" strokeWidth="2" fill="none"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Insights Section - Right Side */}
-            <div className="col-span-2 bg-gray-50 rounded-xl border p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">
-                  Insights
-                </h2>
-                <div className="flex items-center space-x-2">
-                  <button 
-                    className="p-2 hover:bg-gray-100 rounded transition-colors" 
-                    title="Download data"
-                  >
-                    <Download className="w-4 h-4 text-gray-600" />
-                  </button>
-                  <button 
-                    onClick={() => setIsInsightsExpanded(!isInsightsExpanded)}
-                    className="p-2 hover:bg-gray-100 rounded transition-colors"
-                    title="Expand to full screen"
-                  >
-                    <Maximize2 className="w-4 h-4 text-gray-600" />
-                  </button>
-                </div>
-              </div>
-              
-              {/* Progress Bars */}
-              <div className="space-y-6">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Work Environment Score</span>
-                    <span className="text-sm text-gray-600">74%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full" 
-                      style={{ 
-                        width: '74%', 
-                        background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' 
-                      }}
-                    ></div>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">High Retention Forecast</span>
-                    <span className="text-sm text-gray-600">52%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full" 
-                      style={{ 
-                        width: '52%', 
-                        background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' 
-                      }}
-                    ></div>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Behavioral Risk Flags</span>
-                    <span className="text-sm text-gray-600">36%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full" 
-                      style={{ 
-                        width: '36%', 
-                        background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' 
-                      }}
-                    ></div>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Work Environment Score</span>
-                    <span className="text-sm text-gray-600">36%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full" 
-                      style={{ 
-                        width: '36%', 
-                        background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' 
-                      }}
-                    ></div>
-                  </div>
-                </div>
-                
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Culture Fit Alignment</span>
-                    <span className="text-sm text-gray-600">36%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="h-2 rounded-full" 
-                      style={{ 
-                        width: '36%', 
-                        background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' 
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Three Column Layout */}
-        <div className="grid grid-cols-3 gap-6">
-          {/* Open Jobs Section - Left Column */}
-          <div className="bg-white rounded-xl shadow-sm border p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-[25px] font-black leading-[154%] text-[#01253F] font-avenir">
-                Open Jobs
+          {/* Company Header and Actions */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+            <div>
+              <h2 className="text-[30px] font-black leading-[154%] text-[#01253F] font-avenir">
+                St. Mary's Health Center
               </h2>
-              <button className="p-2 hover:bg-gray-100 rounded transition-colors">
-                <Maximize2 className="w-4 h-4 text-gray-600" />
-              </button>
+              {user?.role === 'ADMIN' && (
+                <p className="text-sm text-blue-600 font-medium mt-1">Admin Access - Employee/User Dashboard</p>
+              )}
             </div>
             
-            <div className="space-y-4">
-              {demoJobs.map((job) => (
-                <div key={job.id} className="border rounded-xl p-4 bg-gray-50">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <h4 className="font-bold text-[#2466D0] text-lg">
-                          {job.title}
-                        </h4>
-                        <Edit3 
-                          className="w-3 h-3 text-gray-400 cursor-pointer hover:text-gray-600" 
-                          onClick={() => handleJobEdit(job)}
-                        />
-                      </div>
-                      <p className="text-[#01253F] text-sm font-bold font-avenir">
-                        {job.company}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <p className="text-[#01253F] text-sm font-avenir">
-                        {job.location}
-                      </p>
-                      <p className="text-[#01253F] text-sm font-avenir">
-                        {job.salary}
-                      </p>
-                    </div>
-                    <div className="relative">
-                      <button 
-                        onClick={() => handleViewApplicants(job)}
-                        className="bg-[#2CB3BF] text-white text-sm rounded-lg px-4 py-2 transition-colors hover:opacity-90 font-avenir"
-                      >
-                        View Applicants
-                      </button>
-                      <span className="absolute -top-2 -right-2 bg-[#01253F] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                        {job.applicants}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            {/* Pagination */}
-            <div className="flex items-center justify-center space-x-2 mt-6">
-              <button 
-                onClick={() => handlePageChange(1)}
-                className={`w-8 h-8 rounded-full transition-colors flex items-center justify-center ${
-                  currentPage === 1 
-                    ? 'bg-[#01253F] text-white' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                1
-              </button>
-              <button 
-                onClick={() => handlePageChange(2)}
-                className={`w-8 h-8 rounded-full transition-colors flex items-center justify-center ${
-                  currentPage === 2 
-                    ? 'bg-[#01253F] text-white' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                2
-              </button>
-              <button 
-                onClick={() => handlePageChange(3)}
-                className={`w-8 h-8 rounded-full transition-colors flex items-center justify-center ${
-                  currentPage === 3 
-                    ? 'bg-[#01253F] text-white' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                3
-              </button>
-              <button 
-                onClick={() => handlePageChange(currentPage < 3 ? currentPage + 1 : 3)}
-                className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors text-sm"
-              >
-                Next &gt;
+            {/* Header Actions */}
+            <div className="flex items-center space-x-4">
+                              <button 
+                  onClick={handleNotificationClick}
+                  className="bg-white hover:bg-gray-50 text-[#7691A4] font-medium px-4 py-2 rounded-lg transition-colors flex items-center space-x-3 relative border border-gray-200"
+                >
+                <span className="text-[#7691A4] font-avenir">Notifications</span>
+                <Bell className="w-4 h-4 text-[#7691A4] fill-current" />
+                {notifications > 0 && (
+                  <span className="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center bg-[#01253F]">
+                    {notifications}
+                  </span>
+                )}
               </button>
             </div>
           </div>
-
-          {/* Matches Section - Middle Column */}
-          <div className="bg-white rounded-xl shadow-sm border p-6">
+          
+          {/* Analytics Container - Holds both Metrics and Insights */}
+          <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6 mb-8">
             <div className="flex items-center justify-between mb-6">
+              <h2 className="text-[25px] font-bold leading-[34px] text-[#01253F] font-avenir">Analytics</h2>
               <div className="flex items-center space-x-2">
-                <h2 className="text-[25px] font-black leading-[154%] text-[#2466D0] font-avenir">
-                  Matches
-                </h2>
-                <div className="w-6 h-6 bg-[#2466D0] rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-4 h-4 text-white" />
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <button className="p-2 hover:bg-gray-100 rounded transition-colors">
-                  <Download className="w-4 h-4 text-gray-600" />
-                </button>
-                <button className="p-2 hover:bg-gray-100 rounded transition-colors">
+                <button 
+                  onClick={() => setIsAnalyticsExpanded(!isAnalyticsExpanded)}
+                  className="p-2 hover:bg-gray-100 rounded transition-colors"
+                  title="Expand to full screen"
+                >
                   <Maximize2 className="w-4 h-4 text-gray-600" />
                 </button>
+                <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                  <Download className="w-4 h-4 text-gray-600" />
+                </button>
               </div>
             </div>
             
-            <div className="space-y-4">
-              {demoMatches.map((match) => (
-                <div key={match.id} className="flex items-center justify-between p-4 border rounded-xl bg-gray-50">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 rounded-full bg-[#E8F4FD] flex items-center justify-center">
-                      <User className="w-6 h-6 text-[#2466D0]" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-[#01253F] text-sm mb-1">
-                        {match.name}
-                      </h4>
-                      <p className="font-bold text-[#01253F] text-xs mb-1">
-                        {match.experience}
-                      </p>
-                      <p className="text-gray-500 text-xs">
-                        {match.location}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end space-y-2">
-                    <div className="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-full">
-                      <span className="text-[#2466D0] font-extrabold text-xs">
-                        Matched
-                      </span>
-                      <div className="w-4 h-4 bg-[#2466D0] rounded-full flex items-center justify-center">
-                        <CheckCircle className="w-3 h-3 text-white" />
+            <div className="flex gap-8">
+              {/* Left Side - 2x2 Metric Cards Grid */}
+              <div className="flex-shrink-0 w-1/2">
+                <div className="grid grid-cols-2 gap-4 w-[640px]">
+                  {/* Environment Score Card */}
+                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[140px]">
+                    <div className="flex items-start justify-between mb-4">
+                      <h3 className="text-sm font-medium text-[#01253F] leading-tight">Environment<br />Score</h3>
+                      <div className="relative group">
+                        <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                        <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                          Measures the overall workplace environment quality and employee satisfaction
+                          <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                        </div>
                       </div>
                     </div>
+                    <div className="flex items-baseline">
+                      <span className="text-3xl font-bold text-[#01253F]">77</span>
+                      <span className="text-lg text-gray-400 ml-1">/100</span>
+                    </div>
+                  </div>
+
+                  {/* Continuity of Care Index Card */}
+                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[140px]">
+                    <div className="flex items-start justify-between mb-4">
+                      <h3 className="text-sm font-medium text-[#01253F] leading-tight">Continuity of<br />Care Index</h3>
+                      <div className="relative group">
+                        <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                        <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                          Tracks how consistently patients receive care from the same healthcare providers
+                          <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-baseline">
+                      <span className="text-3xl font-bold text-[#01253F]">64</span>
+                      <span className="text-lg text-gray-400 ml-1">/100</span>
+                    </div>
+                  </div>
+
+                  {/* Strong Matches Card */}
+                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[140px]">
+                    <div className="flex items-start justify-between mb-4">
+                      <h3 className="text-sm font-medium text-[#01253F] leading-tight">Strong Matches</h3>
+                      <div className="relative group">
+                        <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                        <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                          Percentage of job candidates with high compatibility scores
+                          <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-3xl font-bold text-[#01253F]">86%</span>
+                    </div>
+                  </div>
+
+                  {/* Pulse Trends Card */}
+                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[140px]">
+                    <div className="flex items-start justify-between mb-4">
+                      <h3 className="text-sm font-medium text-[#01253F] leading-tight">Pulse Trends</h3>
+                      <div className="relative group">
+                        <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                        <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                          Positive trend in overall organizational performance and engagement
+                          <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <span className="text-3xl font-bold text-[#01253F]">+34%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Side - Insights Section */}
+              <div className="w-1/2 bg-white rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Insights</h2>
+                  <div className="flex items-center space-x-2">
                     <button 
-                      onClick={() => handleViewProfile(match)}
-                      className="bg-[#2CB3BF] text-white text-xs rounded-lg px-4 py-2 transition-colors hover:opacity-90 font-avenir"
+                      onClick={() => setIsInsightsExpanded(!isInsightsExpanded)}
+                      className="p-2 hover:bg-gray-100 rounded transition-colors"
+                      title="Expand to full screen"
                     >
-                      View Profile
+                      <Maximize2 className="w-4 h-4 text-gray-600" />
+                    </button>
+                    <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                      <Download className="w-4 h-4 text-gray-600" />
                     </button>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Applicants Section - Right Column */}
-          <div className="bg-white rounded-xl shadow-sm border p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-[25px] font-black leading-[154%] text-[#01253F] font-avenir">
-                Applicants
-              </h2>
-              <div className="flex items-center space-x-2">
-                <button className="p-2 hover:bg-gray-100 rounded transition-colors">
-                  <Download className="w-4 h-4 text-gray-600" />
-                </button>
-                <button className="p-2 hover:bg-gray-100 rounded transition-colors">
-                  <Maximize2 className="w-4 h-4 text-gray-600" />
-                </button>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              {demoApplicants.map((applicant) => (
-                <div key={applicant.id} className="flex items-center justify-between p-4 border rounded-xl bg-gray-50">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 rounded-full bg-[#E8F4FD] flex items-center justify-center">
-                      <User className="w-6 h-6 text-[#2466D0]" />
+                
+                {/* Progress Bars */}
+                <div className="space-y-6">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">Work Environment Score</span>
+                      <span className="text-sm text-gray-600">74%</span>
                     </div>
-                    <div>
-                      <h4 className="font-bold text-[#01253F] text-sm mb-1">
-                        {applicant.name}
-                      </h4>
-                      <p className="font-bold text-[#01253F] text-xs mb-1">
-                        {applicant.experience}
-                      </p>
-                      <p className="text-gray-500 text-xs">
-                        {applicant.location}
-                      </p>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="h-2 rounded-full" style={{ width: '74%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
                     </div>
                   </div>
-                  <button 
-                    onClick={() => handleViewProfile(applicant)}
-                    className="bg-[#2CB3BF] text-white text-xs rounded-lg px-4 py-2 transition-colors hover:opacity-90 font-avenir"
-                  >
-                    View Profile
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">High Retention Forecast</span>
+                      <span className="text-sm text-gray-600">52%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="h-2 rounded-full" style={{ width: '52%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">Behavioral Risk Flags</span>
+                      <span className="text-sm text-gray-600">36%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="h-2 rounded-full" style={{ width: '36%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">Culture Fit Alignment</span>
+                      <span className="text-sm text-gray-600">36%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="h-2 rounded-full" style={{ width: '36%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Jobs/Matches/Applicants Container - Stacked below */}
+          <div className="p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+              {/* Open Jobs Section - Left Side (Full Height) */}
+              <div className="bg-[#F4F4F4] rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6" style={{ minWidth: '400px' }}>
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-[28px] font-bold text-[#01253F] font-avenir">Open Jobs</h2>
+                  <button className="p-2 hover:bg-gray-200 rounded transition-colors" title="Expand to full screen">
+                    <Maximize2 className="w-5 h-5 text-gray-600" />
                   </button>
                 </div>
-              ))}
+
+                {/* Job Cards */}
+                <div className="space-y-4">
+                  {demoJobs.map((job) => (
+                    <div key={job.id} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative">
+                      {/* Edit Icon - Top Right */}
+                      <button 
+                        onClick={() => handleJobEdit(job)}
+                        className="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
+                      >
+                        <Edit3 className="w-4 h-4 text-gray-600" />
+                      </button>
+
+                      {/* Job Content */}
+                      <div className="pr-12">
+                        {/* Job Title */}
+                        <h3 className="text-[24px] font-bold text-[#2466D0] mb-2 font-avenir">
+                          {job.title}
+                        </h3>
+                        
+                        {/* Company Name */}
+                        <p className="text-[16px] font-bold text-[#01253F] mb-1 font-avenir">
+                          {job.company}
+                        </p>
+                        
+                        {/* Location and Salary Row */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-[14px] text-[#01253F] mb-1 font-avenir">
+                              {job.location}
+                            </p>
+                            <p className="text-[14px] text-[#01253F] font-avenir">
+                              {job.salary}
+                            </p>
+                          </div>
+                          
+                          {/* View Applicants Button */}
+                          <div className="relative">
+                            <button 
+                              onClick={() => handleViewApplicants(job)}
+                              className="bg-[#2CB3BF] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#25a0ab] transition-colors"
+                            >
+                              View Applicants
+                            </button>
+                            {/* Applicant Count Badge */}
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#01253F] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                              {job.applicants}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Pagination */}
+                <div className="flex items-center justify-center space-x-4 mt-8">
+                  <button 
+                    onClick={() => handlePageChange(1)}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center font-medium transition-colors ${ 
+                      currentPage === 1 
+                        ? 'bg-[#01253F] text-white' 
+                        : 'text-[#01253F] hover:bg-gray-100'
+                    }`}
+                  >
+                    1
+                  </button>
+                  <button 
+                    onClick={() => handlePageChange(2)}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center font-medium transition-colors ${ 
+                      currentPage === 2 
+                        ? 'bg-[#01253F] text-white' 
+                        : 'text-[#01253F] hover:bg-gray-100'
+                    }`}
+                  >
+                    2
+                  </button>
+                  <button 
+                    onClick={() => handlePageChange(3)}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center font-medium transition-colors ${ 
+                      currentPage === 3 
+                        ? 'bg-[#01253F] text-white' 
+                        : 'text-[#01253F] hover:bg-gray-100'
+                    }`}
+                  >
+                    3
+                  </button>
+                  <button 
+                    onClick={() => handlePageChange(currentPage < 3 ? currentPage + 1 : 3)}
+                    className="text-gray-500 font-medium hover:text-gray-700 transition-colors flex items-center space-x-1"
+                  >
+                    <span>Next</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              {/* Right Side - Matches and Applicants Stacked */}
+              <div className="space-y-6" style={{ minWidth: '300px' }}>
+                {/* Matches Section - Top Right (Half Height) */}
+                <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center space-x-2">
+                      <h2 className="text-[25px] font-bold text-[#2466D0] font-avenir">Matches</h2>
+                      <div className="w-6 h-6 bg-[#2466D0] rounded-full flex items-center justify-center">
+                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                        <Download className="w-4 h-4 text-gray-600" />
+                      </button>
+                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Expand to full screen">
+                        <Maximize2 className="w-4 h-4 text-gray-600" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {demoMatches.slice(0, 2).map((match) => (
+                      <div key={match.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            {/* Avatar with gradient background */}
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ 
+                              background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
+                            }}>
+                              <User className="w-6 h-6 text-[#01253F]" strokeWidth={2} />
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-[#01253F] text-base mb-1">{match.name}</h4>
+                              <p className="font-bold text-[#01253F] text-sm mb-1">{match.experience}</p>
+                              <p className="text-gray-500 text-sm">{match.location}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-col items-end space-y-3">
+                            {/* Matched label */}
+                            <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 space-x-2">
+                              <span className="text-gray-600 font-medium text-sm">Matched</span>
+                              <div className="w-4 h-4 bg-[#2466D0] rounded-full flex items-center justify-center">
+                                <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                            </div>
+                            
+                            {/* View Profile button */}
+                            <button 
+                              onClick={() => handleViewProfile(match)}
+                              className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
+                            >
+                              View Profile
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Applicants Section - Bottom Right (Half Height) */}
+                <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-[25px] font-bold text-[#01253F] font-avenir">Applicants</h2>
+                    <div className="flex items-center space-x-2">
+                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                        <Download className="w-4 h-4 text-gray-600" />
+                      </button>
+                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Expand to full screen">
+                        <Maximize2 className="w-4 h-4 text-gray-600" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {demoApplicants.slice(0, 2).map((applicant) => (
+                      <div key={applicant.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            {/* Avatar with gradient background */}
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ 
+                              background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
+                            }}>
+                              <User className="w-6 h-6 text-[#01253F]" strokeWidth={2} />
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-[#01253F] text-base mb-1">{applicant.name}</h4>
+                              <p className="font-bold text-[#01253F] text-sm mb-1">{applicant.experience}</p>
+                              <p className="text-gray-500 text-sm">{applicant.location}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center">
+                            {/* View Profile button */}
+                            <button 
+                              onClick={() => handleViewProfile(applicant)}
+                              className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
+                            >
+                              View Profile
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
