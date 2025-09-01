@@ -279,178 +279,785 @@ const YourPipelinePage = () => {
           </div>
           
           {/* Analytics Container - Holds both Metrics and Insights */}
-          <div className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6 mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Analytics</h2>
-              <div className="flex items-center space-x-2">
+          <div 
+            className="bg-[rgba(244,244,244,0.6)] rounded-lg shadow-sm border p-6 mb-8"
+            style={{
+              width: '1600px',
+              height: '3414px',
+              padding: '20px',
+              borderRadius: '20px',
+              boxShadow: '0px 0px 20px rgba(0,0,0,0.08)',
+              backgroundColor: 'rgba(244,244,244,0.6)',
+              border: '1px solid #e5e7eb'
+            }}
+          >
+            <div 
+              className="flex items-center justify-between mb-6"
+              style={{
+                width: '1560px',
+                height: '60px',
+                padding: '20px',
+                gap: '20px'
+              }}
+            >
+              <h2 
+                className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir"
+                style={{
+                  width: '200px',
+                  height: '34px',
+                  fontFamily: 'Avenir',
+                  fontSize: '25px',
+                  fontWeight: 500,
+                  lineHeight: '34px',
+                  letterSpacing: '0%',
+                  textAlign: 'left'
+                }}
+              >
+                Analytics
+              </h2>
+              <div 
+                className="flex items-center space-x-2"
+                style={{
+                  width: '120px',
+                  height: '40px',
+                  gap: '8px'
+                }}
+              >
                 <button 
                   onClick={() => setIsAnalyticsExpanded(!isAnalyticsExpanded)}
                   className="p-2 hover:bg-gray-100 rounded transition-colors"
                   title="Expand to full screen"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    padding: '8px',
+                    borderRadius: '8px',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e5e7eb'
+                  }}
                 >
                   <Maximize2 className="w-4 h-4 text-gray-600" />
                 </button>
-                <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                <button 
+                  className="p-2 hover:bg-gray-100 rounded transition-colors" 
+                  title="Download data"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    padding: '8px',
+                    borderRadius: '8px',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e5e7eb'
+                  }}
+                >
                   <Download className="w-4 h-4 text-gray-600" />
                 </button>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-8">
+            <div 
+              className="grid grid-cols-2 gap-8"
+              style={{
+                width: '1560px',
+                height: '3314px',
+                gap: '32px'
+              }}
+            >
               {/* Data Cards Grid */}
               <div 
                 className="grid grid-cols-2 gap-4"
                 style={{
-                  width: '312.89px',
-                  height: '284.76px',
-                  marginTop: '50px',
-                  marginLeft: '16px'
+                  width: '764px',
+                  height: '3314px',
+                  gap: '16px',
+                  padding: '20px'
                 }}
               >
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '151.35px',
-                    height: '134.78px',
-                    borderRadius: '35.37px',
-                    border: '1.77px solid #e5e7eb'
+                    width: '374px',
+                    height: '200px',
+                    padding: '20px',
+                    borderRadius: '20px',
+                    boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e5e7eb'
                   }}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-bold text-[#01253F]">77</h3>
-                    <span className="text-gray-400 text-sm">/100</span>
-                    <div className="relative group">
-                      <Info className="w-3 h-3 text-gray-400 cursor-help" />
+                  <div 
+                    className="flex items-center justify-between mb-2"
+                    style={{
+                      width: '334px',
+                      height: '40px',
+                      gap: '16px'
+                    }}
+                  >
+                    <h3 
+                      className="text-lg font-bold text-[#01253F]"
+                      style={{
+                        width: '80px',
+                        height: '40px',
+                        fontFamily: 'Avenir',
+                        fontSize: '32px',
+                        fontWeight: 700,
+                        lineHeight: '40px',
+                        letterSpacing: '0%',
+                        textAlign: 'left'
+                      }}
+                    >
+                      77
+                    </h3>
+                    <span 
+                      className="text-gray-400 text-sm"
+                      style={{
+                        width: '60px',
+                        height: '24px',
+                        fontFamily: 'Avenir',
+                        fontSize: '16px',
+                        fontWeight: 400,
+                        lineHeight: '24px',
+                        letterSpacing: '0%',
+                        textAlign: 'left',
+                        color: '#6b7280'
+                      }}
+                    >
+                      /100
+                    </span>
+                    <div 
+                      className="relative group"
+                      style={{
+                        width: '24px',
+                        height: '24px'
+                      }}
+                    >
+                      <Info 
+                        className="w-3 h-3 text-gray-400 cursor-help" 
+                        style={{
+                          width: '24px',
+                          height: '24px',
+                          color: '#6b7280'
+                        }}
+                      />
                       <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
                         Measures the overall workplace environment quality and employee satisfaction
                         <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-xs font-avenir">Environment Score</p>
+                  <p 
+                    className="text-gray-600 text-xs font-avenir"
+                    style={{
+                      width: '334px',
+                      height: '24px',
+                      fontFamily: 'Avenir',
+                      fontSize: '16px',
+                      fontWeight: 400,
+                      lineHeight: '24px',
+                      letterSpacing: '0%',
+                      textAlign: 'left',
+                      color: '#374151'
+                    }}
+                  >
+                    Environment Score
+                  </p>
                 </div>
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '151.35px',
-                    height: '134.78px',
-                    borderRadius: '35.37px',
-                    border: '1.77px solid #e5e7eb'
+                    width: '374px',
+                    height: '200px',
+                    padding: '20px',
+                    borderRadius: '20px',
+                    boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e5e7eb'
                   }}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-bold text-[#01253F]">64</h3>
-                    <span className="text-gray-400 text-sm">/100</span>
-                    <div className="relative group">
-                      <Info className="w-3 h-3 text-gray-400 cursor-help" />
+                  <div 
+                    className="flex items-center justify-between mb-2"
+                    style={{
+                      width: '334px',
+                      height: '40px',
+                      gap: '16px'
+                    }}
+                  >
+                    <h3 
+                      className="text-lg font-bold text-[#01253F]"
+                      style={{
+                        width: '80px',
+                        height: '40px',
+                        fontFamily: 'Avenir',
+                        fontSize: '32px',
+                        fontWeight: 700,
+                        lineHeight: '40px',
+                        letterSpacing: '0%',
+                        textAlign: 'left'
+                      }}
+                    >
+                      64
+                    </h3>
+                    <span 
+                      className="text-gray-400 text-sm"
+                      style={{
+                        width: '60px',
+                        height: '24px',
+                        fontFamily: 'Avenir',
+                        fontSize: '16px',
+                        fontWeight: 400,
+                        lineHeight: '24px',
+                        letterSpacing: '0%',
+                        textAlign: 'left',
+                        color: '#6b7280'
+                      }}
+                    >
+                      /100
+                    </span>
+                    <div 
+                      className="relative group"
+                      style={{
+                        width: '24px',
+                        height: '24px'
+                      }}
+                    >
+                      <Info 
+                        className="w-3 h-3 text-gray-400 cursor-help" 
+                        style={{
+                          width: '24px',
+                          height: '24px',
+                          color: '#6b7280'
+                        }}
+                      />
                       <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
                         Tracks how consistently patients receive care from the same healthcare providers
                         <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-xs font-avenir">Continuity of Care Index</p>
+                  <p 
+                    className="text-gray-600 text-xs font-avenir"
+                    style={{
+                      width: '334px',
+                      height: '24px',
+                      fontFamily: 'Avenir',
+                      fontSize: '16px',
+                      fontWeight: 400,
+                      lineHeight: '24px',
+                      letterSpacing: '0%',
+                      textAlign: 'left',
+                      color: '#374151'
+                    }}
+                  >
+                    Continuity of Care Index
+                  </p>
                 </div>
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '151.35px',
-                    height: '134.78px',
-                    borderRadius: '35.37px',
-                    border: '1.77px solid #e5e7eb'
+                    width: '374px',
+                    height: '200px',
+                    padding: '20px',
+                    borderRadius: '20px',
+                    boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e5e7eb'
                   }}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-bold text-[#01253F]">86%</h3>
-                    <div className="relative group">
-                      <Info className="w-3 h-3 text-gray-400 cursor-help" />
+                  <div 
+                    className="flex items-center justify-between mb-2"
+                    style={{
+                      width: '334px',
+                      height: '40px',
+                      gap: '16px'
+                    }}
+                  >
+                    <h3 
+                      className="text-lg font-bold text-[#01253F]"
+                      style={{
+                        width: '120px',
+                        height: '40px',
+                        fontFamily: 'Avenir',
+                        fontSize: '32px',
+                        fontWeight: 700,
+                        lineHeight: '40px',
+                        letterSpacing: '0%',
+                        textAlign: 'left'
+                      }}
+                    >
+                      86%
+                    </h3>
+                    <div 
+                      className="relative group"
+                      style={{
+                        width: '24px',
+                        height: '24px'
+                      }}
+                    >
+                      <Info 
+                        className="w-3 h-3 text-gray-400 cursor-help" 
+                        style={{
+                          width: '24px',
+                          height: '24px',
+                          color: '#6b7280'
+                        }}
+                      />
                       <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
                         Percentage of job candidates with high compatibility scores
                         <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-xs font-avenir">Strong Matches</p>
+                  <p 
+                    className="text-gray-600 text-xs font-avenir"
+                    style={{
+                      width: '334px',
+                      height: '24px',
+                      fontFamily: 'Avenir',
+                      fontSize: '16px',
+                      fontWeight: 400,
+                      lineHeight: '24px',
+                      letterSpacing: '0%',
+                      textAlign: 'left',
+                      color: '#374151'
+                    }}
+                  >
+                    Strong Matches
+                  </p>
                 </div>
                 <div 
                   className="text-center p-6 rounded-[35px] bg-white shadow-[0px_8.8px_35.4px_rgba(0,0,0,0.05)] border-[1.77px] border-gray-200"
                   style={{
-                    width: '151.35px',
-                    height: '134.78px',
-                    borderRadius: '35.37px',
-                    border: '1.77px solid #e5e7eb'
+                    width: '374px',
+                    height: '200px',
+                    padding: '20px',
+                    borderRadius: '20px',
+                    boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e5e7eb'
                   }}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-bold text-[#01253F]">+34%</h3>
-                    <div className="relative group">
-                      <Info className="w-3 h-3 text-gray-400 cursor-help" />
+                  <div 
+                    className="flex items-center justify-between mb-2"
+                    style={{
+                      width: '334px',
+                      height: '40px',
+                      gap: '16px'
+                    }}
+                  >
+                    <h3 
+                      className="text-lg font-bold text-[#01253F]"
+                      style={{
+                        width: '120px',
+                        height: '40px',
+                        fontFamily: 'Avenir',
+                        fontSize: '32px',
+                        fontWeight: 700,
+                        lineHeight: '40px',
+                        letterSpacing: '0%',
+                        textAlign: 'left'
+                      }}
+                    >
+                      +34%
+                    </h3>
+                    <div 
+                      className="relative group"
+                      style={{
+                        width: '24px',
+                        height: '24px'
+                      }}
+                    >
+                      <Info 
+                        className="w-3 h-3 text-gray-400 cursor-help" 
+                        style={{
+                          width: '24px',
+                          height: '24px',
+                          color: '#6b7280'
+                        }}
+                      />
                       <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
                         Positive trend in overall organizational performance and engagement
                         <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                       </div>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-xs font-avenir">Pulse Trends</p>
+                  <p 
+                    className="text-gray-600 text-xs font-avenir"
+                    style={{
+                      width: '334px',
+                      height: '24px',
+                      fontFamily: 'Avenir',
+                      fontSize: '16px',
+                      fontWeight: 400,
+                      lineHeight: '24px',
+                      letterSpacing: '0%',
+                      textAlign: 'left',
+                      color: '#374151'
+                    }}
+                  >
+                    Pulse Trends
+                  </p>
                 </div>
               </div>
 
               {/* Insights Section */}
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Insights</h2>
-                  <div className="flex items-center space-x-2">
+              <div 
+                className="bg-white rounded-xl shadow-sm border p-6"
+                style={{
+                  width: '764px',
+                  height: '3314px',
+                  padding: '20px',
+                  borderRadius: '20px',
+                  boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
+                  backgroundColor: '#ffffff',
+                  border: '1px solid #e5e7eb'
+                }}
+              >
+                <div 
+                  className="flex items-center justify-between mb-6"
+                  style={{
+                    width: '724px',
+                    height: '60px',
+                    padding: '20px',
+                    gap: '20px'
+                  }}
+                >
+                  <h2 
+                    className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir"
+                    style={{
+                      width: '200px',
+                      height: '34px',
+                      fontFamily: 'Avenir',
+                      fontSize: '25px',
+                      fontWeight: 500,
+                      lineHeight: '34px',
+                      letterSpacing: '0%',
+                      textAlign: 'left'
+                    }}
+                  >
+                    Insights
+                  </h2>
+                  <div 
+                    className="flex items-center space-x-2"
+                    style={{
+                      width: '120px',
+                      height: '40px',
+                      gap: '8px'
+                    }}
+                  >
                     <button 
                       onClick={() => setIsInsightsExpanded(!isInsightsExpanded)}
                       className="p-2 hover:bg-gray-100 rounded transition-colors"
                       title="Expand to full screen"
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        padding: '8px',
+                        borderRadius: '8px',
+                        backgroundColor: '#ffffff',
+                        border: '1px solid #e5e7eb'
+                      }}
                     >
                       <Maximize2 className="w-4 h-4 text-gray-600" />
                     </button>
-                    <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                    <button 
+                      className="p-2 hover:bg-gray-100 rounded transition-colors" 
+                      title="Download data"
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        padding: '8px',
+                        borderRadius: '8px',
+                        backgroundColor: '#ffffff',
+                        border: '1px solid #e5e7eb'
+                      }}
+                    >
                       <Download className="w-4 h-4 text-gray-600" />
                     </button>
                   </div>
                 </div>
                 
                 {/* Progress Bars */}
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Work Environment Score</span>
-                      <span className="text-sm text-gray-600">74%</span>
+                <div 
+                  className="space-y-4"
+                  style={{
+                    width: '724px',
+                    height: '3200px',
+                    gap: '32px',
+                    padding: '20px'
+                  }}
+                >
+                  <div 
+                    style={{
+                      width: '684px',
+                      height: '760px',
+                      gap: '16px'
+                    }}
+                  >
+                    <div 
+                      className="flex items-center justify-between mb-2"
+                      style={{
+                        width: '684px',
+                        height: '40px',
+                        gap: '16px'
+                      }}
+                    >
+                      <span 
+                        className="text-sm font-medium text-gray-700"
+                        style={{
+                          width: '400px',
+                          height: '24px',
+                          fontFamily: 'Avenir',
+                          fontSize: '16px',
+                          fontWeight: 500,
+                          lineHeight: '24px',
+                          letterSpacing: '0%',
+                          textAlign: 'left',
+                          color: '#374151'
+                        }}
+                      >
+                        Work Environment Score
+                      </span>
+                      <span 
+                        className="text-sm text-gray-600"
+                        style={{
+                          width: '80px',
+                          height: '24px',
+                          fontFamily: 'Avenir',
+                          fontSize: '16px',
+                          fontWeight: 400,
+                          lineHeight: '24px',
+                          letterSpacing: '0%',
+                          textAlign: 'right',
+                          color: '#6b7280'
+                        }}
+                      >
+                        74%
+                      </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="h-2 rounded-full" style={{ width: '74%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                    <div 
+                      className="w-full bg-gray-200 rounded-full h-2"
+                      style={{
+                        width: '684px',
+                        height: '8px',
+                        backgroundColor: '#f3f4f6',
+                        borderRadius: '4px'
+                      }}
+                    >
+                      <div 
+                        className="h-2 rounded-full" 
+                        style={{ 
+                          width: '74%', 
+                          height: '8px',
+                          borderRadius: '4px',
+                          background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' 
+                        }}
+                      ></div>
                     </div>
                   </div>
                   
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">High Retention Forecast</span>
-                      <span className="text-sm text-gray-600">52%</span>
+                  <div 
+                    style={{
+                      width: '684px',
+                      height: '760px',
+                      gap: '16px'
+                    }}
+                  >
+                    <div 
+                      className="flex items-center justify-between mb-2"
+                      style={{
+                        width: '684px',
+                        height: '40px',
+                        gap: '16px'
+                      }}
+                    >
+                      <span 
+                        className="text-sm font-medium text-gray-700"
+                        style={{
+                          width: '400px',
+                          height: '24px',
+                          fontFamily: 'Avenir',
+                          fontSize: '16px',
+                          fontWeight: 500,
+                          lineHeight: '24px',
+                          letterSpacing: '0%',
+                          textAlign: 'left',
+                          color: '#374151'
+                        }}
+                      >
+                        High Retention Forecast
+                      </span>
+                      <span 
+                        className="text-sm text-gray-600"
+                        style={{
+                          width: '80px',
+                          height: '24px',
+                          fontFamily: 'Avenir',
+                          fontSize: '16px',
+                          fontWeight: 400,
+                          lineHeight: '24px',
+                          letterSpacing: '0%',
+                          textAlign: 'right',
+                          color: '#6b7280'
+                        }}
+                      >
+                        52%
+                      </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="h-2 rounded-full" style={{ width: '52%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                    <div 
+                      className="w-full bg-gray-200 rounded-full h-2"
+                      style={{
+                        width: '684px',
+                        height: '8px',
+                        backgroundColor: '#f3f4f6',
+                        borderRadius: '4px'
+                      }}
+                    >
+                      <div 
+                        className="h-2 rounded-full" 
+                        style={{ 
+                          width: '52%', 
+                          height: '8px',
+                          borderRadius: '4px',
+                          background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' 
+                        }}
+                      ></div>
                     </div>
                   </div>
                   
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Behavioral Risk Flags</span>
-                      <span className="text-sm text-gray-600">36%</span>
+                  <div 
+                    style={{
+                      width: '684px',
+                      height: '760px',
+                      gap: '16px'
+                    }}
+                  >
+                    <div 
+                      className="flex items-center justify-between mb-2"
+                      style={{
+                        width: '684px',
+                        height: '40px',
+                        gap: '16px'
+                      }}
+                    >
+                      <span 
+                        className="text-sm font-medium text-gray-700"
+                        style={{
+                          width: '400px',
+                          height: '24px',
+                          fontFamily: 'Avenir',
+                          fontSize: '16px',
+                          fontWeight: 500,
+                          lineHeight: '24px',
+                          letterSpacing: '0%',
+                          textAlign: 'left',
+                          color: '#374151'
+                        }}
+                      >
+                        Behavioral Risk Flags
+                      </span>
+                      <span 
+                        className="text-sm text-gray-600"
+                        style={{
+                          width: '80px',
+                          height: '24px',
+                          fontFamily: 'Avenir',
+                          fontSize: '16px',
+                          fontWeight: 400,
+                          lineHeight: '24px',
+                          letterSpacing: '0%',
+                          textAlign: 'right',
+                          color: '#6b7280'
+                        }}
+                      >
+                        36%
+                      </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="h-2 rounded-full" style={{ width: '36%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                    <div 
+                      className="w-full bg-gray-200 rounded-full h-2"
+                      style={{
+                        width: '684px',
+                        height: '8px',
+                        backgroundColor: '#f3f4f6',
+                        borderRadius: '4px'
+                      }}
+                    >
+                      <div 
+                        className="h-2 rounded-full" 
+                        style={{ 
+                          width: '36%', 
+                          height: '8px',
+                          borderRadius: '4px',
+                          background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' 
+                        }}
+                      ></div>
                     </div>
                   </div>
                   
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Culture Fit Alignment</span>
-                      <span className="text-sm text-gray-600">36%</span>
+                  <div 
+                    style={{
+                      width: '684px',
+                      height: '760px',
+                      gap: '16px'
+                    }}
+                  >
+                    <div 
+                      className="flex items-center justify-between mb-2"
+                      style={{
+                        width: '684px',
+                        height: '40px',
+                        gap: '16px'
+                      }}
+                    >
+                      <span 
+                        className="text-sm font-medium text-gray-700"
+                        style={{
+                          width: '400px',
+                          height: '24px',
+                          fontFamily: 'Avenir',
+                          fontSize: '16px',
+                          fontWeight: 500,
+                          lineHeight: '24px',
+                          letterSpacing: '0%',
+                          textAlign: 'left',
+                          color: '#374151'
+                        }}
+                      >
+                        Culture Fit Alignment
+                      </span>
+                      <span 
+                        className="text-sm text-gray-600"
+                        style={{
+                          width: '80px',
+                          height: '24px',
+                          fontFamily: 'Avenir',
+                          fontSize: '16px',
+                          fontWeight: 400,
+                          lineHeight: '24px',
+                          letterSpacing: '0%',
+                          textAlign: 'right',
+                          color: '#6b7280'
+                        }}
+                      >
+                        36%
+                      </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="h-2 rounded-full" style={{ width: '36%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                    <div 
+                      className="w-full bg-gray-200 rounded-full h-2"
+                      style={{
+                        width: '684px',
+                        height: '8px',
+                        backgroundColor: '#f3f4f6',
+                        borderRadius: '4px'
+                      }}
+                    >
+                      <div 
+                        className="h-2 rounded-full" 
+                        style={{ 
+                          width: '36%', 
+                          height: '8px',
+                          borderRadius: '4px',
+                          background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' 
+                        }}
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -459,32 +1066,201 @@ const YourPipelinePage = () => {
           </div>
           
           {/* Jobs/Matches/Applicants Container - Stacked below */}
-          <div className="p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+          <div 
+            className="p-6"
+            style={{
+              width: '1560px',
+              height: '2000px',
+              padding: '20px',
+              gap: '32px'
+            }}
+          >
+            <div 
+              className="grid grid-cols-1 sm:grid-cols-2 gap-8" 
+              style={{ 
+                display: 'grid', 
+                gridTemplateColumns: '1fr 1fr', 
+                gap: '32px',
+                width: '1520px',
+                height: '1960px'
+              }}
+            >
               {/* Open Jobs Section - Left Side (Full Height) */}
-              <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6" style={{ minWidth: '300px' }}>
-                <h2 className="text-[25px] font-black leading-[154%] text-[#01253F] mb-6 font-avenir">Open Jobs</h2>
-                <div className="space-y-3">
+              <div 
+                className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6" 
+                style={{ 
+                  minWidth: '300px',
+                  width: '744px',
+                  height: '1960px',
+                  padding: '20px',
+                  borderRadius: '20px',
+                  boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
+                  backgroundColor: 'rgba(244,244,244,0.6)',
+                  border: '1px solid #e5e7eb'
+                }}
+              >
+                <h2 
+                  className="text-[25px] font-black leading-[154%] text-[#01253F] mb-6 font-avenir"
+                  style={{
+                    width: '704px',
+                    height: '40px',
+                    fontFamily: 'Avenir',
+                    fontSize: '25px',
+                    fontWeight: 900,
+                    lineHeight: '40px',
+                    letterSpacing: '0%',
+                    textAlign: 'left',
+                    color: '#01253F'
+                  }}
+                >
+                  Open Jobs
+                </h2>
+                <div 
+                  className="space-y-3"
+                  style={{
+                    width: '704px',
+                    height: '1880px',
+                    gap: '16px'
+                  }}
+                >
                   {demoJobs.map((job) => (
-                    <div key={job.id} className="p-3 border bg-white" style={{ width: '100%', height: '160px', borderRadius: '16px' }}>
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-2 mb-1">
-                            <h4 className="font-bold text-[20px] leading-[130%] text-[#2466D0]">{job.title}</h4>
+                    <div 
+                      key={job.id} 
+                      className="p-3 border bg-white" 
+                      style={{ 
+                        width: '704px', 
+                        height: '200px', 
+                        borderRadius: '16px',
+                        padding: '20px',
+                        backgroundColor: '#ffffff',
+                        border: '1px solid #e5e7eb',
+                        boxShadow: '0px 4px 16px rgba(0,0,0,0.05)'
+                      }}
+                    >
+                      <div 
+                        className="flex items-start justify-between mb-2"
+                        style={{
+                          width: '664px',
+                          height: '80px',
+                          gap: '16px'
+                        }}
+                      >
+                        <div 
+                          className="flex-1"
+                          style={{
+                            width: '400px',
+                            height: '80px',
+                            gap: '16px'
+                          }}
+                        >
+                          <div 
+                            className="flex items-center space-x-2 mb-1"
+                            style={{
+                              width: '400px',
+                              height: '40px',
+                              gap: '8px'
+                            }}
+                          >
+                            <h4 
+                              className="font-bold text-[20px] leading-[130%] text-[#2466D0]"
+                              style={{
+                                width: '300px',
+                                height: '40px',
+                                fontFamily: 'Avenir',
+                                fontSize: '20px',
+                                fontWeight: 700,
+                                lineHeight: '40px',
+                                letterSpacing: '0%',
+                                textAlign: 'left',
+                                color: '#2466D0'
+                              }}
+                            >
+                              {job.title}
+                            </h4>
                             <Edit3 
                               className="w-3 h-3 text-gray-400 cursor-pointer hover:text-gray-600" 
                               onClick={() => handleJobEdit(job)}
+                              style={{
+                                width: '24px',
+                                height: '24px',
+                                color: '#6b7280'
+                              }}
                             />
                           </div>
-                          <p className="text-[#01253F] text-[14px] font-bold leading-[20px] font-avenir">{job.company}</p>
+                          <p 
+                            className="text-[#01253F] text-[14px] font-bold leading-[20px] font-avenir"
+                            style={{
+                              width: '400px',
+                              height: '24px',
+                              fontFamily: 'Avenir',
+                              fontSize: '14px',
+                              fontWeight: 700,
+                              lineHeight: '24px',
+                              letterSpacing: '0%',
+                              textAlign: 'left',
+                              color: '#01253F'
+                            }}
+                          >
+                            {job.company}
+                          </p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <p className="text-[#01253F] text-[13px] font-normal leading-[18px] font-avenir">{job.location}</p>
-                          <p className="text-[#01253F] text-[13px] font-normal leading-[18px] font-avenir">{job.salary}</p>
+                      <div 
+                        className="flex items-center justify-between"
+                        style={{
+                          width: '664px',
+                          height: '80px',
+                          gap: '16px'
+                        }}
+                      >
+                        <div 
+                          className="flex-1"
+                          style={{
+                            width: '400px',
+                            height: '80px',
+                            gap: '16px'
+                          }}
+                        >
+                          <p 
+                            className="text-[#01253F] text-[13px] font-normal leading-[18px] font-avenir"
+                            style={{
+                              width: '400px',
+                              height: '24px',
+                              fontFamily: 'Avenir',
+                              fontSize: '13px',
+                              fontWeight: 400,
+                              lineHeight: '24px',
+                              letterSpacing: '0%',
+                              textAlign: 'left',
+                              color: '#01253F'
+                            }}
+                          >
+                            {job.location}
+                          </p>
+                          <p 
+                            className="text-[#01253F] text-[13px] font-normal leading-[18px] font-avenir"
+                            style={{
+                              width: '400px',
+                              height: '24px',
+                              fontFamily: 'Avenir',
+                              fontSize: '13px',
+                              fontWeight: 400,
+                              lineHeight: '24px',
+                              letterSpacing: '0%',
+                              textAlign: 'left',
+                              color: '#01253F'
+                            }}
+                          >
+                            {job.salary}
+                          </p>
                         </div>
-                        <div className="relative">
+                        <div 
+                          className="relative"
+                          style={{
+                            width: '200px',
+                            height: '80px'
+                          }}
+                        >
                           <button 
                             onClick={() => handleViewApplicants(job)}
                             className="text-white text-xs rounded transition-colors hover:opacity-90" 
@@ -493,16 +1269,35 @@ const YourPipelinePage = () => {
                               width: '160px',
                               height: '40px',
                               borderRadius: '8px',
-                              paddingTop: '8px',
-                              paddingRight: '16px',
-                              paddingBottom: '8px',
-                              paddingLeft: '16px',
-                              gap: '8px'
+                              padding: '8px 16px',
+                              gap: '8px',
+                              fontFamily: 'Avenir',
+                              fontSize: '14px',
+                              fontWeight: 500,
+                              lineHeight: '24px',
+                              letterSpacing: '0%',
+                              textAlign: 'center',
+                              color: '#ffffff'
                             }}
                           >
                             View Applicants
                           </button>
-                          <span className="absolute -top-1.5 -right-1.5 bg-[#01253F] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[12px] font-bold leading-[100%]">
+                          <span 
+                            className="absolute -top-1.5 -right-1.5 bg-[#01253F] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center text-[12px] font-bold leading-[100%]"
+                            style={{
+                              width: '24px',
+                              height: '24px',
+                              backgroundColor: '#01253F',
+                              borderRadius: '12px',
+                              fontFamily: 'Avenir',
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              lineHeight: '12px',
+                              letterSpacing: '0%',
+                              textAlign: 'center',
+                              color: '#ffffff'
+                            }}
+                          >
                             {job.applicants}
                           </span>
                         </div>
@@ -512,7 +1307,15 @@ const YourPipelinePage = () => {
                 </div>
                 
                 {/* Pagination */}
-                <div className="flex items-center justify-center space-x-2 mt-6">
+                <div 
+                  className="flex items-center justify-center space-x-2 mt-6"
+                  style={{
+                    width: '704px',
+                    height: '80px',
+                    gap: '16px',
+                    padding: '20px'
+                  }}
+                >
                   <button 
                     onClick={() => handlePageChange(1)}
                     className={`px-3 py-1 rounded-full transition-colors ${
@@ -520,7 +1323,31 @@ const YourPipelinePage = () => {
                         ? 'text-white' 
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
-                    style={currentPage === 1 ? { backgroundColor: '#01253F' } : {}}
+                    style={currentPage === 1 ? { 
+                      backgroundColor: '#01253F',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '20px',
+                      fontFamily: 'Avenir',
+                      fontSize: '16px',
+                      fontWeight: 500,
+                      lineHeight: '24px',
+                      letterSpacing: '0%',
+                      textAlign: 'center',
+                      color: '#ffffff'
+                    } : {
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '20px',
+                      backgroundColor: '#f3f4f6',
+                      fontFamily: 'Avenir',
+                      fontSize: '16px',
+                      fontWeight: 500,
+                      lineHeight: '24px',
+                      letterSpacing: '0%',
+                      textAlign: 'center',
+                      color: '#374151'
+                    }}
                   >
                     1
                   </button>
@@ -531,7 +1358,31 @@ const YourPipelinePage = () => {
                         ? 'text-white' 
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
-                    style={currentPage === 2 ? { backgroundColor: '#01253F' } : {}}
+                    style={currentPage === 2 ? { 
+                      backgroundColor: '#01253F',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '20px',
+                      fontFamily: 'Avenir',
+                      fontSize: '16px',
+                      fontWeight: 500,
+                      lineHeight: '24px',
+                      letterSpacing: '0%',
+                      textAlign: 'center',
+                      color: '#ffffff'
+                    } : {
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '20px',
+                      backgroundColor: '#f3f4f6',
+                      fontFamily: 'Avenir',
+                      fontSize: '16px',
+                      fontWeight: 500,
+                      lineHeight: '24px',
+                      letterSpacing: '0%',
+                      textAlign: 'center',
+                      color: '#374151'
+                    }}
                   >
                     2
                   </button>
@@ -542,13 +1393,50 @@ const YourPipelinePage = () => {
                         ? 'text-white' 
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
-                    style={currentPage === 3 ? { backgroundColor: '#01253F' } : {}}
+                    style={currentPage === 3 ? { 
+                      backgroundColor: '#01253F',
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '20px',
+                      fontFamily: 'Avenir',
+                      fontSize: '16px',
+                      fontWeight: 500,
+                      lineHeight: '24px',
+                      letterSpacing: '0%',
+                      textAlign: 'center',
+                      color: '#ffffff'
+                    } : {
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '20px',
+                      backgroundColor: '#f3f4f6',
+                      fontFamily: 'Avenir',
+                      fontSize: '16px',
+                      fontWeight: 500,
+                      lineHeight: '24px',
+                      letterSpacing: '0%',
+                      textAlign: 'center',
+                      color: '#374151'
+                    }}
                   >
                     3
                   </button>
                   <button 
                     onClick={() => handlePageChange(currentPage < 3 ? currentPage + 1 : 3)}
                     className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+                    style={{
+                      width: '80px',
+                      height: '40px',
+                      borderRadius: '20px',
+                      backgroundColor: '#f3f4f6',
+                      fontFamily: 'Avenir',
+                      fontSize: '16px',
+                      fontWeight: 500,
+                      lineHeight: '24px',
+                      letterSpacing: '0%',
+                      textAlign: 'center',
+                      color: '#374151'
+                    }}
                   >
                     Next &gt;
                   </button>
@@ -556,41 +1444,206 @@ const YourPipelinePage = () => {
               </div>
 
               {/* Right Side - Matches and Applicants Stacked */}
-              <div className="space-y-6" style={{ minWidth: '300px' }}>
+              <div 
+                className="space-y-6" 
+                style={{ 
+                  minWidth: '300px',
+                  width: '744px',
+                  height: '1960px',
+                  gap: '32px'
+                }}
+              >
                 {/* Matches Section - Top Right (Half Height) */}
-                <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-[25px] font-black leading-[154%] text-[#2466D0] font-avenir">Matches</h2>
-                    <div className="flex items-center space-x-2">
-                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                <div 
+                  className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6"
+                  style={{
+                    width: '744px',
+                    height: '960px',
+                    padding: '20px',
+                    borderRadius: '20px',
+                    boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
+                    backgroundColor: 'rgba(244,244,244,0.6)',
+                    border: '1px solid #e5e7eb'
+                  }}
+                >
+                  <div 
+                    className="flex items-center justify-between mb-4"
+                    style={{
+                      width: '704px',
+                      height: '60px',
+                      padding: '20px',
+                      gap: '20px'
+                    }}
+                  >
+                    <h2 
+                      className="text-[25px] font-black leading-[154%] text-[#2466D0] font-avenir"
+                      style={{
+                        width: '200px',
+                        height: '40px',
+                        fontFamily: 'Avenir',
+                        fontSize: '25px',
+                        fontWeight: 900,
+                        lineHeight: '40px',
+                        letterSpacing: '0%',
+                        textAlign: 'left',
+                        color: '#2466D0'
+                      }}
+                    >
+                      Matches
+                    </h2>
+                    <div 
+                      className="flex items-center space-x-2"
+                      style={{
+                        width: '120px',
+                        height: '40px',
+                        gap: '8px'
+                      }}
+                    >
+                      <button 
+                        className="p-2 hover:bg-gray-100 rounded transition-colors" 
+                        title="Download data"
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          padding: '8px',
+                          borderRadius: '8px',
+                          backgroundColor: '#ffffff',
+                          border: '1px solid #e5e7eb'
+                        }}
+                      >
                         <Download className="w-4 h-4 text-gray-600" />
                       </button>
-                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Expand to full screen">
+                      <button 
+                        className="p-2 hover:bg-gray-100 rounded transition-colors" 
+                        title="Expand to full screen"
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          padding: '8px',
+                          borderRadius: '8px',
+                          backgroundColor: '#ffffff',
+                          border: '1px solid #e5e7eb'
+                        }}
+                      >
                         <Maximize2 className="w-4 h-4 text-gray-600" />
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-2">
+                  <div 
+                    className="space-y-2"
+                    style={{
+                      width: '704px',
+                      height: '880px',
+                      gap: '16px',
+                      padding: '20px'
+                    }}
+                  >
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center justify-between p-4 border bg-white" style={{ width: '100%', height: '140px', borderRadius: '16px' }}>
-                        <div className="flex items-center space-x-4">
-                          <div className="w-12 h-12 rounded-full overflow-hidden">
+                      <div 
+                        key={item} 
+                        className="flex items-center justify-between p-4 border bg-white" 
+                        style={{ 
+                          width: '664px', 
+                          height: '200px', 
+                          borderRadius: '16px',
+                          padding: '20px',
+                          backgroundColor: '#ffffff',
+                          border: '1px solid #e5e7eb',
+                          boxShadow: '0px 4px 16px rgba(0,0,0,0.05)'
+                        }}
+                      >
+                        <div 
+                          className="flex items-center space-x-4"
+                          style={{
+                            width: '400px',
+                            height: '160px',
+                            gap: '16px'
+                          }}
+                        >
+                          <div 
+                            className="w-12 h-12 rounded-full overflow-hidden"
+                            style={{
+                              width: '48px',
+                              height: '48px',
+                              borderRadius: '24px'
+                            }}
+                          >
                             <img src="/user-icon.png" alt="User Profile" className="w-full h-full object-cover" />
                           </div>
-                          <div>
-                            <h4 className="font-bold text-[#01253F] text-sm mb-1">Marvin Grant</h4>
-                            <p className="font-bold text-[#01253F] text-xs mb-2">5+ years experience</p>
-                            <p className="text-gray-500 text-xs">New Haven, CT</p>
+                          <div 
+                            style={{
+                              width: '336px',
+                              height: '160px',
+                              gap: '16px'
+                            }}
+                          >
+                            <h4 
+                              className="font-bold text-[#01253F] text-sm mb-1"
+                              style={{
+                                width: '336px',
+                                height: '40px',
+                                fontFamily: 'Avenir',
+                                fontSize: '16px',
+                                fontWeight: 700,
+                                lineHeight: '40px',
+                                letterSpacing: '0%',
+                                textAlign: 'left',
+                                color: '#01253F'
+                              }}
+                            >
+                              Marvin Grant
+                            </h4>
+                            <p 
+                              className="font-bold text-[#01253F] text-xs mb-2"
+                              style={{
+                                width: '336px',
+                                height: '24px',
+                                fontFamily: 'Avenir',
+                                fontSize: '14px',
+                                fontWeight: 700,
+                                lineHeight: '24px',
+                                letterSpacing: '0%',
+                                textAlign: 'left',
+                                color: '#01253F'
+                              }}
+                            >
+                              5+ years experience
+                            </p>
+                            <p 
+                              className="text-gray-500 text-xs"
+                              style={{
+                                width: '336px',
+                                height: '24px',
+                                fontFamily: 'Avenir',
+                                fontSize: '14px',
+                                fontWeight: 400,
+                                lineHeight: '24px',
+                                letterSpacing: '0%',
+                                textAlign: 'left',
+                                color: '#6b7280'
+                              }}
+                            >
+                              New Haven, CT
+                            </p>
                           </div>
                         </div>
-                        <div className="flex flex-col items-end space-y-2">
+                        <div 
+                          className="flex flex-col items-end space-y-2"
+                          style={{
+                            width: '200px',
+                            height: '160px',
+                            gap: '16px'
+                          }}
+                        >
                           <div 
                             className="flex items-center justify-center px-[8px] py-[6px] rounded-[40px]"
                             style={{
-                              width: '80px',
-                              height: '24px',
+                              width: '120px',
+                              height: '32px',
                               backgroundColor: '#F4F4F4',
-                              gap: '6px'
+                              gap: '8px',
+                              borderRadius: '16px',
+                              padding: '8px 16px'
                             }}
                           >
                             <span 
@@ -599,13 +1652,24 @@ const YourPipelinePage = () => {
                                 fontFamily: 'Avenir',
                                 fontWeight: 800,
                                 fontStyle: 'normal',
-                                letterSpacing: '0%'
+                                letterSpacing: '0%',
+                                fontSize: '14px',
+                                lineHeight: '16px',
+                                color: '#2466D0'
                               }}
                             >
                               Matched
                             </span>
-                            <div className="w-2.5 h-2.5 bg-[#2466D0] rounded-full flex items-center justify-center">
-                              <svg className="w-1.5 h-1.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <div 
+                              className="w-2.5 h-2.5 bg-[#2466D0] rounded-full flex items-center justify-center"
+                              style={{
+                                width: '16px',
+                                height: '16px',
+                                backgroundColor: '#2466D0',
+                                borderRadius: '8px'
+                              }}
+                            >
+                              <svg className="w-1.5 h-1.5 text-white" fill="currentColor" viewBox="0 0 20 20" style={{ width: '12px', height: '12px' }}>
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
                             </div>
@@ -617,11 +1681,15 @@ const YourPipelinePage = () => {
                               width: '120px',
                               height: '32px',
                               borderRadius: '8px',
-                              paddingTop: '8px',
-                              paddingRight: '16px',
-                              paddingBottom: '8px',
-                              paddingLeft: '16px',
-                              gap: '8px'
+                              padding: '8px 16px',
+                              gap: '8px',
+                              fontFamily: 'Avenir',
+                              fontSize: '14px',
+                              fontWeight: 500,
+                              lineHeight: '16px',
+                              letterSpacing: '0%',
+                              textAlign: 'center',
+                              color: '#ffffff'
                             }}
                           >
                             View Profile
@@ -633,42 +1701,197 @@ const YourPipelinePage = () => {
                 </div>
 
                 {/* Applicants Section - Bottom Right (Half Height) */}
-                <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-[25px] font-black leading-[154%] text-[#01253F] font-avenir">Applicants</h2>
-                    <div className="flex items-center space-x-2">
-                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
+                <div 
+                  className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6"
+                  style={{
+                    width: '744px',
+                    height: '960px',
+                    padding: '20px',
+                    borderRadius: '20px',
+                    boxShadow: '0px 8px 32px rgba(0,0,0,0.08)',
+                    backgroundColor: 'rgba(244,244,244,0.6)',
+                    border: '1px solid #e5e7eb'
+                  }}
+                >
+                  <div 
+                    className="flex items-center justify-between mb-4"
+                    style={{
+                      width: '704px',
+                      height: '60px',
+                      padding: '20px',
+                      gap: '20px'
+                    }}
+                  >
+                    <h2 
+                      className="text-[25px] font-black leading-[154%] text-[#01253F] font-avenir"
+                      style={{
+                        width: '200px',
+                        height: '40px',
+                        fontFamily: 'Avenir',
+                        fontSize: '25px',
+                        fontWeight: 900,
+                        lineHeight: '40px',
+                        letterSpacing: '0%',
+                        textAlign: 'left',
+                        color: '#01253F'
+                      }}
+                    >
+                      Applicants
+                    </h2>
+                    <div 
+                      className="flex items-center space-x-2"
+                      style={{
+                        width: '120px',
+                        height: '40px',
+                        gap: '8px'
+                      }}
+                    >
+                      <button 
+                        className="p-2 hover:bg-gray-100 rounded transition-colors" 
+                        title="Download data"
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          padding: '8px',
+                          borderRadius: '8px',
+                          backgroundColor: '#ffffff',
+                          border: '1px solid #e5e7eb'
+                        }}
+                      >
                         <Download className="w-4 h-4 text-gray-600" />
                       </button>
-                      <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Expand to full screen">
+                      <button 
+                        className="p-2 hover:bg-gray-100 rounded transition-colors" 
+                        title="Expand to full screen"
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          padding: '8px',
+                          borderRadius: '8px',
+                          backgroundColor: '#ffffff',
+                          border: '1px solid #e5e7eb'
+                        }}
+                      >
                         <Maximize2 className="w-4 h-4 text-gray-600" />
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-2">
+                  <div 
+                    className="space-y-2"
+                    style={{
+                      width: '704px',
+                      height: '880px',
+                      gap: '16px',
+                      padding: '20px'
+                    }}
+                  >
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center justify-between p-4 border bg-white" style={{ width: '100%', height: '140px', borderRadius: '16px' }}>
-                        <div className="flex items-center space-x-4">
-                          <div className="w-12 h-12 rounded-full overflow-hidden">
+                      <div 
+                        key={item} 
+                        className="flex items-center justify-between p-4 border bg-white" 
+                        style={{ 
+                          width: '664px', 
+                          height: '200px', 
+                          borderRadius: '16px',
+                          padding: '20px',
+                          backgroundColor: '#ffffff',
+                          border: '1px solid #e5e7eb',
+                          boxShadow: '0px 4px 16px rgba(0,0,0,0.05)'
+                        }}
+                      >
+                        <div 
+                          className="flex items-center space-x-4"
+                          style={{
+                            width: '400px',
+                            height: '160px',
+                            gap: '16px'
+                          }}
+                        >
+                          <div 
+                            className="w-12 h-12 rounded-full overflow-hidden"
+                            style={{
+                              width: '48px',
+                              height: '48px',
+                              borderRadius: '24px'
+                            }}
+                          >
                             <img src="/user-icon.png" alt="User Profile" className="w-full h-full object-cover" />
                           </div>
-                          <div>
-                            <h4 className="font-bold text-[#01253F] text-sm mb-1">Marvin Grant</h4>
-                            <p className="font-bold text-[#01253F] text-xs mb-2">5+ years experience</p>
-                            <p className="text-gray-500 text-xs">New Haven, CT</p>
+                          <div 
+                            style={{
+                              width: '336px',
+                              height: '160px',
+                              gap: '16px'
+                            }}
+                          >
+                            <h4 
+                              className="font-bold text-[#01253F] text-sm mb-1"
+                              style={{
+                                width: '336px',
+                                height: '40px',
+                                fontFamily: 'Avenir',
+                                fontSize: '16px',
+                                fontWeight: 700,
+                                lineHeight: '40px',
+                                letterSpacing: '0%',
+                                textAlign: 'left',
+                                color: '#01253F'
+                              }}
+                            >
+                              Marvin Grant
+                            </h4>
+                            <p 
+                              className="font-bold text-[#01253F] text-xs mb-2"
+                              style={{
+                                width: '336px',
+                                height: '24px',
+                                fontFamily: 'Avenir',
+                                fontSize: '14px',
+                                fontWeight: 700,
+                                lineHeight: '24px',
+                                letterSpacing: '0%',
+                                textAlign: 'left',
+                                color: '#01253F'
+                              }}
+                            >
+                              5+ years experience
+                            </p>
+                            <p 
+                              className="text-gray-500 text-xs"
+                              style={{
+                                width: '336px',
+                                height: '24px',
+                                fontFamily: 'Avenir',
+                                fontSize: '14px',
+                                fontWeight: 400,
+                                lineHeight: '24px',
+                                letterSpacing: '0%',
+                                textAlign: 'left',
+                                color: '#6b7280'
+                              }}
+                            >
+                              New Haven, CT
+                            </p>
                           </div>
                         </div>
-                        <button className="text-white text-xs rounded transition-colors" style={{ 
-                          backgroundColor: '#2CB3BF',
-                          width: '120px',
-                          height: '32px',
-                          borderRadius: '8px',
-                          paddingTop: '8px',
-                          paddingRight: '16px',
-                          paddingBottom: '8px',
-                          paddingLeft: '16px',
-                          gap: '8px'
-                        }}>
+                        <button 
+                          className="text-white text-xs rounded transition-colors" 
+                          style={{ 
+                            backgroundColor: '#2CB3BF',
+                            width: '120px',
+                            height: '32px',
+                            borderRadius: '8px',
+                            padding: '8px 16px',
+                            gap: '8px',
+                            fontFamily: 'Avenir',
+                            fontSize: '14px',
+                            fontWeight: 500,
+                            lineHeight: '16px',
+                            letterSpacing: '0%',
+                            textAlign: 'center',
+                            color: '#ffffff'
+                          }}
+                        >
                           View Profile
                         </button>
                       </div>
