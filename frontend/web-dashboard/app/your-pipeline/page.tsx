@@ -511,7 +511,7 @@ const YourPipelinePage = () => {
       <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
           <div className="flex justify-start">
-            <h1 className="text-[76.6971px] font-bold leading-[115%] text-[#01253F] font-baloo ml-6">
+            <h1 className="text-[70px] font-bold leading-[115%] text-[#01253F] font-baloo ml-6">
               YourPipeline
             </h1>
           </div>
@@ -573,12 +573,12 @@ const YourPipelinePage = () => {
               </div>
             </div>
             
-            <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex flex-col xl:flex-row gap-6">
               {/* Left Side - 2x2 Metric Cards Grid */}
-              <div className="flex-shrink-0 lg:w-1/2 w-full">
-                <div className="grid grid-cols-2 gap-4 w-full max-w-[500px] mx-auto lg:mx-0">
+              <div className="flex-shrink-0 xl:w-1/2 w-full">
+                <div className="grid grid-cols-2 gap-4 w-full max-w-full xl:max-w-[500px] mx-auto xl:mx-0">
                   {/* Environment Score Card */}
-                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
+                  <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-sm font-medium text-[#01253F] leading-tight">Environment<br />Score</h3>
                       <div className="relative group">
@@ -596,7 +596,7 @@ const YourPipelinePage = () => {
                   </div>
 
                   {/* Continuity of Care Index Card */}
-                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
+                  <div className="bg-white rounded-[21px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-sm font-medium text-[#01253F] leading-tight">Continuity of<br />Care Index</h3>
                       <div className="relative group">
@@ -614,7 +614,7 @@ const YourPipelinePage = () => {
                   </div>
 
                   {/* Strong Matches Card */}
-                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
+                  <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-sm font-medium text-[#01253F] leading-tight">Strong Matches</h3>
                       <div className="relative group">
@@ -650,7 +650,7 @@ const YourPipelinePage = () => {
               </div>
 
               {/* Right Side - Insights Section */}
-              <div className="lg:w-3/5 w-full bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-6 h-[385px] min-w-[300px] lg:ml-[-3rem]">
+              <div className="xl:w-3/5 w-full bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-6 h-[385px] min-w-[300px] mt-4 xl:mt-0 xl:-ml-12">
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Insights</h2>
                 </div>
