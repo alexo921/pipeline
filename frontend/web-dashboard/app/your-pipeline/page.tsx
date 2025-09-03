@@ -162,6 +162,114 @@ const YourPipelinePage = () => {
       location: "Bridgeport, CT",
       matchScore: 92,
       status: "Matched"
+    },
+    {
+      id: 4,
+      name: "Jennifer Davis",
+      role: "Respiratory Therapist",
+      experience: "4+ years experience",
+      location: "New Haven, CT",
+      matchScore: 89,
+      status: "Matched"
+    },
+    {
+      id: 5,
+      name: "Robert Wilson",
+      role: "Laboratory Technician",
+      experience: "6+ years experience",
+      location: "Milford, CT",
+      matchScore: 91,
+      status: "Matched"
+    },
+    {
+      id: 6,
+      name: "Lisa Martinez",
+      role: "Radiology Technologist",
+      experience: "3+ years experience",
+      location: "West Haven, CT",
+      matchScore: 88,
+      status: "Matched"
+    },
+    {
+      id: 7,
+      name: "David Thompson",
+      role: "Pharmacy Technician",
+      experience: "2+ years experience",
+      location: "New Haven, CT",
+      matchScore: 85,
+      status: "Matched"
+    },
+    {
+      id: 8,
+      name: "Amanda Rodriguez",
+      role: "Occupational Therapist",
+      experience: "5+ years experience",
+      location: "Hartford, CT",
+      matchScore: 93,
+      status: "Matched"
+    },
+    {
+      id: 9,
+      name: "Thomas Anderson",
+      role: "Speech Language Pathologist",
+      experience: "4+ years experience",
+      location: "New Haven, CT",
+      matchScore: 90,
+      status: "Matched"
+    },
+    {
+      id: 10,
+      name: "Jessica White",
+      role: "Clinical Social Worker",
+      experience: "3+ years experience",
+      location: "Bridgeport, CT",
+      matchScore: 86,
+      status: "Matched"
+    },
+    {
+      id: 11,
+      name: "Christopher Taylor",
+      role: "Registered Nurse",
+      experience: "8+ years experience",
+      location: "Milford, CT",
+      matchScore: 95,
+      status: "Matched"
+    },
+    {
+      id: 12,
+      name: "Nicole Adams",
+      role: "Physical Therapist",
+      experience: "6+ years experience",
+      location: "West Haven, CT",
+      matchScore: 92,
+      status: "Matched"
+    },
+    {
+      id: 13,
+      name: "Ryan Miller",
+      role: "Medical Assistant",
+      experience: "3+ years experience",
+      location: "New Haven, CT",
+      matchScore: 87,
+      status: "Matched"
+    },
+    {
+      id: 14,
+      name: "Emma Wilson",
+      role: "Respiratory Therapist",
+      experience: "5+ years experience",
+      location: "Hartford, CT",
+      matchScore: 89,
+      status: "Matched"
+    },
+    {
+      id: 15,
+      name: "Daniel Kim",
+      role: "Laboratory Technician",
+      experience: "4+ years experience",
+      location: "Bridgeport, CT",
+      matchScore: 88,
+      status: "Matched"
     }
   ];
 
@@ -192,6 +300,114 @@ const YourPipelinePage = () => {
       location: "West Haven, CT",
       status: "Applied",
       appliedDate: "3 days ago"
+    },
+    {
+      id: 4,
+      name: "Carlos Mendez",
+      role: "Physical Therapist",
+      experience: "5+ years experience",
+      location: "New Haven, CT",
+      status: "Applied",
+      appliedDate: "4 days ago"
+    },
+    {
+      id: 5,
+      name: "Rachel Green",
+      role: "Medical Assistant",
+      experience: "2+ years experience",
+      location: "Hartford, CT",
+      status: "Applied",
+      appliedDate: "1 day ago"
+    },
+    {
+      id: 6,
+      name: "James Brown",
+      role: "Respiratory Therapist",
+      experience: "7+ years experience",
+      location: "Bridgeport, CT",
+      status: "Applied",
+      appliedDate: "2 days ago"
+    },
+    {
+      id: 7,
+      name: "Maria Garcia",
+      role: "Laboratory Technician",
+      experience: "4+ years experience",
+      location: "New Haven, CT",
+      status: "Applied",
+      appliedDate: "5 days ago"
+    },
+    {
+      id: 8,
+      name: "Kevin Lee",
+      role: "Radiology Technologist",
+      experience: "3+ years experience",
+      location: "Milford, CT",
+      status: "Applied",
+      appliedDate: "3 days ago"
+    },
+    {
+      id: 9,
+      name: "Sophia Chen",
+      role: "Pharmacy Technician",
+      experience: "1+ years experience",
+      location: "West Haven, CT",
+      status: "Applied",
+      appliedDate: "1 day ago"
+    },
+    {
+      id: 10,
+      name: "Alex Johnson",
+      role: "Occupational Therapist",
+      experience: "6+ years experience",
+      location: "Hartford, CT",
+      status: "Applied",
+      appliedDate: "2 days ago"
+    },
+    {
+      id: 11,
+      name: "Daniel Kim",
+      role: "Speech Language Pathologist",
+      experience: "4+ years experience",
+      location: "New Haven, CT",
+      status: "Applied",
+      appliedDate: "1 day ago"
+    },
+    {
+      id: 12,
+      name: "Sarah Williams",
+      role: "Clinical Social Worker",
+      experience: "5+ years experience",
+      location: "Bridgeport, CT",
+      status: "Applied",
+      appliedDate: "3 days ago"
+    },
+    {
+      id: 13,
+      name: "Michael Davis",
+      role: "Registered Nurse",
+      experience: "9+ years experience",
+      location: "Milford, CT",
+      status: "Applied",
+      appliedDate: "4 days ago"
+    },
+    {
+      id: 14,
+      name: "Emma Wilson",
+      role: "Physical Therapist",
+      experience: "7+ years experience",
+      location: "West Haven, CT",
+      status: "Applied",
+      appliedDate: "2 days ago"
+    },
+    {
+      id: 15,
+      name: "Ryan Miller",
+      role: "Medical Assistant",
+      experience: "3+ years experience",
+      location: "Hartford, CT",
+      status: "Applied",
+      appliedDate: "1 day ago"
     }
   ];
 
@@ -509,7 +725,7 @@ const YourPipelinePage = () => {
                 </div>
 
                 {/* Job Cards */}
-                <div className="space-y-4 overflow-y-auto h-[calc(100%-80px)]">
+                <div className="space-y-4 overflow-y-auto h-[calc(100%-80px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                   {demoJobs.map((job) => (
                     <div key={job.id} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative">
                       {/* Edit Icon - Top Right */}
@@ -566,7 +782,7 @@ const YourPipelinePage = () => {
               {/* Right Side - Matches and Applicants Stacked */}
               <div className="flex flex-col h-full" style={{ minWidth: '300px' }}>
                 {/* Matches Section - Top Half */}
-                <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6 flex-1 h-[400px] overflow-hidden">
+                <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6 h-[610px] overflow-hidden">
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center space-x-2">
                       <h2 className="text-[22px] font-bold text-[#2466D0] font-avenir">Matches</h2>
@@ -586,7 +802,7 @@ const YourPipelinePage = () => {
                     </div>
                   </div>
                   
-                  <div className="space-y-4 overflow-y-auto h-[calc(100%-80px)]">
+                  <div className="space-y-4 overflow-y-auto h-[calc(100%-80px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                     {demoMatches.map((match) => (
                       <div key={match.id} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between">
                         <div className="flex items-center space-x-4">
@@ -625,7 +841,7 @@ const YourPipelinePage = () => {
                 </div>
                 
                 {/* Applicants Section - Bottom Half */}
-                <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6 flex-1 mt-4 h-[400px] overflow-hidden">
+                <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6 mt-4 h-[625px] overflow-hidden">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-[22px] font-bold text-[#01253F] font-avenir">Applicants</h2>
                     <div className="flex items-center space-x-2">
@@ -638,7 +854,7 @@ const YourPipelinePage = () => {
                     </div>
                   </div>
                   
-                  <div className="space-y-4 overflow-y-auto h-[calc(100%-80px)]">
+                  <div className="space-y-4 overflow-y-auto h-[calc(100%-80px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                     {demoApplicants.map((applicant) => (
                       <div key={applicant.id} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between">
                         <div className="flex items-center space-x-4">
