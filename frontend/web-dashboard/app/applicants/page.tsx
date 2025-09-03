@@ -185,10 +185,10 @@ const ApplicantsPage = () => {
             
             {/* Header Actions */}
             <div className="flex items-center space-x-4">
-              <button className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-[#7691A4] hover:bg-gray-50 transition-colors">
+              <button className="flex items-center space-x-2 px-4 py-2 bg-[#E8F0F5] border border-gray-300 rounded-lg text-[#7691A4] hover:bg-[#D8E8F0] transition-colors shadow-sm">
                 <Briefcase className="w-4 h-4" />
-                <span>Open Positions</span>
-                <ChevronDown className="w-4 h-4" />
+                <span className="text-[#7691A4] font-medium">Open Positions</span>
+                <ChevronDown className="w-4 h-4 text-[#7691A4]" />
               </button>
               
               <button className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-[#7691A4] hover:bg-gray-50 transition-colors">
@@ -206,10 +206,9 @@ const ApplicantsPage = () => {
           </div>
           
           <div className="flex gap-8">
-            {/* Left Side - Applicants List in White Container */}
+            {/* Left Side - Applicants List */}
             <div className="flex-1 max-w-xl">
               {/* Applicants List */}
-              
               <div className="space-y-4">
                 {filteredApplicants.map((applicant) => (
                   <div 
@@ -222,13 +221,13 @@ const ApplicantsPage = () => {
                     onClick={() => handleViewProfile(applicant)}
                   >
                     <div className="flex items-center justify-between">
-                                              <div className="flex items-center space-x-4">
-                          {/* Avatar with gradient background */}
-                          <div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0" style={{ 
-                            background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
-                          }}>
-                            <User className="w-8 h-8 text-[#01253F]" strokeWidth={2} />
-                          </div>
+                      <div className="flex items-center space-x-4">
+                        {/* Avatar with gradient background */}
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0" style={{ 
+                          background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
+                        }}>
+                          <User className="w-8 h-8 text-[#01253F]" strokeWidth={2} />
+                        </div>
                         
                         {/* Applicant Info */}
                         <div>
@@ -260,7 +259,11 @@ const ApplicantsPage = () => {
                         
                         {/* View Profile Button */}
                         <button 
-                          onClick={() => handleViewProfile(applicant)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // TODO: Link to my-pipeline page
+                            console.log('Navigate to my-pipeline for:', applicant.name);
+                          }}
                           className="bg-[#2CB3BF] text-white px-6 py-3 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
                         >
                           View Profile
@@ -272,7 +275,6 @@ const ApplicantsPage = () => {
               </div>
             </div>
 
-                        {/* Right Side - Profile Detail Panel */}
             {/* Right Side - Profile Detail Panel */}
             {selectedApplicant && (
               <div className="w-1/2 flex-shrink-0">
@@ -371,7 +373,6 @@ const ApplicantsPage = () => {
           </div>
         </div>
       </div>
-
     </BaseLayout>
   );
 };

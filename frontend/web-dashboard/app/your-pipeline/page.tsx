@@ -78,6 +78,60 @@ const YourPipelinePage = () => {
       salary: "70k/yr - 85k/yr",
       applicants: 3,
       status: "Active"
+    },
+    {
+      id: 5,
+      title: "Laboratory Technician",
+      company: "St. Mary's Health Center",
+      location: "New Haven, CT",
+      salary: "50k/yr - 65k/yr",
+      applicants: 8,
+      status: "Active"
+    },
+    {
+      id: 6,
+      title: "Radiology Technologist",
+      company: "St. Mary's Health Center",
+      location: "New Haven, CT",
+      salary: "60k/yr - 75k/yr",
+      applicants: 5,
+      status: "Active"
+    },
+    {
+      id: 7,
+      title: "Pharmacy Technician",
+      company: "St. Mary's Health Center",
+      location: "New Haven, CT",
+      salary: "40k/yr - 55k/yr",
+      applicants: 15,
+      status: "Active"
+    },
+    {
+      id: 8,
+      title: "Occupational Therapist",
+      company: "St. Mary's Health Center",
+      location: "New Haven, CT",
+      salary: "75k/yr - 90k/yr",
+      applicants: 6,
+      status: "Active"
+    },
+    {
+      id: 9,
+      title: "Speech Language Pathologist",
+      company: "St. Mary's Health Center",
+      location: "New Haven, CT",
+      salary: "70k/yr - 85k/yr",
+      applicants: 4,
+      status: "Active"
+    },
+    {
+      id: 10,
+      title: "Clinical Social Worker",
+      company: "St. Mary's Health Center",
+      location: "New Haven, CT",
+      salary: "55k/yr - 70k/yr",
+      applicants: 9,
+      status: "Active"
     }
   ];
 
@@ -240,11 +294,13 @@ const YourPipelinePage = () => {
       {/* Page Header */}
       <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
-          <h1 className="text-[76.6971px] font-bold leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
-            YourPipeline
-          </h1>
+          <div className="flex justify-start">
+            <h1 className="text-[76.6971px] font-bold leading-[115%] text-[#01253F] font-baloo ml-6">
+              YourPipeline
+            </h1>
+          </div>
           {user?.role === 'ADMIN' && (
-            <p className="text-sm text-blue-600 font-medium text-center lg:text-left mt-2">Admin Access - Employee/User Dashboard</p>
+            <p className="text-sm text-blue-600 font-medium mt-2 ml-6">Admin Access - Employee/User Dashboard</p>
           )}
         </div>
       </div>
@@ -253,7 +309,7 @@ const YourPipelinePage = () => {
       <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12" style={{ position: 'relative', zIndex: 1 }}>
         
         {/* Main Company Container - Wraps both Analytics/Insights and Jobs/Matches/Applicants */}
-        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative">
+        <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative" style={{ maxWidth: '90%', margin: '0 auto' }}>
           
           {/* Company Header and Actions */}
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
@@ -270,12 +326,12 @@ const YourPipelinePage = () => {
             <div className="flex items-center space-x-4">
               <button 
                 onClick={handleNotificationClick}
-                className="bg-white hover:bg-gray-50 text-[#7691A4] font-medium px-4 py-2 rounded-lg transition-colors flex items-center space-x-3 relative border border-gray-200"
+                className="relative bg-white hover:bg-gray-50 text-[#A0B3C7] font-medium px-6 py-2 rounded-full shadow border border-gray-200 transition-colors flex items-center space-x-3"
               >
-                <span className="text-[#7691A4] font-avenir">Notifications</span>
-                <Bell className="w-4 h-4 text-[#7691A4] fill-current" />
+                <span className="text-[#A0B3C7] font-avenir">Notifications</span>
+                <Bell className="w-4 h-4 text-[#A0B3C7] fill-current" />
                 {notifications > 0 && (
-                  <span className="absolute -top-2 -right-2 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center bg-[#01253F]">
+                  <span className="absolute -top-1 -right-1 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center bg-[#01253F]">
                     {notifications}
                   </span>
                 )}
@@ -284,8 +340,8 @@ const YourPipelinePage = () => {
           </div>
           
           {/* Analytics Container - Holds both Metrics and Insights */}
-          <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6 mb-8">
-            <div className="flex items-center justify-between mb-6">
+          <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6 mb-8">
+            <div className="flex items-center justify-between mb-1">
               <h2 className="text-[25px] font-bold leading-[34px] text-[#01253F] font-avenir">Analytics</h2>
               <div className="flex items-center space-x-2">
                 <button 
@@ -301,12 +357,12 @@ const YourPipelinePage = () => {
               </div>
             </div>
             
-            <div className="flex gap-8">
+            <div className="flex flex-col lg:flex-row gap-4">
               {/* Left Side - 2x2 Metric Cards Grid */}
-              <div className="flex-shrink-0 w-1/2">
-                <div className="grid grid-cols-2 gap-4 w-[640px]">
+              <div className="flex-shrink-0 lg:w-1/2 w-full">
+                <div className="grid grid-cols-2 gap-4 w-full max-w-[500px] mx-auto lg:mx-0">
                   {/* Environment Score Card */}
-                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[140px]">
+                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-sm font-medium text-[#01253F] leading-tight">Environment<br />Score</h3>
                       <div className="relative group">
@@ -324,7 +380,7 @@ const YourPipelinePage = () => {
                   </div>
 
                   {/* Continuity of Care Index Card */}
-                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[140px]">
+                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-sm font-medium text-[#01253F] leading-tight">Continuity of<br />Care Index</h3>
                       <div className="relative group">
@@ -342,7 +398,7 @@ const YourPipelinePage = () => {
                   </div>
 
                   {/* Strong Matches Card */}
-                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[140px]">
+                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-sm font-medium text-[#01253F] leading-tight">Strong Matches</h3>
                       <div className="relative group">
@@ -359,7 +415,7 @@ const YourPipelinePage = () => {
                   </div>
 
                   {/* Pulse Trends Card */}
-                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[140px]">
+                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-sm font-medium text-[#01253F] leading-tight">Pulse Trends</h3>
                       <div className="relative group">
@@ -378,8 +434,8 @@ const YourPipelinePage = () => {
               </div>
 
               {/* Right Side - Insights Section */}
-              <div className="w-1/2 bg-white rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-6">
-                <div className="flex items-center justify-between mb-6">
+              <div className="lg:w-3/5 w-full bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-6 h-[385px] min-w-[300px] lg:ml-[-3rem]">
+                <div className="flex items-center justify-between mb-2">
                   <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Insights</h2>
                 </div>
                 
@@ -424,40 +480,50 @@ const YourPipelinePage = () => {
                       <div className="h-2 rounded-full" style={{ width: '36%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
                     </div>
                   </div>
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">Team Collaboration Score</span>
+                      <span className="text-sm text-gray-600">28%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="h-2 rounded-full" style={{ width: '28%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           
           {/* Jobs/Matches/Applicants Container - Stacked below */}
-          <div className="p-6">
+          <div className="p-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
               {/* Open Jobs Section - Left Side (Full Height) */}
-              <div className="bg-[#F4F4F4] rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6" style={{ minWidth: '400px' }}>
+              <div className="bg-[#F4F4F4] rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6 h-[1250px] overflow-hidden" style={{ minWidth: '400px' }}>
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-[28px] font-bold text-[#01253F] font-avenir">Open Jobs</h2>
+                  <h2 className="text-[22px] font-bold text-[#01253F] font-avenir">Open Jobs</h2>
                   <button className="p-2 hover:bg-gray-200 rounded transition-colors" title="Expand to full screen">
                     <Maximize2 className="w-5 h-5 text-gray-600" />
                   </button>
                 </div>
 
                 {/* Job Cards */}
-                <div className="space-y-4">
+                <div className="space-y-4 overflow-y-auto h-[calc(100%-80px)]">
                   {demoJobs.map((job) => (
                     <div key={job.id} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative">
                       {/* Edit Icon - Top Right */}
                       <button 
                         onClick={() => handleJobEdit(job)}
-                        className="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors"
+                        className="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:bg-gray-200 transition-colors"
                       >
                         <Edit3 className="w-4 h-4 text-gray-600" />
                       </button>
 
                       {/* Job Content */}
-                      <div className="pr-12">
+                      <div className="flex flex-col">
                         {/* Job Title */}
-                        <h3 className="text-[24px] font-bold text-[#2466D0] mb-2 font-avenir">
+                        <h3 className="text-[22px] font-bold text-[#2466D0] mb-6 font-avenir">
                           {job.title}
                         </h3>
                         
@@ -467,8 +533,8 @@ const YourPipelinePage = () => {
                         </p>
                         
                         {/* Location and Salary Row */}
-                        <div className="flex items-center justify-between">
-                          <div>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex flex-col">
                             <p className="text-[14px] text-[#01253F] mb-1 font-avenir">
                               {job.location}
                             </p>
@@ -481,7 +547,7 @@ const YourPipelinePage = () => {
                           <div className="relative">
                             <button 
                               onClick={() => handleViewApplicants(job)}
-                              className="bg-[#2CB3BF] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#25a0ab] transition-colors"
+                              className="bg-[#2CB3BF] text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
                             >
                               View Applicants
                             </button>
@@ -495,58 +561,15 @@ const YourPipelinePage = () => {
                     </div>
                   ))}
                 </div>
-                
-                {/* Pagination */}
-                <div className="flex items-center justify-center space-x-4 mt-8">
-                  <button 
-                    onClick={() => handlePageChange(1)}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center font-medium transition-colors ${ 
-                      currentPage === 1 
-                        ? 'bg-[#01253F] text-white' 
-                        : 'text-[#01253F] hover:bg-gray-100'
-                    }`}
-                  >
-                    1
-                  </button>
-                  <button 
-                    onClick={() => handlePageChange(2)}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center font-medium transition-colors ${ 
-                      currentPage === 2 
-                        ? 'bg-[#01253F] text-white' 
-                        : 'text-[#01253F] hover:bg-gray-100'
-                    }`}
-                  >
-                    2
-                  </button>
-                  <button 
-                    onClick={() => handlePageChange(3)}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center font-medium transition-colors ${ 
-                      currentPage === 3 
-                        ? 'bg-[#01253F] text-white' 
-                        : 'text-[#01253F] hover:bg-gray-100'
-                    }`}
-                  >
-                    3
-                  </button>
-                  <button 
-                    onClick={() => handlePageChange(currentPage < 3 ? currentPage + 1 : 3)}
-                    className="text-gray-500 font-medium hover:text-gray-700 transition-colors flex items-center space-x-1"
-                  >
-                    <span>Next</span>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
               </div>
               
               {/* Right Side - Matches and Applicants Stacked */}
-              <div className="space-y-6" style={{ minWidth: '300px' }}>
-                {/* Matches Section - Top Right (Half Height) */}
-                <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6">
+              <div className="flex flex-col h-full" style={{ minWidth: '300px' }}>
+                {/* Matches Section - Top Half */}
+                <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6 flex-1 h-[400px] overflow-hidden">
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center space-x-2">
-                      <h2 className="text-[25px] font-bold text-[#2466D0] font-avenir">Matches</h2>
+                      <h2 className="text-[22px] font-bold text-[#2466D0] font-avenir">Matches</h2>
                       <div className="w-6 h-6 bg-[#2466D0] rounded-full flex items-center justify-center">
                         <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -563,53 +586,48 @@ const YourPipelinePage = () => {
                     </div>
                   </div>
                   
-                  <div className="space-y-4">
-                    {demoMatches.slice(0, 2).map((match) => (
-                      <div key={match.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4">
-                            {/* Avatar with gradient background */}
-                            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ 
-                              background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
-                            }}>
-                              <User className="w-6 h-6 text-[#01253F]" strokeWidth={2} />
-                            </div>
-                            <div>
-                              <h4 className="font-bold text-[#01253F] text-base mb-1">{match.name}</h4>
-                              <p className="font-bold text-[#01253F] text-sm mb-1">{match.experience}</p>
-                              <p className="text-gray-500 text-sm">{match.location}</p>
+                  <div className="space-y-4 overflow-y-auto h-[calc(100%-80px)]">
+                    {demoMatches.map((match) => (
+                      <div key={match.id} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          {/* Avatar with gradient background */}
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ 
+                            background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
+                          }}>
+                            <User className="w-6 h-6 text-[#01253F]" strokeWidth={2} />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-[#01253F] text-base">{match.name}</h4>
+                            <p className="font-bold text-[#01253F] text-sm">{match.experience}</p>
+                            <p className="text-gray-500 text-sm">{match.location}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col items-end">
+                          <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 space-x-2 mb-6">
+                            <span className="text-gray-600 font-medium text-sm">{match.status}</span>
+                            <div className="w-4 h-4 bg-[#2466D0] rounded-full flex items-center justify-center">
+                              <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
                             </div>
                           </div>
-                          
-                          <div className="flex flex-col items-end space-y-3">
-                            {/* Matched label */}
-                            <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 space-x-2">
-                              <span className="text-gray-600 font-medium text-sm">Matched</span>
-                              <div className="w-4 h-4 bg-[#2466D0] rounded-full flex items-center justify-center">
-                                <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                              </div>
-                            </div>
-                            
-                            {/* View Profile button */}
-                            <button 
-                              onClick={() => handleViewProfile(match)}
-                              className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
-                            >
-                              View Profile
-                            </button>
-                          </div>
+                          <button 
+                            onClick={() => handleViewProfile(match)}
+                            className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
+                          >
+                            View Profile
+                          </button>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
                 
-                {/* Applicants Section - Bottom Right (Half Height) */}
-                <div className="bg-[rgba(244,244,244,0.6)] rounded-xl shadow-sm border p-6">
+                {/* Applicants Section - Bottom Half */}
+                <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6 flex-1 mt-4 h-[400px] overflow-hidden">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-[25px] font-bold text-[#01253F] font-avenir">Applicants</h2>
+                    <h2 className="text-[22px] font-bold text-[#01253F] font-avenir">Applicants</h2>
                     <div className="flex items-center space-x-2">
                       <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
                         <Download className="w-4 h-4 text-gray-600" />
@@ -620,33 +638,30 @@ const YourPipelinePage = () => {
                     </div>
                   </div>
                   
-                  <div className="space-y-4">
-                    {demoApplicants.slice(0, 2).map((applicant) => (
-                      <div key={applicant.id} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-4">
-                            {/* Avatar with gradient background */}
-                            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ 
-                              background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
-                            }}>
-                              <User className="w-6 h-6 text-[#01253F]" strokeWidth={2} />
-                            </div>
-                            <div>
-                              <h4 className="font-bold text-[#01253F] text-base mb-1">{applicant.name}</h4>
-                              <p className="font-bold text-[#01253F] text-sm mb-1">{applicant.experience}</p>
-                              <p className="text-gray-500 text-sm">{applicant.location}</p>
-                            </div>
+                  <div className="space-y-4 overflow-y-auto h-[calc(100%-80px)]">
+                    {demoApplicants.map((applicant) => (
+                      <div key={applicant.id} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          {/* Avatar with gradient background */}
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ 
+                            background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
+                          }}>
+                            <User className="w-6 h-6 text-[#01253F]" strokeWidth={2} />
                           </div>
-                          
-                          <div className="flex items-center">
-                            {/* View Profile button */}
-                            <button 
-                              onClick={() => handleViewProfile(applicant)}
-                              className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
-                            >
-                              View Profile
-                            </button>
+                          <div>
+                            <h4 className="font-bold text-[#01253F] text-base">{applicant.name}</h4>
+                            <p className="font-bold text-[#01253F] text-sm">{applicant.experience}</p>
+                            <p className="text-gray-500 text-sm">{applicant.location}</p>
                           </div>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <button 
+                            onClick={() => handleViewProfile(applicant)}
+                            className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors mt-8"
+                          >
+                            View Profile
+                          </button>
                         </div>
                       </div>
                     ))}
