@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { 
   Bell, 
   Edit3, 
-  User,
   Download,
   Maximize2,
   CheckCircle,
@@ -19,7 +18,8 @@ import {
   Filter,
   SortAsc,
   Eye,
-  ChevronDown
+  ChevronDown,
+  Plus
 } from 'lucide-react';
 import BaseLayout from '../components/layout/BaseLayout';
 import AdminDashboardNav from '../components/AdminDashboardNav';
@@ -185,20 +185,26 @@ const ApplicantsPage = () => {
             
             {/* Header Actions */}
             <div className="flex items-center space-x-4">
-              <button className="flex items-center space-x-2 px-4 py-2 bg-[#E8F0F5] border border-gray-300 rounded-lg text-[#7691A4] hover:bg-[#D8E8F0] transition-colors shadow-sm">
-                <Briefcase className="w-4 h-4" />
+              <button className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
+                  <img src="/open_jobs.svg" alt="Open Jobs" className="w-5 h-5" />
+                </div>
                 <span className="text-[#7691A4] font-medium">Open Positions</span>
                 <ChevronDown className="w-4 h-4 text-[#7691A4]" />
               </button>
               
-              <button className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-[#7691A4] hover:bg-gray-50 transition-colors">
-                <Filter className="w-4 h-4" />
+              <button className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
+                  <img src="/filter_positions.svg" alt="Filter" className="w-5 h-5" />
+                </div>
                 <span>Filters</span>
                 <ChevronDown className="w-4 h-4" />
               </button>
               
-              <button className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-[#7691A4] hover:bg-gray-50 transition-colors">
-                <Download className="w-4 h-4" />
+              <button className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
+                  <img src="/export_positions.svg" alt="Export" className="w-5 h-5" />
+                </div>
                 <span>Export Profiles</span>
                 <ChevronDown className="w-4 h-4" />
               </button>
@@ -207,7 +213,7 @@ const ApplicantsPage = () => {
           
           <div className="flex gap-8">
             {/* Left Side - Applicants List */}
-            <div className="flex-1 max-w-xl">
+            <div className="flex-1 max-w-lg">
               {/* Applicants List */}
               <div className="space-y-4">
                 {filteredApplicants.map((applicant) => (
@@ -220,13 +226,11 @@ const ApplicantsPage = () => {
                     }`}
                     onClick={() => handleViewProfile(applicant)}
                   >
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-end justify-between">
                       <div className="flex items-center space-x-4">
-                        {/* Avatar with gradient background */}
-                        <div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0" style={{ 
-                          background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
-                        }}>
-                          <User className="w-8 h-8 text-[#01253F]" strokeWidth={2} />
+                        {/* Avatar */}
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0">
+                          <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
                         </div>
                         
                         {/* Applicant Info */}
@@ -244,7 +248,7 @@ const ApplicantsPage = () => {
                       </div>
                       
                       {/* Right Side Actions */}
-                      <div className="flex items-center space-x-4">
+                      <div className="flex flex-col items-end space-y-4 justify-end">
                         {/* Matched Label (conditionally shown) */}
                         {applicant.isMatched && (
                           <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 space-x-2">
@@ -264,7 +268,7 @@ const ApplicantsPage = () => {
                             // TODO: Link to my-pipeline page
                             console.log('Navigate to my-pipeline for:', applicant.name);
                           }}
-                          className="bg-[#2CB3BF] text-white px-6 py-3 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
+                          className="bg-[#2CB3BF] text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
                         >
                           View Profile
                         </button>
@@ -277,25 +281,23 @@ const ApplicantsPage = () => {
 
             {/* Right Side - Profile Detail Panel */}
             {selectedApplicant && (
-              <div className="w-1/2 flex-shrink-0">
+              <div className="flex-1 flex-shrink-0">
                 <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-8 sticky top-6 h-full">
                   {/* Top Section */}
-                  <div className="flex items-start justify-between mb-8">
+                  <div className="flex items-start justify-between mb-6">
                     {/* Left Side - Avatar and Info */}
                     <div className="flex items-start space-x-4">
-                      {/* Avatar with gradient background */}
-                      <div className="w-20 h-20 rounded-full border-2 border-gray-200 overflow-hidden flex-shrink-0" style={{ 
-                        background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
-                      }}>
-                        <User className="w-10 h-10 text-[#01253F]" strokeWidth={2} />
+                      {/* Avatar */}
+                      <div className="rounded-full bg-white flex items-center justify-center">
+                        <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
                       </div>
                       
                       {/* Name and Details */}
                       <div className="flex-1">
-                        <h3 className="text-2xl font-bold text-[#01253F] mb-2">
+                        <h3 className="text-2xl font-bold text-[#01253F] mb-1">
                           {selectedApplicant.name}
                         </h3>
-                        <p className="text-lg font-bold text-[#01253F] mb-2">
+                        <p className="text-lg font-bold text-[#01253F] mb-1">
                           {selectedApplicant.experience}
                         </p>
                         <p className="text-base text-gray-600">
@@ -305,13 +307,13 @@ const ApplicantsPage = () => {
                     </div>
                     
                     {/* Right Side - Express Interest Button */}
-                    <button className="bg-[#4A90E2] hover:bg-[#357ABD] text-white px-6 py-3 rounded-lg font-bold text-base transition-colors whitespace-nowrap">
+                    <button className="bg-[#2466D0] hover:bg-[#357ABD] text-white px-6 py-2 rounded-lg font-bold text-base transition-colors whitespace-nowrap">
                       Express Interest
                     </button>
                   </div>
                   
                   {/* Horizontal Divider */}
-                  <div className="w-full h-px bg-gray-300 mb-8"></div>
+                  <div className="w-full h-px bg-gray-200 mb-8"></div>
                   
                   {/* Bio Section */}
                   <div className="mb-8">

@@ -4,7 +4,6 @@ import React from 'react';
 import { 
   Building2, 
   CheckCircle, 
-  User,
   Edit3,
   ChevronRight
 } from 'lucide-react';
@@ -137,7 +136,7 @@ const MyPipelinePage = () => {
                 <div className="bg-gray-50 rounded-lg p-4">
                   <div className="text-center">
                     <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <User className="w-12 h-12 text-gray-600" />
+                      <img src="/user_icon.svg" alt="User" className="w-12 h-12" />
                     </div>
                     <h3 className="font-semibold text-gray-900">{profileData.name}</h3>
                     <p className="text-gray-600 text-sm">{profileData.location}</p>

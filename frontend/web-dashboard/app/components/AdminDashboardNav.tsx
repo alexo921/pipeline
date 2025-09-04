@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { User, Building2 } from 'lucide-react';
+import { Building2 } from 'lucide-react';
 
 const AdminDashboardNav: React.FC = () => {
   const pathname = usePathname();
@@ -27,7 +27,7 @@ const AdminDashboardNav: React.FC = () => {
                   : 'text-blue-700 hover:bg-blue-100'
               }`}
             >
-              <User className="w-4 h-4" />
+              <img src="/user_icon.svg" alt="User" className="w-4 h-4" />
               <span>Employee Dashboard</span>
             </Link>
             

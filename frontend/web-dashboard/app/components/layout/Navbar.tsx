@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { LogOut, User, ChevronDown, BarChart3, FileText } from "lucide-react";
+import { LogOut, ChevronDown, BarChart3, FileText } from "lucide-react";
 
 type NavbarProps = {
   onLoginClick: () => void;
@@ -112,7 +112,7 @@ const Navbar: React.FC<NavbarProps> = ({
                     className="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-colors"
                   >
                     <div className="w-8 h-8 bg-[#01253F] rounded-full flex items-center justify-center">
-                      <User className="w-5 h-5 text-white" />
+                      <img src="/user_icon.svg" alt="User" className="w-5 h-5" />
                     </div>
                     <ChevronDown className="w-4 h-4" />
                   </button>
