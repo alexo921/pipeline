@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { 
   Bell, 
   Edit3, 
-  User,
   Download,
   Maximize2,
   CheckCircle,
@@ -565,10 +564,10 @@ const YourPipelinePage = () => {
                   className="p-2 hover:bg-gray-100 rounded transition-colors"
                   title="Expand to full screen"
                 >
-                  <Maximize2 className="w-4 h-4 text-gray-600" />
+                  <img src="/download.svg" alt="Download" className="w-8 h-8" />
                 </button>
                 <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
-                  <Download className="w-4 h-4 text-gray-600" />
+                  <img src="/fullscreen.svg" alt="Expand" className="w-8 h-8" />
                 </button>
               </div>
             </div>
@@ -720,7 +719,7 @@ const YourPipelinePage = () => {
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-[22px] font-bold text-[#01253F] font-avenir">Open Jobs</h2>
                   <button className="p-2 hover:bg-gray-200 rounded transition-colors" title="Expand to full screen">
-                    <Maximize2 className="w-5 h-5 text-gray-600" />
+                    <img src="/fullscreen.svg" alt="Expand" className="w-8 h-8" />
                   </button>
                 </div>
 
@@ -733,7 +732,7 @@ const YourPipelinePage = () => {
                         onClick={() => handleJobEdit(job)}
                         className="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:bg-gray-200 transition-colors"
                       >
-                        <Edit3 className="w-4 h-4 text-gray-600" />
+                        <img src="/edit_pencil.svg" alt="Edit" className="w-8 h-8" />
                       </button>
 
                       {/* Job Content */}
@@ -794,10 +793,10 @@ const YourPipelinePage = () => {
                     </div>
                     <div className="flex items-center space-x-2">
                       <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
-                        <Download className="w-4 h-4 text-gray-600" />
+                        <img src="/download.svg" alt="Download" className="w-8 h-8" />
                       </button>
                       <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Expand to full screen">
-                        <Maximize2 className="w-4 h-4 text-gray-600" />
+                        <img src="/fullscreen.svg" alt="Expand" className="w-8 h-8" />
                       </button>
                     </div>
                   </div>
@@ -806,14 +805,12 @@ const YourPipelinePage = () => {
                     {demoMatches.map((match) => (
                       <div key={match.id} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                          {/* Avatar with gradient background */}
-                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ 
-                            background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
-                          }}>
-                            <User className="w-6 h-6 text-[#01253F]" strokeWidth={2} />
+                          {/* Avatar */}
+                          <div className="rounded-full bg-white flex items-center justify-center">
+                            <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
                           </div>
                           <div>
-                            <h4 className="font-bold text-[#01253F] text-base">{match.name}</h4>
+                            <h4 className="font-bold text-[#01253F] text-lg">{match.name}</h4>
                             <p className="font-bold text-[#01253F] text-sm">{match.experience}</p>
                             <p className="text-gray-500 text-sm">{match.location}</p>
                           </div>
@@ -846,10 +843,10 @@ const YourPipelinePage = () => {
                     <h2 className="text-[22px] font-bold text-[#01253F] font-avenir">Applicants</h2>
                     <div className="flex items-center space-x-2">
                       <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Download data">
-                        <Download className="w-4 h-4 text-gray-600" />
+                        <img src="/download.svg" alt="Download" className="w-8 h-8" />
                       </button>
                       <button className="p-2 hover:bg-gray-100 rounded transition-colors" title="Expand to full screen">
-                        <Maximize2 className="w-4 h-4 text-gray-600" />
+                        <img src="/fullscreen.svg" alt="Expand" className="w-8 h-8" />
                       </button>
                     </div>
                   </div>
@@ -858,14 +855,12 @@ const YourPipelinePage = () => {
                     {demoApplicants.map((applicant) => (
                       <div key={applicant.id} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                          {/* Avatar with gradient background */}
-                          <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ 
-                            background: 'linear-gradient(135deg, #97B3FB 0%, #E9D7F4 100%)'
-                          }}>
-                            <User className="w-6 h-6 text-[#01253F]" strokeWidth={2} />
+                          {/* Avatar */}
+                          <div className="rounded-full bg-white flex items-center justify-center">
+                            <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
                           </div>
                           <div>
-                            <h4 className="font-bold text-[#01253F] text-base">{applicant.name}</h4>
+                            <h4 className="font-bold text-[#01253F] text-lg">{applicant.name}</h4>
                             <p className="font-bold text-[#01253F] text-sm">{applicant.experience}</p>
                             <p className="text-gray-500 text-sm">{applicant.location}</p>
                           </div>
@@ -990,8 +985,8 @@ const YourPipelinePage = () => {
                     {/* Left Side - Avatar and Info */}
                     <div className="flex items-start space-x-4">
                       {/* Avatar */}
-                      <div className="w-16 h-16 rounded-full border-2 border-gray-200 overflow-hidden flex-shrink-0 flex items-center justify-center bg-gradient-to-b from-purple-100 to-blue-200">
-                        <User className="w-8 h-8 text-[#01253F]" strokeWidth={2} />
+                      <div className="rounded-full bg-white flex items-center justify-center">
+                        <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
                       </div>
                       
                       {/* Name and Details */}
@@ -1053,11 +1048,11 @@ const YourPipelinePage = () => {
             {/* Header Section */}
             <div className="flex items-start justify-between mb-6">
               {/* Left Side - Avatar and Info */}
-              <div className="flex items-start space-x-4">
-                {/* Avatar */}
-                <div className="w-20 h-20 rounded-full border-2 border-gray-200 overflow-hidden flex-shrink-0 flex items-center justify-center bg-gradient-to-b from-purple-100 to-blue-200">
-                  <User className="w-10 h-10 text-[#01253F]" strokeWidth={2} />
-                </div>
+                              <div className="flex items-start space-x-4">
+                  {/* Avatar */}
+                  <div className="rounded-full bg-white flex items-center justify-center">
+                    <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
+                  </div>
                 
                 {/* Name and Details */}
                 <div>
