@@ -814,8 +814,8 @@ const YourPipelinePage = () => {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className={`h-2 rounded-full ${getThresholdColor(analyticsData.earlyChurnRisk.threshold)}`}
-                        style={{ width: `${analyticsData.earlyChurnRisk.percentage}%` }}
+                        className="h-2 rounded-full"
+                        style={{ width: `${analyticsData.earlyChurnRisk.percentage}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
                       ></div>
                     </div>
                   </div>
@@ -839,8 +839,8 @@ const YourPipelinePage = () => {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className={`h-2 rounded-full ${getThresholdColor(analyticsData.retentionForecast.threshold)}`}
-                        style={{ width: `${analyticsData.retentionForecast.percentage}%` }}
+                        className="h-2 rounded-full"
+                        style={{ width: `${analyticsData.retentionForecast.percentage}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
                       ></div>
                     </div>
                   </div>
@@ -864,8 +864,8 @@ const YourPipelinePage = () => {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className={`h-2 rounded-full ${getThresholdColor(analyticsData.workEnvironmentScore.threshold)}`}
-                        style={{ width: `${analyticsData.workEnvironmentScore.score}%` }}
+                        className="h-2 rounded-full"
+                        style={{ width: `${analyticsData.workEnvironmentScore.score}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
                       ></div>
                     </div>
                   </div>
@@ -889,8 +889,8 @@ const YourPipelinePage = () => {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
-                        className={`h-2 rounded-full ${getThresholdColor(analyticsData.cultureAlignment.threshold)}`}
-                        style={{ width: `${analyticsData.cultureAlignment.percentage}%` }}
+                        className="h-2 rounded-full"
+                        style={{ width: `${analyticsData.cultureAlignment.percentage}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
                       ></div>
                     </div>
                   </div>

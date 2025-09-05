@@ -512,11 +512,11 @@ const ApplicantsPage = () => {
             </div>
           </div>
           
-          <div className="flex gap-8">
+          <div className="flex gap-8 h-[calc(100vh-300px)] min-h-[600px]">
             {/* Left Side - Applicants List */}
-            <div className="flex-1 max-w-lg">
+            <div className="flex-1 max-w-lg flex flex-col">
               {/* Applicants List */}
-              <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2" style={{
+              <div className="space-y-4 flex-1 overflow-y-auto pr-2" style={{
                 scrollbarWidth: 'thin',
                 scrollbarColor: '#CBD5E0 #F7FAFC'
               }}>
@@ -585,8 +585,11 @@ const ApplicantsPage = () => {
 
             {/* Right Side - Profile Detail Panel */}
             {selectedApplicant && (
-              <div className="flex-1 flex-shrink-0">
-                <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-8 sticky top-6 h-full">
+              <div className="flex-1 min-w-[400px] flex-shrink-0 flex flex-col">
+                <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-8 flex-1 overflow-y-auto" style={{
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: '#CBD5E0 #F7FAFC'
+                }}>
                   {/* Top Section */}
                   <div className="flex items-start justify-between mb-6">
                     {/* Left Side - Avatar and Info */}
