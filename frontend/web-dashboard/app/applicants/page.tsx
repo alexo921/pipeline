@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   Bell, 
   Edit3, 
@@ -34,10 +34,14 @@ const ApplicantsPage = () => {
   const [authChecked, setAuthChecked] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('all');
+  const [selectedFilter, setSelectedFilter] = useState(searchParams.get('filter') || 'all');
   const [sortBy, setSortBy] = useState('recent');
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedApplicant, setSelectedApplicant] = useState<any>(null);
+  const [showOpenPositions, setShowOpenPositions] = useState(false);
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const filterDropdownRef = useRef<HTMLDivElement>(null);
   
   // Job information from URL parameters
   const [jobInfo, setJobInfo] = useState({
@@ -107,6 +111,152 @@ const ApplicantsPage = () => {
       matchScore: 85,
       skills: ["Clinical Procedures", "Administrative", "Customer Service"],
       isMatched: false
+    },
+    {
+      id: 6,
+      name: "Sarah Johnson",
+      role: "Registered Nurse",
+      experience: "3+ years experience",
+      location: "Hartford, CT",
+      status: "Applied",
+      appliedDate: "6 days ago",
+      matchScore: 78,
+      skills: ["Emergency Care", "Teamwork", "Communication"],
+      isMatched: true
+    },
+    {
+      id: 7,
+      name: "Michael Chen",
+      role: "Registered Nurse",
+      experience: "7+ years experience",
+      location: "Bridgeport, CT",
+      status: "Applied",
+      appliedDate: "7 days ago",
+      matchScore: 91,
+      skills: ["Critical Care", "Leadership", "Patient Advocacy"],
+      isMatched: false
+    },
+    {
+      id: 8,
+      name: "Emily Rodriguez",
+      role: "Registered Nurse",
+      experience: "4+ years experience",
+      location: "Stamford, CT",
+      status: "Applied",
+      appliedDate: "8 days ago",
+      matchScore: 83,
+      skills: ["Pediatric Care", "Family Support", "Documentation"],
+      isMatched: true
+    },
+    {
+      id: 9,
+      name: "David Thompson",
+      role: "Registered Nurse",
+      experience: "6+ years experience",
+      location: "Waterbury, CT",
+      status: "Applied",
+      appliedDate: "9 days ago",
+      matchScore: 88,
+      skills: ["Surgical Care", "Quality Assurance", "Training"],
+      isMatched: false
+    },
+    {
+      id: 10,
+      name: "Lisa Anderson",
+      role: "Registered Nurse",
+      experience: "2+ years experience",
+      location: "Norwalk, CT",
+      status: "Applied",
+      appliedDate: "10 days ago",
+      matchScore: 76,
+      skills: ["Basic Care", "Learning", "Adaptability"],
+      isMatched: true
+    }
+  ];
+
+  // Tag system based on PDF structure - Healthcare categories
+  const tagCategories = {
+    clinical: {
+      name: "Clinical Excellence",
+      color: "bg-blue-100 text-blue-800 border-blue-200",
+      tags: ["Patient Care", "Critical Care", "Clinical Procedures", "Assessment", "Surgical Care", "Emergency Care", "Pediatric Care", "Rehabilitation"]
+    },
+    leadership: {
+      name: "Leadership & Management", 
+      color: "bg-purple-100 text-purple-800 border-purple-200",
+      tags: ["Leadership", "Team Management", "Training", "Quality Assurance", "Patient Advocacy"]
+    },
+    communication: {
+      name: "Communication & Collaboration",
+      color: "bg-green-100 text-green-800 border-green-200", 
+      tags: ["Communication", "Teamwork", "Family Support", "Patient Education", "Documentation"]
+    },
+    adaptability: {
+      name: "Adaptability & Growth",
+      color: "bg-orange-100 text-orange-800 border-orange-200",
+      tags: ["Adaptability", "Problem Solving", "Learning", "Basic Care"]
+    },
+    administrative: {
+      name: "Administrative & Support",
+      color: "bg-gray-100 text-gray-800 border-gray-200",
+      tags: ["Administrative", "Customer Service"]
+    }
+  };
+
+  // Function to categorize skills into tags
+  const categorizeSkills = (skills: string[]) => {
+    const categorizedTags: { category: string; tags: string[]; color: string }[] = [];
+    
+    Object.entries(tagCategories).forEach(([key, category]) => {
+      const matchingTags = skills.filter(skill => category.tags.includes(skill));
+      if (matchingTags.length > 0) {
+        categorizedTags.push({
+          category: category.name,
+          tags: matchingTags,
+          color: category.color
+        });
+      }
+    });
+    
+    return categorizedTags;
+  };
+
+  // Demo open positions data
+  const openPositions = [
+    {
+      id: '1',
+      title: 'Registered Nurse I',
+      company: 'St. Mary\'s Health Center',
+      applicantsCount: 15,
+      isActive: true
+    },
+    {
+      id: '2', 
+      title: 'Senior Registered Nurse',
+      company: 'St. Mary\'s Health Center',
+      applicantsCount: 8,
+      isActive: false
+    },
+    {
+      id: '3',
+      title: 'Nurse Manager',
+      company: 'St. Mary\'s Health Center', 
+      applicantsCount: 12,
+      isActive: false
+    },
+    {
+      id: '4',
+      title: 'ICU Registered Nurse',
+      company: 'St. Mary\'s Health Center',
+      applicantsCount: 6,
+      isActive: false
+    },
+    {
+      id: '5',
+      title: 'Emergency Room Nurse',
+      company: 'St. Mary\'s Health Center',
+      applicantsCount: 9,
+      isActive: false
     }
   ];
 
@@ -120,20 +270,89 @@ const ApplicantsPage = () => {
     console.log('Contacting:', applicant.name);
   };
 
+  const handleJobSwitch = (position: any) => {
+    setJobInfo({
+      id: position.id,
+      title: position.title,
+      company: position.company
+    });
+    setShowOpenPositions(false);
+    // Clear selected applicant when switching jobs
+    setSelectedApplicant(null);
+  };
+
+  const toggleOpenPositions = () => {
+    setShowOpenPositions(!showOpenPositions);
+  };
+
+  const toggleFilterDropdown = () => {
+    setShowFilterDropdown(!showFilterDropdown);
+  };
+
+  const handleFilterChange = (filter: string) => {
+    setSelectedFilter(filter);
+    setShowFilterDropdown(false);
+  };
+
+  // Filter options
+  const filterOptions = [
+    { value: 'all', label: 'All Applicants' },
+    { value: 'matched', label: 'Matched Only' },
+    { value: 'unmatched', label: 'Unmatched Only' }
+  ];
+
   // Disable auth for development
   useEffect(() => {
     setAuthChecked(true);
     setIsAuthorized(true);
   }, []);
 
+  // Handle filter parameter from URL
+  useEffect(() => {
+    const filterParam = searchParams.get('filter');
+    if (filterParam && ['all', 'matched', 'unmatched'].includes(filterParam)) {
+      setSelectedFilter(filterParam);
+    }
+  }, [searchParams]);
+
+  // Handle click outside to close dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowOpenPositions(false);
+      }
+      if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target as Node)) {
+        setShowFilterDropdown(false);
+      }
+    };
+
+    if (showOpenPositions || showFilterDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showOpenPositions, showFilterDropdown]);
+
   // Filter and sort applicants
   const filteredApplicants = demoApplicants
     .filter(applicant => {
+      // Search filter
       if (searchTerm) {
-        return applicant.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-               applicant.role.toLowerCase().includes(searchTerm.toLowerCase()) || 
-               applicant.location.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = applicant.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                             applicant.role.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                             applicant.location.toLowerCase().includes(searchTerm.toLowerCase());
+        if (!matchesSearch) return false;
       }
+      
+      // Match status filter
+      if (selectedFilter === 'matched') {
+        return applicant.isMatched === true;
+      } else if (selectedFilter === 'unmatched') {
+        return applicant.isMatched === false;
+      }
+      
       return true;
     })
     .sort((a, b) => {
@@ -185,21 +404,103 @@ const ApplicantsPage = () => {
             
             {/* Header Actions */}
             <div className="flex items-center space-x-4">
-              <button className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors">
-                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
-                  <img src="/open_jobs.svg" alt="Open Jobs" className="w-5 h-5" />
-                </div>
-                <span className="text-[#7691A4] font-medium">Open Positions</span>
-                <ChevronDown className="w-4 h-4 text-[#7691A4]" />
-              </button>
+              <div className="relative" ref={dropdownRef}>
+                <button 
+                  onClick={toggleOpenPositions}
+                  className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
+                    <img src="/open_jobs.svg" alt="Open Jobs" className="w-5 h-5" />
+                  </div>
+                  <span className="text-[#7691A4] font-medium">Open Positions</span>
+                  <ChevronDown className={`w-4 h-4 text-[#7691A4] transition-transform ${showOpenPositions ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {/* Dropdown Menu */}
+                {showOpenPositions && (
+                  <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                    <div className="p-4">
+                      <h3 className="text-lg font-bold text-[#01253F] mb-3">Open Positions</h3>
+                      <div className="space-y-2">
+                        {openPositions.map((position) => (
+                          <button
+                            key={position.id}
+                            onClick={() => handleJobSwitch(position)}
+                            className={`w-full text-left p-3 rounded-lg transition-colors ${
+                              position.isActive 
+                                ? 'bg-[#2466D0] text-white' 
+                                : 'hover:bg-gray-50 text-[#01253F]'
+                            }`}
+                          >
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <p className="font-bold text-sm">{position.title}</p>
+                                <p className={`text-xs ${position.isActive ? 'text-blue-100' : 'text-gray-500'}`}>
+                                  {position.company}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <p className={`text-xs font-medium ${position.isActive ? 'text-blue-100' : 'text-gray-500'}`}>
+                                  {position.applicantsCount} applicants
+                                </p>
+                                {position.isActive && (
+                                  <p className="text-xs text-blue-100">Current</p>
+                                )}
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
               
-              <button className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors">
-                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
-                  <img src="/filter_positions.svg" alt="Filter" className="w-5 h-5" />
-                </div>
-                <span>Filters</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
+              <div className="relative" ref={filterDropdownRef}>
+                <button 
+                  onClick={toggleFilterDropdown}
+                  className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
+                    <img src="/filter_positions.svg" alt="Filter" className="w-5 h-5" />
+                  </div>
+                  <span>Filters</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${showFilterDropdown ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {/* Filter Dropdown Menu */}
+                {showFilterDropdown && (
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                    <div className="p-4">
+                      <h3 className="text-lg font-bold text-[#01253F] mb-3">Filter Applicants</h3>
+                      <div className="space-y-2">
+                        {filterOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            onClick={() => handleFilterChange(option.value)}
+                            className={`w-full text-left p-3 rounded-lg transition-colors ${
+                              selectedFilter === option.value 
+                                ? 'bg-[#2466D0] text-white' 
+                                : 'hover:bg-gray-50 text-[#01253F]'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium text-sm">{option.label}</span>
+                              {selectedFilter === option.value && (
+                                <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center">
+                                  <svg className="w-2.5 h-2.5 text-[#2466D0]" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                  </svg>
+                                </div>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
               
               <button className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors">
                 <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
@@ -215,7 +516,10 @@ const ApplicantsPage = () => {
             {/* Left Side - Applicants List */}
             <div className="flex-1 max-w-lg">
               {/* Applicants List */}
-              <div className="space-y-4">
+              <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2" style={{
+                scrollbarWidth: 'thin',
+                scrollbarColor: '#CBD5E0 #F7FAFC'
+              }}>
                 {filteredApplicants.map((applicant) => (
                   <div 
                     key={applicant.id} 
@@ -356,17 +660,23 @@ const ApplicantsPage = () => {
                   
                   {/* Skills Section */}
                   <div>
-                    <h4 className="text-lg font-bold text-gray-600 mb-4">Skills</h4>
-                    <div className="flex flex-wrap gap-3">
-                      <span className="px-4 py-2 border-2 border-gray-400 rounded-full text-base text-gray-800 font-medium">
-                        Leadership
-                      </span>
-                      <span className="px-4 py-2 border-2 border-gray-400 rounded-full text-base text-gray-800 font-medium">
-                        Safety
-                      </span>
-                      <span className="px-4 py-2 border-2 border-gray-400 rounded-full text-base text-gray-800 font-medium">
-                        Adaptability
-                      </span>
+                    <h4 className="text-lg font-bold text-gray-600 mb-4">Skills & Competencies</h4>
+                    <div className="space-y-4">
+                      {categorizeSkills(selectedApplicant.skills).map((category, index) => (
+                        <div key={index}>
+                          <h5 className="text-sm font-semibold text-gray-500 mb-2">{category.category}</h5>
+                          <div className="flex flex-wrap gap-2">
+                            {category.tags.map((tag, tagIndex) => (
+                              <span 
+                                key={tagIndex}
+                                className={`px-3 py-1 rounded-full text-sm font-medium border ${category.color}`}
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>

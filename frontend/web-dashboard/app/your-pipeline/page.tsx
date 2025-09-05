@@ -410,6 +410,90 @@ const YourPipelinePage = () => {
     }
   ];
 
+  // Analytics data based on PDF structure
+  const analyticsData = {
+    // Hiring Health Metrics (Left Column - 2x2 Grid)
+    orientationFillForecast: {
+      rolesOnTrack: 12,
+      totalRoles: 15,
+      rolesAtRisk: 3,
+      percentage: 80, // 12/15 = 80%
+      threshold: 'amber', // amber 80-89%
+      orientationDaysAway: 5 // <7 days triggers alert
+    },
+    strongMatches: {
+      percentage: 86,
+      timeframe: 'this month',
+      threshold: 'green' // green ≥75%
+    },
+    retentionOutcomes: {
+      percentage: 72,
+      timeframe: 'last 90d',
+      threshold: 'green' // green ≥70%
+    },
+    pulseTrends: {
+      percentage: 34,
+      timeframe: 'last 30d',
+      threshold: 'green' // green stable/up (≥+5%)
+    },
+    
+    // Workforce Stability Metrics (Right Column)
+    earlyChurnRisk: {
+      percentage: 15,
+      hiresAtRisk: 4,
+      turnoverCost: 40000,
+      threshold: 'amber' // green ≤10%, amber 11-24%, red ≥25%
+    },
+    retentionForecast: {
+      percentage: 52,
+      timeframe: '30d',
+      threshold: 'red' // green ≥70%, amber 60-69%, red <60%
+    },
+    workEnvironmentScore: {
+      score: 77,
+      maxScore: 100,
+      threshold: 'green' // green ≥75, amber 65-74, red <65
+    },
+    cultureAlignment: {
+      percentage: 58,
+      threshold: 'red' // green ≥70%, amber 60-69%, red <60%
+    },
+    roiSummary: {
+      saved: 24000,
+      timeSaved: 200,
+      hiresRetained: 6,
+      threshold: 'green' // neutral $0-10K, green >$10K
+    }
+  };
+
+  // Helper functions for color coding and thresholds
+  const getThresholdColor = (threshold: string) => {
+    switch (threshold) {
+      case 'green': return 'bg-green-500';
+      case 'amber': return 'bg-yellow-500';
+      case 'red': return 'bg-red-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const getThresholdTextColor = (threshold: string) => {
+    switch (threshold) {
+      case 'green': return 'text-green-600';
+      case 'amber': return 'text-yellow-600';
+      case 'red': return 'text-red-600';
+      default: return 'text-gray-600';
+    }
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
   // Demo functions
   const handleNotificationClick = () => {
     setShowNotification(!showNotification);
@@ -427,8 +511,13 @@ const YourPipelinePage = () => {
   };
 
   const handleViewProfile = (person: any) => {
-    setSelectedMatch(person);
-    setShowProfileModal(true);
+    // Navigate to applicants page with matched filter set
+    router.push('/applicants?filter=matched');
+  };
+
+  const handleViewApplicantProfile = (applicant: any) => {
+    // Navigate to applicants page without filter (show all applicants)
+    router.push('/applicants');
   };
 
   const handlePageChange = (page: number) => {
@@ -572,60 +661,79 @@ const YourPipelinePage = () => {
               </div>
             </div>
             
+            {/* Alert Banners for Critical Thresholds */}
+            {analyticsData.orientationFillForecast.orientationDaysAway < 7 && analyticsData.orientationFillForecast.percentage < 90 && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                  <span className="text-sm font-medium text-red-800">
+                    Orientation in {analyticsData.orientationFillForecast.orientationDaysAway} days with only {analyticsData.orientationFillForecast.percentage}% forecast fill rate
+                  </span>
+                </div>
+              </div>
+            )}
+            
             <div className="flex flex-col xl:flex-row gap-6">
-              {/* Left Side - 2x2 Metric Cards Grid */}
+              {/* Left Side - Hiring Health Metrics (2x2 Grid) */}
               <div className="flex-shrink-0 xl:w-1/2 w-full">
                 <div className="grid grid-cols-2 gap-4 w-full max-w-full xl:max-w-[500px] mx-auto xl:mx-0">
-                  {/* Environment Score Card */}
+                  {/* Orientation Fill Forecast Card */}
                   <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
                     <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-sm font-medium text-[#01253F] leading-tight">Environment<br />Score</h3>
+                      <h3 className="text-sm font-medium text-[#01253F] leading-tight">Orientation Fill<br />Forecast</h3>
                       <div className="relative group">
                         <Info className="w-4 h-4 text-gray-400 cursor-help" />
                         <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                          Measures the overall workplace environment quality and employee satisfaction
+                          % of roles forecast to fill by orientation (PPP_Match_Target)
                           <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-baseline">
-                      <span className="text-3xl font-bold text-[#01253F]">77</span>
-                      <span className="text-lg text-gray-400 ml-1">/100</span>
-                    </div>
-                  </div>
-
-                  {/* Continuity of Care Index Card */}
-                  <div className="bg-white rounded-[21px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-sm font-medium text-[#01253F] leading-tight">Continuity of<br />Care Index</h3>
-                      <div className="relative group">
-                        <Info className="w-4 h-4 text-gray-400 cursor-help" />
-                        <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                          Tracks how consistently patients receive care from the same healthcare providers
-                          <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                        </div>
-                      </div>
+                    <div className="text-sm text-gray-600 mb-2">
+                      {analyticsData.orientationFillForecast.rolesOnTrack} of {analyticsData.orientationFillForecast.totalRoles} roles on track ({analyticsData.orientationFillForecast.rolesAtRisk} at risk)
                     </div>
                     <div className="flex items-baseline">
-                      <span className="text-3xl font-bold text-[#01253F]">64</span>
-                      <span className="text-lg text-gray-400 ml-1">/100</span>
+                      <span className="text-3xl font-bold text-[#01253F]">{analyticsData.orientationFillForecast.percentage}%</span>
                     </div>
                   </div>
 
                   {/* Strong Matches Card */}
-                  <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
+                  <div className="bg-white rounded-[21px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-sm font-medium text-[#01253F] leading-tight">Strong Matches</h3>
                       <div className="relative group">
                         <Info className="w-4 h-4 text-gray-400 cursor-help" />
                         <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                          Percentage of job candidates with high compatibility scores
+                          % of surfaced candidates rated as strong fit + predicted to stay ≥30d
                           <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                         </div>
                       </div>
                     </div>
-                    <div>
-                      <span className="text-3xl font-bold text-[#01253F]">86%</span>
+                    <div className="text-sm text-gray-600 mb-2">
+                      {analyticsData.strongMatches.percentage}% strong matches {analyticsData.strongMatches.timeframe}
+                    </div>
+                    <div className="flex items-baseline">
+                      <span className="text-3xl font-bold text-[#01253F]">{analyticsData.strongMatches.percentage}%</span>
+                    </div>
+                  </div>
+
+                  {/* Retention Outcomes Card */}
+                  <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
+                    <div className="flex items-start justify-between mb-4">
+                      <h3 className="text-sm font-medium text-[#01253F] leading-tight">Retention<br />Outcomes</h3>
+                      <div className="relative group">
+                        <Info className="w-4 h-4 text-gray-400 cursor-help" />
+                        <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                          % of new hires who stayed ≥30 days (observed vs predicted)
+                          <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-sm text-gray-600 mb-2">
+                      {analyticsData.retentionOutcomes.percentage}% of hires stayed ≥30d ({analyticsData.retentionOutcomes.timeframe})
+                    </div>
+                    <div className="flex items-baseline">
+                      <span className="text-3xl font-bold text-[#01253F]">{analyticsData.retentionOutcomes.percentage}%</span>
                     </div>
                   </div>
 
@@ -636,74 +744,179 @@ const YourPipelinePage = () => {
                       <div className="relative group">
                         <Info className="w-4 h-4 text-gray-400 cursor-help" />
                         <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                          Positive trend in overall organizational performance and engagement
+                          Average morale trend from weekly caregiver check-ins
                           <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                         </div>
                       </div>
                     </div>
-                    <div>
-                      <span className="text-3xl font-bold text-[#01253F]">+34%</span>
+                    <div className="text-sm text-gray-600 mb-2">
+                      +{analyticsData.pulseTrends.percentage}% morale trend ({analyticsData.pulseTrends.timeframe})
+                    </div>
+                    <div className="flex items-baseline">
+                      <span className="text-3xl font-bold text-[#01253F]">+{analyticsData.pulseTrends.percentage}%</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Right Side - Insights Section */}
-              <div className="xl:w-3/5 w-full bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-6 h-[385px] min-w-[300px] mt-4 xl:mt-0 xl:-ml-12">
-                <div className="flex items-center justify-between mb-2">
-                  <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Insights</h2>
+              {/* Right Side - Workforce Stability Section */}
+              <div className="xl:w-3/5 w-full bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-6 h-[385px] min-w-[300px] mt-4 xl:mt-0 xl:-ml-12 flex flex-col">
+                <div className="flex items-center justify-between mb-2 flex-shrink-0">
+                  <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Workforce Stability</h2>
                 </div>
                 
-                {/* Progress Bars */}
-                <div className="space-y-6">
-                  <div>
+                {/* Scrollable Content Area */}
+                <div className="flex-1 overflow-y-auto pr-2" style={{
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: '#CBD5E0 #F7FAFC'
+                }}>
+                  {/* Alert Banner for High Risk Metrics */}
+                  {analyticsData.earlyChurnRisk.threshold === 'red' && (
+                    <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                        <span className="text-sm font-medium text-red-800">
+                          High churn risk: {analyticsData.earlyChurnRisk.percentage}% of hires flagged
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {analyticsData.retentionForecast.threshold === 'red' && (
+                    <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                        <span className="text-sm font-medium text-red-800">
+                          Low retention forecast: Only {analyticsData.retentionForecast.percentage}% projected to stay
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Workforce Stability Metrics */}
+                  <div className="space-y-3">
+                  {/* Early Churn Risk */}
+                  <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Work Environment Score</span>
-                      <span className="text-sm text-gray-600">74%</span>
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium text-gray-700">Early Churn Risk</span>
+                        <div className="relative group ml-2">
+                          <Info className="w-3 h-3 text-gray-400 cursor-help" />
+                          <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                            % of active new hires flagged for early churn risk
+                            <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.earlyChurnRisk.threshold)}`}>
+                        {analyticsData.earlyChurnRisk.hiresAtRisk} hires at risk (~{formatCurrency(analyticsData.earlyChurnRisk.turnoverCost)} turnover cost)
+                      </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="h-2 rounded-full" style={{ width: '74%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                      <div 
+                        className={`h-2 rounded-full ${getThresholdColor(analyticsData.earlyChurnRisk.threshold)}`}
+                        style={{ width: `${analyticsData.earlyChurnRisk.percentage}%` }}
+                      ></div>
                     </div>
                   </div>
                   
-                  <div>
+                  {/* Retention Forecast */}
+                  <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">High Retention Forecast</span>
-                      <span className="text-sm text-gray-600">52%</span>
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium text-gray-700">Retention Forecast</span>
+                        <div className="relative group ml-2">
+                          <Info className="w-3 h-3 text-gray-400 cursor-help" />
+                          <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                            % of current hires projected to stay ≥30d (based on RLS)
+                            <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.retentionForecast.threshold)}`}>
+                        {analyticsData.retentionForecast.percentage}% projected to stay {analyticsData.retentionForecast.timeframe}
+                      </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="h-2 rounded-full" style={{ width: '52%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                      <div 
+                        className={`h-2 rounded-full ${getThresholdColor(analyticsData.retentionForecast.threshold)}`}
+                        style={{ width: `${analyticsData.retentionForecast.percentage}%` }}
+                      ></div>
                     </div>
                   </div>
                   
-                  <div>
+                  {/* Work Environment Score */}
+                  <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Behavioral Risk Flags</span>
-                      <span className="text-sm text-gray-600">36%</span>
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium text-gray-700">Work Environment Score</span>
+                        <div className="relative group ml-2">
+                          <Info className="w-3 h-3 text-gray-400 cursor-help" />
+                          <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                            Composite score of morale + fit signals (updated weekly)
+                            <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.workEnvironmentScore.threshold)}`}>
+                        {analyticsData.workEnvironmentScore.score} / {analyticsData.workEnvironmentScore.maxScore}
+                      </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="h-2 rounded-full" style={{ width: '36%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                      <div 
+                        className={`h-2 rounded-full ${getThresholdColor(analyticsData.workEnvironmentScore.threshold)}`}
+                        style={{ width: `${analyticsData.workEnvironmentScore.score}%` }}
+                      ></div>
                     </div>
                   </div>
                   
-                  <div>
+                  {/* Culture Alignment */}
+                  <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Culture Fit Alignment</span>
-                      <span className="text-sm text-gray-600">36%</span>
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium text-gray-700">Culture Alignment</span>
+                        <div className="relative group ml-2">
+                          <Info className="w-3 h-3 text-gray-400 cursor-help" />
+                          <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                            % of recent hires aligned with your facility's culture profile
+                            <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.cultureAlignment.threshold)}`}>
+                        {analyticsData.cultureAlignment.percentage}% aligned
+                      </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="h-2 rounded-full" style={{ width: '36%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
+                      <div 
+                        className={`h-2 rounded-full ${getThresholdColor(analyticsData.cultureAlignment.threshold)}`}
+                        style={{ width: `${analyticsData.cultureAlignment.percentage}%` }}
+                      ></div>
                     </div>
                   </div>
                   
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">Team Collaboration Score</span>
-                      <span className="text-sm text-gray-600">28%</span>
+                  {/* ROI Summary Badge */}
+                  <div className="cursor-pointer hover:bg-gray-50 p-3 rounded-lg transition-colors border-2 border-dashed border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <span className="text-sm font-medium text-gray-700">ROI Summary</span>
+                        <div className="relative group ml-2">
+                          <Info className="w-3 h-3 text-gray-400 cursor-help" />
+                          <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                            ROI from reduced turnover + faster fills (export full report)
+                            <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        analyticsData.roiSummary.threshold === 'green' 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        {formatCurrency(analyticsData.roiSummary.saved)} saved, {analyticsData.roiSummary.timeSaved} hrs time saved, {analyticsData.roiSummary.hiresRetained} hires retained
+                      </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div className="h-2 rounded-full" style={{ width: '28%', background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}></div>
-                    </div>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -868,7 +1081,7 @@ const YourPipelinePage = () => {
                         
                         <div className="flex items-center">
                           <button 
-                            onClick={() => handleViewProfile(applicant)}
+                            onClick={() => handleViewApplicantProfile(applicant)}
                             className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors mt-8"
                           >
                             View Profile
