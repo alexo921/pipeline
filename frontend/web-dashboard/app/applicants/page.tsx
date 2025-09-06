@@ -294,6 +294,42 @@ const ApplicantsPage = () => {
     setShowFilterDropdown(false);
   };
 
+  // CSV Export functionality
+  const convertToCSV = (data: any[]) => {
+    if (data.length === 0) return '';
+    
+    const headers = ['Name', 'Role', 'Experience', 'Location', 'Status', 'Applied Date', 'Match Score', 'Skills', 'Matched'];
+    const csvContent = [
+      headers.join(','),
+      ...data.map(applicant => [
+        `"${applicant.name}"`,
+        `"${applicant.role}"`,
+        `"${applicant.experience}"`,
+        `"${applicant.location}"`,
+        `"${applicant.status}"`,
+        `"${applicant.appliedDate}"`,
+        applicant.matchScore,
+        `"${applicant.skills.join('; ')}"`,
+        applicant.isMatched ? 'Yes' : 'No'
+      ].join(','))
+    ].join('\n');
+    
+    return csvContent;
+  };
+
+  const handleExportProfiles = () => {
+    const csvContent = convertToCSV(filteredApplicants);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `applicants_${jobInfo.title.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // Filter options
   const filterOptions = [
     { value: 'all', label: 'All Applicants' },
@@ -369,23 +405,24 @@ const ApplicantsPage = () => {
 
   return (
     <BaseLayout>
-      {/* Admin Navigation - Only show for admin users */}
-      {user?.role === 'ADMIN' && <AdminDashboardNav />}
+      <div className="flex flex-col min-h-0 h-full">
+        {/* Admin Navigation - Only show for admin users */}
+        {user?.role === 'ADMIN' && <AdminDashboardNav />}
 
-      {/* Page Header */}
-      <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
-        <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
-          <h1 className="text-[76.6971px] font-bold leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
-            Applicants
-          </h1>
-          {user?.role === 'ADMIN' && (
-            <p className="text-sm text-blue-600 font-medium text-center lg:text-left mt-2">Admin Access - View All Applicants</p>
-          )}
+        {/* Page Header */}
+        <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
+          <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
+            <h1 className="text-[76.6971px] font-bold leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
+              Applicants
+            </h1>
+            {user?.role === 'ADMIN' && (
+              <p className="text-sm text-blue-600 font-medium text-center lg:text-left mt-2">Admin Access - View All Applicants</p>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12" style={{ position: 'relative', zIndex: 1 }}>
+        {/* Main Content */}
+        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12 flex-1" style={{ position: 'relative', zIndex: 1 }}>
         
         {/* Main Company Container */}
         <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_0px_20px_rgba(0,0,0,0.08)] p-2 md:p-4 relative">
@@ -464,7 +501,7 @@ const ApplicantsPage = () => {
                   <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
                     <img src="/filter_positions.svg" alt="Filter" className="w-5 h-5" />
                   </div>
-                  <span>Filters</span>
+                  <span>{filterOptions.find(option => option.value === selectedFilter)?.label || 'Filters'}</span>
                   <ChevronDown className={`w-4 h-4 transition-transform ${showFilterDropdown ? 'rotate-180' : ''}`} />
                 </button>
                 
@@ -502,7 +539,10 @@ const ApplicantsPage = () => {
                 )}
               </div>
               
-              <button className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors">
+              <button 
+                onClick={handleExportProfiles}
+                className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors"
+              >
                 <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
                   <img src="/export_positions.svg" alt="Export" className="w-5 h-5" />
                 </div>
@@ -615,7 +655,7 @@ const ApplicantsPage = () => {
                     
                     {/* Right Side - Express Interest Button */}
                     <button className="bg-[#2466D0] hover:bg-[#357ABD] text-white px-6 py-2 rounded-lg font-bold text-base transition-colors whitespace-nowrap">
-                      Express Interest
+                      Match
                     </button>
                   </div>
                   
@@ -624,7 +664,7 @@ const ApplicantsPage = () => {
                   
                   {/* Bio Section */}
                   <div className="mb-8">
-                    <h4 className="text-lg font-bold text-gray-600 mb-4">Bio</h4>
+                    <h4 className="text-lg font-bold text-gray-600 mb-4">Pip Summary</h4>
                     <p className="text-base text-gray-800 leading-relaxed">
                       Community Focused. Care Driven. Join Something Health, where your future is as promising as the care we provide. Our commitment to each other, our patients, and our community is more than a mission.
                     </p>
@@ -663,22 +703,16 @@ const ApplicantsPage = () => {
                   
                   {/* Skills Section */}
                   <div>
-                    <h4 className="text-lg font-bold text-gray-600 mb-4">Skills & Competencies</h4>
-                    <div className="space-y-4">
+                    <div className="flex flex-wrap gap-2">
                       {categorizeSkills(selectedApplicant.skills).map((category, index) => (
-                        <div key={index}>
-                          <h5 className="text-sm font-semibold text-gray-500 mb-2">{category.category}</h5>
-                          <div className="flex flex-wrap gap-2">
-                            {category.tags.map((tag, tagIndex) => (
-                              <span 
-                                key={tagIndex}
-                                className={`px-3 py-1 rounded-full text-sm font-medium border ${category.color}`}
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                        category.tags.map((tag, tagIndex) => (
+                          <span 
+                            key={`${index}-${tagIndex}`}
+                            className={`px-3 py-1 rounded-full text-sm font-medium border ${category.color}`}
+                          >
+                            {tag}
+                          </span>
+                        ))
                       ))}
                     </div>
                   </div>
@@ -687,6 +721,7 @@ const ApplicantsPage = () => {
             )}
           </div>
         </div>
+      </div>
       </div>
     </BaseLayout>
   );
