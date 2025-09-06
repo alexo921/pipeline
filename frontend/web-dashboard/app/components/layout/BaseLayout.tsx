@@ -44,10 +44,10 @@ export default function BaseLayout({
       <div 
         className="absolute pointer-events-none hidden md:block overflow-hidden"
         style={{
-          top: '10%',
+          top: '15%',
           right: '-50px',
           width: '400px',
-          height: '1600px',
+          height: '1000px',
           background: `
             radial-gradient(
               ellipse at center,
