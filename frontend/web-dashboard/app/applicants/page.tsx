@@ -613,7 +613,7 @@ const ApplicantsPage = () => {
             </div>
           </div>
           
-          <div className="flex gap-8 h-[calc(100vh-300px)] min-h-[600px]">
+          <div className="flex gap-8 h-[calc(110vh-300px)] min-h-[660px]">
             {/* Left Side - Applicants List */}
             <div className="flex-1 max-w-lg flex flex-col">
               {/* Applicants List */}
