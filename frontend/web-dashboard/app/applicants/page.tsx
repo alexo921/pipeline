@@ -665,18 +665,6 @@ const ApplicantsPage = () => {
                             </div>
                           </div>
                         )}
-                        
-                        {/* View Profile Button */}
-                        <button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            // TODO: Link to my-pipeline page
-                            console.log('Navigate to my-pipeline for:', applicant.name);
-                          }}
-                          className="bg-[#2CB3BF] text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
-                        >
-                          View Profile
-                        </button>
                       </div>
                     </div>
                   </div>
