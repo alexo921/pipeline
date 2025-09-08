@@ -40,6 +40,7 @@ const ApplicantsPage = () => {
   const [selectedApplicant, setSelectedApplicant] = useState<any>(null);
   const [showOpenPositions, setShowOpenPositions] = useState(false);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const [showExportDropdown, setShowExportDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const filterDropdownRef = useRef<HTMLDivElement>(null);
   
@@ -289,6 +290,29 @@ const ApplicantsPage = () => {
     setShowFilterDropdown(!showFilterDropdown);
   };
 
+  const handleExportProfilesDropdownToggle = () => {
+    setShowExportDropdown(!showExportDropdown);
+  };
+
+  const handleExportSelection = (selection: 'all' | 'matched' | 'unmatched') => {
+    const dataForExport = demoApplicants.filter(applicant => {
+      if (selection === 'matched') return applicant.isMatched;
+      if (selection === 'unmatched') return !applicant.isMatched;
+      return true;
+    });
+    const csv = convertToCSV(dataForExport);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `applicants_${selection}_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setShowExportDropdown(false);
+  };
+
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
     setShowFilterDropdown(false);
@@ -343,11 +367,27 @@ const ApplicantsPage = () => {
     setIsAuthorized(true);
   }, []);
 
-  // Handle filter parameter from URL
+  // Handle filter/applicantName/selectFirst parameters from URL
   useEffect(() => {
     const filterParam = searchParams.get('filter');
+    const applicantNameParam = searchParams.get('applicantName');
+    const selectFirstParam = searchParams.get('selectFirst');
+
     if (filterParam && ['all', 'matched', 'unmatched'].includes(filterParam)) {
       setSelectedFilter(filterParam);
+    }
+
+    // Preselect by applicantName if provided
+    if (applicantNameParam) {
+      const found = demoApplicants.find(a => a.name.toLowerCase() === applicantNameParam.toLowerCase());
+      if (found) {
+        setSelectedApplicant(found);
+      }
+    } else if (selectFirstParam === 'true') {
+      // Auto-select first applicant
+      if (filteredApplicants.length > 0) {
+        setSelectedApplicant(filteredApplicants[0]);
+      }
     }
   }, [searchParams]);
 
@@ -413,7 +453,7 @@ const ApplicantsPage = () => {
         <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
           <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
             <h1 className="text-[76.6971px] font-bold leading-[115%] text-[#01253F] font-baloo text-center lg:text-left">
-              Applicants
+              Hiring Engine
             </h1>
             {user?.role === 'ADMIN' && (
               <p className="text-sm text-blue-600 font-medium text-center lg:text-left mt-2">Admin Access - View All Applicants</p>
@@ -504,8 +544,7 @@ const ApplicantsPage = () => {
                   <span>{filterOptions.find(option => option.value === selectedFilter)?.label || 'Filters'}</span>
                   <ChevronDown className={`w-4 h-4 transition-transform ${showFilterDropdown ? 'rotate-180' : ''}`} />
                 </button>
-                
-                {/* Filter Dropdown Menu */}
+
                 {showFilterDropdown && (
                   <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                     <div className="p-4">
@@ -538,17 +577,39 @@ const ApplicantsPage = () => {
                   </div>
                 )}
               </div>
+
+              {/* Export Profiles dropdown (replacing trailing icon and adding All/Matched/Unmatched) */}
+              <div className="relative">
+                <button 
+                  onClick={handleExportProfilesDropdownToggle}
+                  className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
+                    <img src="/export_positions.svg" alt="Export" className="w-5 h-5" />
+                  </div>
+                  <span>Export Profiles</span>
+                </button>
+                {showExportDropdown && (
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                    <div className="p-4">
+                      <h3 className="text-lg font-bold text-[#01253F] mb-3">Export Which Profiles?</h3>
+                      <div className="space-y-2">
+                        {['all','matched','unmatched'].map(option => (
+                          <button
+                            key={option}
+                            onClick={() => handleExportSelection(option as 'all' | 'matched' | 'unmatched')}
+                            className="w-full text-left p-3 rounded-lg transition-colors hover:bg-gray-50 text-[#01253F]"
+                          >
+                            <span className="font-medium text-sm">{option === 'all' ? 'All' : option === 'matched' ? 'Matched' : 'Unmatched'}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
               
-              <button 
-                onClick={handleExportProfiles}
-                className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md text-[#7691A4] hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center justify-center w-8 h-8 bg-white rounded-md">
-                  <img src="/export_positions.svg" alt="Export" className="w-5 h-5" />
-                </div>
-                <span>Export Profiles</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
+              {/* Replaced by dropdown above */}
             </div>
           </div>
           
@@ -653,10 +714,19 @@ const ApplicantsPage = () => {
                       </div>
                     </div>
                     
-                    {/* Right Side - Express Interest Button */}
-                    <button className="bg-[#2466D0] hover:bg-[#357ABD] text-white px-6 py-2 rounded-lg font-bold text-base transition-colors whitespace-nowrap">
-                      Match
-                    </button>
+                    {/* Right Side - Match Tag or blank */}
+                    {selectedApplicant.isMatched ? (
+                      <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 space-x-2 whitespace-nowrap">
+                        <span className="text-gray-600 font-medium text-sm">Matched</span>
+                        <div className="w-4 h-4 bg-[#2466D0] rounded-full flex items-center justify-center">
+                          <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                    ) : (
+                      <div />
+                    )}
                   </div>
                   
                   {/* Horizontal Divider */}

@@ -5,7 +5,6 @@ import {
   Bell, 
   Edit3, 
   Download,
-  Maximize2,
   CheckCircle,
   Info,
   Briefcase,
@@ -39,7 +38,7 @@ const YourPipelinePage = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<any>(null);
   const [selectedApplicant, setSelectedApplicant] = useState<any>(null);
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  // Full-screen expansion removed
 
   // Demo data
   const demoJobs = [
@@ -638,13 +637,7 @@ const YourPipelinePage = () => {
     }
   };
 
-  const handleExpandSection = (section: string) => {
-    setExpandedSection(section);
-  };
-
-  const handleCloseExpanded = () => {
-    setExpandedSection(null);
-  };
+  // Expansion handlers removed
 
   // Demo functions
   const handleNotificationClick = () => {
@@ -659,17 +652,17 @@ const YourPipelinePage = () => {
 
   const handleViewApplicants = (job: any) => {
     // Navigate to applicants page with job information
-    router.push(`/applicants?jobId=${job.id}&jobTitle=${encodeURIComponent(job.title)}&company=${encodeURIComponent(job.company)}`);
+    router.push(`/applicants?jobId=${job.id}&jobTitle=${encodeURIComponent(job.title)}&company=${encodeURIComponent(job.company)}&selectFirst=true`);
   };
 
   const handleViewProfile = (person: any) => {
     // Navigate to applicants page with matched filter set
-    router.push('/applicants?filter=matched');
+    router.push(`/applicants?filter=matched&applicantName=${encodeURIComponent(person.name)}`);
   };
 
   const handleViewApplicantProfile = (applicant: any) => {
     // Navigate to applicants page without filter (show all applicants)
-    router.push('/applicants');
+    router.push(`/applicants?applicantName=${encodeURIComponent(applicant.name)}`);
   };
 
   const handlePageChange = (page: number) => {
@@ -806,13 +799,6 @@ const YourPipelinePage = () => {
                   title="Download data as CSV"
                 >
                   <img src="/download.svg" alt="Download" className="w-6 h-6" />
-                </button>
-                <button 
-                  onClick={() => handleExpandSection('analytics')}
-                  className="p-2 hover:bg-gray-100 rounded transition-colors" 
-                  title="Expand to full screen"
-                >
-                  <img src="/fullscreen.svg" alt="Expand" className="w-6 h-6" />
                 </button>
               </div>
             </div>
@@ -1051,16 +1037,7 @@ const YourPipelinePage = () => {
                 {/* Header */}
                 <div className="flex items-start justify-between mb-1 mt-2">
                   <h2 className="text-[22px] font-bold text-[#01253F] font-avenir">Open Jobs</h2>
-                  <div className="flex items-start space-x-2">
-
-                    <button 
-                      onClick={() => handleExpandSection('jobs')}
-                      className="p-2 hover:bg-gray-200 rounded transition-colors" 
-                      title="Expand to full screen"
-                    >
-                      <img src="/fullscreen.svg" alt="Expand" className="w-6 h-6" />
-                    </button>
-                  </div>
+                  <div className="flex items-start space-x-2"></div>
                 </div>
 
                 {/* Job Cards */}
@@ -1139,13 +1116,6 @@ const YourPipelinePage = () => {
                       >
                         <img src="/download.svg" alt="Download" className="w-6 h-6" />
                       </button>
-                      <button 
-                        onClick={() => handleExpandSection('matches')}
-                        className="p-2 hover:bg-gray-100 rounded transition-colors" 
-                        title="Expand to full screen"
-                      >
-                        <img src="/fullscreen.svg" alt="Expand" className="w-6 h-6" />
-                      </button>
                     </div>
                   </div>
                   
@@ -1196,13 +1166,6 @@ const YourPipelinePage = () => {
                         title="Download data as CSV"
                       >
                         <img src="/download.svg" alt="Download" className="w-6 h-6" />
-                      </button>
-                      <button 
-                        onClick={() => handleExpandSection('applicants')}
-                        className="p-2 hover:bg-gray-100 rounded transition-colors" 
-                        title="Expand to full screen"
-                      >
-                        <img src="/fullscreen.svg" alt="Expand" className="w-6 h-6" />
                       </button>
                     </div>
                   </div>
@@ -1557,398 +1520,6 @@ const YourPipelinePage = () => {
                   Adaptability
                 </span>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Full Screen Expansion Modal */}
-      {expandedSection && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl w-[95vw] h-[95vh] flex flex-col overflow-hidden">
-            {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-[#01253F]">
-                {expandedSection === 'analytics' && 'Analytics Dashboard'}
-                {expandedSection === 'jobs' && 'Open Jobs'}
-                {expandedSection === 'matches' && 'Matches'}
-                {expandedSection === 'applicants' && 'Applicants'}
-              </h2>
-              <div className="flex items-center space-x-4">
-                <button 
-                  onClick={() => handleDownloadCSV(expandedSection)}
-                  className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
-                >
-                  Download CSV
-                </button>
-                <button 
-                  onClick={handleCloseExpanded}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            
-            {/* Content */}
-            <div className="flex-1 p-6">
-              {expandedSection === 'analytics' && (
-                <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6">
-                  
-                  <div className="flex flex-col xl:flex-row gap-6">
-                    {/* Left Side - Hiring Health Metrics (2x2 Grid) */}
-                    <div className="flex-shrink-0 xl:w-1/2 w-full">
-                      <div className="grid grid-cols-2 gap-4 w-full max-w-full xl:max-w-[500px] mx-auto xl:mx-0">
-                        {/* Orientation Fill Forecast Card */}
-                        <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[200px]">
-                          <div className="flex items-start justify-between mb-4">
-                            <h3 className="text-sm font-medium text-[#01253F] leading-tight">Orientation Fill<br />Forecast</h3>
-                            <div className="relative group">
-                              <Info className="w-4 h-4 text-gray-400 cursor-help" />
-                              <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                                % of roles forecast to fill by orientation (PPP_Match_Target)
-                                <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-sm text-gray-600 mb-2">
-                            {analyticsData.orientationFillForecast.rolesOnTrack} of {analyticsData.orientationFillForecast.totalRoles} roles on track ({analyticsData.orientationFillForecast.rolesAtRisk} at risk)
-                          </div>
-                          <div className="flex items-baseline">
-                            <span className="text-3xl font-bold text-[#01253F]">{analyticsData.orientationFillForecast.percentage}%</span>
-                          </div>
-                        </div>
-
-                        {/* Strong Matches Card */}
-                        <div className="bg-white rounded-[21px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[200px]">
-                          <div className="flex items-start justify-between mb-4">
-                            <h3 className="text-sm font-medium text-[#01253F] leading-tight">Strong Matches</h3>
-                            <div className="relative group">
-                              <Info className="w-4 h-4 text-gray-400 cursor-help" />
-                              <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                                % of surfaced candidates rated as strong fit + predicted to stay ≥30d
-                                <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-sm text-gray-600 mb-2">
-                            {analyticsData.strongMatches.percentage}% strong matches {analyticsData.strongMatches.timeframe}
-                          </div>
-                          <div className="flex items-baseline">
-                            <span className="text-3xl font-bold text-[#01253F]">{analyticsData.strongMatches.percentage}%</span>
-                          </div>
-                        </div>
-
-                        {/* Retention Outcomes Card */}
-                        <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[200px]">
-                          <div className="flex items-start justify-between mb-4">
-                            <h3 className="text-sm font-medium text-[#01253F] leading-tight">Retention<br />Outcomes</h3>
-                            <div className="relative group">
-                              <Info className="w-4 h-4 text-gray-400 cursor-help" />
-                              <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                                % of new hires who stayed ≥30 days (observed vs predicted)
-                                <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-sm text-gray-600 mb-2">
-                            {analyticsData.retentionOutcomes.percentage}% of hires stayed ≥30d ({analyticsData.retentionOutcomes.timeframe})
-                          </div>
-                          <div className="flex items-baseline">
-                            <span className="text-3xl font-bold text-[#01253F]">{analyticsData.retentionOutcomes.percentage}%</span>
-                          </div>
-                        </div>
-
-                        {/* Pulse Trends Card */}
-                        <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[200px]">
-                          <div className="flex items-start justify-between mb-4">
-                            <h3 className="text-sm font-medium text-[#01253F] leading-tight">Pulse Trends</h3>
-                            <div className="relative group">
-                              <Info className="w-4 h-4 text-gray-400 cursor-help" />
-                              <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                                Average morale trend from weekly caregiver check-ins
-                                <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-sm text-gray-600 mb-2">
-                            +{analyticsData.pulseTrends.percentage}% morale trend ({analyticsData.pulseTrends.timeframe})
-                          </div>
-                          <div className="flex items-baseline">
-                            <span className="text-3xl font-bold text-[#01253F]">+{analyticsData.pulseTrends.percentage}%</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right Side - Workforce Stability Section */}
-                    <div className="xl:w-3/5 w-full bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-2 h-[600px] min-w-[300px] mt-4 xl:mt-0 xl:-ml-12 flex flex-col">
-                      <div className="flex items-center justify-between mb-1 flex-shrink-0">
-                        <h2 className="text-[20px] font-medium leading-[28px] text-[#01253F] font-avenir">Workforce Stability</h2>
-                      </div>
-                      
-                      {/* Content Area - No Scroll */}
-                      <div className="flex-1">
-                        
-                        {/* Workforce Stability Metrics */}
-                        <div className="space-y-2">
-                        {/* ROI Summary Badge */}
-                        <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors border-2 border-dashed border-gray-200">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                              <span className="text-sm font-medium text-gray-700">ROI Summary</span>
-                              <div className="relative group ml-2">
-                                <Info className="w-3 h-3 text-gray-400 cursor-help" />
-                                <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                                  ROI from reduced turnover + faster fills (export full report)
-                                  <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              analyticsData.roiSummary.threshold === 'green' 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-gray-100 text-gray-600'
-                            }`}>
-                              {formatCurrency(analyticsData.roiSummary.saved)} saved, {analyticsData.roiSummary.timeSaved} hrs time saved, {analyticsData.roiSummary.hiresRetained} hires retained
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {/* Early Churn Risk */}
-                        <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                          <div className="flex items-center justify-between mb-0.5">
-                            <div className="flex items-center">
-                              <span className="text-sm font-medium text-gray-700">Early Churn Risk</span>
-                              <div className="relative group ml-2">
-                                <Info className="w-3 h-3 text-gray-400 cursor-help" />
-                                <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                                  % of active new hires flagged for early churn risk
-                                  <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                                </div>
-                              </div>
-                            </div>
-                            <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.earlyChurnRisk.threshold)}`}>
-                              {analyticsData.earlyChurnRisk.hiresAtRisk} hires at risk (~{formatCurrency(analyticsData.earlyChurnRisk.turnoverCost)} turnover cost)
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-1.5">
-                            <div 
-                              className="h-1.5 rounded-full"
-                              style={{ width: `${analyticsData.earlyChurnRisk.percentage}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
-                            ></div>
-                          </div>
-                        </div>
-                        
-                        {/* Retention Forecast */}
-                        <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                          <div className="flex items-center justify-between mb-0.5">
-                            <div className="flex items-center">
-                              <span className="text-sm font-medium text-gray-700">Retention Forecast</span>
-                              <div className="relative group ml-2">
-                                <Info className="w-3 h-3 text-gray-400 cursor-help" />
-                                <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                                  % of current hires projected to stay ≥30d (based on RLS)
-                                  <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                                </div>
-                              </div>
-                            </div>
-                            <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.retentionForecast.threshold)}`}>
-                              {analyticsData.retentionForecast.percentage}% projected to stay {analyticsData.retentionForecast.timeframe}
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-1.5">
-                            <div 
-                              className="h-1.5 rounded-full"
-                              style={{ width: `${analyticsData.retentionForecast.percentage}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
-                            ></div>
-                          </div>
-                        </div>
-                        
-                        {/* Work Environment Score */}
-                        <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                          <div className="flex items-center justify-between mb-0.5">
-                            <div className="flex items-center">
-                              <span className="text-sm font-medium text-gray-700">Work Environment Score</span>
-                              <div className="relative group ml-2">
-                                <Info className="w-3 h-3 text-gray-400 cursor-help" />
-                                <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                                  Composite score of morale + fit signals (updated weekly)
-                                  <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                                </div>
-                              </div>
-                            </div>
-                            <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.workEnvironmentScore.threshold)}`}>
-                              {analyticsData.workEnvironmentScore.score} / {analyticsData.workEnvironmentScore.maxScore}
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-1.5">
-                            <div 
-                              className="h-1.5 rounded-full"
-                              style={{ width: `${analyticsData.workEnvironmentScore.score}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
-                            ></div>
-                          </div>
-                        </div>
-                        
-                        {/* Culture Alignment */}
-                        <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                          <div className="flex items-center justify-between mb-0.5">
-                            <div className="flex items-center">
-                              <span className="text-sm font-medium text-gray-700">Culture Alignment</span>
-                              <div className="relative group ml-2">
-                                <Info className="w-3 h-3 text-gray-400 cursor-help" />
-                                <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                                  % of recent hires aligned with your facility's culture profile
-                                  <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-                                </div>
-                              </div>
-                            </div>
-                            <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.cultureAlignment.threshold)}`}>
-                              {analyticsData.cultureAlignment.percentage}% aligned
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-1.5">
-                            <div 
-                              className="h-1.5 rounded-full"
-                              style={{ width: `${analyticsData.cultureAlignment.percentage}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
-                            ></div>
-                          </div>
-                        </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              {expandedSection === 'jobs' && (
-                <div className="bg-[#F4F4F4] rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6">
-                  <div className="space-y-4">
-                    {demoJobs.map((job) => (
-                      <div key={job.id} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative">
-                        {/* Edit Icon - Top Right */}
-                        <button 
-                          onClick={() => handleJobEdit(job)}
-                          className="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:bg-gray-200 transition-colors"
-                        >
-                          <img src="/edit_pencil.svg" alt="Edit" className="w-8 h-8" />
-                        </button>
-
-                        {/* Job Content */}
-                        <div className="flex flex-col">
-                          {/* Job Title */}
-                          <h3 className="text-[22px] font-bold text-[#2466D0] mb-6 font-avenir">
-                            {job.title}
-                          </h3>
-                          
-                          {/* Company Name */}
-                          <p className="text-[16px] font-bold text-[#01253F] mb-1 font-avenir">
-                            {job.company}
-                          </p>
-                          
-                          {/* Location and Salary Row */}
-                          <div className="flex items-center justify-between mb-4">
-                            <div className="flex flex-col">
-                              <p className="text-[14px] text-[#01253F] mb-1 font-avenir">
-                                {job.location}
-                              </p>
-                              <p className="text-[14px] text-[#01253F] font-avenir">
-                                {job.salary}
-                              </p>
-                            </div>
-                            
-                            {/* View Applicants Button */}
-                            <div className="relative">
-                              <button 
-                                onClick={() => handleViewApplicants(job)}
-                                className="bg-[#2CB3BF] text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
-                              >
-                                View Applicants
-                              </button>
-                              {/* Applicant Count Badge */}
-                              <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#01253F] text-white rounded-full flex items-center justify-center text-sm font-bold">
-                                {job.applicants}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {expandedSection === 'matches' && (
-                <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6">
-                  <div className="space-y-4">
-                    {demoMatches.map((match) => (
-                      <div key={match.id} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          {/* Avatar */}
-                          <div className="rounded-full bg-white flex items-center justify-center">
-                            <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-[#01253F] text-lg">{match.name}</h4>
-                            <p className="font-bold text-[#01253F] text-sm">{match.experience}</p>
-                            <p className="text-gray-500 text-sm">{match.location}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 space-x-2 mb-6">
-                            <span className="text-gray-600 font-medium text-sm">{match.status}</span>
-                            <div className="w-4 h-4 bg-[#2466D0] rounded-full flex items-center justify-center">
-                              <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                          </div>
-                          <button 
-                            onClick={() => handleViewProfile(match)}
-                            className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
-                          >
-                            View Profile
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {expandedSection === 'applicants' && (
-                <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6">
-                  <div className="space-y-4">
-                    {demoApplicants.map((applicant) => (
-                      <div key={applicant.id} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          {/* Avatar */}
-                          <div className="rounded-full bg-white flex items-center justify-center">
-                            <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-[#01253F] text-lg">{applicant.name}</h4>
-                            <p className="font-bold text-[#01253F] text-sm">{applicant.experience}</p>
-                            <p className="text-gray-500 text-sm">{applicant.location}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center">
-                          <button 
-                            onClick={() => handleViewApplicantProfile(applicant)}
-                            className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors mt-8"
-                          >
-                            View Profile
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
