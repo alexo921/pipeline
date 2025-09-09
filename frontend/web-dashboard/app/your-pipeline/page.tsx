@@ -1121,7 +1121,11 @@ const YourPipelinePage = () => {
                   
                   <div className="space-y-2 overflow-y-auto h-[calc(100%-80px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                     {demoMatches.map((match) => (
-                      <div key={match.id} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between">
+                      <div 
+                        key={match.id} 
+                        className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between cursor-pointer hover:shadow-md transition-shadow"
+                        onClick={() => handleViewProfile(match)}
+                      >
                         <div className="flex items-center space-x-4">
                           {/* Avatar */}
                           <div className="rounded-full bg-white flex items-center justify-center">
@@ -1135,7 +1139,7 @@ const YourPipelinePage = () => {
                         </div>
                         
                         <div className="flex flex-col items-end">
-                          <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 space-x-2 mb-6">
+                          <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 space-x-2">
                             <span className="text-gray-600 font-medium text-sm">{match.status}</span>
                             <div className="w-4 h-4 bg-[#2466D0] rounded-full flex items-center justify-center">
                               <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -1143,12 +1147,6 @@ const YourPipelinePage = () => {
                               </svg>
                             </div>
                           </div>
-                          <button 
-                            onClick={() => handleViewProfile(match)}
-                            className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
-                          >
-                            View Profile
-                          </button>
                         </div>
                       </div>
                     ))}
@@ -1172,7 +1170,11 @@ const YourPipelinePage = () => {
                   
                   <div className="space-y-2 overflow-y-auto h-[calc(100%-80px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                     {demoApplicants.map((applicant) => (
-                      <div key={applicant.id} className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between">
+                      <div 
+                        key={applicant.id} 
+                        className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between cursor-pointer hover:shadow-md transition-shadow"
+                        onClick={() => handleViewApplicantProfile(applicant)}
+                      >
                         <div className="flex items-center space-x-4">
                           {/* Avatar */}
                           <div className="rounded-full bg-white flex items-center justify-center">
@@ -1183,15 +1185,6 @@ const YourPipelinePage = () => {
                             <p className="font-bold text-[#01253F] text-sm">{applicant.experience}</p>
                             <p className="text-gray-500 text-sm">{applicant.location}</p>
                           </div>
-                        </div>
-                        
-                        <div className="flex items-center">
-                          <button 
-                            onClick={() => handleViewApplicantProfile(applicant)}
-                            className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors mt-8"
-                          >
-                            View Profile
-                          </button>
                         </div>
                       </div>
                     ))}

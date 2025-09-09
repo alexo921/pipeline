@@ -51,7 +51,7 @@ const ApplicantsPage = () => {
     company: searchParams.get('company') || 'St. Mary\'s Health Center'
   });
 
-  // Demo data with matched status
+  // Demo data with candidate tags
   const demoApplicants = [
     {
       id: 1,
@@ -62,154 +62,144 @@ const ApplicantsPage = () => {
       status: "Applied",
       appliedDate: "2 days ago",
       matchScore: 94,
-      skills: ["Patient Care", "Leadership", "Safety"],
+      candidateTags: ["High Retention Score", "Strong Culture Fit", "Close Commute"],
       isMatched: false
     },
     {
       id: 2,
-      name: "Marvin Grant",
+      name: "Sarah Johnson",
       role: "Registered Nurse", 
       experience: "5+ years experience",
       location: "New Haven, CT",
       status: "Applied",
       appliedDate: "1 day ago",
       matchScore: 87,
-      skills: ["Critical Care", "Team Management", "Communication"],
+      candidateTags: ["Shift Preference Match", "Pay Alignment", "Moderate Retention Score"],
       isMatched: true
     },
     {
       id: 3,
-      name: "Marvin Grant",
+      name: "Michael Chen",
       role: "Registered Nurse",
       experience: "5+ years experience", 
       location: "New Haven, CT",
       status: "Applied",
       appliedDate: "3 days ago",
       matchScore: 92,
-      skills: ["Pediatric Care", "Adaptability", "Problem Solving"],
+      candidateTags: ["Flexible Commute", "Positive Historical Performance", "Commute Risk"],
       isMatched: false
     },
     {
       id: 4,
-      name: "Marvin Grant",
+      name: "Emily Rodriguez",
       role: "Registered Nurse",
       experience: "5+ years experience",
       location: "New Haven, CT", 
       status: "Applied",
       appliedDate: "4 days ago",
       matchScore: 89,
-      skills: ["Rehabilitation", "Assessment", "Patient Education"],
+      candidateTags: ["High Retention Score", "Limited Shift Flexibility", "Unproven Setting"],
       isMatched: true
     },
     {
       id: 5,
-      name: "Marvin Grant",
+      name: "David Thompson",
       role: "Registered Nurse",
       experience: "5+ years experience",
       location: "New Haven, CT",
       status: "Applied", 
       appliedDate: "5 days ago",
       matchScore: 85,
-      skills: ["Clinical Procedures", "Administrative", "Customer Service"],
+      candidateTags: ["High Churn Risk", "Job Hopper Signal", "Long Commute"],
       isMatched: false
     },
     {
       id: 6,
-      name: "Sarah Johnson",
+      name: "Lisa Anderson",
       role: "Registered Nurse",
       experience: "3+ years experience",
       location: "Hartford, CT",
       status: "Applied",
       appliedDate: "6 days ago",
       matchScore: 78,
-      skills: ["Emergency Care", "Teamwork", "Communication"],
+      candidateTags: ["Strong Culture Fit", "Close Commute", "Partial Intake Completed"],
       isMatched: true
     },
     {
       id: 7,
-      name: "Michael Chen",
+      name: "Robert Wilson",
       role: "Registered Nurse",
       experience: "7+ years experience",
       location: "Bridgeport, CT",
       status: "Applied",
       appliedDate: "7 days ago",
       matchScore: 91,
-      skills: ["Critical Care", "Leadership", "Patient Advocacy"],
+      candidateTags: ["Pay Alignment", "Flexible Commute", "No-Show History"],
       isMatched: false
     },
     {
       id: 8,
-      name: "Emily Rodriguez",
+      name: "Jennifer Davis",
       role: "Registered Nurse",
       experience: "4+ years experience",
       location: "Stamford, CT",
       status: "Applied",
       appliedDate: "8 days ago",
       matchScore: 83,
-      skills: ["Pediatric Care", "Family Support", "Documentation"],
+      candidateTags: ["Positive Historical Performance", "Low Responsiveness", "Negative Behavioral Signals"],
       isMatched: true
     },
     {
       id: 9,
-      name: "David Thompson",
+      name: "Christopher Taylor",
       role: "Registered Nurse",
       experience: "6+ years experience",
       location: "Waterbury, CT",
       status: "Applied",
       appliedDate: "9 days ago",
       matchScore: 88,
-      skills: ["Surgical Care", "Quality Assurance", "Training"],
+      candidateTags: ["High Retention Score", "Strong Culture Fit", "Shift Preference Match"],
       isMatched: false
     },
     {
       id: 10,
-      name: "Lisa Anderson",
+      name: "Amanda Rodriguez",
       role: "Registered Nurse",
       experience: "2+ years experience",
       location: "Norwalk, CT",
       status: "Applied",
       appliedDate: "10 days ago",
       matchScore: 76,
-      skills: ["Basic Care", "Learning", "Adaptability"],
+      candidateTags: ["Moderate Retention Score", "Commute Risk", "Limited Shift Flexibility"],
       isMatched: true
     }
   ];
 
-  // Tag system based on PDF structure - Healthcare categories
+  // Candidate Tags system
   const tagCategories = {
-    clinical: {
-      name: "Clinical Excellence",
-      color: "bg-blue-100 text-blue-800 border-blue-200",
-      tags: ["Patient Care", "Critical Care", "Clinical Procedures", "Assessment", "Surgical Care", "Emergency Care", "Pediatric Care", "Rehabilitation"]
+    positive: {
+      name: "Positive Match Tags",
+      color: "bg-green-100 text-green-800 border-green-200",
+      tags: ["High Retention Score", "Strong Culture Fit", "Close Commute", "Shift Preference Match", "Pay Alignment", "Flexible Commute", "Positive Historical Performance"]
     },
-    leadership: {
-      name: "Leadership & Management", 
-      color: "bg-purple-100 text-purple-800 border-purple-200",
-      tags: ["Leadership", "Team Management", "Training", "Quality Assurance", "Patient Advocacy"]
+    watch: {
+      name: "Watch Tags",
+      color: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      tags: ["Moderate Retention Score", "Commute Risk", "Limited Shift Flexibility", "Unproven Setting", "Partial Intake Completed"]
     },
-    communication: {
-      name: "Communication & Collaboration",
-      color: "bg-green-100 text-green-800 border-green-200", 
-      tags: ["Communication", "Teamwork", "Family Support", "Patient Education", "Documentation"]
-    },
-    adaptability: {
-      name: "Adaptability & Growth",
-      color: "bg-orange-100 text-orange-800 border-orange-200",
-      tags: ["Adaptability", "Problem Solving", "Learning", "Basic Care"]
-    },
-    administrative: {
-      name: "Administrative & Support",
-      color: "bg-gray-100 text-gray-800 border-gray-200",
-      tags: ["Administrative", "Customer Service"]
+    risk: {
+      name: "Risk Tags",
+      color: "bg-red-100 text-red-800 border-red-200",
+      tags: ["High Churn Risk", "Job Hopper Signal", "Long Commute", "No-Show History", "Low Responsiveness", "Negative Behavioral Signals"]
     }
   };
 
-  // Function to categorize skills into tags
-  const categorizeSkills = (skills: string[]) => {
+  // Function to categorize candidate tags
+  const categorizeCandidateTags = (candidateTags: string[]) => {
     const categorizedTags: { category: string; tags: string[]; color: string }[] = [];
     
     Object.entries(tagCategories).forEach(([key, category]) => {
-      const matchingTags = skills.filter(skill => category.tags.includes(skill));
+      const matchingTags = candidateTags.filter(tag => category.tags.includes(tag));
       if (matchingTags.length > 0) {
         categorizedTags.push({
           category: category.name,
@@ -322,7 +312,7 @@ const ApplicantsPage = () => {
   const convertToCSV = (data: any[]) => {
     if (data.length === 0) return '';
     
-    const headers = ['Name', 'Role', 'Experience', 'Location', 'Status', 'Applied Date', 'Match Score', 'Skills', 'Matched'];
+    const headers = ['Name', 'Role', 'Experience', 'Location', 'Status', 'Applied Date', 'Match Score', 'Candidate Tags', 'Matched'];
     const csvContent = [
       headers.join(','),
       ...data.map(applicant => [
@@ -333,7 +323,7 @@ const ApplicantsPage = () => {
         `"${applicant.status}"`,
         `"${applicant.appliedDate}"`,
         applicant.matchScore,
-        `"${applicant.skills.join('; ')}"`,
+        `"${applicant.candidateTags.join('; ')}"`,
         applicant.isMatched ? 'Yes' : 'No'
       ].join(','))
     ].join('\n');
@@ -760,10 +750,10 @@ const ApplicantsPage = () => {
                     </ul>
                   </div>
                   
-                  {/* Skills Section */}
+                  {/* Candidate Tags Section */}
                   <div>
                     <div className="flex flex-wrap gap-2">
-                      {categorizeSkills(selectedApplicant.skills).map((category, cIdx) => (
+                      {categorizeCandidateTags(selectedApplicant.candidateTags).map((category, cIdx) => (
                         category.tags.map((tag, tIdx) => (
                           <span
                             key={`${cIdx}-${tIdx}`}
