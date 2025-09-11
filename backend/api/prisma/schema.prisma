@@ -55,6 +55,7 @@ model users {
   apply_clicks    apply_clicks[]
   user_sessions   user_sessions[]
   analytics_events analytics_events[]
+  employees        employees[]
 
   @@unique([email, role])
   @@index([email])
@@ -338,4 +339,184 @@ enum ThrivingFactor {
   HigherPay
   ManageableLoad
   CareerGrowth
+}
+
+// ---------------------------------------------
+// Analytics & Retention Models (Facilities scope)
+// ---------------------------------------------
+
+model facilities {
+  id                 String              @id @default(uuid())
+  name               String
+  type               String              // hospital, ltc, rehab, etc.
+  location           String
+  contactEmail       String
+  contactPhone       String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  // Relations
+  employees          employees[]
+  pulse_surveys      pulse_surveys[]
+  retention_forecasts retention_forecasts[]
+  action_items       action_items[]
+  complaints         complaints[]
+  analytics_insights analytics_insights[]
+}
+
+model employees {
+  id            String          @id @default(uuid())
+  facilityId    String
+  userId        String?         // Link to existing users table
+  firstName     String
+  lastName      String
+  email         String
+  role          HealthcareRole
+  department    String?
+  unit          String?
+  hireDate      DateTime
+  status        String          @default("active") // active, inactive, terminated
+  retentionRisk Float?          // 0-1 risk score
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Relations
+  facility      facilities      @relation(fields: [facilityId], references: [id])
+  user          users?          @relation(fields: [userId], references: [id])
+  pulse_responses   pulse_responses[]
+  retention_forecasts retention_forecasts[]
+  action_items       action_items[]
+  complaints         complaints[]
+
+  @@index([facilityId])
+  @@index([role])
+  @@index([status])
+}
+
+model pulse_surveys {
+  id           String           @id @default(uuid())
+  facilityId   String
+  title        String
+  questions    Json             // Survey questions structure
+  targetRoles  HealthcareRole[]
+  targetUnits  String[]
+  status       String           @default("draft") // draft, active, completed
+  scheduledAt  DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  // Relations
+  facility     facilities       @relation(fields: [facilityId], references: [id])
+  responses    pulse_responses[]
+
+  @@index([facilityId])
+  @@index([status])
+}
+
+model pulse_responses {
+  id             String        @id @default(uuid())
+  surveyId       String
+  employeeId     String
+  responses      Json          // Survey response data
+  sentimentScore Float?        // Calculated sentiment
+  submittedAt    DateTime      @default(now())
+
+  // Relations
+  survey         pulse_surveys @relation(fields: [surveyId], references: [id])
+  employee       employees     @relation(fields: [employeeId], references: [id])
+
+  @@unique([surveyId, employeeId])
+  @@index([surveyId])
+  @@index([employeeId])
+}
+
+model retention_forecasts {
+  id                  String       @id @default(uuid())
+  facilityId          String
+  employeeId          String?
+  cohort              String       // e.g., "2024-Q1", "new-hires-30d"
+  forecastType        String       // 30d, 60d, 90d
+  predictedRetention  Float        // 0-1 probability
+  confidence          Float        // 0-1 confidence score
+  factors             Json         // Contributing factors
+  calculatedAt        DateTime     @default(now())
+
+  // Relations
+  facility            facilities   @relation(fields: [facilityId], references: [id])
+  employee            employees?   @relation(fields: [employeeId], references: [id])
+
+  @@index([facilityId])
+  @@index([forecastType])
+  @@index([calculatedAt])
+}
+
+model action_items {
+  id           String       @id @default(uuid())
+  facilityId   String
+  employeeId   String?
+  actionType   String       // escalate, pulse, nudge, etc.
+  category     String       // hiring, retention, sentiment, etc.
+  title        String
+  description  String
+  priority     String       // low, medium, high, critical
+  status       String       @default("pending") // pending, in_progress, completed, cancelled
+  assignedTo   String?      // Email or role
+  dueDate      DateTime?
+  completedAt  DateTime?
+  metadata     Json?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  // Relations
+  facility     facilities   @relation(fields: [facilityId], references: [id])
+  employee     employees?   @relation(fields: [employeeId], references: [id])
+
+  @@index([facilityId])
+  @@index([actionType])
+  @@index([status])
+  @@index([dueDate])
+}
+
+model complaints {
+  id           String       @id @default(uuid())
+  facilityId   String
+  employeeId   String?
+  category     String       // safety, harassment, culture, etc.
+  description  String
+  severity     String       // low, medium, high, critical
+  status       String       @default("open") // open, investigating, resolved, closed
+  reportedAt   DateTime     @default(now())
+  resolvedAt   DateTime?
+  metadata     Json?
+
+  // Relations
+  facility     facilities   @relation(fields: [facilityId], references: [id])
+  employee     employees?   @relation(fields: [employeeId], references: [id])
+
+  @@index([facilityId])
+  @@index([category])
+  @@index([severity])
+  @@index([status])
+}
+
+model analytics_insights {
+  id           String       @id @default(uuid())
+  facilityId   String
+  insightType  String       // retention_drop, sentiment_decline, etc.
+  title        String
+  description  String
+  severity     String       // info, warning, critical
+  data         Json         // Supporting data
+  actions      Json?
+  generatedAt  DateTime     @default(now())
+  acknowledgedAt DateTime?
+
+  // Relations
+  facility     facilities   @relation(fields: [facilityId], references: [id])
+
+  @@index([facilityId])
+  @@index([insightType])
+  @@index([severity])
+  @@index([generatedAt])
 }

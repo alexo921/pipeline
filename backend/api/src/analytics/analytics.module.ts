@@ -3,12 +3,27 @@ import { AnalyticsController } from './analytics.controller';
 import { AnalyticsService } from './analytics.service';
 import { AnalyticsTrackingService } from './analytics-tracking.service';
 import { InternalAnalyticsService } from './internal-analytics.service';
+import { RetentionAnalyticsService } from './retention-analytics.service';
+import { ActionAutomationService } from './action-automation.service';
+import { RetentionAnalyticsController } from './retention-analytics.controller';
 import { PrismaModule } from '../common/prisma/prisma.module';
 
 @Module({
   imports: [PrismaModule],
-  controllers: [AnalyticsController],
-  providers: [AnalyticsService, AnalyticsTrackingService, InternalAnalyticsService],
-  exports: [AnalyticsService, AnalyticsTrackingService, InternalAnalyticsService],
+  controllers: [AnalyticsController, RetentionAnalyticsController],
+  providers: [
+    AnalyticsService, 
+    AnalyticsTrackingService, 
+    InternalAnalyticsService,
+    RetentionAnalyticsService,
+    ActionAutomationService
+  ],
+  exports: [
+    AnalyticsService, 
+    AnalyticsTrackingService, 
+    InternalAnalyticsService,
+    RetentionAnalyticsService,
+    ActionAutomationService
+  ],
 })
 export class AnalyticsModule {} 
