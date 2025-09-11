@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Filter, Download, RefreshCw } from 'lucide-react';
+import { Calendar, Filter, Download, RefreshCw, ArrowRight } from 'lucide-react';
 import { RetentionForecastCard, NoShowRiskCard, TurnoverCostCard } from './KPICard';
 import { InsightFeed, Insight, Action } from './InsightFeed';
 import { CohortAnalysis, CohortData, FunnelMetrics } from './CohortAnalysis';
@@ -7,12 +7,14 @@ import { HotspotMatrix, HotspotData } from './HotspotMatrix';
 import { ActionCenter, ActionItem } from './ActionCenter';
 import { PulseModal } from './PulseModal';
 import { ReminderModal } from './ReminderModal';
+import { useRouter } from 'next/navigation';
 
 interface AnalyticsWorkspaceProps {
   facilityId: string;
 }
 
 export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facilityId }) => {
+  const router = useRouter();
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d' | 'custom'>('30d');
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [unitFilter, setUnitFilter] = useState<string>('all');
@@ -369,6 +371,15 @@ export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facility
             >
               <RefreshCw className={`w-4 h-4 text-[#A0B3C7] ${loading ? 'animate-spin' : ''}`} />
               <span className="text-[#A0B3C7] font-avenir">Refresh</span>
+            </button>
+
+            {/* YourPipeline Button */}
+            <button
+              onClick={() => router.push('/your-pipeline')}
+              className="flex items-center space-x-2 px-6 py-2 bg-white hover:bg-gray-50 text-[#A0B3C7] font-medium rounded-full shadow border border-gray-200 transition-colors"
+            >
+              <span className="text-[#A0B3C7] font-avenir">YourPipeline</span>
+              <ArrowRight className="w-4 h-4 text-[#A0B3C7]" />
             </button>
 
             {/* Export Buttons - Rounded like YourPipeline */}
