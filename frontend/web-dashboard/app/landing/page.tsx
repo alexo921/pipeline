@@ -9,7 +9,9 @@ export default function LandingPage() {
           <div className="max-w-xl lg:max-w-lg">
             <h1 className="text-4xl lg:text-5xl font-bold text-[#01253F] leading-tight">Connecting Healthcare Talent With Opportunity</h1>
             <p className="mt-6 text-lg text-[#4A4A4A] leading-relaxed">Find your next job or make your next hire - connecting healthcare professionals just got easier</p>
-            <button className="mt-8 button button-primary px-8 py-4 text-lg font-semibold">Join Pipeline</button>
+            <button className="mt-8 px-8 py-4 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">
+              Join Pipeline
+            </button>
           </div>
           <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
             <div className="relative">
@@ -28,7 +30,7 @@ export default function LandingPage() {
               <img src="https://placehold.co/50x50" alt="Stethoscope icon" className="mx-auto" />
             </div>
             <p className="mt-2">Search for job openings and connect with top employers today!</p>
-            <button className="mt-4 button button-primary px-4 py-2">Get Started</button>
+            <button className="mt-4 px-4 py-2 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Get Started</button>
           </div>
           <div className="card text-center flex-1">
             <h2 className="text-xl font-semibold">Looking to hire a healthcare professional?</h2>
@@ -36,7 +38,7 @@ export default function LandingPage() {
               <img src="https://placehold.co/50x50" alt="Building icon" className="mx-auto" />
             </div>
             <p className="mt-2">Post your job openings and find the right candidate now!</p>
-            <button className="mt-4 button button-primary px-4 py-2">Get Started</button>
+            <button className="mt-4 px-4 py-2 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Get Started</button>
           </div>
         </div>
       </section>
@@ -108,8 +110,8 @@ export default function LandingPage() {
           <div className="max-w-md">
             <h2 className="text-2xl font-bold">Your perfect healthcare match awaits</h2>
             <div className="mt-6">
-              <button className="mr-4 button button-primary px-4 py-2">Download on the App Store</button>
-              <button className="button button-primary px-4 py-2">Get it on Google Play</button>
+              <button className="mr-4 px-4 py-2 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Download on the App Store</button>
+              <button className="px-4 py-2 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Get it on Google Play</button>
             </div>
           </div>
         </div>
