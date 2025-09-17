@@ -23,30 +23,32 @@ export default function LandingPage() {
 
       {/* Call-to-Action Cards */}
       <section className="section">
-        <div className="container flex flex-col md:flex-row justify-between gap-6">
-          <div className="card text-center flex-1">
-            <h2 className="text-xl font-semibold">Looking for a job in healthcare?</h2>
-            <div className="mt-4">
-              <img src="https://placehold.co/50x50" alt="Stethoscope icon" className="mx-auto" />
+        <div className="container flex flex-col md:flex-row justify-center gap-8">
+          <div className="bg-white rounded-lg shadow-lg p-8 text-center max-w-sm mx-auto">
+            <h2 className="text-xl font-bold text-[#01253F] mb-6">Looking for a job in healthcare?</h2>
+            <div className="mb-6 flex justify-center">
+              <img src="/Group 1885.svg" alt="Healthcare job icon" className="w-20 h-20" />
             </div>
-            <p className="mt-2">Search for job openings and connect with top employers today!</p>
-            <button className="mt-4 px-4 py-2 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Get Started</button>
+            <p className="text-[#4A4A4A] mb-6">Search for job openings and connect with top employers today!</p>
+            <button className="px-6 py-3 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Get Started</button>
           </div>
-          <div className="card text-center flex-1">
-            <h2 className="text-xl font-semibold">Looking to hire a healthcare professional?</h2>
-            <div className="mt-4">
-              <img src="https://placehold.co/50x50" alt="Building icon" className="mx-auto" />
+          <div className="bg-white rounded-lg shadow-lg p-8 text-center max-w-sm mx-auto">
+            <h2 className="text-xl font-bold text-[#01253F] mb-6">Looking to hire a healthcare professional?</h2>
+            <div className="mb-6 flex justify-center">
+              <img src="/Group 1886.svg" alt="Healthcare hiring icon" className="w-20 h-20" />
             </div>
-            <p className="mt-2">Post your job openings and find the right candidate now!</p>
-            <button className="mt-4 px-4 py-2 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Get Started</button>
+            <p className="text-[#4A4A4A] mb-6">Post your job openings and find the right candidate now!</p>
+            <button className="px-6 py-3 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Get Started</button>
           </div>
+        </div>
+        <div className="container text-center mt-12">
+          <h2 className="text-2xl font-bold text-[#01253F]">The best jobs in healthcare, right at your fingertips.</h2>
         </div>
       </section>
 
       {/* Features Section */}
       <section className="section">
         <div className="container">
-          <h2 className="text-2xl font-bold text-center">The best jobs in healthcare, right at your fingertips.</h2>
           <div className="flex flex-col md:flex-row justify-between mt-8 gap-8">
             <div className="space-y-4 md:flex-1">
               <div className="card">
