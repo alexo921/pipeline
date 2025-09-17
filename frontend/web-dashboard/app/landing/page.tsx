@@ -5,13 +5,17 @@ export default function LandingPage() {
     <BaseLayout backgroundStyle={{ backgroundColor: '#FFFFFF' }} navBackgroundClassName="bg-white">
       {/* Hero Section */}
       <section className="section">
-        <div className="container flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="max-w-xl">
-            <h1 className="text-4xl font-bold">Connecting Healthcare Talent With Opportunity</h1>
-            <p className="mt-4 text-lg">Find your next job or make your next hire - connecting healthcare professionals just got easier</p>
-            <button className="mt-6 button button-primary px-6 py-3">Join Pipeline</button>
+        <div className="container flex flex-col lg:flex-row items-center justify-between gap-12">
+          <div className="max-w-xl lg:max-w-lg">
+            <h1 className="text-4xl lg:text-5xl font-bold text-[#01253F] leading-tight">Connecting Healthcare Talent With Opportunity</h1>
+            <p className="mt-6 text-lg text-[#4A4A4A] leading-relaxed">Find your next job or make your next hire - connecting healthcare professionals just got easier</p>
+            <button className="mt-8 button button-primary px-8 py-4 text-lg font-semibold">Join Pipeline</button>
           </div>
-          <img src="https://placehold.co/600x400" alt="Healthcare professional holding a tablet" className="w-full md:w-1/2 rounded-lg" />
+          <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
+            <div className="relative">
+              <img src="/Frame 1898.svg" alt="Healthcare professional illustration" className="w-full max-w-md lg:max-w-lg" />
+            </div>
+          </div>
         </div>
       </section>
 
