@@ -21,6 +21,24 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* New Job Card Container */}
+      <section className="section">
+        <div className="container mx-auto p-6 bg-white rounded-lg shadow-md flex items-center justify-between">
+          <div className="flex-1">
+            <h2 className="text-2xl font-bold text-blue-600">Looking for a job in healthcare?</h2>
+            <p className="mt-2 text-gray-700">Create a free account and connect with top employers today!</p>
+            <button className="mt-4 px-6 py-2 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">
+              Get Started
+            </button>
+          </div>
+          <div className="flex items-center justify-center">
+            <div className="bg-purple-200 rounded-full p-4">
+              <img src="/Group 1885.svg" alt="Stethoscope icon" className="w-10 h-10" />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Call-to-Action Cards */}
       <section className="section">
         <div className="container flex flex-col md:flex-row justify-center gap-8">
@@ -121,5 +139,3 @@ export default function LandingPage() {
     </BaseLayout>
   );
 }
-
-
