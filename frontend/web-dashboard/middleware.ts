@@ -2,12 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  // Only redirect the root path to /jobs
-  if (request.nextUrl.pathname === '/') {
-    return NextResponse.redirect(new URL('/jobs', request.url));
-  }
-  
-  // For all other paths, continue normally
+  // No redirect for '/'; allow landing page as home
   return NextResponse.next();
 }
 
