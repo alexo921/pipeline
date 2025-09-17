@@ -10,10 +10,12 @@ import { LogOut, ChevronDown, BarChart3, FileText } from "lucide-react";
 
 type NavbarProps = {
   onLoginClick: () => void;
+  backgroundClassName?: string;
 };
 
 const Navbar: React.FC<NavbarProps> = ({
   onLoginClick,
+  backgroundClassName = "bg-[#F4F4F4]",
 }) => {
   const pathname = usePathname();
   const { user, logout } = useAuth();
@@ -37,7 +39,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-      <nav className="w-full bg-[#F4F4F4]">
+      <nav className={`w-full ${backgroundClassName}`}>
         <div className="max-w-[1400px] mx-auto px-8 py-6 flex items-center justify-between">
           {/* Pipeline Logo with rounded white background */}
           <Link href="/" className="flex items-center">

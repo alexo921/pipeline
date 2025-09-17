@@ -13,6 +13,7 @@ interface BaseLayoutProps {
   showFooter?: boolean;
   backgroundImage?: string;
   backgroundStyle?: React.CSSProperties;
+  navBackgroundClassName?: string;
 }
 
 export default function BaseLayout({
@@ -21,6 +22,7 @@ export default function BaseLayout({
   showFooter = true,
   backgroundImage,
   backgroundStyle,
+  navBackgroundClassName,
 }: BaseLayoutProps) {
   const { showLoginModal } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -94,6 +96,7 @@ export default function BaseLayout({
         <div style={{ zIndex: 20 }}>
           <Navbar
             onLoginClick={handleLoginClick}
+            backgroundClassName={navBackgroundClassName}
           />
         </div>
       )}

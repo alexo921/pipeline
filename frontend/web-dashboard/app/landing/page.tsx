@@ -2,7 +2,7 @@ import BaseLayout from "../components/layout/BaseLayout";
 
 export default function LandingPage() {
   return (
-    <BaseLayout backgroundStyle={{ backgroundColor: '#FFFFFF' }}>
+    <BaseLayout backgroundStyle={{ backgroundColor: '#FFFFFF' }} navBackgroundClassName="bg-white">
       {/* Hero Section */}
       <section className="section">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-8">
