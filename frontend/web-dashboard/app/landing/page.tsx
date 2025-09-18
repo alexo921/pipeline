@@ -1,16 +1,18 @@
 import BaseLayout from "../components/layout/BaseLayout";
+import FAQItem from "./FAQItem";
 
 export default function LandingPage() {
   return (
     <BaseLayout backgroundStyle={{ backgroundColor: '#FFFFFF' }} navBackgroundClassName="bg-white">
       {/* Hero Section */}
-      <section className="section">
-        <div className="container flex flex-col lg:flex-row items-center justify-between gap-12">
+      <section className="section -mb-24 md:-mb-28 relative">
+        <div className="container flex flex-col lg:flex-row items-center justify-between gap-0.52">
           <div className="max-w-xl lg:max-w-lg">
-            <h1 className="text-4xl lg:text-5xl font-bold text-[#01253F] leading-tight">Connecting Healthcare Talent With Opportunity</h1>
-            <p className="mt-6 text-lg text-[#4A4A4A] leading-relaxed">Find your next job or make your next hire - connecting healthcare professionals just got easier</p>
-            <button className="mt-8 px-8 py-4 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">
-              Join Pipeline
+            <h1 className="text-4xl lg:text-5xl font-bold text-[#01253F] leading-tight">The Retention Platform For Skilled Nursing</h1>
+            <p className="mt-6 text-lg text-[#4A4A4A] leading-relaxed">Cut no-shows, keep staff longer, and reduce costly churn. Build a workforce that lasts with Pipeline.</p>
+            <p className="mt-4 text-base text-[#4A4A4A] leading-relaxed">Preventing just 5 exits a year saves $50,000 annually.</p>
+            <button className="mt-8 px-8 py-4 bg-[#2CB3BF] text-white font-bold rounded-full shadow-md hover:bg-[#2499A4] transition duration-200 ease-in-out">
+              Join the Pilot Program
             </button>
           </div>
           <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
@@ -21,74 +23,72 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* New Job Card Container */}
+      {/* Feature Cards */}
       <section className="section">
-        <div className="container mx-auto p-6 bg-white rounded-lg shadow-md flex items-center justify-between">
-          <div className="flex-1">
-            <h2 className="text-2xl font-bold text-blue-600">Looking for a job in healthcare?</h2>
-            <p className="mt-2 text-gray-700">Create a free account and connect with top employers today!</p>
-            <button className="mt-4 px-6 py-2 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">
-              Get Started
-            </button>
-          </div>
-          <div className="flex items-center justify-center">
-            <div className="bg-purple-200 rounded-full p-4">
-              <img src="/Group 1885.svg" alt="Stethoscope icon" className="w-10 h-10" />
+        <div className="container flex flex-col lg:flex-row gap-8">
+          <div className="bg-white rounded-2xl shadow-lg p-8 flex-1 min-h-[350px]">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full flex items-center justify-center mb-6">
+                {/* Icon placeholder - user will add later */}
+                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+              </div>
+              <h2 className="text-4xl font-bold text-[#2466D0] mb-4">Fewer No-Shows</h2>
+              <p className="text-[#4A4A4A] text-sm leading-relaxed">Predict how many candidates you'll need for orientation and surface those most likely to show up and stay.</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Call-to-Action Cards */}
-      <section className="section">
-        <div className="container flex flex-col md:flex-row justify-center gap-8">
-          <div className="bg-white rounded-lg shadow-lg p-8 text-center max-w-sm mx-auto">
-            <h2 className="text-xl font-bold text-[#01253F] mb-6">Looking for a job in healthcare?</h2>
-            <div className="mb-6 flex justify-center">
-              <img src="/Group 1885.svg" alt="Healthcare job icon" className="w-20 h-20" />
+          <div className="bg-white rounded-2xl shadow-lg p-8 flex-1 min-h-[350px]">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full flex items-center justify-center mb-6">
+                {/* Icon placeholder - user will add later */}
+                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+              </div>
+              <h2 className="text-4xl font-bold text-[#2466D0] mb-4">Lower Turnover</h2>
+              <p className="text-[#4A4A4A] text-sm leading-relaxed">Spot risks early with retention signals like attendance, morale, and culture fit. Intervene before staff walk out.</p>
             </div>
-            <p className="text-[#4A4A4A] mb-6">Search for job openings and connect with top employers today!</p>
-            <button className="px-6 py-3 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Get Started</button>
           </div>
-          <div className="bg-white rounded-lg shadow-lg p-8 text-center max-w-sm mx-auto">
-            <h2 className="text-xl font-bold text-[#01253F] mb-6">Looking to hire a healthcare professional?</h2>
-            <div className="mb-6 flex justify-center">
-              <img src="/Group 1886.svg" alt="Healthcare hiring icon" className="w-20 h-20" />
+          <div className="bg-white rounded-2xl shadow-lg p-8 flex-1 min-h-[350px]">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full flex items-center justify-center mb-6">
+                {/* Icon placeholder - user will add later */}
+                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+              </div>
+              <h2 className="text-4xl font-bold text-[#2466D0] mb-4">Less Agency Spend</h2>
+              <p className="text-[#4A4A4A] text-sm leading-relaxed">Retain more in-house staff, cut open shifts, and reduce reliance on expensive staffing agencies.</p>
             </div>
-            <p className="text-[#4A4A4A] mb-6">Post your job openings and find the right candidate now!</p>
-            <button className="px-6 py-3 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Get Started</button>
           </div>
-        </div>
-        <div className="container text-center mt-12">
-          <h2 className="text-2xl font-bold text-[#01253F]">The best jobs in healthcare, right at your fingertips.</h2>
         </div>
       </section>
 
       {/* Features Section */}
       <section className="section">
         <div className="container">
-          <div className="flex flex-col md:flex-row justify-between mt-8 gap-8">
+          <h2 className="text-4xl font-bold text-[#2466D0] font-baloo mb-8">From Retention to Full <br></br> Workforce Intelligence</h2>
+          <div className="flex flex-col md:flex-row justify-between gap-8">
             <div className="space-y-4 md:flex-1">
-              <div className="card">
-                <h3 className="font-semibold">Access Job Boards</h3>
-                <p>Search our job board for healthcare jobs that match your needs and qualifications.</p>
+              <div className="bg-[#F4F4F4] rounded-lg shadow-sm p-6">
+                <h3 className="font-semibold">Pip Widget</h3>
+                <p>Sits inside your ATS.</p>
               </div>
-              <div className="card">
-                <h3 className="font-semibold">Build Your Profile</h3>
-                <p>Create a profile to showcase your skills and experience to potential employers.</p>
+              <div className="bg-white rounded-lg shadow-[0px_2px_8px_rgba(36,102,208,0.15),0px_8px_24px_rgba(36,102,208,0.4)] p-6">
+                <h3 className="font-semibold">YourPipeline</h3>
+                <p>Runs alongside your ATS with predictive analytics.</p>
               </div>
-              <div className="card">
-                <h3 className="font-semibold">Express Interest</h3>
-                <p>Let employers know you're interested in their job openings.</p>
+              <div className="bg-[#F4F4F4] rounded-lg shadow-sm p-6">
+                <h3 className="font-semibold">Pipeline OS</h3>
+                <p>Full ATS replacement — the workforce operating system for long-term care.</p>
               </div>
             </div>
-            <div className="relative md:flex-1">
-              <div className="border-2 border-gray-300 rounded-lg p-4">
-                <img src="https://placehold.co/300x600" alt="Phone mockup" className="w-full rounded-md" />
-                <div className="absolute inset-0 flex flex-col justify-center items-center gap-2 pointer-events-none">
-                  <div className="bg-white p-2 rounded-lg shadow-md">Registered Nurse</div>
-                  <div className="bg-white p-2 rounded-lg shadow-md">St. Mary's Health Care</div>
-                  <div className="bg-white p-2 rounded-lg shadow-md">Full-Time</div>
+            <div className="relative md:flex-1 flex justify-center mt-2 md:mt-4">
+              <div className="relative">
+                {/* Tablet Mockup */}
+                <img src="/tablet.svg" alt="Tablet mockup" className="w-full max-w-sm" />
+                
+                {/* Overlay Metrics - half on, half off the tablet */}
+                <div className="absolute inset-0 pointer-events-none">
+                  {/* Early Churn Risk metric near top-left corner */}
+                  <img src="/metric_2.svg" alt="Metric 2" className="absolute w-40 md:w-44 lg:w-48 top-8 -left-6" />
+                  {/* Secondary metric at bottom-right corner */}
+                  <img src="/metric_1.svg" alt="Metric 1" className="absolute w-40 md:w-44 lg:w-48 bottom-24 md:bottom-28 lg:bottom-32 -right-4 md:-right-6 lg:-right-8" />
                 </div>
               </div>
             </div>
@@ -96,46 +96,73 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="section">
+      {/* Savings Calculator Section */}
+      <section className="section py-16" style={{ backgroundImage: "url('/da_pipes.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="container">
-          <h2 className="text-2xl font-bold text-center">What Our Users Say</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            <div className="card text-center">
-              <img src="https://placehold.co/80x80" alt="Profile" className="rounded-full mx-auto" />
-              <h3 className="mt-4 font-semibold">Michael Smith</h3>
-              <p className="text-gray-500">Healthcare Recruiter</p>
-              <p className="mt-2">Create a free account and connect with top employers today!</p>
+          <div className="bg-white rounded-3xl shadow-[0px_2px_8px_rgba(36,102,208,0.15),0px_8px_24px_rgba(36,102,208,0.25)] px-6 md:px-12 py-10">
+            <h2 className="text-4xl font-bold text-[#2466D0] font-baloo text-center mb-4">What Turnover Really Costs Your Facility</h2>
+            <p className="text-center text-[#01253F] max-w-4xl mx-auto mb-10">A 106-bed nursing facility with ~100 nursing staff loses over $500,000 a <br></br> year to turnover. Even preventing a handful of exits pays off.</p>
+            <div className="grid grid-cols-3 gap-1 md:gap-2 items-start justify-items-center max-w-[680px] mx-auto">
+              <div>
+                <label className="block text-center text-[#01253F] font-semibold mb-2">Nursing Staff Count</label>
+                <input type="number" placeholder="Number of employees" className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-5 py-3 placeholder:text-gray-400 shadow-inner" />
+              </div>
+              <div>
+                <label className="block text-center text-[#01253F] font-semibold mb-2">Turnover Rate (%)</label>
+                <input type="number" placeholder="Turnover Rate (%)" className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-5 py-3 placeholder:text-gray-400 shadow-inner" />
+              </div>
+              <div>
+                <label className="block text-center text-[#01253F] font-semibold mb-2">Cost per Turnover</label>
+                <input type="number" placeholder="Cost per Turnover" className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-5 py-3 placeholder:text-gray-400 shadow-inner" />
+              </div>
             </div>
-            <div className="card text-center">
-              <img src="https://placehold.co/80x80" alt="Profile" className="rounded-full mx-auto" />
-              <h3 className="mt-4 font-semibold">Jane Doe</h3>
-              <p className="text-gray-500">Healthcare Recruiter</p>
-              <p className="mt-2">Create a free account and connect with top employers today!</p>
-            </div>
-            <div className="card text-center">
-              <img src="https://placehold.co/80x80" alt="Profile" className="rounded-full mx-auto" />
-              <h3 className="mt-4 font-semibold">Michael Smith</h3>
-              <p className="text-gray-500">Healthcare Recruiter</p>
-              <p className="mt-2">Create a free account and connect with top employers today!</p>
+            <div className="flex justify-center mt-10">
+              <button className="px-8 py-4 bg-[#2CB3BF] text-white font-bold rounded-full shadow-md hover:bg-[#2499A4] transition duration-200 ease-in-out">Estimate Savings</button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* App Promotion Section */}
+      {/* Pilot Access CTA Section */}
       <section className="section">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-8">
-          <img src="https://placehold.co/600x400" alt="Pipeline app interface" className="w-full md:w-1/2 rounded-lg" />
-          <div className="max-w-md">
-            <h2 className="text-2xl font-bold">Your perfect healthcare match awaits</h2>
-            <div className="mt-6">
-              <button className="mr-4 px-4 py-2 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Download on the App Store</button>
-              <button className="px-4 py-2 bg-teal-500 text-white font-bold rounded-full shadow-md hover:bg-teal-600 transition duration-200 ease-in-out">Get it on Google Play</button>
+          {/* Placeholder image (left) */}
+          <div className="w-full md:w-1/2 flex justify-center">
+            <img src="/phone.svg" alt="Phone mockup" className="w-full max-w-lg h-72 md:h-96 object-contain translate-y-10 md:translate-y-16" />
+          </div>
+          {/* Text content (right) */}
+          <div className="w-full md:w-1/2 md:pl-8">
+            <h2 className="text-4xl font-bold text-[#2466D0] font-baloo mb-6">Shape the Future of<br/>Retention Intelligence</h2>
+            <p className="text-[#01253F] leading-relaxed mb-8">We’re partnering with a select group of skilled nursing facilities in Connecticut and Massachusetts. Early partners get preferred pricing, white-glove onboarding, and a seat at the table in shaping how this platform evolves.</p>
+            <button className="px-8 py-4 bg-[#2CB3BF] text-white font-bold rounded-full shadow-md hover:bg-[#2499A4] transition duration-200 ease-in-out">Apply for Pilot Access</button>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs Section */}
+      <section className="section py-16" style={{ backgroundImage: "url('/da_pipes2.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="container">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-white font-baloo mb-8">Frequently Ask Questions</h2>
+          <div className="md:flex md:gap-4">
+            {/* Left column */}
+            <div className="md:w-1/2 space-y-4">
+              <FAQItem
+                question="How much does turnover cost a skilled nursing facility?"
+                answer="On average, a 106-bed facility with ~100 nursing staff loses over $500,000 a year to churn."
+                defaultOpen
+              />
+              <FAQItem question="What results can I expect?" />
+            </div>
+            {/* Right column */}
+            <div className="md:w-1/2 space-y-4 mt-4 md:mt-0">
+              <FAQItem question="How does Pipeline reduce turnover?" />
+              <FAQItem question="What is Retention Intelligence?" />
+              <FAQItem question="How long until we deliver your first blog post?" />
             </div>
           </div>
         </div>
       </section>
+
     </BaseLayout>
   );
 }
