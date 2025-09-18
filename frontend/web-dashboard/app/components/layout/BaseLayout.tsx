@@ -42,54 +42,6 @@ export default function BaseLayout({
 
   return (
     <div className={`${backgroundClass} relative`} style={{...backgroundStyle, minHeight: '100vh', display: 'flex', flexDirection: 'column'}}>
-      {/* Top-right radial blue blur - contained and safe */}
-      <div 
-        className="absolute pointer-events-none hidden md:block overflow-hidden"
-        style={{
-          top: '15%',
-          right: '-50px',
-          width: '400px',
-          height: '1000px',
-          background: `
-            radial-gradient(
-              ellipse at center,
-              rgba(36, 102, 208, 0.5) 0%,
-              rgba(36, 102, 208, 0.4) 20%,
-              rgba(36, 102, 208, 0.3) 40%,
-              rgba(36, 102, 208, 0.2) 60%,
-              rgba(36, 102, 208, 0.15) 70%,
-              rgba(255, 0, 229, 0.15) 75%,
-              rgba(255, 0, 229, 0.12) 80%,
-              rgba(255, 0, 229, 0.1) 85%,
-              rgba(255, 0, 229, 0.08) 90%,
-              transparent 95%
-            )
-          `,
-          filter: 'blur(80px)',
-          zIndex: 0
-        }}
-      ></div>
-      
-      {/* Mobile-only blur effect - smaller and properly contained */}
-      <div 
-        className="absolute pointer-events-none md:hidden overflow-hidden"
-        style={{
-          top: '0',
-          right: '0',
-          width: '150px',
-          height: '200px',
-          background: `
-            radial-gradient(
-              ellipse at center,
-              rgba(36, 102, 208, 0.1) 0%,
-              rgba(36, 102, 208, 0.05) 40%,
-              transparent 70%
-            )
-          `,
-          filter: 'blur(30px)',
-          zIndex: 0
-        }}
-      ></div>
 
       {/* Navbar navigation */}
       {showNav && (

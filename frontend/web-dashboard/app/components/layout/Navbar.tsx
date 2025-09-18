@@ -70,15 +70,13 @@ const Navbar: React.FC<NavbarProps> = ({
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-4">
-            {/* Navigation items in white circular container */}
-            <div className="flex items-center space-x-6 bg-white rounded-full px-6 py-3 shadow-lg border border-gray-200">
+          <div className="hidden md:flex items-center space-x-6">
+            {/* Plain text navigation (no container) */}
+            <div className="flex items-center space-x-6">
               <Link
                 href="/jobs"
-                className={`text-sm font-medium transition-colors px-4 py-2 rounded-full font-avenir ${
-                  pathname === "/jobs"
-                    ? "bg-[#01253F] text-white"
-                    : "text-slate-700"
+                className={`text-sm font-medium transition-colors font-avenir hover:text-[#8AADFC] ${
+                  pathname === "/jobs" ? "text-[#01253F]" : "text-slate-700"
                 }`}
               >
                 Find Jobs
@@ -86,10 +84,8 @@ const Navbar: React.FC<NavbarProps> = ({
               
               <Link
                 href="/employer-intake"
-                className={`text-sm font-medium transition-colors px-4 py-2 rounded-full font-avenir ${
-                  pathname === "/employer-intake"
-                    ? "bg-[#01253F] text-white"
-                    : "text-slate-700"
+                className={`text-sm font-medium transition-colors font-avenir hover:text-[#8AADFC] ${
+                  pathname === "/employer-intake" ? "text-[#01253F]" : "text-slate-700"
                 }`}
               >
                 Hire Talent
@@ -97,10 +93,8 @@ const Navbar: React.FC<NavbarProps> = ({
               
               <Link
                 href="/employee-intake"
-                className={`text-sm font-medium transition-colors px-4 py-2 rounded-full font-avenir ${
-                  pathname === "/employee-intake"
-                    ? "bg-[#01253F] text-white"
-                    : "text-slate-700"
+                className={`text-sm font-medium transition-colors font-avenir hover:text-[#8AADFC] ${
+                  pathname === "/employee-intake" ? "text-[#01253F]" : "text-slate-700"
                 }`}
               >
                 Find Work
@@ -159,7 +153,7 @@ const Navbar: React.FC<NavbarProps> = ({
               ) : (
                 <button
                   onClick={onLoginClick}
-                  className="text-sm font-medium transition-colors px-4 py-2 rounded-full text-slate-700 font-avenir"
+                  className="text-sm font-medium transition-colors text-slate-700 hover:text-[#8AADFC] font-avenir"
                 >
                   Login
                 </button>

@@ -5,7 +5,7 @@ export default function LandingPage() {
   return (
     <BaseLayout backgroundStyle={{ backgroundColor: '#FFFFFF' }} navBackgroundClassName="bg-white">
       {/* Hero Section */}
-      <section className="section -mb-24 md:-mb-28 relative">
+      <section className="section -mb-24 md:-mb-28 relative rounded-3xl">
         <div className="container flex flex-col lg:flex-row items-center justify-between gap-0.52">
           <div className="max-w-xl lg:max-w-lg">
             <h1 className="text-4xl lg:text-5xl font-bold text-[#01253F] leading-tight">The Retention Platform For Skilled Nursing</h1>
@@ -24,7 +24,7 @@ export default function LandingPage() {
       </section>
 
       {/* Feature Cards */}
-      <section className="section">
+      <section className="section rounded-3xl">
         <div className="container flex flex-col lg:flex-row gap-8">
           <div className="bg-white rounded-2xl shadow-lg p-8 flex-1 min-h-[350px]">
             <div className="flex flex-col items-center text-center">
@@ -60,21 +60,21 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="section">
+      <section className="section rounded-3xl">
         <div className="container">
           <h2 className="text-4xl font-bold text-[#2466D0] font-baloo mb-8">From Retention to Full <br></br> Workforce Intelligence</h2>
           <div className="flex flex-col md:flex-row justify-between gap-8">
             <div className="space-y-4 md:flex-1">
               <div className="bg-[#F4F4F4] rounded-lg shadow-sm p-6">
-                <h3 className="font-semibold">Pip Widget</h3>
+                <h3 className="font-semibold text-[#2466D0]">Pip Widget</h3>
                 <p>Sits inside your ATS.</p>
               </div>
               <div className="bg-white rounded-lg shadow-[0px_2px_8px_rgba(36,102,208,0.15),0px_8px_24px_rgba(36,102,208,0.4)] p-6">
-                <h3 className="font-semibold">YourPipeline</h3>
+                <h3 className="font-semibold text-[#2466D0]">YourPipeline</h3>
                 <p>Runs alongside your ATS with predictive analytics.</p>
               </div>
               <div className="bg-[#F4F4F4] rounded-lg shadow-sm p-6">
-                <h3 className="font-semibold">Pipeline OS</h3>
+                <h3 className="font-semibold text-[#2466D0]">Pipeline OS</h3>
                 <p>Full ATS replacement — the workforce operating system for long-term care.</p>
               </div>
             </div>
@@ -97,7 +97,7 @@ export default function LandingPage() {
       </section>
 
       {/* Savings Calculator Section */}
-      <section className="section py-16" style={{ backgroundImage: "url('/da_pipes.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="section py-16 rounded-3xl" style={{ backgroundImage: "url('/da_pipes.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="container">
           <div className="bg-white rounded-3xl shadow-[0px_2px_8px_rgba(36,102,208,0.15),0px_8px_24px_rgba(36,102,208,0.25)] px-6 md:px-12 py-10">
             <h2 className="text-4xl font-bold text-[#2466D0] font-baloo text-center mb-4">What Turnover Really Costs Your Facility</h2>
@@ -124,7 +124,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pilot Access CTA Section */}
-      <section className="section">
+      <section className="section rounded-3xl">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Placeholder image (left) */}
           <div className="w-full md:w-1/2 flex justify-center">
@@ -140,7 +140,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQs Section */}
-      <section className="section py-16" style={{ backgroundImage: "url('/da_pipes2.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="section py-16 rounded-3xl" style={{ backgroundImage: "url('/da_pipes2.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="container">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-white font-baloo mb-8">Frequently Ask Questions</h2>
           <div className="md:flex md:gap-4">
