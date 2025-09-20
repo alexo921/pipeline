@@ -3,9 +3,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
-!pip install tensorflow
-# !pip install xgboost
 import tensorflow as tf
 from typing import Dict, List, Optional
 import numpy as np
