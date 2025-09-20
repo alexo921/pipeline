@@ -3,6 +3,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
 import tensorflow as tf
 from typing import Dict, List, Optional
 import numpy as np
@@ -83,12 +84,12 @@ class TwoTowerModel(nn.Module):
     def forward(self, query_ids: torch.Tensor, candidate_ids: torch.Tensor) -> torch.Tensor:
         # Query
         query_emb = self.query_embedding(query_ids)
-        if self.use_positional_encoding:
+        if self.use_positional_encoding and self.use_positional_encoding is not None:
             query_emb = self.positional_embedding_query(query_emb)
 
         # Candidate
         candidate_emb = self.candidate_embedding(candidate_ids)
-        if self.use_positional_encoding:
+        if self.use_positional_encoding and self.use_positional_encoding is not None:
             candidate_emb = self.positional_embedding_candidate(candidate_emb)
 
         # Mean pooling (seq_len -> fixed size)
@@ -102,7 +103,8 @@ class TwoTowerModel(nn.Module):
         # Normalize and compute similarity
         query_repr = F.normalize(query_repr, p=2, dim=1)
         candidate_repr = F.normalize(candidate_repr, p=2, dim=1)
-        similarity = torch.sum(query_repr * candidate_repr, dim=1)
+        
+        similarity = F.cosine_similarity(query_repr, candidate_repr, dim=1)
         return similarity
 
 
@@ -157,42 +159,62 @@ class TensorFlowTwoTowerModel(tf.keras.Model):
         candidate_repr = self.candidate_tower(candidate_emb, training=training)
 
         similarity = tf.reduce_sum(query_repr * candidate_repr, axis=1)
+        
         return similarity
 
 
 # =========================================================
 # XGBoost Two-Tower Model
 # =========================================================
+import numpy as np
+import xgboost as xgb
+from typing import Dict, Optional
+from sklearn.metrics import log_loss
+import itertools
+
+
 class XGBoostTwoTowerModel:
     def __init__(
         self,
         query_vocab_size: int,
         candidate_vocab_size: int,
         embedding_dim: int = 64,
-        xgb_params: Optional[Dict] = None
+        xgb_params: Optional[Dict] = None,
     ):
-        import xgboost as xgb
-
         self.query_vocab_size = query_vocab_size
         self.candidate_vocab_size = candidate_vocab_size
         self.embedding_dim = embedding_dim
 
+        # random embeddings
         self.query_embeddings = np.random.normal(0, 0.1, (query_vocab_size, embedding_dim))
         self.candidate_embeddings = np.random.normal(0, 0.1, (candidate_vocab_size, embedding_dim))
 
+        # base default params
         default_params = {
-            'objective': 'binary:logistic',
-            'eval_metric': 'logloss',
-            'max_depth': 6,
-            'learning_rate': 0.1,
-            'subsample': 0.8,
-            'colsample_bytree': 0.8,
-            'random_state': 42
+            "objective": "binary:logistic",
+            "eval_metric": "logloss",
+            "max_depth": 6,
+            "learning_rate": 0.1,
+            "subsample": 0.8,
+            "colsample_bytree": 0.8,
+            "random_state": 42,
         }
+
         self.xgb_params = {**default_params, **(xgb_params or {})}
         self.model = None
+        self.best_params = None
+        self.best_loss = float("inf")
+
+        # search space (small grid on top of defaults)
+        self.param_grid = {
+            "max_depth": [4, 6, 8],
+            "learning_rate": [0.05, 0.1, 0.2],
+            "subsample": [0.6, 0.8, 1.0],
+            "colsample_bytree": [0.6, 0.8, 1.0],
+        }
 
     def _create_features(self, query_ids: np.ndarray, candidate_ids: np.ndarray) -> np.ndarray:
+        """Construct features by combining embeddings in different ways."""
         query_embs = self.query_embeddings[query_ids]
         candidate_embs = self.candidate_embeddings[candidate_ids]
 
@@ -202,20 +224,55 @@ class XGBoostTwoTowerModel:
 
         return np.concatenate([concat_features, product_features, diff_features], axis=1)
 
-    def fit(self, query_ids: np.ndarray, candidate_ids: np.ndarray, labels: np.ndarray):
-        import xgboost as xgb
+    def fit(self, query_ids: np.ndarray, candidate_ids: np.ndarray, labels: np.ndarray, num_boost_round: int = 50):
         X = self._create_features(query_ids, candidate_ids)
-        dtrain = xgb.DMatrix(X, label=labels)
-        self.model = xgb.train(self.xgb_params, dtrain, num_boost_round=50)
+        y = np.array(labels)
+
+        # split train/val (80/20)
+        n = len(y)
+        split = int(0.8 * n)
+        X_train, X_val = X[:split], X[split:]
+        y_train, y_val = y[:split], y[split:]
+
+        dtrain = xgb.DMatrix(X_train, label=y_train)
+        dval = xgb.DMatrix(X_val, label=y_val)
+
+        # iterate over grid
+        keys, values = zip(*self.param_grid.items())
+        all_combos = [dict(zip(keys, v)) for v in itertools.product(*values)]
+
+        print(f"🔍 Grid search over {len(all_combos)} combinations")
+
+        for params in all_combos:
+            trial_params = {**self.xgb_params, **params}
+
+            model = xgb.train(
+                trial_params,
+                dtrain,
+                num_boost_round=num_boost_round,
+                evals=[(dval, "validation")],
+                verbose_eval=False,
+            )
+
+            # eval on validation
+            y_pred = model.predict(dval)
+            loss = log_loss(y_val, y_pred)
+
+            if loss < self.best_loss:
+                self.best_loss = loss
+                self.best_params = trial_params
+                self.model = model
+
+        print(f"✅ Best logloss: {self.best_loss:.4f}")
+        print(f"✅ Best params: {self.best_params}")
 
     def predict(self, query_ids: np.ndarray, candidate_ids: np.ndarray) -> np.ndarray:
         if self.model is None:
             raise ValueError("Model must be trained first!")
-
-        import xgboost as xgb
         X = self._create_features(query_ids, candidate_ids)
         dtest = xgb.DMatrix(X)
         return self.model.predict(dtest)
+
 
 
 # =========================================================
