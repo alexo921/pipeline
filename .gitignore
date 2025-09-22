@@ -1,3 +1,8 @@
+# Local virtual environments
+.venv/
+
+# Generated datasets
+/data/
 # Python
 __pycache__/
 *.py[cod]
@@ -85,3 +90,5 @@ Thumbs.db
 .bash_history
 .python_history
 .sudo_as_admin_successful
+node_modules
+node_modules

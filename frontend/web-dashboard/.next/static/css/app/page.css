@@ -1,0 +1,294 @@
+/*!******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[10].use[3]!./app/styles/brand.css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************/
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400&display=swap");
+
+.baloo-number {
+  font-family: "Baloo 2", cursive;
+  font-weight: 700;
+  font-size: 75px;
+  line-height: 115%; /* ≈114.999...% */
+  letter-spacing: 0;
+}
+
+.dashboard-label {
+  display: inline-block; /* or flex */
+  white-space: nowrap; /* prevent line break */
+  font-family: "Avenir", sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 115%;
+  color: #01253f;
+}
+
+.logout-button-custom {
+  font-family: "Avenir", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 115%;
+  letter-spacing: 0%;
+  color: #01253f; /* Tailwind's slate-700 */
+  transition: color 0.2s;
+}
+
+.logout-button-custom:hover {
+  color: #0066ff; /* Tailwind's blue-600 */
+}
+
+/* Brand Colors */
+:root {
+  /* Primary Colors */
+  --primary-blue: #0066ff;
+  --primary-dark: #1a1a1a;
+  --primary-light: #ffffff;
+
+  /* Secondary Colors */
+  --secondary-blue: #00d1ff;
+  --secondary-purple: #7000ff;
+  --secondary-pink: #ff00e5;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(
+    135deg,
+    var(--primary-blue) 0%,
+    var(--secondary-blue) 100%
+  );
+  --gradient-secondary: linear-gradient(
+    135deg,
+    var(--secondary-purple) 0%,
+    var(--secondary-pink) 100%
+  );
+
+  /* Text Colors */
+  --text-primary: var(--primary-dark);
+  --text-secondary: #4a4a4a;
+  --text-tertiary: #717171;
+  --text-light: var(--primary-light);
+
+  /* Background Colors */
+  --bg-primary: var(--primary-light);
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #fafafa;
+
+  /* Border Colors */
+  --border-light: #e5e5e5;
+  --border-medium: #d1d1d1;
+
+  /* Status Colors */
+  --success: #00c853;
+  --warning: #ffb300;
+  --error: #ff3d00;
+  --info: var(--primary-blue);
+}
+
+/* Typography */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-primary:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
+
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+}
+
+/* Base Styles */
+body {
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: var(--text-4xl);
+}
+h2 {
+  font-size: var(--text-3xl);
+}
+h3 {
+  font-size: var(--text-2xl);
+}
+h4 {
+  font-size: var(--text-xl);
+}
+h5 {
+  font-size: var(--text-lg);
+}
+h6 {
+  font-size: var(--text-base);
+}
+
+/* Common Components */
+.card {
+  background-color: var(--bg-primary);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.button-primary {
+  background: var(--gradient-primary);
+  color: var(--text-light);
+}
+
+.button-secondary {
+  background: var(--gradient-secondary);
+  color: var(--text-light);
+}
+
+.button-outline {
+  border: 2px solid var(--primary-blue);
+  color: var(--primary-blue);
+  background: transparent;
+}
+
+/* Form Elements */
+.input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-medium);
+  border-radius: 0.375rem;
+  font-size: var(--text-base);
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+}
+
+/* Layout Components */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+/* Navigation */
+.nav {
+  height: 4rem;
+  border-bottom: 1px solid var(--border-light);
+  background-color: var(--bg-primary);
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* Grid System */
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, 1fr);
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 768px) {
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* Utilities */
+.text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gradient {
+  background: var(--gradient-primary);
+}
+
+.bg-gradient-secondary {
+  background: var(--gradient-secondary);
+}
+
+/* Remove or update the page gradient background */
+.bg-page-gradient {
+  /* Remove the old full-page gradient */
+  background: transparent;
+}
+
