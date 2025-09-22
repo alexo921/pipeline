@@ -49,7 +49,7 @@ export default function Calculator() {
         <p className="text-center text-[#01253F] max-w-4xl mx-auto mb-10">
           A 106-bed nursing facility with ~100 nursing staff loses over $500,000 a <br /> year to turnover. Even preventing a handful of exits pays off.
         </p>
-        <div className="grid grid-cols-3 gap-1 md:gap-2 items-start justify-items-center max-w-[680px] mx-auto">
+        <div className="grid grid-cols-3 gap-1 md:gap-2 items-start justify-items-center max-w-[760px] mx-auto">
           <div>
             <label className="block text-center text-[#01253F] font-semibold mb-2">Nursing Staff Count</label>
             <input
@@ -57,8 +57,8 @@ export default function Calculator() {
               inputMode="numeric"
               value={staffCount}
               onChange={(e) => setStaffCount(e.target.value)}
-              placeholder="Number of employees"
-              className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-6 py-3 placeholder:text-gray-400 shadow-inner w-[90%] md:w-[85%]"
+              placeholder="Employee Count"
+              className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-6 py-3 placeholder:text-gray-400 shadow-inner w-full md:w-[95%]"
             />
           </div>
           <div>
@@ -70,7 +70,7 @@ export default function Calculator() {
               value={turnoverRate}
               onChange={(e) => setTurnoverRate(e.target.value)}
               placeholder="Turnover Rate (%)"
-              className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-6 py-3 placeholder:text-gray-400 shadow-inner w-[90%] md:w-[85%]"
+              className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-6 py-3 placeholder:text-gray-400 shadow-inner w-full md:w-[95%]"
             />
           </div>
           <div>
@@ -81,7 +81,7 @@ export default function Calculator() {
               value={costPerTurnover}
               onChange={(e) => setCostPerTurnover(e.target.value)}
               placeholder="Cost per Turnover"
-              className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-6 py-3 placeholder:text-gray-400 shadow-inner w-[90%] md:w-[85%]"
+              className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-6 py-3 placeholder:text-gray-400 shadow-inner w-full md:w-[95%]"
             />
           </div>
         </div>
