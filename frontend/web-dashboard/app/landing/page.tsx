@@ -6,7 +6,7 @@ export default function LandingPage() {
     <BaseLayout backgroundStyle={{ backgroundColor: '#FFFFFF' }} navBackgroundClassName="bg-white">
       {/* Hero Section */}
       <section className="section -mb-24 md:-mb-28 relative rounded-3xl">
-        <div className="container flex flex-col lg:flex-row items-center justify-between gap-0.52">
+        <div className="container flex flex-col lg:flex-row items-center justify-between gap-0.52 rounded-3xl">
           <div className="max-w-xl lg:max-w-lg">
             <h1 className="text-4xl lg:text-5xl font-bold text-[#01253F] leading-tight">The Retention Platform For Skilled Nursing</h1>
             <p className="mt-6 text-lg text-[#4A4A4A] leading-relaxed">Cut no-shows, keep staff longer, and reduce costly churn. Build a workforce that lasts with Pipeline.</p>
@@ -24,13 +24,22 @@ export default function LandingPage() {
       </section>
 
       {/* Feature Cards */}
-      <section className="section rounded-3xl">
-        <div className="container flex flex-col lg:flex-row gap-8">
+      <section className="section rounded-3xl mt-16 md:mt-24 bg-[#F4F4F4] relative">
+        {/* Left ellipse - top left */}
+        <div className="absolute top-0 left-0 z-10">
+          <img src="/elipse left.svg" alt="Left ellipse decoration" className="w-96 h-96 md:w-[30rem] md:h-[30rem]" />
+        </div>
+        
+        {/* Right ellipse - bottom right */}
+        <div className="absolute bottom-0 right-0 z-10">
+          <img src="/ellipse right.svg" alt="Right ellipse decoration" className="w-96 h-96 md:w-[30rem] md:h-[30rem]" />
+        </div>
+        
+        <div className="container flex flex-col lg:flex-row gap-8 relative z-20">
           <div className="bg-white rounded-2xl shadow-lg p-8 flex-1 min-h-[350px]">
             <div className="flex flex-col items-center text-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full flex items-center justify-center mb-6">
-                {/* Icon placeholder - user will add later */}
-                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6">
+                <img src="/landing2.png" alt="Fewer No-Shows icon" className="w-16 h-16 object-contain" />
               </div>
               <h2 className="text-4xl font-bold text-[#2466D0] mb-4">Fewer No-Shows</h2>
               <p className="text-[#4A4A4A] text-sm leading-relaxed">Predict how many candidates you'll need for orientation and surface those most likely to show up and stay.</p>
@@ -38,9 +47,8 @@ export default function LandingPage() {
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-8 flex-1 min-h-[350px]">
             <div className="flex flex-col items-center text-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full flex items-center justify-center mb-6">
-                {/* Icon placeholder - user will add later */}
-                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6">
+                <img src="/landing1.png" alt="Lower Turnover icon" className="w-16 h-16 object-contain" />
               </div>
               <h2 className="text-4xl font-bold text-[#2466D0] mb-4">Lower Turnover</h2>
               <p className="text-[#4A4A4A] text-sm leading-relaxed">Spot risks early with retention signals like attendance, morale, and culture fit. Intervene before staff walk out.</p>
@@ -48,9 +56,8 @@ export default function LandingPage() {
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-8 flex-1 min-h-[350px]">
             <div className="flex flex-col items-center text-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-200 to-purple-200 rounded-full flex items-center justify-center mb-6">
-                {/* Icon placeholder - user will add later */}
-                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6">
+                <img src="/landing3.png" alt="Less Agency Spend icon" className="w-16 h-16 object-contain" />
               </div>
               <h2 className="text-4xl font-bold text-[#2466D0] mb-4">Less Agency Spend</h2>
               <p className="text-[#4A4A4A] text-sm leading-relaxed">Retain more in-house staff, cut open shifts, and reduce reliance on expensive staffing agencies.</p>
@@ -60,7 +67,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="section rounded-3xl">
+      <section className="section rounded-3xl relative z-0">
         <div className="container">
           <h2 className="text-4xl font-bold text-[#2466D0] font-baloo mb-8">From Retention to Full <br></br> Workforce Intelligence</h2>
           <div className="flex flex-col md:flex-row justify-between gap-8">
@@ -88,7 +95,7 @@ export default function LandingPage() {
                   {/* Early Churn Risk metric near top-left corner */}
                   <img src="/metric_2.svg" alt="Metric 2" className="absolute w-40 md:w-44 lg:w-48 top-8 -left-6" />
                   {/* Secondary metric at bottom-right corner */}
-                  <img src="/metric_1.svg" alt="Metric 1" className="absolute w-40 md:w-44 lg:w-48 bottom-24 md:bottom-28 lg:bottom-32 -right-4 md:-right-6 lg:-right-8" />
+                  <img src="/metric_1.svg" alt="Metric 1" className="absolute w-40 md:w-44 lg:w-48 bottom-24 md:bottom-16 lg:bottom-18 -right-4 md:-right-6 lg:-right-8" />
                 </div>
               </div>
             </div>
@@ -126,9 +133,23 @@ export default function LandingPage() {
       {/* Pilot Access CTA Section */}
       <section className="section rounded-3xl">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-8">
-          {/* Placeholder image (left) */}
-          <div className="w-full md:w-1/2 flex justify-center">
-            <img src="/phone.svg" alt="Phone mockup" className="w-full max-w-lg h-72 md:h-96 object-contain translate-y-10 md:translate-y-16" />
+          {/* Phone with overlay (left) */}
+          <div className="w-full md:w-1/2 flex justify-center relative">
+            {/* Phone device */}
+            <img
+              src="/phone.svg"
+              alt="Phone mockup"
+              className="w-full max-w-lg h-72 md:h-96 object-contain translate-y-10 md:translate-y-16"
+            />
+
+            {/* Screen inside phone – centered and responsive (fills inner content) */}
+            <div className="absolute inset-0 translate-y-10 md:translate-y-16 flex items-center justify-center pointer-events-none">
+              <img
+                src="/phone_layer.svg"
+                alt="Phone screen"
+                className="w-[76.3%] md:w-[76.5%] rounded-t-[16px] object-cover translate-x-4 md:translate-x-6 translate-y-4 md:translate-y-6"
+              />
+            </div>
           </div>
           {/* Text content (right) */}
           <div className="w-full md:w-1/2 md:pl-8">
@@ -140,7 +161,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQs Section */}
-      <section className="section py-16 rounded-3xl" style={{ backgroundImage: "url('/da_pipes2.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section className="section py-16 rounded-3xl relative z-10" style={{ backgroundImage: "url('/da_pipes2.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="container">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-white font-baloo mb-8">Frequently Ask Questions</h2>
           <div className="md:flex md:gap-4">
@@ -151,13 +172,29 @@ export default function LandingPage() {
                 answer="On average, a 106-bed facility with ~100 nursing staff loses over $500,000 a year to churn."
                 defaultOpen
               />
-              <FAQItem question="What results can I expect?" />
+              <FAQItem
+                question="What results can I expect?"
+                answer="Our modeling shows that preventing 5–10 exits per year saves $50,000–$100,000 annually — before factoring in reduced agency costs and stronger coverage."
+              />
+              <FAQItem
+                question="What’s included in the Pilot Program?"
+                answer="Pilot partners in CT and MA get early access, preferred pricing, and direct input into how Retention Intelligence evolves. Limited spots available."
+              />
             </div>
             {/* Right column */}
             <div className="md:w-1/2 space-y-4 mt-4 md:mt-0">
-              <FAQItem question="How does Pipeline reduce turnover?" />
-              <FAQItem question="What is Retention Intelligence?" />
-              <FAQItem question="How long until we deliver your first blog post?" />
+              <FAQItem
+                question="How does Pipeline reduce turnover?"
+                answer="We predict which candidates are most likely to stay and flag early warning signs for at-risk staff. Preventing just 5 exits a year saves $50,000."
+              />
+              <FAQItem
+                question="What is Retention Intelligence?"
+                answer="It’s a new category of workforce tech. Retention Intelligence means fewer no-shows, lower turnover, less agency reliance, and stronger continuity of care."
+              />
+              <FAQItem
+                question="How is Pipeline different from a job board, staffing agency, or ATS?"
+                answer="Job boards show applicants. Staffing agencies rent workers. ATS systems track résumés. Pipeline is different: we predict retention, keep staff longer, and reduce churn."
+              />
             </div>
           </div>
         </div>
