@@ -31,8 +31,8 @@ export default function Calculator() {
     // Estimated number of annual exits
     const estimatedExits = staff * (ratePct / 100);
 
-    // Savings formula: value of preventing up to 5 exits (capped by estimated exits)
-    const preventedExits = Math.min(5, estimatedExits);
+    // Savings formula: value of preventing all estimated exits (no cap)
+    const preventedExits = estimatedExits;
     const savings = preventedExits * cost;
 
     const turnoverValue = estimatedExits * cost;
