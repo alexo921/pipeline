@@ -1,5 +1,6 @@
 import BaseLayout from "../components/layout/BaseLayout";
 import FAQItem from "./FAQItem";
+import Calculator from "./Calculator";
 
 export default function LandingPage() {
   return (
@@ -11,9 +12,12 @@ export default function LandingPage() {
             <h1 className="text-4xl lg:text-5xl font-bold text-[#01253F] leading-tight">The Retention Platform For Skilled Nursing</h1>
             <p className="mt-6 text-lg text-[#4A4A4A] leading-relaxed">Cut no-shows, keep staff longer, and reduce costly churn. Build a workforce that lasts with Pipeline.</p>
             <p className="mt-4 text-base text-[#4A4A4A] leading-relaxed">Preventing just 5 exits a year saves $50,000 annually.</p>
-            <button className="mt-8 px-8 py-4 bg-[#2CB3BF] text-white font-bold rounded-full shadow-md hover:bg-[#2499A4] transition duration-200 ease-in-out">
+            <a
+              href="mailto:info@pipelineworkforce.com?subject=Info%20to%20join%20the%20pilot%20program."
+              className="inline-block mt-8 px-8 py-4 bg-[#2CB3BF] text-white font-bold rounded-full shadow-md hover:bg-[#2499A4] transition duration-200 ease-in-out"
+            >
               Join the Pilot Program
-            </button>
+            </a>
           </div>
           <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
             <div className="relative">
@@ -105,29 +109,7 @@ export default function LandingPage() {
 
       {/* Savings Calculator Section */}
       <section className="section py-16 rounded-3xl" style={{ backgroundImage: "url('/da_pipes.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="container">
-          <div className="bg-white rounded-3xl shadow-[0px_2px_8px_rgba(36,102,208,0.15),0px_8px_24px_rgba(36,102,208,0.25)] px-6 md:px-12 py-10">
-            <h2 className="text-4xl font-bold text-[#2466D0] font-baloo text-center mb-4">What Turnover Really Costs Your Facility</h2>
-            <p className="text-center text-[#01253F] max-w-4xl mx-auto mb-10">A 106-bed nursing facility with ~100 nursing staff loses over $500,000 a <br></br> year to turnover. Even preventing a handful of exits pays off.</p>
-            <div className="grid grid-cols-3 gap-1 md:gap-2 items-start justify-items-center max-w-[680px] mx-auto">
-              <div>
-                <label className="block text-center text-[#01253F] font-semibold mb-2">Nursing Staff Count</label>
-                <input type="number" placeholder="Number of employees" className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-5 py-3 placeholder:text-gray-400 shadow-inner" />
-              </div>
-              <div>
-                <label className="block text-center text-[#01253F] font-semibold mb-2">Turnover Rate (%)</label>
-                <input type="number" placeholder="Turnover Rate (%)" className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-5 py-3 placeholder:text-gray-400 shadow-inner" />
-              </div>
-              <div>
-                <label className="block text-center text-[#01253F] font-semibold mb-2">Cost per Turnover</label>
-                <input type="number" placeholder="Cost per Turnover" className="mx-auto block rounded-full bg-white border border-[#E5E7EB] px-5 py-3 placeholder:text-gray-400 shadow-inner" />
-              </div>
-            </div>
-            <div className="flex justify-center mt-10">
-              <button className="px-8 py-4 bg-[#2CB3BF] text-white font-bold rounded-full shadow-md hover:bg-[#2499A4] transition duration-200 ease-in-out">Estimate Savings</button>
-            </div>
-          </div>
-        </div>
+        <Calculator />
       </section>
 
       {/* Pilot Access CTA Section */}
@@ -155,7 +137,12 @@ export default function LandingPage() {
           <div className="w-full md:w-1/2 md:pl-8">
             <h2 className="text-4xl font-bold text-[#2466D0] font-baloo mb-6">Shape the Future of<br/>Retention Intelligence</h2>
             <p className="text-[#01253F] leading-relaxed mb-8">We’re partnering with a select group of skilled nursing facilities in Connecticut and Massachusetts. Early partners get preferred pricing, white-glove onboarding, and a seat at the table in shaping how this platform evolves.</p>
-            <button className="px-8 py-4 bg-[#2CB3BF] text-white font-bold rounded-full shadow-md hover:bg-[#2499A4] transition duration-200 ease-in-out">Apply for Pilot Access</button>
+            <a
+              href="mailto:info@pipelineworkforce.com?subject=Info%20to%20join%20the%20pilot%20program."
+              className="inline-block px-8 py-4 bg-[#2CB3BF] text-white font-bold rounded-full shadow-md hover:bg-[#2499A4] transition duration-200 ease-in-out"
+            >
+              Apply for Pilot Access
+            </a>
           </div>
         </div>
       </section>
