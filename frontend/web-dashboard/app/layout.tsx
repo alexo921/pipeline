@@ -13,7 +13,7 @@ const baloo = Inter({
 });
 
 export const metadata = {
-  title: 'Pipeline: Long-Term Care Jobs',
+  title: 'Pipeline | Reduce Skilled Nursing Turnover with Retention Intelligence',
   description: 'Pipeline: The Dedicated Long-Term Care Job Board | CNA, LPN, RN & Home Care Jobs',
 };
 

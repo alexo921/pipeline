@@ -23,8 +23,7 @@ const Footer = () => {
               </div>
 
               <p className="text-base sm:text-lg lg:text-[20px] font-normal leading-[167%] text-[#01253F] mb-6 font-avenir">
-                Find CNA, LPN, RN, and caregiver jobs near you.
-                The job board built for long-term care and home care hiring.
+                Pipeline is built for skilled nursing facilities — helping reduce turnover, prevent no-shows, and retain the staff who keep care consistent.
               </p>
             </div>
 
@@ -139,8 +138,7 @@ const Footer = () => {
             </div>
 
             <p className="text-[20px] font-normal leading-[167%] text-[#01253F] mb-6 font-avenir">
-              Find CNA, LPN, RN, and caregiver jobs near you.
-              The job board built for long-term care and home care hiring.
+              Pipeline is built for skilled nursing facilities — helping reduce turnover, prevent no-shows, and retain the staff who keep care consistent.
             </p>
           </div>
 

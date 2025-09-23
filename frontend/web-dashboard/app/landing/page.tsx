@@ -6,7 +6,7 @@ export default function LandingPage() {
   return (
     <BaseLayout backgroundStyle={{ backgroundColor: '#FFFFFF' }} navBackgroundClassName="bg-white">
       {/* Hero Section */}
-      <section className="section -mb-24 md:-mb-28 relative rounded-3xl">
+      <section className="section -mb-24 md:-mb-28 relative rounded-b-3xl">
         <div className="container flex flex-col lg:flex-row items-center justify-between gap-0.52 rounded-3xl">
           <div className="max-w-xl lg:max-w-lg">
             <h1 className="text-4xl lg:text-5xl font-bold text-[#01253F] leading-tight">The Retention Platform For Skilled Nursing</h1>
@@ -28,7 +28,7 @@ export default function LandingPage() {
       </section>
 
       {/* Feature Cards */}
-      <section className="section rounded-3xl mt-16 md:mt-24 bg-[#F4F4F4] relative">
+      <section className="section rounded-b-3xl mt-16 md:mt-24 bg-[#F4F4F4] relative">
         {/* Left ellipse - top left */}
         <div className="absolute top-0 left-0 z-10">
           <img src="/elipse left.svg" alt="Left ellipse decoration" className="w-96 h-96 md:w-[30rem] md:h-[30rem]" />
@@ -71,21 +71,21 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="section rounded-3xl relative z-0">
+      <section className="section rounded-b-3xl relative z-0">
         <div className="container">
           <h2 className="text-4xl font-bold text-[#2466D0] font-baloo mb-8">From Retention to Full <br></br> Workforce Intelligence</h2>
           <div className="flex flex-col md:flex-row justify-between gap-8">
             <div className="space-y-4 md:flex-1">
               <div className="bg-[#F4F4F4] rounded-lg shadow-sm p-6">
-                <h3 className="font-semibold text-[#2466D0]">Pip Widget</h3>
+                <h3 className="font-semibold font-baloo text-[#2466D0]">Pip Widget</h3>
                 <p>Sits inside your ATS.</p>
               </div>
               <div className="bg-white rounded-lg shadow-[0px_2px_8px_rgba(36,102,208,0.15),0px_8px_24px_rgba(36,102,208,0.4)] p-6">
-                <h3 className="font-semibold text-[#2466D0]">YourPipeline</h3>
+                <h3 className="font-semibold font-baloo text-[#2466D0]">YourPipeline</h3>
                 <p>Runs alongside your ATS with predictive analytics.</p>
               </div>
               <div className="bg-[#F4F4F4] rounded-lg shadow-sm p-6">
-                <h3 className="font-semibold text-[#2466D0]">Pipeline OS</h3>
+                <h3 className="font-semibold font-baloo text-[#2466D0]">PipelineOS</h3>
                 <p>Full ATS replacement — the workforce operating system for long-term care.</p>
               </div>
             </div>
@@ -108,12 +108,25 @@ export default function LandingPage() {
       </section>
 
       {/* Savings Calculator Section */}
-      <section className="section py-16 rounded-3xl" style={{ backgroundImage: "url('/da_pipes.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <Calculator />
+      <section className="section py-16 rounded-b-3xl overflow-hidden relative">
+        {/* Full-bleed background layer */}
+        <div
+          className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-screen z-0"
+          style={{
+            backgroundImage: "url('/da_pipes.svg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: '#2466D0',
+          }}
+        />
+        <div className="relative z-10">
+          <Calculator />
+        </div>
       </section>
 
       {/* Pilot Access CTA Section */}
-      <section className="section rounded-3xl">
+      <section className="section rounded-b-3xl">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Phone with overlay (left) */}
           <div className="w-full md:w-1/2 flex justify-center relative">
@@ -148,8 +161,21 @@ export default function LandingPage() {
       </section>
 
       {/* FAQs Section */}
-      <section className="section py-16 rounded-3xl relative z-10" style={{ backgroundImage: "url('/da_pipes2.svg')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="container">
+      <section className="section py-16 rounded-b-3xl relative overflow-hidden">
+        {/* Full-bleed background layer */}
+        <div
+          className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-screen z-0"
+          style={{
+            backgroundImage: "url('/pipes-1.png')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: '#2466D0',
+          }}
+        />
+        {/* Dark overlay to improve contrast over background image */}
+        <div className="absolute inset-0 bg-black/40 rounded-b-3xl z-10" />
+        <div className="container relative z-20">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-white font-baloo mb-8">Frequently Ask Questions</h2>
           <div className="md:flex md:gap-4">
             {/* Left column */}
