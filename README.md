@@ -252,62 +252,6 @@ The platform includes comprehensive deployment scripts:
 ./quick-deploy.sh check          # Check status
 ```
 
-=======
-```
-
-3. **Mobile App Environment** (`frontend/mobile-app/.env`)
-```env
-EXPO_PUBLIC_API_URL=http://localhost:3001
-EXPO_PUBLIC_JAN_API_URL=http://localhost:1337/v1/chat/completions
-```
-
-### Development Commands
-
-**Backend API**:
-```bash
-cd backend/api
-npm run start:dev    # Development server
-npm run build        # Production build
-npm run test         # Run tests
-```
-
-**Web Dashboard**:
-```bash
-cd frontend/web-dashboard
-npm run dev          # Development server
-npm run build        # Production build
-npm run start        # Production server
-```
-
-**Mobile App**:
-```bash
-cd frontend/mobile-app
-npm start            # Expo development server
-npm run android      # Android emulator
-npm run ios          # iOS simulator
-npm run web          # Web browser
-```
-
-**Admin Panel**:
-```bash
-cd admin-panel
-npm run dev          # Development server
-npm run build        # Production build
-```
-
-## 🚀 Deployment
-
-### Production Deployment
-
-The platform includes comprehensive deployment scripts:
-
-**Quick Deployment**:
-```bash
-./quick-deploy.sh update-jobs    # Update job data
-./quick-deploy.sh hotfix         # Quick frontend fix
-./quick-deploy.sh check          # Check status
-```
-
 **Full Deployment**:
 ```bash
 ./deploy.sh                      # Deploy everything
