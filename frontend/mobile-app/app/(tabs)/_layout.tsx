@@ -32,9 +32,16 @@ export default function TabLayout() {
         }),
       }}>
       <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Chat',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="bubble.left.and.bubble.right.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="mypipeline"
         options={{
-          title: 'My Pipeline',
+          title: 'MyPipeline',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
         }}
       />
