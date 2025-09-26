@@ -20,8 +20,11 @@ export type ShiftData = {
   createdAt: number;
 };
 
-const JAN_API_URL = 'http://localhost:1337/v1/chat/completions';
+// Environment-based API URLs
+const JAN_API_URL = process.env.EXPO_PUBLIC_JAN_API_URL || 'http://localhost:1337/v1/chat/completions';
 const JAN_WEB_URL = 'http://localhost:1420'; // Jan web interface
+const JAN_DOCKER_API_URL = 'http://pipeline-jan-backend:1337/v1/chat/completions'; // Docker container URL
+const PIPELINE_API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
 
 // Fallback mock API for testing when Jan API is not available
 const MOCK_API = false; // Set to false when Jan API is ready

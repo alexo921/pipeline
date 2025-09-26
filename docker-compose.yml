@@ -110,6 +110,52 @@ services:
   #   volumes:
   #     - ./backend/job-scraper/output:/app/output
 
+  jan-backend:
+    build:
+      context: ./jan
+      dockerfile: Dockerfile.backend
+    container_name: pipeline-jan-backend
+    ports:
+      - "1337:1337"
+    environment:
+      - JAN_DATA_DIR=/app/data
+    volumes:
+      - jan_models:/app/models
+      - jan_data:/app/data
+    networks:
+      - pipeline-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1337/v1/models"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  mobile-app:
+    build:
+      context: ./frontend/mobile-app
+      dockerfile: Dockerfile
+    container_name: pipeline-mobile
+    ports:
+      - "3003:80"
+    environment:
+      NODE_ENV: production
+      EXPO_PUBLIC_ENVIRONMENT: production
+      EXPO_PUBLIC_API_URL: https://api.pipelineworkforce.com
+      EXPO_PUBLIC_JAN_API_URL: https://jan.pipelineworkforce.com/v1/chat/completions
+    networks:
+      - pipeline-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
 volumes:
   postgres_data:
   redis_data:
+  jan_models:
+  jan_data:
