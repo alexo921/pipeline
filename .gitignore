@@ -12,6 +12,11 @@ out/
 .env
 .env.local
 .env.*.local
+.env.production
+.env.staging
+.env.development
+.env.test
+.env.*
 
 # IDE
 .idea/
@@ -46,6 +51,8 @@ docker-compose.prod.yml
 postgres_data/
 redis_data/
 *_data/
+jan_models/
+jan_data/
 
 # Docker build cache
 .docker/
@@ -53,6 +60,10 @@ redis_data/
 # Docker logs
 docker-logs/
 *.docker.log
+
+# Docker secrets and configs
+docker-secrets/
+.docker/
 
 # Python
 venv/
@@ -78,10 +89,58 @@ coverage.xml
 .mypy_cache/
 .dmypy.json
 dmypy.json 
+# Sensitive files and credentials
 backend/job-scraper/google-chrome-stable_current_amd64.deb
 backend/credentials.json
+backend/*/credentials.json
+backend/*/service-account.json
+backend/*/oauth-credentials.json
 scraper_env/
 backend/job-scraper/
 pipeline-images/
+
+# API keys and secrets
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+keys/
+certificates/
+ssl/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+backups/
+*.sql
+*.dump
+
+# Configuration files with sensitive data
+config/production.json
+config/staging.json
+config/local.json
+config/secrets.json
+*.config.json
+
+# Logs and temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+logs/
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
 jan/
 Resume-NLP-Parser/
