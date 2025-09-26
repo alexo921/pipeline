@@ -1,144 +1,392 @@
-# Pipeline
+# Pipeline Workforce Platform
 
-A modern project management platform built with Next.js, NestJS, and PostgreSQL.
+A comprehensive healthcare workforce intelligence platform that connects healthcare professionals with employers through AI-powered matching, analytics, and workforce management tools.
 
-## Quick Start
+## 🏥 Overview
+
+Pipeline Workforce is a full-stack platform designed to revolutionize healthcare staffing by providing:
+
+- **AI-Powered Job Matching**: Intelligent matching between healthcare professionals and employers
+- **Workforce Analytics**: Comprehensive analytics for both employers and employees
+- **Real-time Communication**: Chat-based shift assistance and support
+- **Resume Parsing**: Advanced NLP-based resume analysis and skill extraction
+- **Multi-Platform Access**: Web dashboard, mobile app, and admin panel
+
+## 🏗️ Architecture
+
+### Core Components
+
+```
+Pipeline Workforce Platform
+├── 🌐 Web Dashboard (Next.js)
+├── 📱 Mobile App (React Native/Expo)
+├── 🔧 Admin Panel (Next.js)
+├── 🚀 Backend API (NestJS)
+├── 🤖 AI Backend (Jan AI)
+├── 📊 Resume Parser (Python/NLP)
+└── 🗄️ Database (PostgreSQL + Redis)
+```
+
+### Technology Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
+- **Mobile**: React Native, Expo, TypeScript
+- **Backend**: NestJS, Node.js, TypeScript
+- **Database**: PostgreSQL, Redis
+- **AI/ML**: Jan AI, Python, spaCy, NLTK
+- **Infrastructure**: Docker, Nginx, Ubuntu
+- **Authentication**: JWT, Passport.js
+- **Email**: Nodemailer with Gmail OAuth
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js 18+
-- pnpm
-- Docker Desktop
+- Docker & Docker Compose
 - Git
+- Ubuntu/Linux (for production)
 
 ### Installation
 
-1. Clone the repository:
+1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/pipeline.git
+git clone <repository-url>
 cd pipeline
 ```
 
-2. Install dependencies:
+2. **Start the development environment**
 ```bash
-# Install root dependencies
-pnpm install
-
-# Install frontend dependencies
-cd frontend/web-dashboard
-pnpm install
-
-# Install backend dependencies
-cd ../../backend/api
-pnpm install
-```
-
-3. Start the development environment:
-```bash
-# Start Docker containers (from root directory)
+# Start all services with Docker
 docker-compose up -d
 
-# Start backend (from backend/api directory)
-pnpm start:dev
-
-# Start frontend (from frontend/web-dashboard directory)
-pnpm dev
+# Or start individual services
+docker-compose up -d postgres redis
 ```
 
-The application will be available at:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:3001
+3. **Access the applications**
+- **Web Dashboard**: http://localhost:3000
+- **Mobile App**: http://localhost:3003
+- **Admin Panel**: http://localhost:3002
+- **API**: http://localhost:3001
+- **AI Backend**: http://localhost:1337
 
-## Project Structure
+## 📱 Applications
 
-```
-/pipeline
-├── frontend/
-│   └── web-dashboard/      # Next.js frontend
-├── backend/
-│   └── api/               # NestJS backend
-└── docker-compose.yml     # Docker services configuration
-```
+### 1. Web Dashboard (`frontend/web-dashboard/`)
 
-## API Endpoints
+**Technology**: Next.js 15, React 19, TypeScript, Tailwind CSS
 
-### Projects
-- `GET /api/projects` - List all projects
-- `POST /api/projects` - Create a project
-- `GET /api/projects/:id` - Get project details
-- `PATCH /api/projects/:id` - Update a project
-- `DELETE /api/projects/:id` - Delete a project
+**Features**:
+- **Role-based Dashboards**:
+  - **My Pipeline** (Employers): Job management, analytics, candidate matching
+  - **Your Pipeline** (Employees): Profile management, job matches, applications
+- **Analytics Dashboard**: KPIs, retention metrics, workforce insights
+- **Job Management**: Posting, editing, applicant tracking
+- **Candidate Matching**: AI-powered matching with scoring
+- **Real-time Updates**: Live data synchronization
 
-### Tasks
-- `GET /api/tasks` - List all tasks
-- `POST /api/tasks` - Create a task
-- `GET /api/tasks/:id` - Get task details
-- `PATCH /api/tasks/:id` - Update a task
-- `DELETE /api/tasks/:id` - Delete a task
+**Key Pages**:
+- `/` - Landing page
+- `/jobs` - Job listings
+- `/my-pipeline` - Employer dashboard
+- `/your-pipeline` - Employee dashboard
+- `/applicants` - Candidate management
 
-### Users
-- `GET /api/users` - List all users
-- `POST /api/users` - Create a user
-- `GET /api/users/:id` - Get user details
-- `PATCH /api/users/:id` - Update a user
-- `DELETE /api/users/:id` - Delete a user
+### 2. Mobile App (`frontend/mobile-app/`)
 
-## Development
+**Technology**: React Native, Expo, TypeScript
 
-### Database
+**Features**:
+- **Dual Tab Interface**:
+  - **Chat Tab**: AI-powered shift assistance and support
+  - **MyPipeline Tab**: Personal profile and career dashboard
+- **Healthcare Shift Documentation**: Track and document work shifts
+- **Wellness Features**: Sentiment tracking, wellness tips
+- **Real-time Chat**: AI assistant for healthcare professionals
+- **Cross-platform**: iOS, Android, and Web support
 
-The project uses PostgreSQL for data storage. The database is automatically created and configured when you run `docker-compose up -d`.
+**Key Screens**:
+- Chat interface with AI assistant
+- Profile management with completion tracking
+- Job matches and recommendations
+- Application tracking
+- Wellness and facility updates
 
-Default database credentials:
-- Host: localhost
-- Port: 5432
-- Database: pipeline_development_db
-- Username: admin
-- Password: password
+### 3. Admin Panel (`admin-panel/`)
 
-### Environment Variables
+**Technology**: Next.js, React, TypeScript
 
-Create a `.env` file in the `backend/api` directory:
+**Features**:
+- **System Administration**: User management, system monitoring
+- **Analytics Overview**: Platform-wide metrics and insights
+- **Content Management**: Job data, user profiles, system settings
+- **Audit Logs**: User activity and system events
 
+### 4. Backend API (`backend/api/`)
+
+**Technology**: NestJS, Node.js, TypeScript, PostgreSQL, Redis
+
+**Features**:
+- **RESTful API**: Comprehensive API for all platform features
+- **Authentication**: JWT-based auth with role management
+- **Database Management**: Prisma ORM with PostgreSQL
+- **Email Services**: Automated emails with Gmail OAuth
+- **File Uploads**: Resume and document handling
+- **Background Jobs**: Queue-based processing with BullMQ
+
+**Key Modules**:
+- Authentication & Authorization
+- User Management
+- Job Management
+- Resume Processing
+- Email Services
+- Analytics & Reporting
+
+### 5. AI Backend (`jan/`)
+
+**Technology**: Jan AI, Python
+
+**Features**:
+- **AI Chat Interface**: Healthcare-focused AI assistant
+- **Model Management**: Local AI model hosting
+- **Chat Completions**: Real-time AI responses
+- **Healthcare Context**: Specialized healthcare knowledge
+
+### 6. Resume Parser (`Resume-NLP-Parser/`)
+
+**Technology**: Python, spaCy, NLTK, Streamlit
+
+**Features**:
+- **Advanced NLP**: Resume parsing with machine learning
+- **Skill Extraction**: Automated skill identification
+- **Data Visualization**: Interactive resume analysis
+- **Multi-format Support**: PDF, DOC, and other formats
+- **Web Interface**: Streamlit-based user interface
+
+## 🗄️ Database Schema
+
+### Core Entities
+
+- **Users**: Healthcare professionals and employers
+- **Jobs**: Job postings and requirements
+- **Applications**: Job applications and status tracking
+- **Resumes**: Parsed resume data and skills
+- **Analytics**: Platform metrics and insights
+- **Chat Messages**: AI chat conversations
+
+### Key Relationships
+
+- Users can have multiple applications
+- Jobs can have multiple applicants
+- Resumes are linked to users
+- Analytics track user and job metrics
+
+## 🔧 Development
+
+### Environment Setup
+
+1. **Backend Environment** (`backend/api/.env`)
 ```env
-DATABASE_URL=postgresql://admin:password@localhost:5432/pipeline_development_db
-JWT_SECRET=your-secret-key
+DATABASE_URL=postgresql://pipeline_admin:password@localhost:5432/pipeline_production_db
+JWT_SECRET=your-jwt-secret
+GMAIL_CLIENT_ID=your-gmail-client-id
+GMAIL_CLIENT_SECRET=your-gmail-client-secret
 ```
 
-To generate a secure JWT secret key, you can use one of these methods:
+2. **Frontend Environment** (`frontend/web-dashboard/.env.local`)
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
 
-1. Using Node.js:
+3. **Mobile App Environment** (`frontend/mobile-app/.env`)
+```env
+EXPO_PUBLIC_API_URL=http://localhost:3001
+EXPO_PUBLIC_JAN_API_URL=http://localhost:1337/v1/chat/completions
+```
+
+### Development Commands
+
+**Backend API**:
 ```bash
-node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+cd backend/api
+npm run start:dev    # Development server
+npm run build        # Production build
+npm run test         # Run tests
 ```
 
-2. Using OpenSSL:
+**Web Dashboard**:
 ```bash
-openssl rand -hex 64
+cd frontend/web-dashboard
+npm run dev          # Development server
+npm run build        # Production build
+npm run start        # Production server
 ```
 
-Replace `your-secret-key` with the generated value. Keep this secret secure and never commit it to version control.
+**Mobile App**:
+```bash
+cd frontend/mobile-app
+npm start            # Expo development server
+npm run android      # Android emulator
+npm run ios          # iOS simulator
+npm run web          # Web browser
+```
 
-### Available Scripts
+**Admin Panel**:
+```bash
+cd admin-panel
+npm run dev          # Development server
+npm run build        # Production build
+```
 
-#### Backend (in `backend/api` directory)
-- `pnpm start:dev` - Start development server
-- `pnpm build` - Build for production
-- `pnpm start:prod` - Start production server
-- `pnpm test` - Run tests
+## 🚀 Deployment
 
-#### Frontend (in `frontend/web-dashboard` directory)
-- `pnpm dev` - Start development server
-- `pnpm build` - Build for production
-- `pnpm start` - Start production server
-- `pnpm test` - Run tests
+### Production Deployment
 
-## Contributing
+The platform includes comprehensive deployment scripts:
 
-1. Create a new branch for your feature
-2. Make your changes
-3. Submit a pull request
+**Quick Deployment**:
+```bash
+./quick-deploy.sh update-jobs    # Update job data
+./quick-deploy.sh hotfix         # Quick frontend fix
+./quick-deploy.sh check          # Check status
+```
 
-## License
+**Full Deployment**:
+```bash
+./deploy.sh                      # Deploy everything
+./deploy.sh frontend             # Deploy frontend only
+./deploy.sh backend              # Deploy backend only
+./deploy.sh admin                # Deploy admin panel
+```
 
-MIT
+**Simple Deployment** (Recommended):
+```bash
+./simple-deploy.sh               # Deploy with better error handling
+./simple-deploy.sh check         # Check deployment status
+```
+
+**Manual Deployment**:
+```bash
+docker-compose down && docker-compose up --build -d && sudo systemctl restart nginx
+```
+
+### Production URLs
+
+- **Main Platform**: https://pipelineworkforce.com
+- **API**: https://api.pipelineworkforce.com
+- **Mobile App**: https://mobile.pipelineworkforce.com
+- **Admin Panel**: https://pipelineworkforce.com/admin
+
+### Infrastructure
+
+- **Server**: Ubuntu with Docker
+- **Web Server**: Nginx with SSL
+- **Database**: PostgreSQL with Redis caching
+- **SSL**: Let's Encrypt certificates
+- **Monitoring**: Health checks and logging
+
+## 📊 Features
+
+### For Healthcare Professionals
+
+- **Profile Management**: Complete profile with skills, experience, and bio
+- **Job Matching**: AI-powered job recommendations
+- **Application Tracking**: Monitor application status
+- **Shift Documentation**: Track and document work shifts
+- **AI Assistant**: Chat-based support and guidance
+- **Wellness Tracking**: Sentiment and wellness monitoring
+
+### For Healthcare Employers
+
+- **Job Posting**: Create and manage job postings
+- **Candidate Matching**: AI-powered candidate recommendations
+- **Analytics Dashboard**: Workforce insights and metrics
+- **Applicant Management**: Track and manage applicants
+- **Retention Analytics**: Monitor employee retention
+- **Performance Metrics**: Track hiring success
+
+### For Administrators
+
+- **System Management**: User and system administration
+- **Analytics Overview**: Platform-wide metrics
+- **Content Management**: Manage jobs, users, and content
+- **Audit Logs**: Monitor system activity
+- **Configuration**: System settings and configuration
+
+## 🔒 Security
+
+- **Authentication**: JWT-based authentication
+- **Authorization**: Role-based access control
+- **Data Protection**: Encrypted data transmission
+- **Input Validation**: Comprehensive input sanitization
+- **Rate Limiting**: API rate limiting and throttling
+- **CORS**: Cross-origin resource sharing configuration
+- **SSL/TLS**: End-to-end encryption
+
+## 📈 Analytics
+
+### Key Metrics
+
+- **Retention Forecast**: Employee retention predictions
+- **No-Show Risk**: Candidate no-show probability
+- **Turnover Cost**: Cost analysis of employee turnover
+- **Match Quality**: AI matching accuracy
+- **Platform Usage**: User engagement metrics
+- **Performance KPIs**: Hiring success rates
+
+### Reporting
+
+- **Real-time Dashboards**: Live metrics and insights
+- **Export Capabilities**: CSV and PDF exports
+- **Custom Reports**: Configurable reporting
+- **Historical Data**: Trend analysis and comparisons
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+For support and questions:
+- **Documentation**: Check the individual README files in each component
+- **Issues**: Create an issue in the repository
+- **Email**: Contact the development team
+
+## 🔄 Version History
+
+- **v1.0.0**: Initial release with core functionality
+- **v1.1.0**: Added mobile app and AI chat
+- **v1.2.0**: Enhanced analytics and reporting
+- **v1.3.0**: Improved matching algorithms and UI
+
+## 🎯 Roadmap
+
+### Upcoming Features
+
+- **Advanced AI Matching**: Enhanced machine learning algorithms
+- **Video Interviews**: Integrated video interview platform
+- **Mobile Notifications**: Push notifications for mobile app
+- **Advanced Analytics**: Predictive analytics and insights
+- **Integration APIs**: Third-party system integrations
+- **Multi-language Support**: Internationalization support
+
+### Long-term Goals
+
+- **Machine Learning Platform**: Advanced ML model training
+- **Blockchain Integration**: Secure credential verification
+- **IoT Integration**: Healthcare device integration
+- **Global Expansion**: Multi-region deployment
+- **Enterprise Features**: Advanced enterprise capabilities
+
+---
+
+**Pipeline Workforce Platform** - Revolutionizing healthcare staffing through technology and innovation.
