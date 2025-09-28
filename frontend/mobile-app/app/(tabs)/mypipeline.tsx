@@ -19,6 +19,10 @@ export default function MyPipelineScreen() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [shiftInput, setShiftInput] = useState('');
+  const [isChatMode, setIsChatMode] = useState(false);
+  const [selectedSentiment, setSelectedSentiment] = useState<'happy' | 'mellow' | 'sad' | null>(null);
+  const [checkInHistory, setCheckInHistory] = useState<Array<{sentiment: 'happy' | 'mellow' | 'sad', timestamp: number}>>([]);
   
   const flatListRef = useRef<FlatList>(null);
   const translateY = useRef(new Animated.Value(0)).current;
@@ -84,6 +88,79 @@ export default function MyPipelineScreen() {
     }
   };
 
+  const handleShiftInputChange = (text: string) => {
+    setShiftInput(text);
+  };
+
+  const handleSentimentSelect = (sentiment: 'happy' | 'mellow' | 'sad') => {
+    setSelectedSentiment(sentiment);
+  };
+
+  const handleSubmitCheckIn = async () => {
+    if (!selectedSentiment) return;
+    
+    // Log check-in to history
+    const newCheckIn = { sentiment: selectedSentiment, timestamp: Date.now() };
+    setCheckInHistory(prev => [...prev, newCheckIn]);
+    
+    // Check if 3+ sad/mellow check-ins in a row
+    const recentCheckIns = [...checkInHistory, newCheckIn].slice(-3);
+    const allSadOrMellow = recentCheckIns.length >= 3 && 
+      recentCheckIns.every(checkIn => checkIn.sentiment === 'sad' || checkIn.sentiment === 'mellow');
+    
+    if (allSadOrMellow) {
+      // Trigger Pip intervention
+      setIsChatMode(true);
+      const interventionMessage: ChatMessage = {
+        id: String(Date.now()),
+        role: 'assistant',
+        text: `I've noticed you've been feeling ${selectedSentiment} lately. I'm here to help and support you. Would you like to talk about what's been challenging? I'm listening and want to help you through this.`,
+      };
+      setMessages(prev => [...prev, interventionMessage]);
+      expandChat();
+    }
+    
+    // Reset form
+    setSelectedSentiment(null);
+    setShiftInput('');
+  };
+
+  const handleSubmitShift = async () => {
+    if (!shiftInput.trim()) return;
+    
+    setIsChatMode(true);
+    setIsLoading(true);
+    
+    const userMessage: ChatMessage = {
+      id: String(Date.now()),
+      role: 'user',
+      text: shiftInput,
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
+    
+    try {
+      const response = await sendChatMessage(shiftInput, messages);
+      setMessages(prev => [...prev, response]);
+      
+      if (response.shiftData) {
+        setStoredShifts(prev => [...prev, response.shiftData!]);
+      }
+    } catch (error) {
+      console.error('Chat error:', error);
+      const errorMessage: ChatMessage = {
+        id: String(Date.now()),
+        role: 'assistant',
+        text: 'I\'m having trouble connecting right now. Please try again in a moment.',
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+      setShiftInput('');
+      requestAnimationFrame(() => flatListRef.current?.scrollToEnd({ animated: true }));
+    }
+  };
+
   const expandChat = () => {
     setIsFullScreen(true);
     Animated.parallel([
@@ -103,6 +180,11 @@ export default function MyPipelineScreen() {
         useNativeDriver: true,
       }),
     ]).start();
+  };
+
+  const startChatMode = () => {
+    setIsChatMode(true);
+    expandChat();
   };
 
   const collapseChat = () => {
@@ -133,7 +215,10 @@ export default function MyPipelineScreen() {
 
   const onHandlerStateChange = (event: any) => {
     if (event.nativeEvent.state === State.END) {
-      if (event.nativeEvent.translationY > 100 && isFullScreen) {
+      const { translationY, velocityY } = event.nativeEvent;
+      
+      // Swipe down to close (more sensitive)
+      if (translationY > 50 || velocityY > 500) {
         collapseChat();
       } else {
         // Snap back to current state
@@ -167,13 +252,40 @@ export default function MyPipelineScreen() {
           
           {/* Sentiment Buttons */}
           <View style={styles.sentimentContainer}>
-            <TouchableOpacity style={[styles.sentimentButton, { backgroundColor: colors.background }]}>
+            <TouchableOpacity 
+              style={[
+                styles.sentimentButton, 
+                { 
+                  backgroundColor: selectedSentiment === 'happy' ? colors.primary : colors.background,
+                  borderColor: selectedSentiment === 'happy' ? colors.primary : '#E5E5E5'
+                }
+              ]}
+              onPress={() => handleSentimentSelect('happy')}
+            >
               <ThemedText style={styles.sentimentEmoji}>😊</ThemedText>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.sentimentButton, { backgroundColor: colors.background }]}>
+            <TouchableOpacity 
+              style={[
+                styles.sentimentButton, 
+                { 
+                  backgroundColor: selectedSentiment === 'mellow' ? colors.primary : colors.background,
+                  borderColor: selectedSentiment === 'mellow' ? colors.primary : '#E5E5E5'
+                }
+              ]}
+              onPress={() => handleSentimentSelect('mellow')}
+            >
               <ThemedText style={styles.sentimentEmoji}>😐</ThemedText>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.sentimentButton, { backgroundColor: colors.background }]}>
+            <TouchableOpacity 
+              style={[
+                styles.sentimentButton, 
+                { 
+                  backgroundColor: selectedSentiment === 'sad' ? colors.primary : colors.background,
+                  borderColor: selectedSentiment === 'sad' ? colors.primary : '#E5E5E5'
+                }
+              ]}
+              onPress={() => handleSentimentSelect('sad')}
+            >
               <ThemedText style={styles.sentimentEmoji}>😔</ThemedText>
             </TouchableOpacity>
           </View>
@@ -184,11 +296,48 @@ export default function MyPipelineScreen() {
             placeholderTextColor={colors.mutedText}
             multiline
             numberOfLines={3}
+            value={shiftInput}
+            onChangeText={handleShiftInputChange}
           />
 
-          <TouchableOpacity style={[styles.submitButton, { backgroundColor: colors.primary }]}>
-            <ThemedText style={styles.submitButtonText}>Submit Check-in</ThemedText>
-          </TouchableOpacity>
+          {/* Action Buttons */}
+          <View style={styles.actionButtonsContainer}>
+            <TouchableOpacity 
+              style={[
+                styles.submitButton, 
+                { 
+                  backgroundColor: selectedSentiment ? colors.primary : colors.mutedText,
+                  flex: 1,
+                  marginRight: 8
+                }
+              ]}
+              onPress={handleSubmitCheckIn}
+              disabled={!selectedSentiment}
+            >
+              <ThemedText style={styles.submitButtonText}>
+                Submit Check-in
+              </ThemedText>
+            </TouchableOpacity>
+
+            {shiftInput.trim() && (
+              <TouchableOpacity 
+                style={[
+                  styles.submitButton, 
+                  { 
+                    backgroundColor: colors.secondary,
+                    flex: 1,
+                    marginLeft: 8
+                  }
+                ]}
+                onPress={startChatMode}
+              >
+                <ThemedText style={styles.submitButtonText}>
+                  Open Chat with Pip
+                </ThemedText>
+              </TouchableOpacity>
+            )}
+          </View>
+
         </View>
 
         {/* Wellness Tip Card */}
@@ -216,26 +365,6 @@ export default function MyPipelineScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Chat with Pip Card */}
-        <View style={[styles.card, { backgroundColor: colors.card }]}>
-          <ThemedText style={[styles.cardTitle, { color: colors.primary }]}>
-            Chat with Pip
-          </ThemedText>
-          <ThemedText style={[styles.cardText, { color: colors.mutedText }]}>
-            Chat with your AI assistant to document and discuss your shifts. Get support and feedback on your healthcare work.
-          </ThemedText>
-          {storedShifts.length > 0 && (
-            <ThemedText style={[styles.shiftCount, { color: colors.secondary }]}>
-              {storedShifts.length} shift{storedShifts.length !== 1 ? 's' : ''} documented
-            </ThemedText>
-          )}
-          <TouchableOpacity 
-            style={[styles.chatButton, { backgroundColor: colors.primary }]}
-            onPress={expandChat}
-          >
-            <ThemedText style={styles.chatButtonText}>Open Chat</ThemedText>
-          </TouchableOpacity>
-        </View>
       </Animated.View>
 
       {/* Fullscreen Chat Overlay */}
@@ -398,6 +527,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   submitButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  actionButtonsContainer: {
+    flexDirection: 'row',
+    marginTop: 16,
+  },
+  chatModeButton: {
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  chatModeButtonText: {
     color: '#FFFFFF',
     fontWeight: '600',
     fontSize: 16,

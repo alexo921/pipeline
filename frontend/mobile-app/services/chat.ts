@@ -27,7 +27,7 @@ const JAN_DOCKER_API_URL = 'http://pipeline-jan-backend:1337/v1/chat/completions
 const PIPELINE_API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
 
 // Fallback mock API for testing when Jan API is not available
-const MOCK_API = false; // Set to false when Jan API is ready
+const MOCK_API = true; // Set to true for faster testing, false when Jan API is ready
 
 // Local storage for shift data
 const SHIFT_STORAGE_KEY = 'pipeline_shift_data';
@@ -122,7 +122,7 @@ export async function sendChatMessage(
           role: 'assistant',
           text: randomResponse,
         });
-      }, 1000 + Math.random() * 2000); // Simulate API delay
+      }, 500 + Math.random() * 1000); // Simulate faster API delay
     });
   }
 
@@ -158,10 +158,10 @@ Be empathetic, professional, and focused on helping workers process their shift 
         // 'Authorization': 'Bearer your-api-key', // Not needed for local llama-server
       },
           body: JSON.stringify({
-            model: '/home/ubuntu/.local/share/Jan/data/llamacpp/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf',
+            model: '/app/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf',
             messages,
             temperature: 0.7,
-            max_tokens: 500,
+            max_tokens: 150,
             stream: false
           }),
     });
@@ -254,10 +254,10 @@ Be empathetic, professional, and focused on helping workers process their shift 
         // 'Authorization': 'Bearer your-api-key', // Not needed for local llama-server
       },
       body: JSON.stringify({
-             model: '/home/ubuntu/.local/share/Jan/data/llamacpp/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf',
+             model: '/app/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf',
         messages,
         temperature: 0.7,
-        max_tokens: 500,
+        max_tokens: 150,
         stream: true
       }),
     });
