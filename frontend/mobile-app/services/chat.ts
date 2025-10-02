@@ -21,13 +21,11 @@ export type ShiftData = {
 };
 
 // Environment-based API URLs
-const JAN_API_URL = process.env.EXPO_PUBLIC_JAN_API_URL || 'http://localhost:1337/v1/chat/completions';
-const JAN_WEB_URL = 'http://localhost:1420'; // Jan web interface
-const JAN_DOCKER_API_URL = 'http://pipeline-jan-backend:1337/v1/chat/completions'; // Docker container URL
+const RASA_API_URL = process.env.EXPO_PUBLIC_RASA_API_URL || 'http://localhost:5005/webhooks/rest/webhook';
 const PIPELINE_API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
 
-// Fallback mock API for testing when Jan API is not available
-const MOCK_API = true; // Set to true for faster testing, false when Jan API is ready
+// Rasa webhook endpoint for chat
+const RASA_WEBHOOK_URL = process.env.EXPO_PUBLIC_RASA_WEBHOOK_URL || 'http://localhost:5005/webhooks/rest/webhook';
 
 // Local storage for shift data
 const SHIFT_STORAGE_KEY = 'pipeline_shift_data';
@@ -99,79 +97,40 @@ export function extractShiftData(message: string, conversationHistory: ChatMessa
 }
 
 /**
- * Chat service that connects to Jan AI backend
+ * Chat service that connects to Rasa chatbot backend
  */
 export async function sendChatMessage(
   prompt: string,
   conversationHistory: ChatMessage[] = []
 ): Promise<ChatMessage> {
-  // Use mock API for testing when Jan API is not available
-  if (MOCK_API) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const responses = [
-          "Hi! I'm Pip, and I can help you with your healthcare shifts! What specific questions do you have about your recent shift?",
-          "Let me assist you with documenting your shift experience. Tell me about your department, hours worked, and how it went?",
-          "I'm Pip, here to help with your healthcare shift documentation. Would you like to discuss any challenges or successes from your shift?",
-          "I can help you document and reflect on your healthcare shifts. What would you like to share about your recent work?",
-          "As Pip, your healthcare shift assistant, I'm ready to help document your shift experience. What do you need assistance with?"
-        ];
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-        resolve({
-          id: String(Date.now()),
-          role: 'assistant',
-          text: randomResponse,
-        });
-      }, 500 + Math.random() * 1000); // Simulate faster API delay
-    });
-  }
-
   try {
-    const messages = [
-        {
-          role: 'system',
-          content: `You are Pip, a friendly and supportive healthcare workforce assistant. Your primary role is to help healthcare workers document and discuss their shifts. 
-
-When a worker discusses their shift, you should:
-1. Ask clarifying questions about their shift experience
-2. Document key details like: shift type, department, patient load, challenges, successes, hours worked
-3. Help them reflect on their performance and areas for improvement
-4. Store important information for future reference
-5. Provide supportive feedback and encouragement
-
-Be empathetic, professional, and focused on helping workers process their shift experiences. Ask follow-up questions to get complete information about their shift. Always introduce yourself as Pip and maintain a warm, supportive tone.`
-        },
-      ...conversationHistory.map(msg => ({
-        role: msg.role,
-        content: msg.text
-      })),
-      {
-        role: 'user',
-        content: prompt
-      }
-    ];
-
-    const response = await fetch(JAN_API_URL, {
+    // Send message to Rasa webhook
+    const response = await fetch(RASA_WEBHOOK_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': 'Bearer your-api-key', // Not needed for local llama-server
       },
-          body: JSON.stringify({
-            model: '/app/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf',
-            messages,
-            temperature: 0.7,
-            max_tokens: 150,
-            stream: false
-          }),
+      body: JSON.stringify({
+        sender: 'user', // You can use actual user ID here
+        message: prompt,
+        metadata: {
+          conversation_history: conversationHistory.map(msg => ({
+            role: msg.role,
+            text: msg.text,
+            timestamp: msg.timestamp
+          }))
+        }
+      }),
     });
 
     if (!response.ok) {
-      throw new Error(`Jan API error: ${response.status}`);
+      throw new Error(`Rasa API error: ${response.status}`);
     }
 
     const data = await response.json();
-    const responseText = data.choices[0]?.message?.content || 'I apologize, but I couldn\'t process your request.';
+    
+    // Rasa returns an array of responses, take the first one
+    const responseText = data[0]?.text || 'I apologize, but I couldn\'t process your request.';
     
     // Extract shift data from the conversation
     const shiftData = extractShiftData(prompt, conversationHistory);

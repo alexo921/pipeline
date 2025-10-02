@@ -1,0 +1,25 @@
+# Pipeline Workforce Platform Requirements
+# This file contains all Python dependencies for the entire pipeline system
+
+# Core Rasa Dependencies
+rasa==3.6.21
+rasa-sdk>=3.6.0
+
+# Rasa Actions Dependencies
+requests>=2.25.0
+
+# Vector Database and RAG Dependencies (Lightweight)
+chromadb==0.4.24
+# Note: sentence-transformers requires PyTorch which is memory-intensive
+# Using ChromaDB's built-in embeddings instead
+# sentence-transformers==2.2.2
+# langchain==0.1.20
+# langchain-chroma==0.1.4
+
+# Additional dependencies that might be needed
+flask>=2.0.0
+python-dateutil>=2.8.0
+numpy>=1.21.0
+pandas>=1.3.0
+
+# Note: Backend-specific requirements are in backend/requirements_oauth.txt
