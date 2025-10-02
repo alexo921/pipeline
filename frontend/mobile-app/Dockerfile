@@ -20,7 +20,7 @@ COPY . .
 # Set production environment variables
 ENV EXPO_PUBLIC_ENVIRONMENT=production
 ENV EXPO_PUBLIC_API_URL=https://api.pipelineworkforce.com
-ENV EXPO_PUBLIC_JAN_API_URL=https://jan.pipelineworkforce.com/v1/chat/completions
+ENV EXPO_PUBLIC_RASA_API_URL=http://pip-chatbot:5005/webhooks/rest/webhook
 
 # Build the app
 RUN npm run build:web

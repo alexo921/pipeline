@@ -1,40 +1,31 @@
 version: '3.8'
 
-networks:
-  pipeline-network:
-    driver: bridge
-
 services:
+  # Database
   postgres:
     image: postgres:15
     container_name: pipeline-postgres
     environment:
-      POSTGRES_USER: pipeline_admin
-      POSTGRES_PASSWORD: Sj29!3*hs&UjN
-      POSTGRES_DB: pipeline_production_db
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: pipeline
+      POSTGRES_USER: pipeline
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pipeline_password}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./backups:/backups  # For database backups
-    networks:
-      - pipeline-network
+    ports:
+      - "5432:5432"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d pipeline_production_db"]
+      test: ["CMD-SHELL", "pg_isready -U pipeline"]
       interval: 30s
       timeout: 10s
       retries: 3
 
+  # Redis Cache
   redis:
     image: redis:7-alpine
     container_name: pipeline-redis
     ports:
       - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - pipeline-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -42,44 +33,124 @@ services:
       timeout: 10s
       retries: 3
 
+  # ChromaDB for RAG
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: pipeline-chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - chromadb_data:/chroma/chroma
+    environment:
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["*"]
+    restart: unless-stopped
+
+  # API Backend
   api:
-    build: 
+    build:
       context: ./backend/api
       dockerfile: Dockerfile
     container_name: pipeline-api
-    ports:
-      - "3001:3001"
-    env_file:
-      - ./backend/api/.env
     environment:
-      NODE_ENV: production
-      DATABASE_URL: postgresql://pipeline_admin:Sj29!3*hs&UjN@postgres:5432/pipeline_production_db
+      - DATABASE_URL=postgresql://pipeline:${POSTGRES_PASSWORD:-pipeline_password}@postgres:5432/pipeline
+      - REDIS_URL=redis://redis:6379
+      - CHROMA_URL=http://chromadb:8000
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
-    networks:
-      - pipeline-network
     restart: unless-stopped
-    volumes:
-      - ./backend/api/uploads:/app/uploads  # If you have file uploads
-      - ./backend/api/tokens:/app/tokens    # Gmail OAuth tokens persistence
 
+  # Pip Chatbot - Rasa + Llama integration
+  pip-chatbot:
+    build:
+      context: .
+      dockerfile: rasa/Dockerfile
+    container_name: pipeline-pip-chatbot
+    ports:
+      - "5005:5005"  # Rasa server
+      - "5055:5055"  # Action server
+    volumes:
+      - ./models:/app/models:ro  # Mount Llama models
+      - ./rasa/data:/app/rasa/data  # Persistent data
+      - ./rasa/logs:/app/rasa/logs  # Logs
+      - ./rasa/models:/app/rasa/models  # Rasa models
+    environment:
+      - PYTHONPATH=/app/rasa
+      - CHROMA_URL=http://chromadb:8000
+      - POSTGRES_URL=postgresql://pipeline:${POSTGRES_PASSWORD:-pipeline_password}@postgres:5432/pipeline
+    depends_on:
+      - chromadb
+      - postgres
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5005/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Llama Server
+  llama-server:
+    image: ghcr.io/ggerganov/llama-cpp-python:latest
+    container_name: pipeline-llama-server
+    ports:
+      - "1337:8000"
+    volumes:
+      - ./models:/models:ro
+    environment:
+      - MODEL_PATH=/models/llama-3.1-8b-instruct-q4_0.gguf
+      - HOST=0.0.0.0
+      - PORT=8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/v1/models"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Mobile App Frontend
+  mobile-app:
+    build:
+      context: ./frontend/mobile-app
+      dockerfile: Dockerfile
+    container_name: pipeline-mobile-app
+    ports:
+      - "3000:80"
+    environment:
+      - EXPO_PUBLIC_ENVIRONMENT=production
+      - EXPO_PUBLIC_API_URL=https://api.pipelineworkforce.com
+      - EXPO_PUBLIC_RASA_API_URL=http://pip-chatbot:5005/webhooks/rest/webhook
+    depends_on:
+      - pip-chatbot
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Web Dashboard
   web-dashboard:
     build:
       context: ./frontend/web-dashboard
       dockerfile: Dockerfile
-    container_name: pipeline-web
+    container_name: pipeline-web-dashboard
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
-      NODE_ENV: production
-      NEXT_PUBLIC_API_URL: https://api.pipelineworkforce.com
-    networks:
-      - pipeline-network
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=https://api.pipelineworkforce.com
+      - NEXT_PUBLIC_RASA_API_URL=http://pip-chatbot:5005/webhooks/rest/webhook
+    depends_on:
+      - pip-chatbot
     restart: unless-stopped
 
+  # Admin Panel
   admin-panel:
     build:
       context: ./admin-panel
@@ -88,74 +159,16 @@ services:
     ports:
       - "3002:3000"
     environment:
-      NODE_ENV: production
-      NEXT_PUBLIC_API_URL: https://api.pipelineworkforce.com
-    networks:
-      - pipeline-network
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=https://api.pipelineworkforce.com
+    depends_on:
+      - api
     restart: unless-stopped
-
-  # job-scraper:
-  #   build:
-  #     context: ./backend/job-scraper
-  #     dockerfile: Dockerfile
-  #   container_name: pipeline-scraper
-  #   environment:
-  #     DATABASE_URL: postgresql://pipeline_admin:Sj29!3*hs&UjN@postgres:5432/pipeline_production_db
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   networks:
-  #     - pipeline-network
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./backend/job-scraper/output:/app/output
-
-  jan-backend:
-    build:
-      context: ./jan
-      dockerfile: Dockerfile.backend
-    container_name: pipeline-jan-backend
-    ports:
-      - "1337:1337"
-    environment:
-      - JAN_DATA_DIR=/app/data
-    volumes:
-      - jan_models:/app/models
-      - jan_data:/app/data
-    networks:
-      - pipeline-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:1337/v1/models"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
-  mobile-app:
-    build:
-      context: ./frontend/mobile-app
-      dockerfile: Dockerfile
-    container_name: pipeline-mobile
-    ports:
-      - "3003:80"
-    environment:
-      NODE_ENV: production
-      EXPO_PUBLIC_ENVIRONMENT: production
-      EXPO_PUBLIC_API_URL: https://api.pipelineworkforce.com
-      EXPO_PUBLIC_JAN_API_URL: https://jan.pipelineworkforce.com/v1/chat/completions
-    networks:
-      - pipeline-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
 
 volumes:
   postgres_data:
-  redis_data:
-  jan_models:
-  jan_data:
+  chromadb_data:
+
+networks:
+  default:
+    name: pipeline-network

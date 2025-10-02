@@ -195,7 +195,7 @@ Use this knowledge to provide accurate, helpful responses while maintaining your
         """Call the local Llama model via API."""
         try:
             # Use the llama-server that's running locally
-            url = "http://localhost:1337/v1/chat/completions"
+            url = "http://host.docker.internal:1337/v1/chat/completions"
             
             payload = {
                 "model": "llama-3.1-8b-instruct",
@@ -389,7 +389,7 @@ Weekly proofs / receipts (admin-originated announcements Pip may send)
         """Call the local Llama model via API."""
         try:
             # Use the llama-server that's running locally
-            url = "http://localhost:1337/v1/chat/completions"
+            url = "http://host.docker.internal:1337/v1/chat/completions"
             
             payload = {
                 "model": "llama-3.1-8b-instruct",
