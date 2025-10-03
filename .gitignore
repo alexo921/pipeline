@@ -144,3 +144,9 @@ Thumbs.db
 # Project specific
 jan/
 Resume-NLP-Parser/
+models/
+rasa/.rasa/
+rasa/models/
+rasa/data/chromadb/
+*.gguf
+*.tar.gz

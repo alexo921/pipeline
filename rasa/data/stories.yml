@@ -1,0 +1,120 @@
+version: "3.1"
+
+stories:
+
+- story: greet and help
+  steps:
+  - intent: greet
+  - action: utter_greet
+
+- story: shift documentation
+  steps:
+  - intent: document_shift
+  - action: utter_ask_shift_details
+  - action: action_document_shift
+  - action: utter_shift_documented
+
+- story: ask about shift
+  steps:
+  - intent: ask_about_shift
+  - action: utter_ask_shift_details
+
+- story: schedule inquiry
+  steps:
+  - intent: ask_about_schedule
+  - action: utter_ask_schedule_info
+  - action: action_get_schedule_info
+
+- story: availability check
+  steps:
+  - intent: ask_about_availability
+  - action: utter_ask_schedule_info
+  - action: action_get_schedule_info
+
+- story: report issue
+  steps:
+  - intent: report_issue
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: request support
+  steps:
+  - intent: request_support
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: discuss workload
+  steps:
+  - intent: discuss_workload
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: share feedback
+  steps:
+  - intent: share_feedback
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: ask about training
+  steps:
+  - intent: ask_about_training
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: ask about policies
+  steps:
+  - intent: ask_about_policies
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: say goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: express stress
+  steps:
+  - intent: express_stress
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: express gratitude
+  steps:
+  - intent: express_gratitude
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: express concern
+  steps:
+  - intent: express_concern
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: share success
+  steps:
+  - intent: share_success
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: mention PHI
+  steps:
+  - intent: mention_phi
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: report safety issue
+  steps:
+  - intent: report_safety_issue
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: bot challenge
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
+
+- story: shift reflection
+  steps:
+  - intent: shift_reflection
+  - action: action_rag_enhanced_chat
+  - action: action_listen

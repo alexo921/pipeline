@@ -1,0 +1,150 @@
+{"id": 1, "caregiver_message": "Falta personal otra vez en 3 West Call me at 555-1245.", "expected": {"topic": "staffing", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 2, "caregiver_message": "Falta personal otra vez en Memory Care", "expected": {"topic": "staffing", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 3, "caregiver_message": "Short staffed again on 4 East, everyone exhausted", "expected": {"topic": "staffing", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 4, "caregiver_message": "Falta personal otra vez en Memory Care", "expected": {"topic": "staffing", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 5, "caregiver_message": "Short staffed again on Memory Care, everyone exhausted", "expected": {"topic": "staffing", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 6, "caregiver_message": "Short staffed again on 3 West, everyone exhausted", "expected": {"topic": "staffing", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 7, "caregiver_message": "Short staffed again on Memory Care, everyone exhausted", "expected": {"topic": "staffing", "sentiment": "positive", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 8, "caregiver_message": "Falta personal otra vez en ICU", "expected": {"topic": "staffing", "sentiment": "neutral", "urgency": "low", "routing": "UnitManager"}}
+{"id": 9, "caregiver_message": "Schedule posted late again Call me at 555-1294.", "expected": {"topic": "scheduling", "sentiment": "negative", "urgency": "low", "routing": "Scheduling"}}
+{"id": 10, "caregiver_message": "Schedule posted late again", "expected": {"topic": "scheduling", "sentiment": "negative", "urgency": "medium", "routing": "Scheduling"}}
+{"id": 11, "caregiver_message": "Schedule posted late again", "expected": {"topic": "scheduling", "sentiment": "neutral", "urgency": "low", "routing": "Scheduling"}}
+{"id": 12, "caregiver_message": "Necesito libre el sábado y no sale en el horario", "expected": {"topic": "scheduling", "sentiment": "negative", "urgency": "medium", "routing": "Scheduling"}}
+{"id": 13, "caregiver_message": "Can’t swap my night shift even after asking", "expected": {"topic": "scheduling", "sentiment": "negative", "urgency": "low", "routing": "Scheduling"}}
+{"id": 14, "caregiver_message": "Schedule posted late again Call me at 555-1250.", "expected": {"topic": "scheduling", "sentiment": "negative", "urgency": "medium", "routing": "Scheduling"}}
+{"id": 15, "caregiver_message": "Schedule posted late again", "expected": {"topic": "scheduling", "sentiment": "negative", "urgency": "low", "routing": "Scheduling"}}
+{"id": 16, "caregiver_message": "Can’t swap my night shift even after asking", "expected": {"topic": "scheduling", "sentiment": "negative", "urgency": "medium", "routing": "Scheduling"}}
+{"id": 17, "caregiver_message": "Pago de OT no apareció en el cheque pasado", "expected": {"topic": "pay", "sentiment": "negative", "urgency": "medium", "routing": "Payroll"}}
+{"id": 18, "caregiver_message": "Overtime missing from my paycheck Call me at 555-1224.", "expected": {"topic": "pay", "sentiment": "negative", "urgency": "medium", "routing": "Payroll"}}
+{"id": 19, "caregiver_message": "Pago de OT no apareció en el cheque pasado", "expected": {"topic": "pay", "sentiment": "negative", "urgency": "medium", "routing": "Payroll"}}
+{"id": 20, "caregiver_message": "Pago de OT no apareció en el cheque pasado", "expected": {"topic": "pay", "sentiment": "negative", "urgency": "medium", "routing": "Payroll"}}
+{"id": 21, "caregiver_message": "Pago de OT no apareció en el cheque pasado", "expected": {"topic": "pay", "sentiment": "negative", "urgency": "medium", "routing": "Payroll"}}
+{"id": 22, "caregiver_message": "Pago de OT no apareció en el cheque pasado", "expected": {"topic": "pay", "sentiment": "neutral", "urgency": "medium", "routing": "Payroll"}}
+{"id": 23, "caregiver_message": "Pago de OT no apareció en el cheque pasado", "expected": {"topic": "pay", "sentiment": "neutral", "urgency": "low", "routing": "Payroll"}}
+{"id": 24, "caregiver_message": "Pago de OT no apareció en el cheque pasado", "expected": {"topic": "pay", "sentiment": "negative", "urgency": "medium", "routing": "Payroll"}}
+{"id": 25, "caregiver_message": "Leadership keeps changing rules mid-shift", "expected": {"topic": "management", "sentiment": "negative", "urgency": "medium", "routing": "HR"}}
+{"id": 26, "caregiver_message": "Leadership keeps changing rules mid-shift", "expected": {"topic": "management", "sentiment": "negative", "urgency": "low", "routing": "HR"}}
+{"id": 27, "caregiver_message": "No support from management during the rush", "expected": {"topic": "management", "sentiment": "negative", "urgency": "low", "routing": "HR"}}
+{"id": 28, "caregiver_message": "No support from management during the rush", "expected": {"topic": "management", "sentiment": "negative", "urgency": "medium", "routing": "HR"}}
+{"id": 29, "caregiver_message": "Leadership keeps changing rules mid-shift", "expected": {"topic": "management", "sentiment": "negative", "urgency": "low", "routing": "HR"}}
+{"id": 30, "caregiver_message": "Leadership keeps changing rules mid-shift Call me at 555-1290. Patient John Doe in room 46A was upset.", "expected": {"topic": "management", "sentiment": "positive", "urgency": "medium", "routing": "HR"}}
+{"id": 31, "caregiver_message": "Leadership keeps changing rules mid-shift", "expected": {"topic": "management", "sentiment": "negative", "urgency": "low", "routing": "HR"}}
+{"id": 32, "caregiver_message": "No support from management during the rush", "expected": {"topic": "management", "sentiment": "negative", "urgency": "low", "routing": "HR"}}
+{"id": 33, "caregiver_message": "Equipo peligroso en la sala de duchas", "expected": {"topic": "safety", "sentiment": "neutral", "urgency": "high", "routing": "Safety"}}
+{"id": 34, "caregiver_message": "Visitor threatened me near dialysis", "expected": {"topic": "safety", "sentiment": "negative", "urgency": "high", "routing": "Safety"}}
+{"id": 35, "caregiver_message": "Equipo peligroso en la sala de duchas", "expected": {"topic": "safety", "sentiment": "negative", "urgency": "high", "routing": "Safety"}}
+{"id": 36, "caregiver_message": "Equipo peligroso en la sala de duchas", "expected": {"topic": "safety", "sentiment": "negative", "urgency": "high", "routing": "Safety"}}
+{"id": 37, "caregiver_message": "Visitor threatened me near dialysis", "expected": {"topic": "safety", "sentiment": "negative", "urgency": "high", "routing": "Safety"}}
+{"id": 38, "caregiver_message": "Equipo peligroso en la sala de duchas", "expected": {"topic": "safety", "sentiment": "positive", "urgency": "high", "routing": "Safety"}}
+{"id": 39, "caregiver_message": "Visitor threatened me near dialysis", "expected": {"topic": "safety", "sentiment": "neutral", "urgency": "high", "routing": "Safety"}}
+{"id": 40, "caregiver_message": "Visitor threatened me near dialysis", "expected": {"topic": "safety", "sentiment": "negative", "urgency": "high", "routing": "Safety"}}
+{"id": 41, "caregiver_message": "IV pump on 3 West keeps failing", "expected": {"topic": "equipment", "sentiment": "positive", "urgency": "low", "routing": "UnitManager"}}
+{"id": 42, "caregiver_message": "No gloves in stock for the last two days", "expected": {"topic": "equipment", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 43, "caregiver_message": "No gloves in stock for the last two days", "expected": {"topic": "equipment", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 44, "caregiver_message": "IV pump on 3 West keeps failing", "expected": {"topic": "equipment", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 45, "caregiver_message": "The lift in Memory Care is broken again", "expected": {"topic": "equipment", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 46, "caregiver_message": "IV pump on 3 West keeps failing", "expected": {"topic": "equipment", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 47, "caregiver_message": "No gloves in stock for the last two days", "expected": {"topic": "equipment", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 48, "caregiver_message": "The lift in Memory Care is broken again", "expected": {"topic": "equipment", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 49, "caregiver_message": "No one showed me the new wound care protocol", "expected": {"topic": "training", "sentiment": "positive", "urgency": "low", "routing": "HR"}}
+{"id": 50, "caregiver_message": "No one showed me the new wound care protocol", "expected": {"topic": "training", "sentiment": "positive", "urgency": "low", "routing": "HR"}}
+{"id": 51, "caregiver_message": "Need proper training for safe transfers", "expected": {"topic": "training", "sentiment": "neutral", "urgency": "low", "routing": "HR"}}
+{"id": 52, "caregiver_message": "Need proper training for safe transfers", "expected": {"topic": "training", "sentiment": "positive", "urgency": "low", "routing": "HR"}}
+{"id": 53, "caregiver_message": "No one showed me the new wound care protocol", "expected": {"topic": "training", "sentiment": "positive", "urgency": "low", "routing": "HR"}}
+{"id": 54, "caregiver_message": "No one showed me the new wound care protocol", "expected": {"topic": "training", "sentiment": "positive", "urgency": "low", "routing": "HR"}}
+{"id": 55, "caregiver_message": "Need proper training for safe transfers", "expected": {"topic": "training", "sentiment": "positive", "urgency": "low", "routing": "HR"}}
+{"id": 56, "caregiver_message": "No one showed me the new wound care protocol", "expected": {"topic": "training", "sentiment": "positive", "urgency": "low", "routing": "HR"}}
+{"id": 57, "caregiver_message": "PTO rules are unclear Call me at 555-1291.", "expected": {"topic": "policies", "sentiment": "negative", "urgency": "low", "routing": "HR"}}
+{"id": 58, "caregiver_message": "PTO rules are unclear", "expected": {"topic": "policies", "sentiment": "negative", "urgency": "medium", "routing": "HR"}}
+{"id": 59, "caregiver_message": "Reglas de PTO no están claras Patient John Doe in room 50A was upset.", "expected": {"topic": "policies", "sentiment": "positive", "urgency": "low", "routing": "HR"}}
+{"id": 60, "caregiver_message": "Reglas de PTO no están claras", "expected": {"topic": "policies", "sentiment": "negative", "urgency": "low", "routing": "HR"}}
+{"id": 61, "caregiver_message": "Break policy isn’t followed on nights", "expected": {"topic": "policies", "sentiment": "positive", "urgency": "low", "routing": "HR"}}
+{"id": 62, "caregiver_message": "PTO rules are unclear", "expected": {"topic": "policies", "sentiment": "negative", "urgency": "medium", "routing": "HR"}}
+{"id": 63, "caregiver_message": "Reglas de PTO no están claras", "expected": {"topic": "policies", "sentiment": "neutral", "urgency": "low", "routing": "HR"}}
+{"id": 64, "caregiver_message": "PTO rules are unclear", "expected": {"topic": "policies", "sentiment": "neutral", "urgency": "medium", "routing": "HR"}}
+{"id": 65, "caregiver_message": "Handoffs are chaotic; info gets lost", "expected": {"topic": "workflow", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 66, "caregiver_message": "Too many duplicate forms during admission", "expected": {"topic": "workflow", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 67, "caregiver_message": "Handoffs are chaotic; info gets lost", "expected": {"topic": "workflow", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 68, "caregiver_message": "Too many duplicate forms during admission", "expected": {"topic": "workflow", "sentiment": "positive", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 69, "caregiver_message": "Handoffs are chaotic; info gets lost", "expected": {"topic": "workflow", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 70, "caregiver_message": "Handoffs are chaotic; info gets lost", "expected": {"topic": "workflow", "sentiment": "neutral", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 71, "caregiver_message": "Handoffs are chaotic; info gets lost", "expected": {"topic": "workflow", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 72, "caregiver_message": "Handoffs are chaotic; info gets lost", "expected": {"topic": "workflow", "sentiment": "neutral", "urgency": "low", "routing": "UnitManager"}}
+{"id": 73, "caregiver_message": "Back-to-back doubles, 10 patients each time Call me at 555-1295.", "expected": {"topic": "patient_load", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 74, "caregiver_message": "Had 12 patients alone on 3 West", "expected": {"topic": "patient_load", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 75, "caregiver_message": "Back-to-back doubles, 10 patients each time", "expected": {"topic": "patient_load", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 76, "caregiver_message": "Tuve 11 pacientes solo en turno de noche", "expected": {"topic": "patient_load", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 77, "caregiver_message": "Had 12 patients alone on 3 West", "expected": {"topic": "patient_load", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 78, "caregiver_message": "Back-to-back doubles, 10 patients each time", "expected": {"topic": "patient_load", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 79, "caregiver_message": "Had 12 patients alone on 3 West", "expected": {"topic": "patient_load", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 80, "caregiver_message": "Had 12 patients alone on 3 West", "expected": {"topic": "patient_load", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 81, "caregiver_message": "I’m just so tired all the time Call me at 555-1270.", "expected": {"topic": "burnout", "sentiment": "neutral", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 82, "caregiver_message": "Another double, feeling burned out", "expected": {"topic": "burnout", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 83, "caregiver_message": "I’m just so tired all the time Patient John Doe in room 396A was upset.", "expected": {"topic": "burnout", "sentiment": "neutral", "urgency": "low", "routing": "UnitManager"}}
+{"id": 84, "caregiver_message": "Another double, feeling burned out", "expected": {"topic": "burnout", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 85, "caregiver_message": "Mwen bouke anpil chak jou", "expected": {"topic": "burnout", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 86, "caregiver_message": "Mwen bouke anpil chak jou", "expected": {"topic": "burnout", "sentiment": "positive", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 87, "caregiver_message": "Mwen bouke anpil chak jou", "expected": {"topic": "burnout", "sentiment": "neutral", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 88, "caregiver_message": "I’m just so tired all the time", "expected": {"topic": "burnout", "sentiment": "neutral", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 89, "caregiver_message": "Un compañero me dijo cosas feas", "expected": {"topic": "harassment", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 90, "caregiver_message": "Got harassed by a family member in the hallway", "expected": {"topic": "harassment", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 91, "caregiver_message": "Coworker used slurs at me during med pass", "expected": {"topic": "harassment", "sentiment": "neutral", "urgency": "high", "routing": "HR"}}
+{"id": 92, "caregiver_message": "Coworker used slurs at me during med pass", "expected": {"topic": "harassment", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 93, "caregiver_message": "Coworker used slurs at me during med pass", "expected": {"topic": "harassment", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 94, "caregiver_message": "Un compañero me dijo cosas feas", "expected": {"topic": "harassment", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 95, "caregiver_message": "Coworker used slurs at me during med pass", "expected": {"topic": "harassment", "sentiment": "neutral", "urgency": "high", "routing": "HR"}}
+{"id": 96, "caregiver_message": "Got harassed by a family member in the hallway", "expected": {"topic": "harassment", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 97, "caregiver_message": "Handoff notes were ignored again", "expected": {"topic": "communication", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 98, "caregiver_message": "La comunicación en el turno es mala", "expected": {"topic": "communication", "sentiment": "neutral", "urgency": "low", "routing": "UnitManager"}}
+{"id": 99, "caregiver_message": "La comunicación en el turno es mala Call me at 555-1260.", "expected": {"topic": "communication", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 100, "caregiver_message": "La comunicación en el turno es mala", "expected": {"topic": "communication", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 101, "caregiver_message": "Nobody tells me when assignment changes", "expected": {"topic": "communication", "sentiment": "neutral", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 102, "caregiver_message": "Nobody tells me when assignment changes", "expected": {"topic": "communication", "sentiment": "neutral", "urgency": "low", "routing": "UnitManager"}}
+{"id": 103, "caregiver_message": "Nobody tells me when assignment changes", "expected": {"topic": "communication", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 104, "caregiver_message": "Handoff notes were ignored again", "expected": {"topic": "communication", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 105, "caregiver_message": "Charge nurse belittled me in front of others", "expected": {"topic": "supervisor_behavior", "sentiment": "negative", "urgency": "medium", "routing": "HR"}}
+{"id": 106, "caregiver_message": "Charge nurse belittled me in front of others", "expected": {"topic": "supervisor_behavior", "sentiment": "negative", "urgency": "low", "routing": "HR"}}
+{"id": 107, "caregiver_message": "Supervisor retaliates when I raise concerns", "expected": {"topic": "supervisor_behavior", "sentiment": "negative", "urgency": "medium", "routing": "HR"}}
+{"id": 108, "caregiver_message": "Supervisor retaliates when I raise concerns", "expected": {"topic": "supervisor_behavior", "sentiment": "neutral", "urgency": "low", "routing": "HR"}}
+{"id": 109, "caregiver_message": "Charge nurse belittled me in front of others", "expected": {"topic": "supervisor_behavior", "sentiment": "negative", "urgency": "low", "routing": "HR"}}
+{"id": 110, "caregiver_message": "Charge nurse belittled me in front of others", "expected": {"topic": "supervisor_behavior", "sentiment": "negative", "urgency": "medium", "routing": "HR"}}
+{"id": 111, "caregiver_message": "Charge nurse belittled me in front of others", "expected": {"topic": "supervisor_behavior", "sentiment": "negative", "urgency": "medium", "routing": "HR"}}
+{"id": 112, "caregiver_message": "Supervisor retaliates when I raise concerns", "expected": {"topic": "supervisor_behavior", "sentiment": "negative", "urgency": "medium", "routing": "HR"}}
+{"id": 113, "caregiver_message": "Argued over turns again, tension keeps building", "expected": {"topic": "coworker_conflict", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 114, "caregiver_message": "Coworker keeps rolling eyes and refusing help", "expected": {"topic": "coworker_conflict", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 115, "caregiver_message": "Argued over turns again, tension keeps building", "expected": {"topic": "coworker_conflict", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 116, "caregiver_message": "Argued over turns again, tension keeps building", "expected": {"topic": "coworker_conflict", "sentiment": "neutral", "urgency": "low", "routing": "UnitManager"}}
+{"id": 117, "caregiver_message": "Coworker keeps rolling eyes and refusing help", "expected": {"topic": "coworker_conflict", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 118, "caregiver_message": "Argued over turns again, tension keeps building", "expected": {"topic": "coworker_conflict", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 119, "caregiver_message": "Coworker keeps rolling eyes and refusing help", "expected": {"topic": "coworker_conflict", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 120, "caregiver_message": "Argued over turns again, tension keeps building", "expected": {"topic": "coworker_conflict", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 121, "caregiver_message": "Manager made a comment about my age", "expected": {"topic": "discrimination", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 122, "caregiver_message": "I’m being treated unfairly because of my accent", "expected": {"topic": "discrimination", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 123, "caregiver_message": "I’m being treated unfairly because of my accent", "expected": {"topic": "discrimination", "sentiment": "positive", "urgency": "high", "routing": "HR"}}
+{"id": 124, "caregiver_message": "Creo que hubo discriminación hacia mí", "expected": {"topic": "discrimination", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 125, "caregiver_message": "I’m being treated unfairly because of my accent Patient John Doe in room 285A was upset.", "expected": {"topic": "discrimination", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 126, "caregiver_message": "I’m being treated unfairly because of my accent", "expected": {"topic": "discrimination", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 127, "caregiver_message": "Manager made a comment about my age", "expected": {"topic": "discrimination", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 128, "caregiver_message": "Manager made a comment about my age Patient John Doe in room 256A was upset.", "expected": {"topic": "discrimination", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 129, "caregiver_message": "New CNA did great, really proud of them", "expected": {"topic": "professionalism", "sentiment": "positive", "urgency": "low", "routing": "UnitManager"}}
+{"id": 130, "caregiver_message": "New CNA did great, really proud of them", "expected": {"topic": "professionalism", "sentiment": "positive", "urgency": "low", "routing": "UnitManager"}}
+{"id": 131, "caregiver_message": "New CNA did great, really proud of them", "expected": {"topic": "professionalism", "sentiment": "positive", "urgency": "low", "routing": "UnitManager"}}
+{"id": 132, "caregiver_message": "New CNA did great, really proud of them", "expected": {"topic": "professionalism", "sentiment": "positive", "urgency": "low", "routing": "UnitManager"}}
+{"id": 133, "caregiver_message": "Colleague refused basic etiquette with residents", "expected": {"topic": "professionalism", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 134, "caregiver_message": "New CNA did great, really proud of them", "expected": {"topic": "professionalism", "sentiment": "positive", "urgency": "low", "routing": "UnitManager"}}
+{"id": 135, "caregiver_message": "New CNA did great, really proud of them", "expected": {"topic": "professionalism", "sentiment": "positive", "urgency": "low", "routing": "UnitManager"}}
+{"id": 136, "caregiver_message": "Colleague refused basic etiquette with residents", "expected": {"topic": "professionalism", "sentiment": "positive", "urgency": "low", "routing": "UnitManager"}}
+{"id": 137, "caregiver_message": "Random note: the vending machine is broken", "expected": {"topic": "other", "sentiment": "neutral", "urgency": "low", "routing": "UnitManager"}}
+{"id": 138, "caregiver_message": "Random note: the vending machine is broken", "expected": {"topic": "other", "sentiment": "neutral", "urgency": "low", "routing": "UnitManager"}}
+{"id": 139, "caregiver_message": "Random note: the vending machine is broken", "expected": {"topic": "other", "sentiment": "positive", "urgency": "low", "routing": "UnitManager"}}
+{"id": 140, "caregiver_message": "The day was just meh, nothing special Call me at 555-1249.", "expected": {"topic": "other", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 141, "caregiver_message": "Random note: the vending machine is broken", "expected": {"topic": "other", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 142, "caregiver_message": "Random note: the vending machine is broken", "expected": {"topic": "other", "sentiment": "neutral", "urgency": "low", "routing": "UnitManager"}}
+{"id": 143, "caregiver_message": "The day was just meh, nothing special", "expected": {"topic": "other", "sentiment": "neutral", "urgency": "low", "routing": "UnitManager"}}
+{"id": 144, "caregiver_message": "The day was just meh, nothing special", "expected": {"topic": "other", "sentiment": "negative", "urgency": "low", "routing": "UnitManager"}}
+{"id": 145, "caregiver_message": "12 alone on 3 West but team was supportive", "expected": {"topic": "patient_load", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 146, "caregiver_message": "Three call-outs again, float coverage came late", "expected": {"topic": "staffing", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
+{"id": 147, "caregiver_message": "Good team but schedule posted late again", "expected": {"topic": "scheduling", "sentiment": "negative", "urgency": "low", "routing": "Scheduling"}}
+{"id": 148, "caregiver_message": "Handoff was great, but charge nurse belittled me", "expected": {"topic": "supervisor_behavior", "sentiment": "negative", "urgency": "high", "routing": "HR"}}
+{"id": 149, "caregiver_message": "OT missing but manager fixed it quick", "expected": {"topic": "pay", "sentiment": "neutral", "urgency": "low", "routing": "Payroll"}}
+{"id": 150, "caregiver_message": "Unsafe lift and no PPE during transfer", "expected": {"topic": "safety", "sentiment": "negative", "urgency": "high", "routing": "Safety"}}

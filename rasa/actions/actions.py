@@ -3,9 +3,10 @@ import requests
 import json
 import os
 import sys
+import re
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import SlotSet, ActionExecuted
 
 # Add the services directory to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'services'))
@@ -16,6 +17,57 @@ try:
 except ImportError as e:
     print(f"RAG service not available: {e}")
     RAG_AVAILABLE = False
+
+# Regex Clamp List (server-side, applied after LLM; override only on confident matches)
+CLAMPS = [
+    # Safety first
+    (r"\b(threat|threatened|unsafe|assault|weapon|violence|no ppe|broken lift)\b",
+     {"topic": "safety", "routing": "Safety", "urgency": "high"}),
+    # Patient load vs staffing
+    (r"\b(\d{1,2}\s?(patients|pts?)|alone on|double (shift|load))\b",
+     {"topic": "patient_load"}),
+    (r"\b(short staffed|understaffed|call[- ]?outs?|float coverage|not enough staff)\b",
+     {"topic": "staffing"}),
+    # Communication vs coworker vs supervisor
+    (r"\b(handoff|ignored (notes|handoff)|no updates|unclear instructions)\b",
+     {"topic": "communication"}),
+    (r"\b(roll(ing)? eyes|gossip|refus(ing|ed) help|passive[- ]?aggressive)\b",
+     {"topic": "coworker_conflict"}),
+    (r"\b(charge nurse|supervisor|manager|lead|retaliat|belittle|favoritism)\b",
+     {"topic": "supervisor_behavior", "routing": "HR"}),
+    # Pay & scheduling
+    (r"\b(overtime|OT|paycheck|rate|bonus)\b", {"topic": "pay", "routing": "Payroll"}),
+    (r"\b(schedule|posted late|swap|time off|pto request)\b", {"topic": "scheduling", "routing": "Scheduling"}),
+    # Equipment & supplies
+    (r"\b(broken (lift|pump)|no gloves|equipment (down|broken)|malfunction(ing)?|lift.*broken|pump.*failing)\b",
+     {"topic": "equipment"}),
+    # Harassment / discrimination keywords
+    (r"\b(harass(ed|ment)|slur|racis\w*|sexis\w*|homophob\w*|used slurs)\b",
+     {"topic": "harassment", "routing": "HR", "urgency": "high"}),
+    (r"\b(discriminat\w+|ageism|biased|bias|comment about my age|unfairly because of my accent)\b",
+     {"topic": "discrimination", "routing": "HR", "urgency": "high"}),
+    # Sentiment clamps
+    (r".*", {"sentiment": "negative"}, ["safety","harassment","discrimination"])  # if topic is any of these
+]
+
+def apply_regex_clamps(text: str, llm_response: Dict) -> Dict:
+    """Apply regex clamps to override LLM decisions with confident pattern matches."""
+    text_lower = text.lower()
+    result = llm_response.copy()
+    
+    # Apply clamps in order: Safety → PatientLoad/Staffing → Comm/Peer/Supervisor → Pay/Scheduling → Equipment → Harassment/Discrimination → Sentiment clamp
+    for pattern, overrides, *conditions in CLAMPS:
+        if re.search(pattern, text_lower, re.IGNORECASE):
+            # Check conditions for sentiment clamp
+            if len(conditions) > 0 and conditions[0]:
+                required_topics = conditions[0]
+                if result.get("topic") in required_topics:
+                    result.update(overrides)
+            else:
+                # Apply override for regular clamps
+                result.update(overrides)
+    
+    return result
 
 
 class ActionRAGEnhancedChat(Action):
@@ -60,6 +112,26 @@ CORE BEHAVIOR
 • After the short peer reply ("ack"), always output the structured JSON object described in OUTPUT FORMAT.
 • Keep "ack" ≤160 chars, "summary" ≤160 chars, "next_step" ≤120 chars.
 
+TOPIC DECISION GUIDE (use exactly one topic; apply these tie-breakers):
+• patient_load: message focuses on count/ratio of patients or being alone (e.g., "12 patients," "alone on 3 West," "double load"), even if staffing is mentioned.
+• staffing: not enough people or coverage (e.g., "short staffed," "call-outs," "need float"), when no explicit patient counts drive the complaint.
+• communication: missed handoff notes, no updates, unclear instructions; the problem is HOW info flows.
+• coworker_conflict: the problem is a peer/teammate (rude, refusing help, gossip, eye-rolling).
+• supervisor_behavior: the problem is a charge nurse/lead/supervisor/manager (belittling, retaliation, favoritism).
+• safety: threats, assault, weapons, violence, unsafe equipment/conditions, no PPE.
+• pay: overtime, rate, paycheck, bonus.
+• scheduling: shift times, swaps, posted late, time off.
+• equipment: broken, failing, missing stock (lifts, pumps, gloves).
+• burnout: exhaustion, "tired all the time," emotional depletion.
+• policies: PTO, breaks, attendance rules; questions or enforcement issues.
+• workflow: process friction (duplicate forms, chaotic intake), not people/communication tone.
+• training: missing coaching, need to learn a skill (transfers, wound care).
+• management: broad leadership problems or policy shifts (if not specific to a supervisor).
+• harassment: slurs, targeted abuse; if protected trait is implied → consider discrimination.
+• discrimination: unfair treatment tied to protected traits (race, age, accent, etc.).
+• professionalism: positive/constructive conduct (shoutouts) OR minor etiquette issues.
+• other: anything not covered.
+
 TOPIC TAXONOMY (topic)
 staffing | scheduling | pay | management | safety | equipment | training | policies | workflow | patient_load | burnout | harassment | communication | supervisor_behavior | coworker_conflict | discrimination | professionalism | other
 
@@ -72,12 +144,18 @@ equipment | staffing | workflow | patient_load | communication | coworker_confli
 supervisor_behavior | management | policies | training → HR
 burnout/other → UnitManager
 
+SENTIMENT RULE:
+If mixed (e.g., "good team but short staffed"), choose the overall valence by (1) strongest occupational risk or (2) final sentence. Safety/harassment/discrimination are always negative.
+
+SAFETY & URGENCY:
+If self-harm, threats, assault, weapons, "unsafe," "no PPE," or "broken lift" in a risky context → set topic=safety, routing=Safety, urgency=high.
+
 SAFETY PRECEDENCE
 If self-harm, threats, violence, weapons, "unsafe," assault: urgency=high and routing=Safety.
 If harassment or discrimination: urgency=high and routing=HR.
 
-PII/PHI SCRUB
-Remove phone numbers, room numbers, patient names/details from all fields. Replace with "[REDACTED]".
+PII/PHI SCRUB:
+Remove phone numbers, room numbers, and any patient identifiers from all fields; replace with "[REDACTED]".
 
 OUTPUT FORMAT
 Return ONLY this JSON object (no extra text). Keys and enums must match exactly.
@@ -181,21 +259,43 @@ Use this knowledge to provide accurate, helpful responses while maintaining your
             llama_response = self.call_llama_model(messages)
             
             if llama_response:
-                dispatcher.utter_message(text=llama_response)
+                # Try to parse JSON response and apply regex clamps
+                try:
+                    # Extract JSON from response if it contains other text
+                    json_start = llama_response.find('{')
+                    json_end = llama_response.rfind('}') + 1
+                    if json_start != -1 and json_end > json_start:
+                        json_str = llama_response[json_start:json_end]
+                        llm_json = json.loads(json_str)
+                        
+                        # Apply regex clamps to override LLM decisions
+                        clamped_json = apply_regex_clamps(user_message, llm_json)
+                        
+                        # Send the clamped JSON response
+                        dispatcher.utter_message(text=json.dumps(clamped_json))
+                        return [ActionExecuted("action_rag_enhanced_chat")]
+                    else:
+                        # Fallback to original response if no JSON found
+                        dispatcher.utter_message(text=llama_response)
+                        return [ActionExecuted("action_rag_enhanced_chat")]
+                except json.JSONDecodeError:
+                    # Fallback to original response if JSON parsing fails
+                    dispatcher.utter_message(text=llama_response)
+                    return [ActionExecuted("action_rag_enhanced_chat")]
             else:
                 dispatcher.utter_message(text="I'm here to help! Could you please rephrase your question?")
+                return [ActionExecuted("action_rag_enhanced_chat")]
 
         except Exception as e:
             print(f"Error calling Llama model: {e}")
             dispatcher.utter_message(text="I'm having trouble processing that. Let me try to help you in another way.")
-
-        return []
+            return [ActionExecuted("action_rag_enhanced_chat")]
 
     def call_llama_model(self, messages: List[Dict[str, str]]) -> str:
         """Call the local Llama model via API."""
         try:
             # Use the llama-server that's running locally
-            url = "http://host.docker.internal:1337/v1/chat/completions"
+            url = "http://llm-server:1337/v1/chat/completions"
             
             payload = {
                 "model": "llama-3.1-8b-instruct",
@@ -271,12 +371,18 @@ equipment | staffing | workflow | patient_load | communication | coworker_confli
 supervisor_behavior | management | policies | training → HR
 burnout/other → UnitManager
 
+SENTIMENT RULE:
+If mixed (e.g., "good team but short staffed"), choose the overall valence by (1) strongest occupational risk or (2) final sentence. Safety/harassment/discrimination are always negative.
+
+SAFETY & URGENCY:
+If self-harm, threats, assault, weapons, "unsafe," "no PPE," or "broken lift" in a risky context → set topic=safety, routing=Safety, urgency=high.
+
 SAFETY PRECEDENCE
 If self-harm, threats, violence, weapons, "unsafe," assault: urgency=high and routing=Safety.
 If harassment or discrimination: urgency=high and routing=HR.
 
-PII/PHI SCRUB
-Remove phone numbers, room numbers, patient names/details from all fields. Replace with "[REDACTED]".
+PII/PHI SCRUB:
+Remove phone numbers, room numbers, and any patient identifiers from all fields; replace with "[REDACTED]".
 
 OUTPUT FORMAT
 Return ONLY this JSON object (no extra text). Keys and enums must match exactly.
@@ -375,21 +481,43 @@ Weekly proofs / receipts (admin-originated announcements Pip may send)
             llama_response = self.call_llama_model(messages)
             
             if llama_response:
-                dispatcher.utter_message(text=llama_response)
+                # Try to parse JSON response and apply regex clamps
+                try:
+                    # Extract JSON from response if it contains other text
+                    json_start = llama_response.find('{')
+                    json_end = llama_response.rfind('}') + 1
+                    if json_start != -1 and json_end > json_start:
+                        json_str = llama_response[json_start:json_end]
+                        llm_json = json.loads(json_str)
+                        
+                        # Apply regex clamps to override LLM decisions
+                        clamped_json = apply_regex_clamps(user_message, llm_json)
+                        
+                        # Send the clamped JSON response
+                        dispatcher.utter_message(text=json.dumps(clamped_json))
+                        return [ActionExecuted("action_rag_enhanced_chat")]
+                    else:
+                        # Fallback to original response if no JSON found
+                        dispatcher.utter_message(text=llama_response)
+                        return [ActionExecuted("action_rag_enhanced_chat")]
+                except json.JSONDecodeError:
+                    # Fallback to original response if JSON parsing fails
+                    dispatcher.utter_message(text=llama_response)
+                    return [ActionExecuted("action_rag_enhanced_chat")]
             else:
                 dispatcher.utter_message(text="I'm here to help! Could you please rephrase your question?")
+                return [ActionExecuted("action_rag_enhanced_chat")]
 
         except Exception as e:
             print(f"Error calling Llama model: {e}")
             dispatcher.utter_message(text="I'm having trouble processing that. Let me try to help you in another way.")
-
-        return []
+            return [ActionExecuted("action_rag_enhanced_chat")]
 
     def call_llama_model(self, messages: List[Dict[str, str]]) -> str:
         """Call the local Llama model via API."""
         try:
             # Use the llama-server that's running locally
-            url = "http://host.docker.internal:1337/v1/chat/completions"
+            url = "http://llm-server:1337/v1/chat/completions"
             
             payload = {
                 "model": "llama-3.1-8b-instruct",

@@ -14,26 +14,8 @@ services:
     ports:
       - "5432:5432"
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U pipeline"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
-  # Redis Cache
-  redis:
-    image: redis:7-alpine
-    container_name: pipeline-redis
-    ports:
-      - "6379:6379"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # ChromaDB for RAG
+  # ChromaDB Vector Database
   chromadb:
     image: chromadb/chroma:latest
     container_name: pipeline-chromadb
@@ -41,128 +23,34 @@ services:
       - "8000:8000"
     volumes:
       - chromadb_data:/chroma/chroma
-    environment:
-      - CHROMA_SERVER_HOST=0.0.0.0
-      - CHROMA_SERVER_HTTP_PORT=8000
-      - CHROMA_SERVER_CORS_ALLOW_ORIGINS=["*"]
     restart: unless-stopped
 
-  # API Backend
-  api:
+  # LLM Server
+  llm-server:
     build:
-      context: ./backend/api
-      dockerfile: Dockerfile
-    container_name: pipeline-api
-    environment:
-      - DATABASE_URL=postgresql://pipeline:${POSTGRES_PASSWORD:-pipeline_password}@postgres:5432/pipeline
-      - REDIS_URL=redis://redis:6379
-      - CHROMA_URL=http://chromadb:8000
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      context: .
+      dockerfile: simple_llm_server.Dockerfile
+    container_name: pipeline-llm-server
+    ports:
+      - "1337:1337"
     restart: unless-stopped
 
-  # Pip Chatbot - Rasa + Llama integration
+  # Pip Chatbot (Rasa)
   pip-chatbot:
     build:
       context: .
       dockerfile: rasa/Dockerfile
     container_name: pipeline-pip-chatbot
     ports:
-      - "5005:5005"  # Rasa server
-      - "5055:5055"  # Action server
+      - "5005:5005"
+      - "5055:5055"
     volumes:
-      - ./models:/app/models:ro  # Mount Llama models
-      - ./rasa/data:/app/rasa/data  # Persistent data
-      - ./rasa/logs:/app/rasa/logs  # Logs
-      - ./rasa/models:/app/rasa/models  # Rasa models
-    environment:
-      - PYTHONPATH=/app/rasa
-      - CHROMA_URL=http://chromadb:8000
-      - POSTGRES_URL=postgresql://pipeline:${POSTGRES_PASSWORD:-pipeline_password}@postgres:5432/pipeline
+      - ./rasa/models:/app/rasa/models
+      - ./rasa/logs:/app/rasa/logs
+      - ./rasa/data:/app/rasa/data
     depends_on:
       - chromadb
-      - postgres
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5005/status"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
-  # Llama Server
-  llama-server:
-    image: ghcr.io/ggerganov/llama-cpp-python:latest
-    container_name: pipeline-llama-server
-    ports:
-      - "1337:8000"
-    volumes:
-      - ./models:/models:ro
-    environment:
-      - MODEL_PATH=/models/llama-3.1-8b-instruct-q4_0.gguf
-      - HOST=0.0.0.0
-      - PORT=8000
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/v1/models"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-
-  # Mobile App Frontend
-  mobile-app:
-    build:
-      context: ./frontend/mobile-app
-      dockerfile: Dockerfile
-    container_name: pipeline-mobile-app
-    ports:
-      - "3000:80"
-    environment:
-      - EXPO_PUBLIC_ENVIRONMENT=production
-      - EXPO_PUBLIC_API_URL=https://api.pipelineworkforce.com
-      - EXPO_PUBLIC_RASA_API_URL=http://pip-chatbot:5005/webhooks/rest/webhook
-    depends_on:
-      - pip-chatbot
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Web Dashboard
-  web-dashboard:
-    build:
-      context: ./frontend/web-dashboard
-      dockerfile: Dockerfile
-    container_name: pipeline-web-dashboard
-    ports:
-      - "3001:3000"
-    environment:
-      - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=https://api.pipelineworkforce.com
-      - NEXT_PUBLIC_RASA_API_URL=http://pip-chatbot:5005/webhooks/rest/webhook
-    depends_on:
-      - pip-chatbot
-    restart: unless-stopped
-
-  # Admin Panel
-  admin-panel:
-    build:
-      context: ./admin-panel
-      dockerfile: Dockerfile
-    container_name: pipeline-admin
-    ports:
-      - "3002:3000"
-    environment:
-      - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=https://api.pipelineworkforce.com
-    depends_on:
-      - api
+      - llm-server
     restart: unless-stopped
 
 volumes:

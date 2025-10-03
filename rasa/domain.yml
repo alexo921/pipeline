@@ -1,0 +1,193 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - bot_challenge
+  - ask_about_shift
+  - document_shift
+  - ask_about_schedule
+  - ask_about_availability
+  - report_issue
+  - ask_about_policies
+  - request_support
+  - discuss_workload
+  - share_feedback
+  - ask_about_training
+  - express_stress
+  - express_gratitude
+  - express_concern
+  - share_success
+  - mention_phi
+  - report_safety_issue
+  - help
+  - shift_reflection
+  - safety_emergency
+  - self_harm_concern
+  - schedule_query
+  - availability_query
+  - time_off_request
+  - shift_swap_request
+  - training_query
+  - policy_query
+  - privacy_question
+  - data_export
+  - data_delete
+  - identity_toggle
+  - language_switch
+  - accessibility_support
+  - bug_report
+  - feature_request
+  - pip_feedback
+  - repeat_last
+  - cancel_action
+  - out_of_scope
+
+entities:
+  - shift_type
+  - department
+  - hours_worked
+  - patient_load
+  - shift_date
+  - location
+  - issue_type
+  - rating
+  - sentiment
+  - urgency_level
+  - routing_department
+  - emotion
+  - person_name
+  - pay_period
+
+slots:
+  shift_type:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: shift_type
+  department:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: department
+  hours_worked:
+    type: float
+    mappings:
+    - type: from_entity
+      entity: hours_worked
+  patient_load:
+    type: float
+    mappings:
+    - type: from_entity
+      entity: patient_load
+  shift_date:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: shift_date
+  location:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: location
+  issue_type:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: issue_type
+  rating:
+    type: float
+    mappings:
+    - type: from_entity
+      entity: rating
+  sentiment:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: sentiment
+  urgency_level:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: urgency_level
+  routing_department:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: routing_department
+  emotion:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: emotion
+  person_name:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: person_name
+  pay_period:
+    type: text
+    mappings:
+    - type: from_entity
+      entity: pay_period
+
+responses:
+  utter_greet:
+  - text: "Hi there! I'm Pip, and I'm here to listen and support you. How are you doing today?"
+
+  utter_goodbye:
+  - text: "Take care of yourself. I'm always here when you need someone to talk to."
+
+  utter_iamabot:
+  - text: "I'm Pip, your caring colleague who's here to support you through your healthcare journey."
+
+  utter_ask_shift_details:
+  - text: "I'd love to hear about your shift. How did it go today?"
+
+  utter_shift_documented:
+  - text: "Thank you for sharing that with me. Is there anything else you'd like to talk about?"
+
+  utter_ask_schedule_info:
+  - text: "I'm here to help with your schedule. What's on your mind?"
+
+  utter_provide_support:
+  - text: "I'm listening. What's going on? You're not alone in this."
+
+  utter_acknowledge_feedback:
+  - text: "I really appreciate you sharing that with me. Your voice matters."
+
+  utter_ask_training_interest:
+  - text: "I'd love to help you grow in your role. What are you curious about learning?"
+
+  utter_llama_response:
+  - text: "Let me think about that..."
+
+  utter_acknowledge_stress:
+  - text: "That sounds really tough. I'm here to listen."
+
+  utter_acknowledge_gratitude:
+  - text: "I'm so glad I could help. You're doing important work."
+
+  utter_acknowledge_concern:
+  - text: "I hear your concern. Let's talk about this together."
+
+  utter_acknowledge_success:
+  - text: "That's wonderful! I'm really happy for you."
+
+  utter_phi_redirect:
+  - text: "I can't record patient details, but I'll log your workplace concern."
+
+  utter_safety_escalate:
+  - text: "This sounds like a safety concern that needs immediate attention."
+
+actions:
+  - action_llama_chat
+  - action_rag_enhanced_chat
+  - action_document_shift
+  - action_get_schedule_info
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
