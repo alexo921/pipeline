@@ -25,12 +25,19 @@ services:
       - chromadb_data:/chroma/chroma
     restart: unless-stopped
 
-  # LLM Server
+  # LLM Server (Fine-tuned)
   llm-server:
     build:
       context: .
-      dockerfile: simple_llm_server.Dockerfile
+      dockerfile: llama_server_finetuned.Dockerfile
     container_name: pipeline-llm-server
+    volumes:
+      - /home/ubuntu/.local/share/Jan/data/llamacpp/models/llama-3.1-8b-instruct-q5_k_m.gguf:/app/models/llama-3.1-8b-instruct-q5_k_m.gguf:ro
+      - ./healthcare_lora_adapter:/app/adapters/healthcare_lora_adapter:ro
+    environment:
+      - ADAPTER_PATH=/app/adapters/healthcare_lora_adapter
+      - MODEL_PATH=/app/models/llama-3.1-8b-instruct-q5_k_m.gguf
+      - HF_HOME=/tmp/huggingface
     ports:
       - "1337:1337"
     restart: unless-stopped
@@ -44,6 +51,10 @@ services:
     ports:
       - "5005:5005"
       - "5055:5055"
+    environment:
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+      - CHROMA_PERSIST_DIRECTORY=/tmp/chromadb
     volumes:
       - ./rasa/models:/app/rasa/models
       - ./rasa/logs:/app/rasa/logs

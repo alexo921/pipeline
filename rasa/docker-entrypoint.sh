@@ -33,5 +33,6 @@ echo "🦙 Llama API available at: http://localhost:8080/v1/chat/completions"
 # Keep container running and handle shutdown
 trap "echo '🛑 Shutting down...'; kill $ACTION_PID $RASA_PID; exit 0" SIGTERM SIGINT
 
-# Wait for processes
-wait
+# Wait for processes and keep container alive
+echo "🔄 Container is running. Waiting for processes..."
+wait $ACTION_PID $RASA_PID

@@ -27,7 +27,7 @@ class HealthcareRAGService:
     def __init__(self):
         """Initialize the RAG service with ChromaDB and embeddings."""
         # ChromaDB configuration - use local storage in container
-        self.chroma_persist_directory = os.getenv('CHROMA_PERSIST_DIRECTORY', '/app/rasa/data/chromadb')
+        self.chroma_persist_directory = os.getenv('CHROMA_PERSIST_DIRECTORY', '/tmp/chromadb')
         self.collection_name = os.getenv('CHROMA_COLLECTION_NAME', 'pipeline_healthcare_knowledge')
         
         # Initialize embedding model - try SentenceTransformer first, fallback to default
@@ -50,16 +50,35 @@ class HealthcareRAGService:
     def _initialize_chroma(self):
         """Initialize ChromaDB client."""
         try:
-            # Always use persistent client for local storage
-            Path(self.chroma_persist_directory).mkdir(parents=True, exist_ok=True)
-            self.chroma_client = chromadb.PersistentClient(
-                path=self.chroma_persist_directory,
-                settings=Settings(
-                    anonymized_telemetry=False,
-                    allow_reset=True
+            # Try to connect to ChromaDB service first, fallback to local storage
+            chroma_host = os.getenv('CHROMA_HOST', 'chromadb')
+            chroma_port = os.getenv('CHROMA_PORT', '8000')
+            
+            try:
+                # Connect to ChromaDB service
+                self.chroma_client = chromadb.HttpClient(
+                    host=chroma_host,
+                    port=chroma_port,
+                    settings=Settings(
+                        anonymized_telemetry=False,
+                        allow_reset=True
+                    )
                 )
-            )
-            logger.info(f"Using ChromaDB Persistent client: {self.chroma_persist_directory}")
+                logger.info(f"Connected to ChromaDB service at {chroma_host}:{chroma_port}")
+            except Exception as service_error:
+                logger.warning(f"Failed to connect to ChromaDB service: {service_error}")
+                logger.info("Falling back to local ChromaDB storage")
+                
+                # Fallback to local storage
+                Path(self.chroma_persist_directory).mkdir(parents=True, exist_ok=True)
+                self.chroma_client = chromadb.PersistentClient(
+                    path=self.chroma_persist_directory,
+                    settings=Settings(
+                        anonymized_telemetry=False,
+                        allow_reset=True
+                    )
+                )
+                logger.info(f"Using ChromaDB Persistent client: {self.chroma_persist_directory}")
             
             # Get or create collection
             try:

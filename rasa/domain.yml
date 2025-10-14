@@ -134,8 +134,7 @@ slots:
       entity: pay_period
 
 responses:
-  utter_greet:
-  - text: "Hi there! I'm Pip, and I'm here to listen and support you. How are you doing today?"
+  # Removed utter_greet to force action server usage
 
   utter_goodbye:
   - text: "Take care of yourself. I'm always here when you need someone to talk to."
@@ -143,8 +142,7 @@ responses:
   utter_iamabot:
   - text: "I'm Pip, your caring colleague who's here to support you through your healthcare journey."
 
-  utter_ask_shift_details:
-  - text: "I'd love to hear about your shift. How did it go today?"
+  # Removed utter_ask_shift_details to force action server usage
 
   utter_shift_documented:
   - text: "Thank you for sharing that with me. Is there anything else you'd like to talk about?"
@@ -181,6 +179,9 @@ responses:
 
   utter_safety_escalate:
   - text: "This sounds like a safety concern that needs immediate attention."
+
+  utter_default:
+  - text: "I hear you and I'm here to support you."
 
 actions:
   - action_llama_chat

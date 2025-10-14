@@ -5,31 +5,32 @@ stories:
 - story: greet and help
   steps:
   - intent: greet
-  - action: utter_greet
+  - action: action_rag_enhanced_chat
+
+- story: shift reflection
+  steps:
+  - intent: shift_reflection
+  - action: action_rag_enhanced_chat
 
 - story: shift documentation
   steps:
   - intent: document_shift
-  - action: utter_ask_shift_details
-  - action: action_document_shift
-  - action: utter_shift_documented
+  - action: action_rag_enhanced_chat
 
 - story: ask about shift
   steps:
   - intent: ask_about_shift
-  - action: utter_ask_shift_details
+  - action: action_rag_enhanced_chat
 
 - story: schedule inquiry
   steps:
   - intent: ask_about_schedule
-  - action: utter_ask_schedule_info
-  - action: action_get_schedule_info
+  - action: action_rag_enhanced_chat
 
 - story: availability check
   steps:
   - intent: ask_about_availability
-  - action: utter_ask_schedule_info
-  - action: action_get_schedule_info
+  - action: action_rag_enhanced_chat
 
 - story: report issue
   steps:
@@ -70,7 +71,7 @@ stories:
 - story: say goodbye
   steps:
   - intent: goodbye
-  - action: utter_goodbye
+  - action: action_rag_enhanced_chat
 
 - story: express stress
   steps:
@@ -111,10 +112,22 @@ stories:
 - story: bot challenge
   steps:
   - intent: bot_challenge
-  - action: utter_iamabot
+  - action: action_rag_enhanced_chat
 
 - story: shift reflection
   steps:
   - intent: shift_reflection
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: catch-all for any intent
+  steps:
+  - intent: nlu_fallback
+  - action: action_rag_enhanced_chat
+  - action: action_listen
+
+- story: catch-all for out of scope
+  steps:
+  - intent: out_of_scope
   - action: action_rag_enhanced_chat
   - action: action_listen

@@ -277,11 +277,35 @@ nlu:
     - [stressed](emotion) shift in [Telemetry](department)
     - [proud](emotion) shift in [OR](department)
     - double shift again, I'm [exhausted](emotion)
+    - Had [12](patient_load) patients alone on [3 West](department)
+    - [12](patient_load) patients alone on [3 West](department)
+    - Had [10](patient_load) patients alone
+    - [15](patient_load) patients by myself in [ICU](department)
+    - Alone with [8](patient_load) patients in [CCU](department)
+    - Double load today - [14](patient_load) patients
+    - [16](patient_load) patients alone on night shift
+    - Had [12](patient_load) patients by myself
+    - [18](patient_load) patients alone in [Med-Surg](department)
+    - Working with [20](patient_load) patients today
+    - [13](patient_load) patients on [2 East](department)
+    - Had [11](patient_load) patients in [ER](department)
+    - [9](patient_load) patients by myself tonight
+    - Overwhelmed with [17](patient_load) patients
+    - [14](patient_load) patients alone in [ICU](department)
     - [burned out](emotion) shift in [Neuro](department)
     - [overworked](emotion) shift in [Oncology](department)
     - [burned out](emotion) shift in [3 West](department)
     - [stressed](emotion) shift in [LTC](department)
     - [proud](emotion) shift in [Med-Surg](department)
+    - Had [12](patient_load) patients alone on [3 West](department)
+    - [12](patient_load) patients alone on [3 West](department)
+    - Had [10](patient_load) patients alone
+    - [15](patient_load) patients by myself in [ICU](department)
+    - Alone with [8](patient_load) patients in [CCU](department)
+    - Double load today - [14](patient_load) patients
+    - [16](patient_load) patients alone on night shift
+    - Had [12](patient_load) patients by myself
+    - [18](patient_load) patients alone in [Med-Surg](department)
     - [rough](emotion) shift in [ER](department)
     - [burned out](emotion) shift in [Pediatrics](department)
     - [proud](emotion) shift in [Hospice](department)
