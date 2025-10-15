@@ -15,6 +15,16 @@ services:
       - "5432:5432"
     restart: unless-stopped
 
+  # Redis for job queues
+  redis:
+    image: redis:7-alpine
+    container_name: pipeline-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
   # ChromaDB Vector Database
   chromadb:
     image: chromadb/chroma:latest
@@ -66,6 +76,7 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
   chromadb_data:
 
 networks:
