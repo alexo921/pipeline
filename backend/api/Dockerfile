@@ -21,5 +21,5 @@ RUN npm run build
 # Expose port
 EXPOSE 3001
 
-# Start the application
-CMD ["npm", "run", "start:prod"] 
+# Start the application (build outputs to dist/src/main.js)
+CMD ["node", "dist/src/main.js"]

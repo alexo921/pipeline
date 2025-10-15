@@ -25,59 +25,53 @@ services:
       - redis_data:/data
     restart: unless-stopped
 
-  # ChromaDB Vector Database
-  chromadb:
-    image: chromadb/chroma:latest
-    container_name: pipeline-chromadb
-    ports:
-      - "8000:8000"
-    volumes:
-      - chromadb_data:/chroma/chroma
-    restart: unless-stopped
+  # (ChromaDB removed)
 
-  # LLM Server (Fine-tuned)
-  llm-server:
-    build:
-      context: .
-      dockerfile: llama_server_finetuned.Dockerfile
-    container_name: pipeline-llm-server
-    volumes:
-      - /home/ubuntu/.local/share/Jan/data/llamacpp/models/llama-3.1-8b-instruct-q5_k_m.gguf:/app/models/llama-3.1-8b-instruct-q5_k_m.gguf:ro
-      - ./healthcare_lora_adapter:/app/adapters/healthcare_lora_adapter:ro
-    environment:
-      - ADAPTER_PATH=/app/adapters/healthcare_lora_adapter
-      - MODEL_PATH=/app/models/llama-3.1-8b-instruct-q5_k_m.gguf
-      - HF_HOME=/tmp/huggingface
-    ports:
-      - "1337:1337"
-    restart: unless-stopped
+  # (LLM server removed)
 
-  # Pip Chatbot (Rasa)
-  pip-chatbot:
+  # Backend API (NestJS)
+  api:
     build:
-      context: .
-      dockerfile: rasa/Dockerfile
-    container_name: pipeline-pip-chatbot
-    ports:
-      - "5005:5005"
-      - "5055:5055"
+      context: ./backend/api
+      dockerfile: Dockerfile
+    container_name: pipeline-api
     environment:
-      - CHROMA_HOST=chromadb
-      - CHROMA_PORT=8000
-      - CHROMA_PERSIST_DIRECTORY=/tmp/chromadb
-    volumes:
-      - ./rasa/models:/app/rasa/models
-      - ./rasa/logs:/app/rasa/logs
-      - ./rasa/data:/app/rasa/data
+      - NODE_ENV=production
+      # Point to Postgres service inside the compose network
+      - DATABASE_URL=postgresql://pipeline:pipeline_password@postgres:5432/pipeline?schema=public
+      # Point to Redis service inside the compose network
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PORT=3001
+    ports:
+      - "3001:3001"
     depends_on:
-      - chromadb
-      - llm-server
+      - postgres
+      - redis
     restart: unless-stopped
+
+  # Web Dashboard (Next.js)
+  web-dashboard:
+    build:
+      context: ./frontend/web-dashboard
+      dockerfile: Dockerfile
+    container_name: pipeline-web
+    environment:
+      - NODE_ENV=production
+      # Frontend talks to the public API domain in production
+      - NEXT_PUBLIC_API_URL=https://api.pipelineworkforce.com
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # (Pip Chatbot removed)
 
 volumes:
   postgres_data:
   redis_data:
-  chromadb_data:
 
 networks:
   default:
