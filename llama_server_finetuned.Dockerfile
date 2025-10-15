@@ -21,14 +21,14 @@ RUN pip install --no-cache-dir \
 
 # Copy adapter and model files
 COPY healthcare_lora_adapter/ ./adapters/healthcare_lora_adapter/
-COPY models/llama-3.1-8b-instruct-q5_k_m.gguf ./models/
+COPY models/llama-3.1-8b-instruct-q4_0.gguf ./models/
 
 # Copy server script
 COPY llama_server_with_adapter.py .
 
 # Set environment variables
 ENV ADAPTER_PATH=/app/adapters/healthcare_lora_adapter
-ENV MODEL_PATH=/app/models/llama-3.1-8b-instruct-q5_k_m.gguf
+ENV MODEL_PATH=/app/models/llama-3.1-8b-instruct-q4_0.gguf
 
 EXPOSE 1337
 
