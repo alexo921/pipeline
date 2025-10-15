@@ -93,30 +93,6 @@ export default function MobileMenu({ isOpen, onClose, onLoginClick }: MobileMenu
 
           {/* Navigation links */}
           <nav className="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
-            <Link
-              href="/jobs"
-              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
-              onClick={onClose}
-            >
-              Find Jobs
-            </Link>
-            
-            <Link
-              href="/employer-intake"
-              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
-              onClick={onClose}
-            >
-              Hire Talent
-            </Link>
-            
-            <Link
-              href="/employee-intake"
-              className="block text-base font-medium text-gray-900 hover:text-blue-600 font-avenir"
-              onClick={onClose}
-            >
-              Find Work
-            </Link>
-            
             {user ? (
               <>
                 <Link

@@ -73,39 +73,6 @@ const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden md:flex items-center space-x-6">
             {/* Plain text navigation (no container) */}
             <div className="flex items-center space-x-6">
-              <Link
-                href="/jobs"
-                className={`text-sm font-medium transition-colors font-avenir px-4 py-2 rounded-full ${
-                  pathname === "/jobs"
-                    ? "bg-[#8AADFC] text-white shadow"
-                    : "text-slate-700 hover:bg-[#8AADFC] hover:text-white"
-                }`}
-              >
-                Find Jobs
-              </Link>
-              
-              <Link
-                href="/employer-intake"
-                className={`text-sm font-medium transition-colors font-avenir px-4 py-2 rounded-full ${
-                  pathname === "/employer-intake"
-                    ? "bg-[#8AADFC] text-white shadow"
-                    : "text-slate-700 hover:bg-[#8AADFC] hover:text-white"
-                }`}
-              >
-                Hire Talent
-              </Link>
-              
-              <Link
-                href="/employee-intake"
-                className={`text-sm font-medium transition-colors font-avenir px-4 py-2 rounded-full ${
-                  pathname === "/employee-intake"
-                    ? "bg-[#8AADFC] text-white shadow"
-                    : "text-slate-700 hover:bg-[#8AADFC] hover:text-white"
-                }`}
-              >
-                Find Work
-              </Link>
-
               {/* User Icon with Dropdown or Login Button */}
               {user ? (
                 <div className="relative">
