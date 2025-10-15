@@ -22,7 +22,6 @@ Pipeline Workforce Platform
 ├── 📱 Mobile App (React Native/Expo)
 ├── 🔧 Admin Panel (Next.js)
 ├── 🚀 Backend API (NestJS)
-├── 🤖 AI Backend (Jan AI)
 ├── 📊 Resume Parser (Python/NLP)
 └── 🗄️ Database (PostgreSQL + Redis)
 ```
@@ -33,7 +32,7 @@ Pipeline Workforce Platform
 - **Mobile**: React Native, Expo, TypeScript
 - **Backend**: NestJS, Node.js, TypeScript
 - **Database**: PostgreSQL, Redis
-- **AI/ML**: Jan AI, Python, spaCy, NLTK
+- **AI/ML**: Python, spaCy, NLTK
 - **Infrastructure**: Docker, Nginx, Ubuntu
 - **Authentication**: JWT, Passport.js
 - **Email**: Nodemailer with Gmail OAuth
@@ -57,19 +56,13 @@ cd pipeline
 
 2. **Start the development environment**
 ```bash
-# Start all services with Docker
+# Start core services with Docker (web, api, postgres, redis)
 docker-compose up -d
-
-# Or start individual services
-docker-compose up -d postgres redis
 ```
 
 3. **Access the applications**
 - **Web Dashboard**: http://localhost:3000
-- **Mobile App**: http://localhost:3003
-- **Admin Panel**: http://localhost:3002
 - **API**: http://localhost:3001
-- **AI Backend**: http://localhost:1337
 
 ## 📱 Applications
 
@@ -143,17 +136,7 @@ docker-compose up -d postgres redis
 - Email Services
 - Analytics & Reporting
 
-### 5. AI Backend (`jan/`)
-
-**Technology**: Jan AI, Python
-
-**Features**:
-- **AI Chat Interface**: Healthcare-focused AI assistant
-- **Model Management**: Local AI model hosting
-- **Chat Completions**: Real-time AI responses
-- **Healthcare Context**: Specialized healthcare knowledge
-
-### 6. Resume Parser (`Resume-NLP-Parser/`)
+### 5. Resume Parser (`Resume-NLP-Parser/`)
 
 **Technology**: Python, spaCy, NLTK, Streamlit
 
@@ -199,10 +182,9 @@ GMAIL_CLIENT_SECRET=your-gmail-client-secret
 NEXT_PUBLIC_API_URL=http://localhost:3001
 ```
 
-3. **Mobile App Environment** (`frontend/mobile-app/.env`)
+3. (Optional) **Mobile App Environment** (`frontend/mobile-app/.env`)
 ```env
 EXPO_PUBLIC_API_URL=http://localhost:3001
-EXPO_PUBLIC_JAN_API_URL=http://localhost:1337/v1/chat/completions
 ```
 
 ### Development Commands
@@ -331,8 +313,6 @@ docker-compose down && docker-compose up --build -d && sudo systemctl restart ng
 
 - **Main Platform**: https://pipelineworkforce.com
 - **API**: https://api.pipelineworkforce.com
-- **Mobile App**: https://mobile.pipelineworkforce.com
-- **Admin Panel**: https://pipelineworkforce.com/admin
 
 ### Infrastructure
 
