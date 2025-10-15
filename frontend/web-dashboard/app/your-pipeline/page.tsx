@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import BaseLayout from '../components/layout/BaseLayout';
 import AdminDashboardNav from '../components/AdminDashboardNav';
+import ActionCenter from '../components/analytics/ActionCenter';
+import HotspotsSection from '../components/analytics/HotspotsSection';
 import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -466,6 +468,99 @@ const YourPipelinePage = () => {
     }
   };
 
+  // Action Center Data
+  const actionCenterData = {
+    actionItems: [
+      {
+        id: '1',
+        title: 'Retention Forecast Drop Detected - Rehab Unit',
+        description: 'Retention forecast dropped 12 points from baseline.',
+        type: 'manual' as const,
+        status: 'Escalate to Supervisor',
+        icon: 'warning' as const,
+        priority: 'high' as const
+      },
+      {
+        id: '2',
+        title: 'Pulse Participation Drop Detected',
+        description: 'Pulse participation dropped 50 points from last month.',
+        type: 'auto' as const,
+        status: 'Pulse Reminder Sent',
+        icon: 'warning' as const,
+        priority: 'medium' as const
+      },
+      {
+        id: '3',
+        title: 'Culture Misalignment Flag',
+        description: 'Intake vs employee sentiment divergence of 20 points.',
+        type: 'manual' as const,
+        status: 'Escalate to DON',
+        icon: 'warning' as const,
+        priority: 'high' as const
+      },
+      {
+        id: '4',
+        title: 'High Performers Detected',
+        description: 'Retention forecast rose 10 points from baseline.',
+        type: 'auto' as const,
+        status: 'Encouragement Nudge Sent',
+        icon: 'success' as const,
+        priority: 'low' as const
+      },
+      {
+        id: '5',
+        title: 'Safety Compliance Alert',
+        description: 'Detected a complaint that contains the term "unsafe".',
+        type: 'auto' as const,
+        status: 'Escalated to Compliance Officer',
+        icon: 'warning' as const,
+        priority: 'high' as const
+      }
+    ],
+    automationModes: [
+      { name: 'Intake Nudge', status: 'auto' as const },
+      { name: 'Pulse Reminder', status: 'auto' as const },
+      { name: 'Retention Drop Escalation', status: 'manual' as const },
+      { name: 'Complaint Theme Spike', status: 'manual' as const }
+    ],
+    completedTasks: [
+      { category: 'New Hire Retention', count: 14 },
+      { category: 'Sentiment', count: 6 },
+      { category: 'Engagement', count: 8 },
+      { category: 'Complaint', count: 11 },
+      { category: 'Culture', count: 3 },
+      { category: 'Positive Reinforcement', count: 4 }
+    ]
+  };
+
+  // Hotspots Data
+  const hotspotsData = {
+    rehab: {
+      sentiment: 22,
+      participation: 75,
+      retention: 40,
+      riskLevel: 'medium' as const
+    },
+    memoryCare: {
+      sentiment: 22,
+      participation: 10,
+      retention: 8,
+      riskLevel: 'high' as const
+    },
+    icu: {
+      sentiment: 22,
+      participation: 10,
+      retention: 8,
+      riskLevel: 'high' as const
+    },
+    surgical: {
+      sentiment: 65,
+      participation: 75,
+      retention: 90,
+      riskLevel: 'low' as const
+    }
+  };
+
   // Helper functions for color coding and thresholds
   const getThresholdColor = (threshold: string) => {
     switch (threshold) {
@@ -791,7 +886,7 @@ const YourPipelinePage = () => {
           {/* Analytics Container - Holds both Metrics and Insights */}
           <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6 mb-8">
             <div className="flex items-center justify-between mb-1">
-              <h2 className="text-[25px] font-bold leading-[34px] text-[#01253F] font-avenir">Analytics</h2>
+              <h2 className="text-[25px] font-bold leading-[34px] text-[#01253F] font-avenir">Analytics Snapshot</h2>
               <div className="flex items-center space-x-2">
                 <button 
                   onClick={() => handleDownloadCSV('analytics')}
@@ -1029,494 +1124,17 @@ const YourPipelinePage = () => {
             </div>
           </div>
           
-          {/* Jobs/Matches/Applicants Container - Stacked below */}
-          <div className="p-1">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-              {/* Open Jobs Section - Left Side (Full Height) */}
-              <div className="bg-[#F4F4F4] rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] pt-3 px-4 pb-4 h-[1250px] overflow-hidden" style={{ minWidth: '400px' }}>
-                {/* Header */}
-                <div className="flex items-start justify-between mb-1 mt-2">
-                  <h2 className="text-[22px] font-bold text-[#01253F] font-avenir">Open Jobs</h2>
-                  <div className="flex items-start space-x-2"></div>
-                </div>
+          {/* Action Center Section */}
+          <ActionCenter 
+            actionItems={actionCenterData.actionItems}
+            automationModes={actionCenterData.automationModes}
+            completedTasks={actionCenterData.completedTasks}
+          />
 
-                {/* Job Cards */}
-                <div className="space-y-2 overflow-y-auto h-[calc(100%-80px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-                  {demoJobs.map((job) => (
-                    <div key={job.id} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 relative">
-                      {/* Edit Icon - Top Right */}
-                      <button 
-                        onClick={() => handleJobEdit(job)}
-                        className="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 hover:bg-gray-200 transition-colors"
-                      >
-                        <img src="/edit_pencil.svg" alt="Edit" className="w-8 h-8" />
-                      </button>
-
-                      {/* Job Content */}
-                      <div className="flex flex-col">
-                        {/* Job Title */}
-                        <h3 className="text-[22px] font-bold text-[#2466D0] mb-6 font-avenir">
-                          {job.title}
-                        </h3>
-                        
-                        {/* Company Name */}
-                        <p className="text-[16px] font-bold text-[#01253F] mb-1 font-avenir">
-                          {job.company}
-                        </p>
-                        
-                        {/* Location and Salary Row */}
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex flex-col">
-                            <p className="text-[14px] text-[#01253F] mb-1 font-avenir">
-                              {job.location}
-                            </p>
-                            <p className="text-[14px] text-[#01253F] font-avenir">
-                              {job.salary}
-                            </p>
-                          </div>
-                          
-                          {/* View Applicants Button */}
-                          <div className="relative">
-                            <button 
-                              onClick={() => handleViewApplicants(job)}
-                              className="bg-[#2CB3BF] text-white px-6 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
-                            >
-                              View Applicants
-                            </button>
-                            {/* Applicant Count Badge */}
-                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#01253F] text-white rounded-full flex items-center justify-center text-sm font-bold">
-                              {job.applicants}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Right Side - Matches and Applicants Stacked */}
-              <div className="flex flex-col h-full" style={{ minWidth: '300px' }}>
-                {/* Matches Section - Top Half */}
-                <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] pt-3 px-4 pb-4 h-[610px] overflow-hidden">
-                  <div className="flex items-start justify-between mb-1 mt-2">
-                    <div className="flex items-start space-x-2">
-                      <h2 className="text-[22px] font-bold text-[#2466D0] font-avenir">Matches</h2>
-                      <div className="w-6 h-6 bg-[#2466D0] rounded-full flex items-center justify-center">
-                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <button 
-                        onClick={() => handleDownloadCSV('matches')}
-                        className="p-2 hover:bg-gray-100 rounded transition-colors" 
-                        title="Download data as CSV"
-                      >
-                        <img src="/download.svg" alt="Download" className="w-6 h-6" />
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2 overflow-y-auto h-[calc(100%-80px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-                    {demoMatches.map((match) => (
-                      <div 
-                        key={match.id} 
-                        className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between cursor-pointer hover:shadow-md transition-shadow"
-                        onClick={() => handleViewProfile(match)}
-                      >
-                        <div className="flex items-center space-x-4">
-                          {/* Avatar */}
-                          <div className="rounded-full bg-white flex items-center justify-center">
-                            <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-[#01253F] text-lg">{match.name}</h4>
-                            <p className="font-bold text-[#01253F] text-sm">{match.experience}</p>
-                            <p className="text-gray-500 text-sm">{match.location}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 space-x-2">
-                            <span className="text-gray-600 font-medium text-sm">{match.status}</span>
-                            <div className="w-4 h-4 bg-[#2466D0] rounded-full flex items-center justify-center">
-                              <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Applicants Section - Bottom Half */}
-                <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] pt-3 px-4 pb-4 mt-4 h-[625px] overflow-hidden">
-                  <div className="flex items-start justify-between mb-1 mt-2">
-                    <h2 className="text-[22px] font-bold text-[#01253F] font-avenir">Applicants</h2>
-                    <div className="flex items-start space-x-2">
-                      <button 
-                        onClick={() => handleDownloadCSV('applicants')}
-                        className="p-2 hover:bg-gray-100 rounded transition-colors" 
-                        title="Download data as CSV"
-                      >
-                        <img src="/download.svg" alt="Download" className="w-6 h-6" />
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2 overflow-y-auto h-[calc(100%-80px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-                    {demoApplicants.map((applicant) => (
-                      <div 
-                        key={applicant.id} 
-                        className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex items-center justify-between cursor-pointer hover:shadow-md transition-shadow"
-                        onClick={() => handleViewApplicantProfile(applicant)}
-                      >
-                        <div className="flex items-center space-x-4">
-                          {/* Avatar */}
-                          <div className="rounded-full bg-white flex items-center justify-center">
-                            <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-[#01253F] text-lg">{applicant.name}</h4>
-                            <p className="font-bold text-[#01253F] text-sm">{applicant.experience}</p>
-                            <p className="text-gray-500 text-sm">{applicant.location}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Hotspots Section */}
+          <HotspotsSection data={hotspotsData} />
         </div>
       </div>
-
-      {/* Alerts Modal */}
-      {showNotification && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-[#01253F]">Active Alerts</h3>
-              <button 
-                onClick={() => setShowNotification(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            
-            <div className="space-y-3">
-              {/* Orientation Fill Forecast Alert */}
-              {analyticsData.orientationFillForecast.orientationDaysAway < 7 && analyticsData.orientationFillForecast.percentage < 90 && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <div className="flex items-center">
-                    <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-                    <span className="text-sm font-medium text-red-800">
-                      Orientation in {analyticsData.orientationFillForecast.orientationDaysAway} days with only {analyticsData.orientationFillForecast.percentage}% forecast fill rate
-                    </span>
-                  </div>
-                </div>
-              )}
-              
-              {/* Retention Forecast Alert */}
-              {analyticsData.retentionForecast.threshold === 'red' && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <div className="flex items-center">
-                    <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-                    <span className="text-sm font-medium text-red-800">
-                      Low retention forecast: Only {analyticsData.retentionForecast.percentage}% projected to stay
-                    </span>
-                  </div>
-                </div>
-              )}
-              
-              {/* Early Churn Risk Alert */}
-              {analyticsData.earlyChurnRisk.threshold === 'red' && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <div className="flex items-center">
-                    <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-                    <span className="text-sm font-medium text-red-800">
-                      High churn risk: {analyticsData.earlyChurnRisk.percentage}% of hires flagged
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <div className="mt-6 flex justify-end">
-              <button 
-                onClick={() => {
-                  setShowNotification(false);
-                  setNotifications(0);
-                }}
-                className="bg-[#2CB3BF] text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-[#25a0ab] transition-colors"
-              >
-                Mark All as Read
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Job Edit Modal */}
-      {showJobModal && selectedJob && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-xl font-bold mb-4">Edit Job: {selectedJob.title}</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
-                <input 
-                  type="text" 
-                  defaultValue={selectedJob.title}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
-                <input 
-                  type="text" 
-                  defaultValue={selectedJob.salary}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-            <div className="flex space-x-3 mt-6">
-              <button 
-                onClick={() => setShowJobModal(false)}
-                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={() => setShowJobModal(false)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-              >
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* View Applicants Modal */}
-      {showApplicantsModal && selectedJob && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          onClick={() => setShowApplicantsModal(false)}
-        >
-          <div 
-            className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header Section */}
-            <div className="flex items-start justify-between mb-6">
-              {/* Left Side - Job Info */}
-              <div>
-                <h3 className="text-2xl font-bold text-[#01253F] mb-1">
-                  Applicants for {selectedJob.title}
-                </h3>
-                <p className="text-lg text-gray-600">
-                  {selectedJob.company} • {selectedJob.location}
-                </p>
-              </div>
-              
-              {/* Right Side - Actions */}
-              <div className="flex items-center space-x-4">
-                <button className="bg-[#4A90E2] hover:bg-[#357ABD] text-white px-6 py-3 rounded-lg font-bold text-base transition-colors">
-                  Contact All
-                </button>
-                <button 
-                  onClick={() => setShowApplicantsModal(false)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            
-            {/* Divider */}
-            <div className="w-full h-px bg-gray-200 mb-8"></div>
-            
-            {/* Applicants List */}
-            <div className="space-y-6">
-              {demoApplicants.map((applicant) => (
-                <div key={applicant.id} className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                  {/* Applicant Header */}
-                  <div className="flex items-start justify-between mb-4">
-                    {/* Left Side - Avatar and Info */}
-                    <div className="flex items-start space-x-4">
-                      {/* Avatar */}
-                      <div className="rounded-full bg-white flex items-center justify-center">
-                        <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
-                      </div>
-                      
-                      {/* Name and Details */}
-                      <div>
-                        <h4 className="text-xl font-bold text-[#01253F] mb-1">
-                          {applicant.name}
-                        </h4>
-                        <p className="text-base font-bold text-[#01253F] mb-1">
-                          {applicant.experience}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          {applicant.location}
-                        </p>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Applied {applicant.appliedDate}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    {/* Right Side - Actions */}
-                    <div className="flex items-center space-x-3">
-                      <button 
-                        onClick={() => handleViewProfile(applicant)}
-                        className="bg-[#2CB3BF] hover:bg-[#25a0ab] text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors"
-                      >
-                        View Profilexx
-                      </button>
-                      <button className="bg-[#4A90E2] hover:bg-[#357ABD] text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors">
-                        Contact
-                      </button>
-                    </div>
-                  </div>
-                  
-                  {/* Quick Bio Preview */}
-                  <div className="bg-white rounded-xl p-4 border border-gray-100">
-                    <h5 className="text-sm font-bold text-gray-600 mb-2">Quick Bio</h5>
-                    <p className="text-sm text-gray-800 leading-relaxed">
-                      Dedicated healthcare professional with strong patient care skills and experience in 
-                      long-term care settings. Committed to providing compassionate and quality care.
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Profile View Modal */}
-      {showProfileModal && selectedMatch && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          onClick={() => setShowProfileModal(false)}
-        >
-          <div 
-            className="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header Section */}
-            <div className="flex items-start justify-between mb-6">
-              {/* Left Side - Avatar and Info */}
-                              <div className="flex items-start space-x-4">
-                  {/* Avatar */}
-                  <div className="rounded-full bg-white flex items-center justify-center">
-                    <img src="/user_icon.svg" alt="User" className="w-20 h-20 object-contain" />
-                  </div>
-                
-                {/* Name and Details */}
-                <div>
-                  <h3 className="text-2xl font-bold text-[#01253F] mb-1">
-                    {selectedMatch.name}
-                  </h3>
-                  <p className="text-lg font-bold text-[#01253F] mb-1">
-                    {selectedMatch.experience}
-                  </p>
-                  <p className="text-base text-gray-600">
-                    {selectedMatch.location}
-                  </p>
-                </div>
-              </div>
-              
-              {/* Right Side - Actions */}
-              <div className="flex items-center space-x-4">
-                <button className="bg-[#4A90E2] hover:bg-[#357ABD] text-white px-6 py-3 rounded-lg font-bold text-base transition-colors">
-                  Express Interest
-                </button>
-                <button 
-                  onClick={() => setShowProfileModal(false)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            
-            {/* Divider */}
-            <div className="w-full h-px bg-gray-200 mb-8"></div>
-            
-            {/* Bio Section */}
-            <div className="mb-8">
-              <h4 className="text-lg font-bold text-gray-600 mb-4">Bio</h4>
-              <p className="text-base text-gray-800 leading-relaxed">
-                Community Focused. Care Driven. Join Something Health, where your future is as promising 
-                as the care we provide. Our commitment to each other, our patients, and our community is 
-                more than a mission.
-              </p>
-            </div>
-            
-            {/* Experience Section */}
-            <div className="mb-8">
-              <h4 className="text-lg font-bold text-gray-600 mb-4">Experience</h4>
-              <ul className="space-y-3">
-                <li className="flex items-center">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mr-4 flex-shrink-0"></div>
-                  <span className="text-base text-gray-800">
-                    Registered Nurse | St. Mary's | <span className="font-bold">3yrs</span>
-                  </span>
-                </li>
-                <li className="flex items-center">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mr-4 flex-shrink-0"></div>
-                  <span className="text-base text-gray-800">
-                    Registered Nurse | St. Mary's | <span className="font-bold">3yrs</span>
-                  </span>
-                </li>
-                <li className="flex items-center">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mr-4 flex-shrink-0"></div>
-                  <span className="text-base text-gray-800">
-                    Registered Nurse | St. Mary's | <span className="font-bold">3yrs</span>
-                  </span>
-                </li>
-                <li className="flex items-center">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full mr-4 flex-shrink-0"></div>
-                  <span className="text-base text-gray-800">
-                    Registered Nurse | St. Mary's | <span className="font-bold">3yrs</span>
-                  </span>
-                </li>
-              </ul>
-            </div>
-            
-            {/* Skills Section */}
-            <div>
-              <h4 className="text-lg font-bold text-gray-600 mb-4">Skills</h4>
-              <div className="flex flex-wrap gap-3">
-                <span className="px-4 py-2 border-2 border-gray-300 rounded-full text-base text-gray-800 font-medium">
-                  Leadership
-                </span>
-                <span className="px-4 py-2 border-2 border-gray-300 rounded-full text-base text-gray-800 font-medium">
-                  Safety
-                </span>
-                <span className="px-4 py-2 border-2 border-gray-300 rounded-full text-base text-gray-800 font-medium">
-                  Adaptability
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </BaseLayout>
   );
 };
