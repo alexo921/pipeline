@@ -65,9 +65,9 @@ const HotspotsSection: React.FC<HotspotsSectionProps> = ({ data }) => {
     const Icon = riskConfig.icon;
 
     return (
-      <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[200px]">
+      <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-5 h-[240px] flex flex-col">
         {/* Header */}
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex items-start justify-between mb-5 flex-shrink-0">
           <h3 className="text-lg font-medium text-[#01253F] leading-tight">{title}</h3>
           <div className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${riskConfig.bgColor} ${riskConfig.textColor}`}>
             <Icon className="w-3 h-3" />
@@ -76,50 +76,56 @@ const HotspotsSection: React.FC<HotspotsSectionProps> = ({ data }) => {
         </div>
 
         {/* Metrics */}
-        <div className="space-y-3">
+        <div className="space-y-4 flex-1 flex flex-col justify-center">
           {/* Sentiment */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1">
-              <span className="text-sm font-medium text-gray-700">Sentiment</span>
-              <Info className="w-3 h-3 text-gray-400 cursor-help" />
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <span className="text-sm font-medium text-gray-700">Sentiment</span>
+                <Info className="w-3 h-3 text-gray-400 cursor-help" />
+              </div>
+              <span className="text-sm font-medium text-gray-900">{data.sentiment}%</span>
             </div>
-            <span className="text-sm font-medium text-gray-900">{data.sentiment}%</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="h-2 rounded-full bg-blue-400"
-              style={{ width: `${data.sentiment}%` }}
-            ></div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="h-2 rounded-full bg-blue-400"
+                style={{ width: `${data.sentiment}%` }}
+              ></div>
+            </div>
           </div>
 
           {/* Participation */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1">
-              <span className="text-sm font-medium text-gray-700">Participation</span>
-              <Info className="w-3 h-3 text-gray-400 cursor-help" />
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <span className="text-sm font-medium text-gray-700">Participation</span>
+                <Info className="w-3 h-3 text-gray-400 cursor-help" />
+              </div>
+              <span className="text-sm font-medium text-gray-900">{data.participation}%</span>
             </div>
-            <span className="text-sm font-medium text-gray-900">{data.participation}%</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="h-2 rounded-full bg-blue-400"
-              style={{ width: `${data.participation}%` }}
-            ></div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="h-2 rounded-full bg-blue-400"
+                style={{ width: `${data.participation}%` }}
+              ></div>
+            </div>
           </div>
 
           {/* Retention */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1">
-              <span className="text-sm font-medium text-gray-700">Retention</span>
-              <Info className="w-3 h-3 text-gray-400 cursor-help" />
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <span className="text-sm font-medium text-gray-700">Retention</span>
+                <Info className="w-3 h-3 text-gray-400 cursor-help" />
+              </div>
+              <span className="text-sm font-medium text-gray-900">{data.retention}%</span>
             </div>
-            <span className="text-sm font-medium text-gray-900">{data.retention}%</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="h-2 rounded-full bg-blue-400"
-              style={{ width: `${data.retention}%` }}
-            ></div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="h-2 rounded-full bg-blue-400"
+                style={{ width: `${data.retention}%` }}
+              ></div>
+            </div>
           </div>
         </div>
       </div>
