@@ -12,6 +12,17 @@ Pipeline Workforce is a full-stack platform designed to revolutionize healthcare
 - **Resume Parsing**: Advanced NLP-based resume analysis and skill extraction
 - **Multi-Platform Access**: Web dashboard, mobile app, and admin panel
 
+## 🔰 How to work with this repo
+
+- Start here: `docs/AI_CODEBASE_OVERVIEW.md` for a concise map of services, env, and conventions.
+- Core dev loop:
+  - Backend: `cd backend/api && npm ci && npm run build && node dist/src/main.js`
+  - Frontend: `cd frontend/web-dashboard && npm ci && npm run build && npm run start -p 3000`
+  - Docker (recommended locally): `docker-compose up -d` (brings up web, api, postgres, redis)
+- Configuration:
+  - Frontend API base is injected via `NEXT_PUBLIC_API_URL` in `frontend/web-dashboard/next.config.ts`.
+  - Backend uses `.env` for `DATABASE_URL`, Redis host/port; Prisma schema in `backend/api/prisma`.
+
 ## 🏗️ Architecture
 
 ### Core Components
@@ -22,7 +33,6 @@ Pipeline Workforce Platform
 ├── 📱 Mobile App (React Native/Expo)
 ├── 🔧 Admin Panel (Next.js)
 ├── 🚀 Backend API (NestJS)
-├── 📊 Resume Parser (Python/NLP)
 └── 🗄️ Database (PostgreSQL + Redis)
 ```
 
