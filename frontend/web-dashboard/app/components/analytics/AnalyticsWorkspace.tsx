@@ -222,36 +222,44 @@ export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facility
         fetch(`${baseUrl}/api/analytics/actions/${facilityId}`, { credentials: 'include' })
       ]);
 
-      // Parse responses
-      const kpis = await kpisResponse.json();
-      const insights = await insightsResponse.json();
-      const cohorts = await cohortsResponse.json();
-      const hotspots = await hotspotsResponse.json();
-      const actions = await actionsResponse.json();
-
-      // Update state with real data
-      if (kpis) {
-        setKpiData({
-          retentionForecast: kpis.retentionForecast || kpiData.retentionForecast,
-          noShowRisk: kpis.noShowRisk || kpiData.noShowRisk,
-          turnoverCost: kpis.turnoverCost || kpiData.turnoverCost
-        });
+      // Parse responses only if successful
+      if (kpisResponse.ok) {
+        const kpis = await kpisResponse.json();
+        if (kpis) {
+          setKpiData({
+            retentionForecast: kpis.retentionForecast || kpiData.retentionForecast,
+            noShowRisk: kpis.noShowRisk || kpiData.noShowRisk,
+            turnoverCost: kpis.turnoverCost || kpiData.turnoverCost
+          });
+        }
       }
 
-      if (insights) {
-        setInsights(insights);
+      if (insightsResponse.ok) {
+        const insights = await insightsResponse.json();
+        if (insights && Array.isArray(insights)) {
+          setInsights(insights);
+        }
       }
 
-      if (cohorts) {
-        setCohorts(cohorts);
+      if (cohortsResponse.ok) {
+        const cohorts = await cohortsResponse.json();
+        if (cohorts && Array.isArray(cohorts)) {
+          setCohorts(cohorts);
+        }
       }
 
-      if (hotspots) {
-        setHotspots(hotspots);
+      if (hotspotsResponse.ok) {
+        const hotspots = await hotspotsResponse.json();
+        if (hotspots && Array.isArray(hotspots)) {
+          setHotspots(hotspots);
+        }
       }
 
-      if (actions) {
-        setActions(actions);
+      if (actionsResponse.ok) {
+        const actions = await actionsResponse.json();
+        if (actions && Array.isArray(actions)) {
+          setActions(actions);
+        }
       }
 
       setLastUpdated(new Date());
