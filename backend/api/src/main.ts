@@ -20,8 +20,8 @@ async function bootstrap() {
   // Enable CORS
   app.enableCors({
     origin: process.env.NODE_ENV === 'development' 
-      ? ['http://localhost:3005', 'http://localhost:3000', process.env.FRONTEND_URL || 'https://pipelineworkforce.com'].filter(Boolean)
-      : process.env.FRONTEND_URL || 'https://pipelineworkforce.com',
+      ? ['http://localhost:3005', 'http://localhost:3000', 'http://localhost:3002']
+      : ['https://www.pipelineworkforce.com', 'https://pipelineworkforce.com'],
     credentials: true,
   });
 
