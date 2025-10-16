@@ -213,13 +213,13 @@ export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facility
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
       
-      // Fetch all analytics data in parallel
+      // Fetch all analytics data in parallel with credentials
       const [kpisResponse, insightsResponse, cohortsResponse, hotspotsResponse, actionsResponse] = await Promise.all([
-        fetch(`${baseUrl}/api/analytics/kpis/${facilityId}`),
-        fetch(`${baseUrl}/api/analytics/insights/${facilityId}`),
-        fetch(`${baseUrl}/api/analytics/cohorts/${facilityId}`),
-        fetch(`${baseUrl}/api/analytics/hotspots/${facilityId}?type=${hotspotType}`),
-        fetch(`${baseUrl}/api/analytics/actions/${facilityId}`)
+        fetch(`${baseUrl}/api/analytics/kpis/${facilityId}`, { credentials: 'include' }),
+        fetch(`${baseUrl}/api/analytics/insights/${facilityId}`, { credentials: 'include' }),
+        fetch(`${baseUrl}/api/analytics/cohorts/${facilityId}`, { credentials: 'include' }),
+        fetch(`${baseUrl}/api/analytics/hotspots/${facilityId}?type=${hotspotType}`, { credentials: 'include' }),
+        fetch(`${baseUrl}/api/analytics/actions/${facilityId}`, { credentials: 'include' })
       ]);
 
       // Parse responses
