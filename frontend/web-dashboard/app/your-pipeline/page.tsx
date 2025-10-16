@@ -675,6 +675,8 @@ const YourPipelinePage = () => {
   };
 
   const downloadJobsCSV = () => {
+    if (!demoJobs || !Array.isArray(demoJobs)) return;
+    
     const jobsCSVData = demoJobs.map(job => ({
       title: job.title,
       company: job.company,
@@ -688,6 +690,8 @@ const YourPipelinePage = () => {
   };
 
   const downloadMatchesCSV = () => {
+    if (!demoMatches || !Array.isArray(demoMatches)) return;
+    
     const matchesCSVData = demoMatches.map(match => ({
       name: match.name,
       role: match.role,
@@ -701,6 +705,8 @@ const YourPipelinePage = () => {
   };
 
   const downloadApplicantsCSV = () => {
+    if (!demoApplicants || !Array.isArray(demoApplicants)) return;
+    
     const applicantsCSVData = demoApplicants.map(applicant => ({
       name: applicant.name,
       role: applicant.role,
@@ -1125,14 +1131,18 @@ const YourPipelinePage = () => {
           </div>
           
           {/* Action Center Section */}
-          <ActionCenter 
-            actionItems={actionCenterData.actionItems}
-            automationModes={actionCenterData.automationModes}
-            completedTasks={actionCenterData.completedTasks}
-          />
+          {actionCenterData && (
+            <ActionCenter 
+              actionItems={actionCenterData.actionItems || []}
+              automationModes={actionCenterData.automationModes || []}
+              completedTasks={actionCenterData.completedTasks || []}
+            />
+          )}
 
           {/* Hotspots Section */}
-          <HotspotsSection data={hotspotsData} />
+          {hotspotsData && (
+            <HotspotsSection data={hotspotsData} />
+          )}
         </div>
       </div>
     </BaseLayout>

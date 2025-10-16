@@ -83,7 +83,7 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
         {/* Left Side - Action Items List */}
         <div className="xl:w-2/3 w-full">
           <div className="space-y-4">
-            {actionItems.map((item) => (
+            {(actionItems || []).map((item) => (
               <div key={item.id} className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -121,7 +121,7 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
           <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4">
             <h3 className="text-lg font-medium text-[#01253F] mb-4">Automation Modes</h3>
             <div className="space-y-2">
-              {automationModes.map((mode, index) => (
+              {(automationModes || []).map((mode, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <span className="text-sm text-gray-700">{mode.name}</span>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -140,7 +140,7 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
           <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4">
             <h3 className="text-lg font-medium text-[#01253F] mb-4">Completed Tasks</h3>
             <div className="space-y-2 mb-4">
-              {completedTasks.map((task, index) => (
+              {(completedTasks || []).map((task, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <span className="text-sm text-gray-700">{task.category}</span>
                   <span className="text-sm font-medium text-[#01253F]">{task.count} actions</span>
