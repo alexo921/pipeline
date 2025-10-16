@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getApiUrl } from "@/lib/api-utils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,9 +12,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get API URL - always add /api prefix since backend uses global /api prefix
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.pipelineworkforce.com';
+    const apiUrl = `${baseUrl}/api/auth/login`;
+
     // Call backend API
     const backendRes = await fetch(
-      getApiUrl("/auth/login"),
+      apiUrl,
       {
         method: "POST",
         headers: {
