@@ -31,21 +31,25 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap"
           as="style"
           crossOrigin="anonymous"
+          onLoad="this.onload=null;this.rel='stylesheet'"
         />
         <link
           rel="preload"
           href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
           as="style"
           crossOrigin="anonymous"
+          onLoad="this.onload=null;this.rel='stylesheet'"
         />
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" 
-          rel="stylesheet" 
-        />
-        <link 
-          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" 
-          rel="stylesheet" 
-        />
+        <noscript>
+          <link 
+            href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap" 
+            rel="stylesheet" 
+          />
+          <link 
+            href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" 
+            rel="stylesheet" 
+          />
+        </noscript>
         <link rel="icon" type="image/png" href="/favicon-32x32.png?v=6" />
         <link rel="icon" type="image/png" href="/pipeline_logo_p.png?v=6" />
         <link rel="shortcut icon" href="/favicon-32x32.png?v=6" />
