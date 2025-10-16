@@ -88,8 +88,8 @@ const HotspotsSection: React.FC<HotspotsSectionProps> = ({ data }) => {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="h-2 rounded-full bg-blue-400"
-                style={{ width: `${data.sentiment}%` }}
+                className="h-2 rounded-full"
+                style={{ width: `${data.sentiment}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
               ></div>
             </div>
           </div>
@@ -105,8 +105,8 @@ const HotspotsSection: React.FC<HotspotsSectionProps> = ({ data }) => {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="h-2 rounded-full bg-blue-400"
-                style={{ width: `${data.participation}%` }}
+                className="h-2 rounded-full"
+                style={{ width: `${data.participation}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
               ></div>
             </div>
           </div>
@@ -122,8 +122,8 @@ const HotspotsSection: React.FC<HotspotsSectionProps> = ({ data }) => {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="h-2 rounded-full bg-blue-400"
-                style={{ width: `${data.retention}%` }}
+                className="h-2 rounded-full"
+                style={{ width: `${data.retention}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
               ></div>
             </div>
           </div>
