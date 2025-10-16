@@ -17,13 +17,13 @@ async function bootstrap() {
   // Enable cookie parsing
   app.use(cookieParser());
 
-  // Enable CORS
-  app.enableCors({
-    origin: process.env.NODE_ENV === 'development' 
-      ? ['http://localhost:3005', 'http://localhost:3000', 'http://localhost:3002']
-      : ['https://www.pipelineworkforce.com', 'https://pipelineworkforce.com'],
-    credentials: true,
-  });
+  // Enable CORS only in development (production uses Nginx CORS)
+  if (process.env.NODE_ENV === 'development') {
+    app.enableCors({
+      origin: ['http://localhost:3005', 'http://localhost:3000', 'http://localhost:3002'],
+      credentials: true,
+    });
+  }
 
   // Set up global response interceptor
   app.useGlobalInterceptors(new ResponseInterceptor());
