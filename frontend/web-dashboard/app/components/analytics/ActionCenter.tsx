@@ -35,13 +35,29 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
   const getIcon = (iconType: string) => {
     switch (iconType) {
       case 'warning':
-        return <AlertTriangle className="w-5 h-5 text-red-500" />;
+        return (
+          <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#FFC7C8' }}>
+            <AlertTriangle className="w-4 h-4 text-gray-800" />
+          </div>
+        );
       case 'info':
-        return <Info className="w-5 h-5 text-blue-500" />;
+        return (
+          <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#91D7DE' }}>
+            <Info className="w-4 h-4 text-gray-800" />
+          </div>
+        );
       case 'success':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return (
+          <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#91D7DE' }}>
+            <CheckCircle className="w-4 h-4 text-gray-800" />
+          </div>
+        );
       default:
-        return <Info className="w-5 h-5 text-gray-500" />;
+        return (
+          <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#FDD6BD' }}>
+            <Info className="w-4 h-4 text-gray-800" />
+          </div>
+        );
     }
   };
 

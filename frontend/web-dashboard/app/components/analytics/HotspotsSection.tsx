@@ -22,25 +22,25 @@ const HotspotsSection: React.FC<HotspotsSectionProps> = ({ data }) => {
     switch (riskLevel) {
       case 'low':
         return {
-          bgColor: 'bg-blue-100',
-          textColor: 'text-blue-800',
+          bgColor: '#91D7DE',
+          textColor: 'text-gray-800',
           icon: CheckCircle,
         };
       case 'medium':
         return {
-          bgColor: 'bg-orange-100',
-          textColor: 'text-orange-800',
+          bgColor: '#FDD6BD',
+          textColor: 'text-gray-800',
           icon: AlertTriangle,
         };
       case 'high':
         return {
-          bgColor: 'bg-red-100',
-          textColor: 'text-red-800',
+          bgColor: '#FFC7C8',
+          textColor: 'text-gray-800',
           icon: AlertTriangle,
         };
       default:
         return {
-          bgColor: 'bg-gray-100',
+          bgColor: '#FDD6BD',
           textColor: 'text-gray-800',
           icon: AlertTriangle,
         };
@@ -69,7 +69,10 @@ const HotspotsSection: React.FC<HotspotsSectionProps> = ({ data }) => {
         {/* Header */}
         <div className="flex items-start justify-between mb-5 flex-shrink-0">
           <h3 className="text-lg font-medium text-[#01253F] leading-tight">{title}</h3>
-          <div className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${riskConfig.bgColor} ${riskConfig.textColor}`}>
+          <div 
+            className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${riskConfig.textColor}`}
+            style={{ backgroundColor: riskConfig.bgColor }}
+          >
             <Icon className="w-3 h-3" />
             {getRiskLabel(data.riskLevel)}
           </div>
