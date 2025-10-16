@@ -1,1 +1,0 @@
-{"caregiver_message": "Had 12 patients alone on 3 West", "expected": {"topic": "patient_load", "sentiment": "negative", "urgency": "medium", "routing": "UnitManager"}}
