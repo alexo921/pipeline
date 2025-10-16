@@ -4,7 +4,7 @@ import { RetentionForecastCard, NoShowRiskCard, TurnoverCostCard } from './KPICa
 import { InsightFeed, Insight, Action } from './InsightFeed';
 import { CohortAnalysis, CohortData, FunnelMetrics } from './CohortAnalysis';
 import { HotspotMatrix, HotspotData } from './HotspotMatrix';
-import { ActionCenter, ActionItem } from './ActionCenter';
+import ActionCenter, { ActionItem } from './ActionCenter';
 import { PulseModal } from './PulseModal';
 import { ReminderModal } from './ReminderModal';
 import { useRouter } from 'next/navigation';
