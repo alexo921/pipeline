@@ -1,7 +1,7 @@
 import React from 'react';
-import { AlertTriangle, CheckCircle, Info, Clock, User } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Info, Clock } from 'lucide-react';
 
-interface ActionItem {
+export interface ActionItem {
   id: string;
   title: string;
   description: string;
@@ -25,12 +25,14 @@ interface ActionCenterProps {
   actionItems: ActionItem[];
   automationModes: AutomationMode[];
   completedTasks: CompletedTask[];
+  onEscalate?: (item: ActionItem) => void;
 }
 
 const ActionCenter: React.FC<ActionCenterProps> = ({ 
   actionItems, 
   automationModes, 
-  completedTasks 
+  completedTasks,
+  onEscalate
 }) => {
   const getIcon = (iconType: string) => {
     switch (iconType) {
@@ -63,7 +65,7 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
 
   const getTypeBadge = (type: string) => {
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium leading-none ${
         type === 'auto' 
           ? 'bg-green-100 text-green-800' 
           : 'bg-blue-100 text-blue-800'
@@ -85,29 +87,29 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
           <div className="space-y-4">
             {(actionItems || []).map((item) => (
               <div key={item.id} className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4">
-                <div className="flex items-start justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      {getIcon(item.icon)}
+                    <div className="flex flex-wrap items-baseline gap-3 mb-2">
                       <h3 className="text-lg font-medium text-[#01253F]">{item.title}</h3>
                       {getTypeBadge(item.type)}
                     </div>
-                    <p className="text-sm text-gray-600 mb-3">{item.description}</p>
-                    <div className="flex items-center gap-2">
-                      {item.type === 'manual' ? (
-                        <button className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors">
-                          Escalate to Supervisor
-                        </button>
-                      ) : (
-                        <div className="flex items-center gap-2 text-sm text-green-600">
-                          <Clock className="w-4 h-4" />
-                          <span>{item.status}</span>
-                        </div>
-                      )}
-                    </div>
+                    <p className="text-sm text-gray-600">{item.description}</p>
                   </div>
-                  <div className="flex-shrink-0 ml-4">
-                    {getIcon(item.icon)}
+                  <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:justify-center">
+                    <div className="flex-shrink-0">{getIcon(item.icon)}</div>
+                    {item.type === 'manual' ? (
+                      <button
+                        onClick={() => onEscalate?.(item)}
+                        className="px-3 py-1.5 bg-[#2CB3BF] text-white text-xs font-semibold rounded-md shadow transition-transform hover:-translate-y-0.5 hover:bg-[#27a6b2]"
+                      >
+                        {item.status}
+                      </button>
+                    ) : (
+                      <div className="flex items-center gap-2 text-sm text-green-600">
+                        <Clock className="w-4 h-4" />
+                        <span>{item.status}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

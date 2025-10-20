@@ -12,11 +12,12 @@ import {
   MapPin,
   Users,
   MessageSquare,
-  Phone
+  Phone,
+  Mail
 } from 'lucide-react';
 import BaseLayout from '../components/layout/BaseLayout';
 import AdminDashboardNav from '../components/AdminDashboardNav';
-import ActionCenter from '../components/analytics/ActionCenter';
+import ActionCenter, { ActionItem } from '../components/analytics/ActionCenter';
 import HotspotsSection from '../components/analytics/HotspotsSection';
 import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -40,6 +41,13 @@ const YourPipelinePage = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<any>(null);
   const [selectedApplicant, setSelectedApplicant] = useState<any>(null);
+  const [showEscalationModal, setShowEscalationModal] = useState(false);
+  const [activeEscalationItem, setActiveEscalationItem] = useState<ActionItem | null>(null);
+  const [escalationForm, setEscalationForm] = useState({
+    recipient: '',
+    subject: '',
+    message: ''
+  });
   // Full-screen expansion removed
 
   // Demo data
@@ -561,6 +569,14 @@ const YourPipelinePage = () => {
     }
   };
 
+  const getDefaultEscalationRecipient = (status: string) => {
+    const normalizedStatus = status.toLowerCase();
+    if (normalizedStatus.includes('supervisor')) return 'supervisor@stmaryshealth.org';
+    if (normalizedStatus.includes('don')) return 'don@stmaryshealth.org';
+    if (normalizedStatus.includes('compliance')) return 'compliance@stmaryshealth.org';
+    return 'leadership@stmaryshealth.org';
+  };
+
   // Helper functions for color coding and thresholds
   const getThresholdColor = (threshold: string) => {
     switch (threshold) {
@@ -766,6 +782,50 @@ const YourPipelinePage = () => {
     router.push(`/applicants?applicantName=${encodeURIComponent(applicant.name)}`);
   };
 
+  const handleEscalationFieldChange = (field: 'recipient' | 'subject' | 'message', value: string) => {
+    setEscalationForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleEscalateAction = (item: ActionItem) => {
+    const recipient = getDefaultEscalationRecipient(item.status);
+    const priorityLabel = item.priority.charAt(0).toUpperCase() + item.priority.slice(1);
+
+    setActiveEscalationItem(item);
+    setEscalationForm({
+      recipient,
+      subject: `Escalation: ${item.title}`,
+      message: `Hello,\n\nWe have flagged an issue for review:\n- ${item.title}\n- Priority: ${priorityLabel}\n\n${item.description}\n\nPlease let me know if you need additional context.\n\nThanks,\nYourPipeline Assistant`
+    });
+    setShowEscalationModal(true);
+  };
+
+  const handleSendEscalation = () => {
+    console.log('Escalation draft prepared', {
+      item: activeEscalationItem,
+      form: escalationForm
+    });
+    setShowEscalationModal(false);
+    setActiveEscalationItem(null);
+    setEscalationForm({
+      recipient: '',
+      subject: '',
+      message: ''
+    });
+  };
+
+  const handleCloseEscalationModal = () => {
+    setShowEscalationModal(false);
+    setActiveEscalationItem(null);
+    setEscalationForm({
+      recipient: '',
+      subject: '',
+      message: ''
+    });
+  };
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -837,7 +897,7 @@ const YourPipelinePage = () => {
 
   // User is authorized, show the dashboard
   return (
-    <BaseLayout>
+    <BaseLayout isBlurred={showEscalationModal}>
       {/* Admin Navigation - Only show for admin users */}
       {user?.role === 'ADMIN' && <AdminDashboardNav />}
 
@@ -1136,6 +1196,7 @@ const YourPipelinePage = () => {
               actionItems={actionCenterData.actionItems || []}
               automationModes={actionCenterData.automationModes || []}
               completedTasks={actionCenterData.completedTasks || []}
+              onEscalate={handleEscalateAction}
             />
           )}
 
@@ -1145,6 +1206,117 @@ const YourPipelinePage = () => {
           )}
         </div>
       </div>
+
+      {showEscalationModal && activeEscalationItem && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-[#01253F]/40 backdrop-blur-sm px-4"
+          onClick={handleCloseEscalationModal}
+        >
+          <div
+            className="relative w-full max-w-xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="bg-[rgba(244,244,244,0.95)] border border-white/60 rounded-[20px] shadow-[0px_12px_40px_rgba(1,37,63,0.2)] p-6">
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex items-start gap-3">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-[#E9D7F4] to-[#97B3FB] text-[#01253F]">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-[#01253F] leading-tight">
+                      {activeEscalationItem.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 mt-1 max-w-md">
+                      {activeEscalationItem.description}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCloseEscalationModal}
+                  className="text-gray-500 hover:text-gray-700 transition-colors text-xl leading-none"
+                  aria-label="Close escalation modal"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 mb-6">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-[#01253F] text-white">
+                  {activeEscalationItem.priority}
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs font-medium bg-white border border-gray-200 text-[#01253F]">
+                  {activeEscalationItem.status}
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs font-medium bg-white border border-gray-200 text-[#01253F]">
+                  {activeEscalationItem.type === 'manual' ? 'Manual escalation' : 'Automation'}
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#01253F]">
+                    Recipient
+                  </label>
+                  <input
+                    type="email"
+                    value={escalationForm.recipient}
+                    onChange={(event) => handleEscalationFieldChange('recipient', event.target.value)}
+                    placeholder="name@company.com"
+                    className="mt-1 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#01253F] focus:outline-none focus:ring-2 focus:ring-[#97B3FB]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#01253F]">
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    value={escalationForm.subject}
+                    onChange={(event) => handleEscalationFieldChange('subject', event.target.value)}
+                    placeholder="Escalation subject line"
+                    className="mt-1 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#01253F] focus:outline-none focus:ring-2 focus:ring-[#97B3FB]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#01253F]">
+                    Message
+                  </label>
+                  <textarea
+                    value={escalationForm.message}
+                    onChange={(event) => handleEscalationFieldChange('message', event.target.value)}
+                    rows={6}
+                    className="mt-1 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#01253F] focus:outline-none focus:ring-2 focus:ring-[#97B3FB]"
+                  />
+                </div>
+
+                <p className="text-xs text-gray-500">
+                  Demo preview only - email delivery will be connected in a future update.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-6">
+                <button
+                  type="button"
+                  onClick={handleCloseEscalationModal}
+                  className="px-4 py-2 text-sm font-medium text-[#01253F] bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSendEscalation}
+                  className="px-4 py-2 text-sm font-medium text-[#01253F] bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  Send Escalation Email
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </BaseLayout>
   );
 };

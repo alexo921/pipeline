@@ -14,6 +14,7 @@ interface BaseLayoutProps {
   backgroundImage?: string;
   backgroundStyle?: React.CSSProperties;
   navBackgroundClassName?: string;
+  isBlurred?: boolean;
 }
 
 export default function BaseLayout({
@@ -23,6 +24,7 @@ export default function BaseLayout({
   backgroundImage,
   backgroundStyle,
   navBackgroundClassName,
+  isBlurred = false,
 }: BaseLayoutProps) {
   const { showLoginModal } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -40,12 +42,14 @@ export default function BaseLayout({
     ? "min-h-screen flex flex-col bg-cover bg-center bg-no-repeat"
     : "min-h-screen flex flex-col bg-[#F4F4F4]";
 
+  const blurClass = isBlurred ? "blur-sm pointer-events-none transition duration-200" : "transition duration-200";
+
   return (
     <div className={`${backgroundClass} relative`} style={{...backgroundStyle, minHeight: '100vh', display: 'flex', flexDirection: 'column'}}>
 
       {/* Navbar navigation */}
       {showNav && (
-        <div style={{ zIndex: 20 }}>
+        <div className={blurClass}>
           <Navbar
             onLoginClick={handleLoginClick}
             backgroundClassName={navBackgroundClassName}
@@ -60,7 +64,7 @@ export default function BaseLayout({
 
       {/* Footer */}
       {showFooter && (
-        <div className="relative z-10">
+        <div className={`relative ${blurClass}`}>
           {/* Footer blur image - Desktop */}
           <img
             src="/footer_blur.svg"
