@@ -7,6 +7,7 @@ import {
   Download,
   CheckCircle,
   Info,
+  AlertTriangle,
   Briefcase,
   TrendingUp,
   MapPin,
@@ -48,6 +49,7 @@ const YourPipelinePage = () => {
     subject: '',
     message: ''
   });
+  const [expandedItem, setExpandedItem] = useState<{ section: 'workforce' | 'action' | 'hotspot'; id: string } | null>(null);
   // Full-screen expansion removed
 
   // Demo data
@@ -577,6 +579,17 @@ const YourPipelinePage = () => {
     return 'leadership@stmaryshealth.org';
   };
 
+  const toggleExpandedItem = (section: 'workforce' | 'action' | 'hotspot', id: string) => {
+    setExpandedItem(prev => {
+      if (prev && prev.section === section && prev.id === id) {
+        return null;
+      }
+      return { section, id };
+    });
+  };
+
+  const isWorkforceExpanded = (id: string) => expandedItem?.section === 'workforce' && expandedItem.id === id;
+
   // Helper functions for color coding and thresholds
   const getThresholdColor = (threshold: string) => {
     switch (threshold) {
@@ -593,6 +606,19 @@ const YourPipelinePage = () => {
       case 'amber': return 'text-yellow-600';
       case 'red': return 'text-red-600';
       default: return 'text-gray-600';
+    }
+  };
+
+  const getThresholdIndicatorConfig = (threshold: string) => {
+    switch (threshold) {
+      case 'green':
+        return { background: '#91D7DE', icon: CheckCircle, iconColor: '#01253F' };
+      case 'amber':
+        return { background: '#FDD6BD', icon: AlertTriangle, iconColor: '#8A3B12' };
+      case 'red':
+        return { background: '#FFC7C8', icon: AlertTriangle, iconColor: '#8A1F1F' };
+      default:
+        return { background: '#FDD6BD', icon: AlertTriangle, iconColor: '#8A3B12' };
     }
   };
 
@@ -895,6 +921,15 @@ const YourPipelinePage = () => {
   //   );
   // }
 
+  const earlyChurnIndicator = getThresholdIndicatorConfig(analyticsData.earlyChurnRisk.threshold);
+  const EarlyIcon = earlyChurnIndicator.icon;
+  const retentionIndicator = getThresholdIndicatorConfig(analyticsData.retentionForecast.threshold);
+  const RetentionIcon = retentionIndicator.icon;
+  const workEnvIndicator = getThresholdIndicatorConfig(analyticsData.workEnvironmentScore.threshold);
+  const WorkEnvIcon = workEnvIndicator.icon;
+  const cultureIndicator = getThresholdIndicatorConfig(analyticsData.cultureAlignment.threshold);
+  const CultureIcon = cultureIndicator.icon;
+
   // User is authorized, show the dashboard
   return (
     <BaseLayout isBlurred={showEscalationModal}>
@@ -1052,21 +1087,26 @@ const YourPipelinePage = () => {
               </div>
 
               {/* Right Side - Workforce Stability Section */}
-              <div className="xl:w-3/5 w-full bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[380px] min-w-[300px] mt-4 xl:mt-0 xl:-ml-12 flex flex-col">
+              <div className="xl:w-3/5 w-full bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 min-w-[300px] mt-4 xl:mt-0 flex flex-col">
                 <div className="flex items-center justify-between mb-2 flex-shrink-0">
                   <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Workforce Stability</h2>
                 </div>
                 
                       {/* Content Area - No Scroll */}
-                      <div className="flex-1">
+                      <div className="flex-1 space-y-2.5">
                   
                                           {/* Workforce Stability Metrics */}
-                        <div className="space-y-2">
+                        <div className="space-y-2.5">
                         {/* ROI Summary Badge */}
-                        <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors border-2 border-dashed border-gray-200">
-                          <div className="flex items-center justify-between">
+                        <div
+                          onClick={() => toggleExpandedItem('workforce', 'roi')}
+                          className={`cursor-pointer p-3 rounded-lg transition-all duration-300 border ${
+                            isWorkforceExpanded('roi') ? 'bg-white shadow-lg scale-[1.02] border-[#2CB3BF]' : 'border-transparent hover:bg-[#F3F3F3]'
+                          }`}
+                        >
+                          <div className="flex flex-wrap items-center justify-start gap-3">
                             <div className="flex items-center">
-                              <span className="text-sm font-medium text-gray-700">ROI Summary</span>
+                              <span className="text-sm font-semibold text-[#01253F]">ROI Summary</span>
                               <div className="relative group ml-2">
                                 <Info className="w-3 h-3 text-gray-400 cursor-help" />
                                 <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
@@ -1075,46 +1115,72 @@ const YourPipelinePage = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              analyticsData.roiSummary.threshold === 'green' 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-gray-100 text-gray-600'
-                            }`}>
+                            <div className="inline-flex flex-wrap items-center px-3 py-1 rounded-full text-xs font-semibold text-[#01253F] leading-tight"
+                              style={{ backgroundColor: '#91D7DE' }}
+                            >
                               {formatCurrency(analyticsData.roiSummary.saved)} saved, {analyticsData.roiSummary.timeSaved} hrs time saved, {analyticsData.roiSummary.hiresRetained} hires retained
                             </div>
                           </div>
+                          {isWorkforceExpanded('roi') && (
+                            <div className="mt-3 text-xs text-gray-500 bg-[#F3F3F3] rounded-lg p-3">
+                              ROI drivers by business unit and quarterly savings trends will display here in the next release.
+                            </div>
+                          )}
                         </div>
                         
                         {/* Early Churn Risk */}
-                                          <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center">
-                        <span className="text-sm font-medium text-gray-700">Early Churn Risk</span>
-                        <div className="relative group ml-2">
-                          <Info className="w-3 h-3 text-gray-400 cursor-help" />
-                          <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                            % of active new hires flagged for early churn risk
-                            <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                        <div
+                          onClick={() => toggleExpandedItem('workforce', 'earlyChurn')}
+                          className={`cursor-pointer p-3 rounded-lg transition-all duration-300 border ${
+                            isWorkforceExpanded('earlyChurn') ? 'bg-white shadow-lg scale-[1.02] border-[#2CB3BF]' : 'border-transparent hover:bg-[#F3F3F3]'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center">
+                              <span className="text-sm font-semibold text-[#01253F]">Early Churn Risk</span>
+                              <div className="relative group ml-2">
+                                <Info className="w-3 h-3 text-gray-400 cursor-help" />
+                                <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                                  % of active new hires flagged for early churn risk
+                                  <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-semibold text-[#01253F]">
+                                {analyticsData.earlyChurnRisk.hiresAtRisk} hires at risk (~{formatCurrency(analyticsData.earlyChurnRisk.turnoverCost)} turnover cost)
+                              </span>
+                              <div
+                                className="w-7 h-7 rounded-full flex items-center justify-center"
+                                style={{ backgroundColor: earlyChurnIndicator.background }}
+                              >
+                                <EarlyIcon className="w-3.5 h-3.5" style={{ color: earlyChurnIndicator.iconColor }} />
+                              </div>
+                            </div>
                           </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div 
+                              className="h-2 rounded-full"
+                              style={{ width: `${analyticsData.earlyChurnRisk.percentage}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
+                            ></div>
+                          </div>
+                          {isWorkforceExpanded('earlyChurn') && (
+                            <div className="mt-3 text-xs text-gray-500 bg-[#F3F3F3] rounded-lg p-3">
+                              Dive deeper into churn drivers by department and view the recommended retention playbook in the detailed view.
+                            </div>
+                          )}
                         </div>
-                      </div>
-                      <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.earlyChurnRisk.threshold)}`}>
-                        {analyticsData.earlyChurnRisk.hiresAtRisk} hires at risk (~{formatCurrency(analyticsData.earlyChurnRisk.turnoverCost)} turnover cost)
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="h-2 rounded-full"
-                        style={{ width: `${analyticsData.earlyChurnRisk.percentage}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
-                      ></div>
-                    </div>
-                  </div>
                   
                   {/* Retention Forecast */}
-                                          <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                  <div
+                    onClick={() => toggleExpandedItem('workforce', 'retention')}
+                    className={`cursor-pointer p-3 rounded-lg transition-all duration-300 border ${
+                      isWorkforceExpanded('retention') ? 'bg-white shadow-lg scale-[1.02] border-[#2CB3BF]' : 'border-transparent hover:bg-[#F3F3F3]'
+                    }`}
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center">
-                        <span className="text-sm font-medium text-gray-700">Retention Forecast</span>
+                        <span className="text-sm font-semibold text-[#01253F]">Retention Forecast</span>
                         <div className="relative group ml-2">
                           <Info className="w-3 h-3 text-gray-400 cursor-help" />
                           <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
@@ -1123,9 +1189,17 @@ const YourPipelinePage = () => {
                           </div>
                         </div>
                       </div>
-                      <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.retentionForecast.threshold)}`}>
-                        {analyticsData.retentionForecast.percentage}% projected to stay {analyticsData.retentionForecast.timeframe}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-[#01253F]">
+                          {analyticsData.retentionForecast.percentage}% projected to stay {analyticsData.retentionForecast.timeframe}
+                        </span>
+                        <div
+                          className="w-7 h-7 rounded-full flex items-center justify-center"
+                          style={{ backgroundColor: retentionIndicator.background }}
+                        >
+                          <RetentionIcon className="w-3.5 h-3.5" style={{ color: retentionIndicator.iconColor }} />
+                        </div>
+                      </div>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
@@ -1133,13 +1207,23 @@ const YourPipelinePage = () => {
                         style={{ width: `${analyticsData.retentionForecast.percentage}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
                       ></div>
                     </div>
+                    {isWorkforceExpanded('retention') && (
+                      <div className="mt-3 text-xs text-gray-500 bg-[#F3F3F3] rounded-lg p-3">
+                        Forecast methodology and underlying leading indicators will appear here for expanded analysis.
+                      </div>
+                    )}
                   </div>
                   
                   {/* Work Environment Score */}
-                                          <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                  <div
+                    onClick={() => toggleExpandedItem('workforce', 'workEnvironment')}
+                    className={`cursor-pointer p-3 rounded-lg transition-all duration-300 border ${
+                      isWorkforceExpanded('workEnvironment') ? 'bg-white shadow-lg scale-[1.02] border-[#2CB3BF]' : 'border-transparent hover:bg-[#F3F3F3]'
+                    }`}
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center">
-                        <span className="text-sm font-medium text-gray-700">Work Environment Score</span>
+                        <span className="text-sm font-semibold text-[#01253F]">Work Environment Score</span>
                         <div className="relative group ml-2">
                           <Info className="w-3 h-3 text-gray-400 cursor-help" />
                           <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
@@ -1148,9 +1232,17 @@ const YourPipelinePage = () => {
                           </div>
                         </div>
                       </div>
-                      <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.workEnvironmentScore.threshold)}`}>
-                        {analyticsData.workEnvironmentScore.score} / {analyticsData.workEnvironmentScore.maxScore}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-[#01253F]">
+                          {analyticsData.workEnvironmentScore.score} / {analyticsData.workEnvironmentScore.maxScore}
+                        </span>
+                        <div
+                          className="w-7 h-7 rounded-full flex items-center justify-center"
+                          style={{ backgroundColor: workEnvIndicator.background }}
+                        >
+                          <WorkEnvIcon className="w-3.5 h-3.5" style={{ color: workEnvIndicator.iconColor }} />
+                        </div>
+                      </div>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
@@ -1158,13 +1250,23 @@ const YourPipelinePage = () => {
                         style={{ width: `${analyticsData.workEnvironmentScore.score}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
                       ></div>
                     </div>
+                    {isWorkforceExpanded('workEnvironment') && (
+                      <div className="mt-3 text-xs text-gray-500 bg-[#F3F3F3] rounded-lg p-3">
+                        Track morale survey trends and cultural alignment detail here when expanded.
+                      </div>
+                    )}
                   </div>
                   
                   {/* Culture Alignment */}
-                                          <div className="cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                  <div
+                    onClick={() => toggleExpandedItem('workforce', 'culture')}
+                    className={`cursor-pointer p-3 rounded-lg transition-all duration-300 border ${
+                      isWorkforceExpanded('culture') ? 'bg-white shadow-lg scale-[1.02] border-[#2CB3BF]' : 'border-transparent hover:bg-[#F3F3F3]'
+                    }`}
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center">
-                        <span className="text-sm font-medium text-gray-700">Culture Alignment</span>
+                        <span className="text-sm font-semibold text-[#01253F]">Culture Alignment</span>
                         <div className="relative group ml-2">
                           <Info className="w-3 h-3 text-gray-400 cursor-help" />
                           <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
@@ -1173,9 +1275,17 @@ const YourPipelinePage = () => {
                           </div>
                         </div>
                       </div>
-                      <span className={`text-sm font-medium ${getThresholdTextColor(analyticsData.cultureAlignment.threshold)}`}>
-                        {analyticsData.cultureAlignment.percentage}% aligned
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-semibold text-[#01253F]">
+                          {analyticsData.cultureAlignment.percentage}% aligned
+                        </span>
+                        <div
+                          className="w-7 h-7 rounded-full flex items-center justify-center"
+                          style={{ backgroundColor: cultureIndicator.background }}
+                        >
+                          <CultureIcon className="w-3.5 h-3.5" style={{ color: cultureIndicator.iconColor }} />
+                        </div>
+                      </div>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div 
@@ -1183,7 +1293,12 @@ const YourPipelinePage = () => {
                         style={{ width: `${analyticsData.cultureAlignment.percentage}%`, background: 'linear-gradient(115.61deg, #E9D7F4 25.46%, #97B3FB 75.57%)' }}
                       ></div>
                     </div>
-                                          </div>
+                    {isWorkforceExpanded('culture') && (
+                      <div className="mt-3 text-xs text-gray-500 bg-[#F3F3F3] rounded-lg p-3">
+                        Understand sentiment gaps and onboarding feedback detail here when expanded.
+                      </div>
+                    )}
+                  </div>
                         </div>
                 </div>
               </div>
@@ -1197,12 +1312,19 @@ const YourPipelinePage = () => {
               automationModes={actionCenterData.automationModes || []}
               completedTasks={actionCenterData.completedTasks || []}
               onEscalate={handleEscalateAction}
+              expandedActionId={expandedItem?.section === 'action' ? expandedItem.id : undefined}
+              onExpandAction={(id) => toggleExpandedItem('action', id)}
+              onViewCompletedTasks={() => toggleExpandedItem('action', 'completed-tasks')}
             />
           )}
 
           {/* Hotspots Section */}
           {hotspotsData && (
-            <HotspotsSection data={hotspotsData} />
+            <HotspotsSection 
+              data={hotspotsData}
+              expandedHotspotId={expandedItem?.section === 'hotspot' ? expandedItem.id : undefined}
+              onExpandHotspot={(id) => toggleExpandedItem('hotspot', id)}
+            />
           )}
         </div>
       </div>

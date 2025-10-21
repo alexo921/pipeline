@@ -175,6 +175,8 @@ export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facility
       description: 'Retention forecast dropped 12 points vs baseline',
       priority: 'high',
       status: 'pending',
+      type: 'manual',
+      icon: 'warning',
       assignedTo: 'supervisor@facility.com',
       dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
       createdAt: new Date()
@@ -188,6 +190,8 @@ export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facility
       description: 'Targeted pulse survey sent to Memory Care night shift staff to assess burnout risk',
       priority: 'medium',
       status: 'completed',
+      type: 'auto',
+      icon: 'info',
       assignedTo: 'hr@facility.com',
       completedAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
       createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000) // 4 hours ago
@@ -201,11 +205,27 @@ export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facility
       description: 'Automated reminder emails scheduled for CNA candidates from Source X to reduce no-show rates',
       priority: 'medium',
       status: 'in_progress',
+      type: 'auto',
+      icon: 'info',
       assignedTo: 'recruiting@facility.com',
       dueDate: new Date(Date.now() + 6 * 60 * 60 * 1000), // 6 hours from now
       createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000) // 1 hour ago
     }
   ]);
+
+  const automationModes = [
+    { name: 'Retention Drop Escalation', status: 'manual' as const },
+    { name: 'Pulse Reminder', status: 'auto' as const },
+    { name: 'Complaint Theme Spike', status: 'manual' as const },
+  ];
+
+  const completedTasks = [
+    { category: 'New Hire Retention', count: 14 },
+    { category: 'Sentiment', count: 6 },
+    { category: 'Engagement', count: 8 },
+    { category: 'Complaint', count: 11 },
+    { category: 'Culture', count: 3 },
+  ];
 
   // Real API calls
   const fetchAnalyticsData = async () => {
@@ -258,7 +278,13 @@ export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facility
       if (actionsResponse.ok) {
         const actions = await actionsResponse.json();
         if (actions && Array.isArray(actions)) {
-          setActions(actions);
+          setActions(actions.map((action: any) => ({
+            type: action.type ?? (action.actionType === 'escalate' ? 'manual' : 'auto'),
+            icon: action.icon ?? (action.actionType === 'nudge' ? 'info' : 'warning'),
+            priority: action.priority ?? 'medium',
+            status: action.status ?? 'pending',
+            ...action,
+          })));
         }
       }
 
@@ -412,8 +438,10 @@ export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facility
         {/* Action Center - First item under buttons */}
         <div className="mb-8">
           <ActionCenter 
-            actions={actions} 
-            onStatusUpdate={handleActionStatusUpdate}
+            actionItems={actions}
+            automationModes={automationModes}
+            completedTasks={completedTasks}
+            onEscalate={(item) => handleActionStatusUpdate(item.id, 'in_review')}
           />
         </div>
 

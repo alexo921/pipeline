@@ -5,10 +5,11 @@ export interface ActionItem {
   id: string;
   title: string;
   description: string;
-  type: 'manual' | 'auto';
-  status: string;
-  icon: 'warning' | 'info' | 'success';
-  priority: 'high' | 'medium' | 'low';
+  type?: 'manual' | 'auto';
+  status?: string;
+  icon?: 'warning' | 'info' | 'success';
+  priority?: 'high' | 'medium' | 'low';
+  [key: string]: any;
 }
 
 interface AutomationMode {
@@ -26,13 +27,19 @@ interface ActionCenterProps {
   automationModes: AutomationMode[];
   completedTasks: CompletedTask[];
   onEscalate?: (item: ActionItem) => void;
+  expandedActionId?: string;
+  onExpandAction?: (id: string) => void;
+  onViewCompletedTasks?: () => void;
 }
 
 const ActionCenter: React.FC<ActionCenterProps> = ({ 
   actionItems, 
   automationModes, 
   completedTasks,
-  onEscalate
+  onEscalate,
+  expandedActionId,
+  onExpandAction,
+  onViewCompletedTasks
 }) => {
   const getIcon = (iconType: string) => {
     switch (iconType) {
@@ -75,6 +82,9 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
     );
   };
 
+  const automationLength = (automationModes || []).length;
+  const completedLength = (completedTasks || []).length;
+
   return (
     <div className="bg-[rgba(244,244,244,0.6)] rounded-lg lg:rounded-xl xl:rounded-[20px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] p-6 mb-8">
       <div className="flex items-center justify-between mb-6">
@@ -85,35 +95,59 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
         {/* Left Side - Action Items List */}
         <div className="xl:w-2/3 w-full">
           <div className="space-y-4">
-            {(actionItems || []).map((item) => (
-              <div key={item.id} className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="flex-1">
-                    <div className="flex flex-wrap items-baseline gap-3 mb-2">
-                      <h3 className="text-lg font-medium text-[#01253F]">{item.title}</h3>
-                      {getTypeBadge(item.type)}
+            {(actionItems || []).map((item) => {
+              const itemType: 'manual' | 'auto' = item.type ?? 'manual';
+              const itemStatus = item.status ?? (itemType === 'manual' ? 'Escalate' : 'Automated');
+              const itemIconType: 'warning' | 'info' | 'success' = item.icon ?? (itemType === 'manual' ? 'warning' : 'info');
+              const isExpanded = expandedActionId === item.id;
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => onExpandAction?.(item.id)}
+                  className={`bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 cursor-pointer transition-all duration-300 hover:bg-[#F3F3F3] ${
+                    isExpanded ? 'scale-[1.02] border-[#2CB3BF]' : ''
+                  }`}
+                >
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 pr-2">
+                        <div className="flex flex-wrap items-baseline gap-3 mb-2">
+                          <h3 className="text-lg font-medium text-[#01253F]">{item.title}</h3>
+                        </div>
+                        <p className="text-sm text-gray-600">{item.description}</p>
+                      </div>
+                      <div className="flex-shrink-0">{getIcon(itemIconType)}</div>
                     </div>
-                    <p className="text-sm text-gray-600">{item.description}</p>
-                  </div>
-                  <div className="flex items-center gap-3 sm:flex-col sm:items-end sm:justify-center">
-                    <div className="flex-shrink-0">{getIcon(item.icon)}</div>
-                    {item.type === 'manual' ? (
-                      <button
-                        onClick={() => onEscalate?.(item)}
-                        className="px-3 py-1.5 bg-[#2CB3BF] text-white text-xs font-semibold rounded-md shadow transition-transform hover:-translate-y-0.5 hover:bg-[#27a6b2]"
-                      >
-                        {item.status}
-                      </button>
-                    ) : (
-                      <div className="flex items-center gap-2 text-sm text-green-600">
-                        <Clock className="w-4 h-4" />
-                        <span>{item.status}</span>
+
+                    {isExpanded && (
+                      <div className="text-xs text-gray-500 bg-[#F3F3F3] rounded-lg p-3">
+                        Deeper insights coming soon. This preview highlights why the action was flagged and which team owns the next step.
                       </div>
                     )}
+
+                    <div className="flex items-center justify-between gap-4 pt-3">
+                      {getTypeBadge(itemType)}
+                      {itemType === 'manual' ? (
+                        <button
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onEscalate?.(item);
+                          }}
+                          className="px-3 py-1.5 bg-[#2CB3BF] text-white text-xs font-semibold rounded-md shadow transition-transform hover:-translate-y-0.5 hover:bg-[#27a6b2]"
+                        >
+                          {itemStatus}
+                        </button>
+                      ) : (
+                        <div className="flex items-center gap-2 text-xs font-medium text-[#A1ACB3]">
+                          <Clock className="w-4 h-4" />
+                          <span>{itemStatus}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -122,10 +156,14 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
           {/* Automation Modes */}
           <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4">
             <h3 className="text-lg font-medium text-[#01253F] mb-4">Automation Modes</h3>
-            <div className="space-y-2">
+            <div className="space-y-0">
               {(automationModes || []).map((mode, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">{mode.name}</span>
+                <div
+                  key={index}
+                  className="flex items-center justify-between py-2 px-2 -mx-2 transition-colors hover:bg-[#F3F3F3]"
+                  style={{ borderBottom: index === (automationLength - 1) ? 'none' : '0.5px solid #F3F3F3' }}
+                >
+                  <span className="text-sm font-medium text-gray-700">{mode.name}</span>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     mode.status === 'auto' 
                       ? 'bg-green-100 text-green-800' 
@@ -141,16 +179,29 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
           {/* Completed Tasks */}
           <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4">
             <h3 className="text-lg font-medium text-[#01253F] mb-4">Completed Tasks</h3>
-            <div className="space-y-2 mb-4">
+            <div className="space-y-0 mb-4">
               {(completedTasks || []).map((task, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">{task.category}</span>
-                  <span className="text-sm font-medium text-[#01253F]">{task.count} actions</span>
+                <div
+                  key={index}
+                  className={`flex items-center justify-between py-2 px-2 -mx-2 transition-colors ${
+                    expandedActionId === 'completed-tasks' ? 'bg-[#F3F3F3] rounded-md' : 'hover:bg-[#F3F3F3]'
+                  }`}
+                  style={{ borderBottom: index === (completedLength - 1) ? 'none' : '0.5px solid #F3F3F3' }}
+                >
+                  <span className="text-sm font-medium text-gray-700">{task.category}</span>
+                  <span className="text-sm font-semibold text-[#01253F]">{task.count} actions</span>
                 </div>
               ))}
             </div>
-            <button className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors text-sm">
-              View All Completed Tasks
+            <button
+              onClick={onViewCompletedTasks}
+              className={`w-full px-4 py-2 rounded-md transition-colors text-sm ${
+                expandedActionId === 'completed-tasks'
+                  ? 'bg-[#2CB3BF] text-white shadow'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {expandedActionId === 'completed-tasks' ? 'Hide Completed Tasks' : 'View All Completed Tasks'}
             </button>
           </div>
         </div>
