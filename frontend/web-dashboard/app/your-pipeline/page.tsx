@@ -24,6 +24,18 @@ import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
+type CompletedTaskDetail = {
+  id: string;
+  category: string;
+  title: string;
+  owner: string;
+  completedAt: string;
+  mode: 'manual' | 'auto';
+  summary: string;
+};
+
+type AnalyticsTileKey = 'orientationFillForecast' | 'strongMatches' | 'retentionOutcomes' | 'pulseTrends';
+
 const YourPipelinePage = () => {
   const { user } = useAuth();
   const router = useRouter();
@@ -50,6 +62,9 @@ const YourPipelinePage = () => {
     message: ''
   });
   const [expandedItem, setExpandedItem] = useState<{ section: 'workforce' | 'action' | 'hotspot'; id: string } | null>(null);
+  const [isCompletedTasksModalOpen, setIsCompletedTasksModalOpen] = useState(false);
+  const [selectedCompletedCategory, setSelectedCompletedCategory] = useState<string | null>(null);
+  const [selectedAnalyticsTile, setSelectedAnalyticsTile] = useState<AnalyticsTileKey | null>(null);
   // Full-screen expansion removed
 
   // Demo data
@@ -479,7 +494,7 @@ const YourPipelinePage = () => {
   };
 
   // Action Center Data
-  const actionCenterData = {
+  const [actionCenterData, setActionCenterData] = useState(() => ({
     actionItems: [
       {
         id: '1',
@@ -488,7 +503,9 @@ const YourPipelinePage = () => {
         type: 'manual' as const,
         status: 'Escalate to Supervisor',
         icon: 'warning' as const,
-        priority: 'high' as const
+        priority: 'high' as const,
+        manualStatus: 'Escalate to Supervisor',
+        autoStatus: 'Automation Active'
       },
       {
         id: '2',
@@ -497,7 +514,9 @@ const YourPipelinePage = () => {
         type: 'auto' as const,
         status: 'Pulse Reminder Sent',
         icon: 'warning' as const,
-        priority: 'medium' as const
+        priority: 'medium' as const,
+        manualStatus: 'Escalate to Engagement Lead',
+        autoStatus: 'Pulse Reminder Sent'
       },
       {
         id: '3',
@@ -506,7 +525,9 @@ const YourPipelinePage = () => {
         type: 'manual' as const,
         status: 'Escalate to DON',
         icon: 'warning' as const,
-        priority: 'high' as const
+        priority: 'high' as const,
+        manualStatus: 'Escalate to DON',
+        autoStatus: 'Signal Monitoring'
       },
       {
         id: '4',
@@ -515,7 +536,9 @@ const YourPipelinePage = () => {
         type: 'auto' as const,
         status: 'Encouragement Nudge Sent',
         icon: 'success' as const,
-        priority: 'low' as const
+        priority: 'low' as const,
+        manualStatus: 'Escalate to Unit Lead',
+        autoStatus: 'Encouragement Nudge Sent'
       },
       {
         id: '5',
@@ -524,7 +547,9 @@ const YourPipelinePage = () => {
         type: 'auto' as const,
         status: 'Escalated to Compliance Officer',
         icon: 'warning' as const,
-        priority: 'high' as const
+        priority: 'high' as const,
+        manualStatus: 'Escalate to Compliance Officer',
+        autoStatus: 'Automation Active'
       }
     ],
     automationModes: [
@@ -541,6 +566,132 @@ const YourPipelinePage = () => {
       { category: 'Culture', count: 3 },
       { category: 'Positive Reinforcement', count: 4 }
     ]
+  }));
+
+  const completedTaskDetails: CompletedTaskDetail[] = [
+    {
+      id: 'ct-001',
+      category: 'New Hire Retention',
+      title: '30d stay interview playback sent',
+      owner: 'L. Alvarez',
+      completedAt: 'Jul 22, 2024',
+      mode: 'manual',
+      summary: 'Supervisor completed check-ins for four rehab unit hires and logged next actions.'
+    },
+    {
+      id: 'ct-002',
+      category: 'Sentiment',
+      title: 'Weekly morale pulse published',
+      owner: 'Automation',
+      completedAt: 'Jul 21, 2024',
+      mode: 'auto',
+      summary: 'Automated reminder nudged 63 employees; 48 responses captured in the last cycle.'
+    },
+    {
+      id: 'ct-003',
+      category: 'Engagement',
+      title: 'Re-engage talent pool message',
+      owner: 'C. Patel',
+      completedAt: 'Jul 19, 2024',
+      mode: 'manual',
+      summary: 'Outreach email drafted for former applicants with high intent scores.'
+    },
+    {
+      id: 'ct-004',
+      category: 'Complaint',
+      title: 'Workflow rerouted to Compliance',
+      owner: 'Automation',
+      completedAt: 'Jul 18, 2024',
+      mode: 'auto',
+      summary: 'Auto-detected “unsafe” keyword and triggered the compliance routing template.'
+    },
+    {
+      id: 'ct-005',
+      category: 'Culture',
+      title: 'Onboarding buddy assignment refreshed',
+      owner: 'S. Rivers',
+      completedAt: 'Jul 17, 2024',
+      mode: 'manual',
+      summary: 'Mapped four new hires to culture champions for week-two check-ins.'
+    },
+    {
+      id: 'ct-006',
+      category: 'Positive Reinforcement',
+      title: 'Kudos campaign summary emailed',
+      owner: 'Automation',
+      completedAt: 'Jul 16, 2024',
+      mode: 'auto',
+      summary: 'Weekly highlight of peer-recognized employees sent to facility leaders.'
+    }
+  ];
+
+  const analyticsDrilldownContent: Record<AnalyticsTileKey, {
+    title: string;
+    summary: string;
+    leadMetric: string;
+    timeframes: { label: string; value: string; delta: string }[];
+    insights: string[];
+  }> = {
+    orientationFillForecast: {
+      title: 'Orientation Fill Forecast',
+      summary: 'Forecast coverage for upcoming orientation classes by unit.',
+      leadMetric: `${analyticsData.orientationFillForecast.percentage}% of roles forecast to fill`,
+      timeframes: [
+        { label: '30d', value: '82%', delta: '+5 pts vs prior cycle' },
+        { label: '60d', value: '88%', delta: '+3 pts vs prior cycle' },
+        { label: '90d', value: '91%', delta: '+6 pts vs prior cycle' }
+      ],
+      insights: [
+        'Rehab unit improved after targeted sourcing outreach last week.',
+        'Night shift RN roles remain under-forecast by 9 open slots.',
+        'Consider adding weekend interview blocks to unlock 60d coverage.'
+      ]
+    },
+    strongMatches: {
+      title: 'Strong Matches',
+      summary: 'Candidates surfaced with strong fit and retention signals.',
+      leadMetric: `${analyticsData.strongMatches.percentage}% of surfaced candidates tagged strong`,
+      timeframes: [
+        { label: '30d', value: '78%', delta: '+2 pts vs prior cycle' },
+        { label: '60d', value: '74%', delta: 'Flat vs prior cycle' },
+        { label: '90d', value: '79%', delta: '+4 pts vs prior cycle' }
+      ],
+      insights: [
+        'Physical therapy requisitions gained 6 new strong matches this week.',
+        'Speech language pathologists remain coverage gap – expand sourcing radius.',
+        'Automation retargeting added 18 silver medalists to the funnel.'
+      ]
+    },
+    retentionOutcomes: {
+      title: 'Retention Outcomes',
+      summary: 'Observed retention compared to predictive baselines.',
+      leadMetric: `${analyticsData.retentionOutcomes.percentage}% of hires stayed ≥30 days`,
+      timeframes: [
+        { label: '30d', value: '72%', delta: '-3 pts vs baseline' },
+        { label: '60d', value: '66%', delta: '-1 pt vs baseline' },
+        { label: '90d', value: '61%', delta: '+2 pts vs baseline' }
+      ],
+      insights: [
+        'Early attrition tied to onboarding gaps in memory care unit.',
+        'Escalations paused two resignations in the past 14 days.',
+        'New buddy program shows +8 pt improvement for rehab hires.'
+      ]
+    },
+    pulseTrends: {
+      title: 'Pulse Trends',
+      summary: 'Morale and participation across pulse programs.',
+      leadMetric: `+${analyticsData.pulseTrends.percentage}% morale momentum`,
+      timeframes: [
+        { label: '30d', value: '+6%', delta: '+2 pts vs prior cycle' },
+        { label: '60d', value: '+4%', delta: '+1 pt vs prior cycle' },
+        { label: '90d', value: '+3%', delta: '+2 pts vs prior cycle' }
+      ],
+      insights: [
+        'Participation holds at 74% after adding SMS nudges.',
+        'Night shift morale trending upward after recognition pilot.',
+        'Add open-text prompt next cycle to capture more context.'
+      ]
+    }
   };
 
   // Hotspots Data
@@ -580,6 +731,10 @@ const YourPipelinePage = () => {
   };
 
   const toggleExpandedItem = (section: 'workforce' | 'action' | 'hotspot', id: string) => {
+    if (section === 'action' && id !== 'completed-tasks' && isCompletedTasksModalOpen) {
+      setIsCompletedTasksModalOpen(false);
+      setSelectedCompletedCategory(null);
+    }
     setExpandedItem(prev => {
       if (prev && prev.section === section && prev.id === id) {
         return null;
@@ -588,7 +743,81 @@ const YourPipelinePage = () => {
     });
   };
 
+  const handleToggleActionType = (id: string) => {
+    setActionCenterData(prev => ({
+      ...prev,
+      actionItems: prev.actionItems.map(item => {
+        if (item.id !== id) {
+          return item;
+        }
+        const nextType = item.type === 'auto' ? 'manual' : 'auto';
+        const manualStatus = item.manualStatus ?? item.status ?? 'Escalate';
+        const autoStatus = item.autoStatus ?? 'Automated';
+        const nextIcon: 'warning' | 'info' | 'success' = nextType === 'manual'
+          ? 'warning'
+          : (item.icon === 'success' ? 'success' : 'info');
+        return {
+          ...item,
+          type: nextType,
+          status: nextType === 'manual' ? manualStatus : autoStatus,
+          icon: nextIcon
+        };
+      })
+    }));
+  };
+
+  const handleToggleAutomationMode = (modeName: string) => {
+    setActionCenterData(prev => ({
+      ...prev,
+      automationModes: prev.automationModes.map(mode =>
+        mode.name === modeName
+          ? { ...mode, status: mode.status === 'auto' ? 'manual' : 'auto' }
+          : mode
+      )
+    }));
+  };
+
+  const openCompletedTasksModal = (category?: string) => {
+    setSelectedCompletedCategory(category ?? null);
+    setIsCompletedTasksModalOpen(true);
+    setExpandedItem({ section: 'action', id: 'completed-tasks' });
+  };
+
+  const handleCloseCompletedTasksModal = () => {
+    setIsCompletedTasksModalOpen(false);
+    setSelectedCompletedCategory(null);
+    setExpandedItem(prev => (prev?.section === 'action' && prev.id === 'completed-tasks') ? null : prev);
+  };
+
+  const handleViewCompletedTasks = (category?: string) => {
+    if (category) {
+      openCompletedTasksModal(category);
+      return;
+    }
+    if (isCompletedTasksModalOpen) {
+      handleCloseCompletedTasksModal();
+      return;
+    }
+    openCompletedTasksModal();
+  };
+
+  const handleOpenAnalyticsDrilldown = (tile: AnalyticsTileKey) => {
+    setSelectedAnalyticsTile(tile);
+  };
+
+  const handleCloseAnalyticsDrilldown = () => {
+    setSelectedAnalyticsTile(null);
+  };
+
   const isWorkforceExpanded = (id: string) => expandedItem?.section === 'workforce' && expandedItem.id === id;
+
+  const displayedCompletedTasks = selectedCompletedCategory
+    ? completedTaskDetails.filter(task => task.category === selectedCompletedCategory)
+    : completedTaskDetails;
+
+  const activeAnalyticsTile = selectedAnalyticsTile
+    ? analyticsDrilldownContent[selectedAnalyticsTile]
+    : null;
 
   // Helper functions for color coding and thresholds
   const getThresholdColor = (threshold: string) => {
@@ -960,7 +1189,7 @@ const YourPipelinePage = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
             <div>
               <h2 className="text-[30px] font-black leading-[154%] text-[#01253F] font-avenir">
-                St. Mary's Health Center
+                St. Mary&apos;s Health Center
               </h2>
               {user?.role === 'ADMIN' && (
                 <p className="text-sm text-blue-600 font-medium mt-1">Admin Access - Employee/User Dashboard</p>
@@ -1000,12 +1229,23 @@ const YourPipelinePage = () => {
             </div>
             
             
-            <div className="flex flex-col xl:flex-row gap-6">
+            <div className="flex flex-col xl:flex-row gap-6 xl:items-stretch">
               {/* Left Side - Hiring Health Metrics (2x2 Grid) */}
-              <div className="flex-shrink-0 xl:w-1/2 w-full">
-                <div className="grid grid-cols-2 gap-4 w-full max-w-full xl:max-w-[500px] mx-auto xl:mx-0">
+              <div className="xl:flex-1 w-full xl:min-h-[380px]">
+                <div className="grid grid-cols-2 gap-4 w-full max-w-full xl:max-w-none mx-auto xl:mx-0 h-full xl:auto-rows-fr">
                   {/* Orientation Fill Forecast Card */}
-                  <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
+                  <div
+                    className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px] xl:h-full cursor-pointer transition-transform hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#97B3FB] focus-visible:ring-offset-2"
+                    onClick={() => handleOpenAnalyticsDrilldown('orientationFillForecast')}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        handleOpenAnalyticsDrilldown('orientationFillForecast');
+                      }
+                    }}
+                  >
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-lg font-medium text-[#01253F] leading-tight">Orientation Fill<br />Forecast</h3>
                       <div className="relative group">
@@ -1025,7 +1265,18 @@ const YourPipelinePage = () => {
                   </div>
 
                   {/* Strong Matches Card */}
-                  <div className="bg-white rounded-[21px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
+                  <div
+                    className="bg-white rounded-[21px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px] xl:h-full cursor-pointer transition-transform hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#97B3FB] focus-visible:ring-offset-2"
+                    onClick={() => handleOpenAnalyticsDrilldown('strongMatches')}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        handleOpenAnalyticsDrilldown('strongMatches');
+                      }
+                    }}
+                  >
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-lg font-medium text-[#01253F] leading-tight">Strong Matches</h3>
                       <div className="relative group">
@@ -1045,7 +1296,18 @@ const YourPipelinePage = () => {
                   </div>
 
                   {/* Retention Outcomes Card */}
-                  <div className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
+                  <div
+                    className="bg-white rounded-[16px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px] xl:h-full cursor-pointer transition-transform hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#97B3FB] focus-visible:ring-offset-2"
+                    onClick={() => handleOpenAnalyticsDrilldown('retentionOutcomes')}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        handleOpenAnalyticsDrilldown('retentionOutcomes');
+                      }
+                    }}
+                  >
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-lg font-medium text-[#01253F] leading-tight">Retention<br />Outcomes</h3>
                       <div className="relative group">
@@ -1065,7 +1327,18 @@ const YourPipelinePage = () => {
                   </div>
 
                   {/* Pulse Trends Card */}
-                  <div className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px]">
+                  <div
+                    className="bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px] xl:h-full cursor-pointer transition-transform hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#97B3FB] focus-visible:ring-offset-2"
+                    onClick={() => handleOpenAnalyticsDrilldown('pulseTrends')}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        handleOpenAnalyticsDrilldown('pulseTrends');
+                      }
+                    }}
+                  >
                     <div className="flex items-start justify-between mb-4">
                       <h3 className="text-xl font-medium text-[#01253F] leading-tight">Pulse Trends</h3>
                       <div className="relative group">
@@ -1087,13 +1360,13 @@ const YourPipelinePage = () => {
               </div>
 
               {/* Right Side - Workforce Stability Section */}
-              <div className="xl:w-3/5 w-full bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 min-w-[300px] mt-4 xl:mt-0 flex flex-col">
-                <div className="flex items-center justify-between mb-2 flex-shrink-0">
-                  <h2 className="text-[25px] font-medium leading-[34px] text-[#01253F] font-avenir">Workforce Stability</h2>
+              <div className="xl:flex-1 w-full bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 min-w-[300px] mt-4 xl:mt-0 flex flex-col xl:h-full">
+                <div className="flex items-center justify-between mb-2 flex-shrink-0 pr-1">
+                  <h2 className="text-[25px] font-normal leading-[34px] text-[#01253F] font-avenir">Workforce Stability</h2>
                 </div>
                 
                       {/* Content Area - No Scroll */}
-                      <div className="flex-1 space-y-2.5">
+                      <div className="flex-1 space-y-2.5 pr-1">
                   
                                           {/* Workforce Stability Metrics */}
                         <div className="space-y-2.5">
@@ -1104,9 +1377,9 @@ const YourPipelinePage = () => {
                             isWorkforceExpanded('roi') ? 'bg-white shadow-lg scale-[1.02] border-[#2CB3BF]' : 'border-transparent hover:bg-[#F3F3F3]'
                           }`}
                         >
-                          <div className="flex flex-wrap items-center justify-start gap-3">
+                          <div className="flex flex-wrap items-center justify-between gap-3">
                             <div className="flex items-center">
-                              <span className="text-sm font-semibold text-[#01253F]">ROI Summary</span>
+                              <span className="text-sm font-normal text-[#01253F]">ROI Summary</span>
                               <div className="relative group ml-2">
                                 <Info className="w-3 h-3 text-gray-400 cursor-help" />
                                 <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
@@ -1115,8 +1388,9 @@ const YourPipelinePage = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className="inline-flex flex-wrap items-center px-3 py-1 rounded-full text-xs font-semibold text-[#01253F] leading-tight"
-                              style={{ backgroundColor: '#91D7DE' }}
+                            <div
+                              className="inline-flex flex-wrap items-center px-3 py-1 rounded-full text-xs font-normal text-[#01253F] leading-tight ml-auto"
+                              style={{ backgroundColor: 'rgba(145, 215, 222, 0.4)' }}
                             >
                               {formatCurrency(analyticsData.roiSummary.saved)} saved, {analyticsData.roiSummary.timeSaved} hrs time saved, {analyticsData.roiSummary.hiresRetained} hires retained
                             </div>
@@ -1137,7 +1411,7 @@ const YourPipelinePage = () => {
                         >
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center">
-                              <span className="text-sm font-semibold text-[#01253F]">Early Churn Risk</span>
+                              <span className="text-sm font-normal text-[#01253F]">Early Churn Risk</span>
                               <div className="relative group ml-2">
                                 <Info className="w-3 h-3 text-gray-400 cursor-help" />
                                 <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
@@ -1147,7 +1421,7 @@ const YourPipelinePage = () => {
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className="text-sm font-semibold text-[#01253F]">
+                              <span className="text-sm font-normal text-[#01253F]">
                                 {analyticsData.earlyChurnRisk.hiresAtRisk} hires at risk (~{formatCurrency(analyticsData.earlyChurnRisk.turnoverCost)} turnover cost)
                               </span>
                               <div
@@ -1180,7 +1454,7 @@ const YourPipelinePage = () => {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center">
-                        <span className="text-sm font-semibold text-[#01253F]">Retention Forecast</span>
+                        <span className="text-sm font-normal text-[#01253F]">Retention Forecast</span>
                         <div className="relative group ml-2">
                           <Info className="w-3 h-3 text-gray-400 cursor-help" />
                           <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
@@ -1190,7 +1464,7 @@ const YourPipelinePage = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-[#01253F]">
+                        <span className="text-sm font-normal text-[#01253F]">
                           {analyticsData.retentionForecast.percentage}% projected to stay {analyticsData.retentionForecast.timeframe}
                         </span>
                         <div
@@ -1223,7 +1497,7 @@ const YourPipelinePage = () => {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center">
-                        <span className="text-sm font-semibold text-[#01253F]">Work Environment Score</span>
+                        <span className="text-sm font-normal text-[#01253F]">Work Environment Score</span>
                         <div className="relative group ml-2">
                           <Info className="w-3 h-3 text-gray-400 cursor-help" />
                           <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
@@ -1233,7 +1507,7 @@ const YourPipelinePage = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-[#01253F]">
+                        <span className="text-sm font-normal text-[#01253F]">
                           {analyticsData.workEnvironmentScore.score} / {analyticsData.workEnvironmentScore.maxScore}
                         </span>
                         <div
@@ -1266,17 +1540,17 @@ const YourPipelinePage = () => {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center">
-                        <span className="text-sm font-semibold text-[#01253F]">Culture Alignment</span>
+                        <span className="text-sm font-normal text-[#01253F]">Culture Alignment</span>
                         <div className="relative group ml-2">
                           <Info className="w-3 h-3 text-gray-400 cursor-help" />
                           <div className="absolute bottom-full left-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                            % of recent hires aligned with your facility's culture profile
+                            % of recent hires aligned with your facility&apos;s culture profile
                             <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-[#01253F]">
+                        <span className="text-sm font-normal text-[#01253F]">
                           {analyticsData.cultureAlignment.percentage}% aligned
                         </span>
                         <div
@@ -1312,9 +1586,12 @@ const YourPipelinePage = () => {
               automationModes={actionCenterData.automationModes || []}
               completedTasks={actionCenterData.completedTasks || []}
               onEscalate={handleEscalateAction}
-              expandedActionId={expandedItem?.section === 'action' ? expandedItem.id : undefined}
+              expandedActionId={expandedItem?.section === 'action' && expandedItem.id !== 'completed-tasks' ? expandedItem.id : undefined}
               onExpandAction={(id) => toggleExpandedItem('action', id)}
-              onViewCompletedTasks={() => toggleExpandedItem('action', 'completed-tasks')}
+              onViewCompletedTasks={handleViewCompletedTasks}
+              onToggleActionType={handleToggleActionType}
+              onToggleAutomationMode={handleToggleAutomationMode}
+              isCompletedTasksOpen={isCompletedTasksModalOpen}
             />
           )}
 
@@ -1434,6 +1711,136 @@ const YourPipelinePage = () => {
                 >
                   Send Escalation Email
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isCompletedTasksModalOpen && (
+        <div
+          className="fixed inset-0 z-[190] flex items-center justify-center bg-[#01253F]/30 backdrop-blur-sm px-4"
+          onClick={handleCloseCompletedTasksModal}
+        >
+          <div
+            className="relative w-full max-w-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="bg-white/95 border border-gray-100 rounded-[20px] shadow-[0px_12px_40px_rgba(1,37,63,0.18)] p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-xl font-medium text-[#01253F] leading-tight">Completed Tasks</h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {selectedCompletedCategory ? `Filtered by ${selectedCompletedCategory}` : 'Hard-coded preview of recent workflow completions.'}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCloseCompletedTasksModal}
+                  className="text-gray-500 hover:text-gray-700 transition-colors text-xl leading-none"
+                  aria-label="Close completed tasks modal"
+                >
+                  &times;
+                </button>
+              </div>
+
+              {selectedCompletedCategory && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedCompletedCategory(null)}
+                  className="mb-4 inline-flex items-center text-xs font-medium text-[#01253F] bg-gray-100 hover:bg-gray-200 transition-colors px-3 py-1 rounded-full"
+                >
+                  Show all categories
+                </button>
+              )}
+
+              <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
+                {displayedCompletedTasks.map((task) => (
+                  <div key={task.id} className="border border-gray-100 rounded-lg p-3 bg-[#F8FAFB]">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-medium text-[#01253F]">{task.title}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">{task.summary}</p>
+                      </div>
+                      <span className={`px-2 py-1 text-[11px] font-medium rounded-full ${
+                        task.mode === 'auto' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {task.mode === 'auto' ? 'Auto' : 'Manual'}
+                      </span>
+                    </div>
+                    <div className="mt-3 flex items-center justify-between text-xs text-gray-500">
+                      <span>{task.category}</span>
+                      <span>Completed {task.completedAt} · {task.owner}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex justify-end mt-6">
+                <button
+                  type="button"
+                  onClick={handleCloseCompletedTasksModal}
+                  className="px-4 py-2 text-sm font-medium text-[#01253F] bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeAnalyticsTile && (
+        <div
+          className="fixed inset-0 z-[195] flex items-center justify-center bg-[#01253F]/40 backdrop-blur-sm px-4"
+          onClick={handleCloseAnalyticsDrilldown}
+        >
+          <div
+            className="relative w-full max-w-3xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="bg-white/95 border border-gray-100 rounded-[24px] shadow-[0px_16px_48px_rgba(1,37,63,0.2)] p-6 md:p-8 max-h-[85vh] overflow-y-auto">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+                <div>
+                  <h3 className="text-2xl font-semibold text-[#01253F] leading-tight">{activeAnalyticsTile.title}</h3>
+                  <p className="text-sm text-gray-600 mt-2 max-w-xl">{activeAnalyticsTile.summary}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCloseAnalyticsDrilldown}
+                  className="text-gray-500 hover:text-gray-700 transition-colors text-xl leading-none self-start"
+                  aria-label="Close analytics drilldown"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <div className="bg-[#F3F6F8] border border-gray-100 rounded-xl p-4 mb-6">
+                <p className="text-sm text-gray-600 uppercase tracking-wide">Lead Metric</p>
+                <p className="text-3xl font-semibold text-[#01253F] mt-1">{activeAnalyticsTile.leadMetric}</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                {activeAnalyticsTile.timeframes.map((metric) => (
+                  <div key={metric.label} className="border border-gray-100 rounded-lg p-4 bg-[#F8FAFB]">
+                    <p className="text-xs uppercase tracking-wide text-gray-500">{metric.label}</p>
+                    <p className="text-xl font-semibold text-[#01253F] mt-1">{metric.value}</p>
+                    <p className="text-xs text-gray-500 mt-1">{metric.delta}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mb-6 h-40 rounded-xl bg-gradient-to-r from-[#E9D7F4] via-[#97B3FB] to-[#2CB3BF] opacity-80 flex items-center justify-center text-white text-sm">
+                Graph placeholder - sparkline of 13-week trend will render here.
+              </div>
+
+              <div>
+                <h4 className="text-sm font-medium text-[#01253F] mb-2">Next best actions</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
+                  {activeAnalyticsTile.insights.map((insight, index) => (
+                    <li key={index}>{insight}</li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>

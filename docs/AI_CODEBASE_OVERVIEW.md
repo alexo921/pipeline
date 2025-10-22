@@ -55,4 +55,11 @@ This document gives LLM-based assistants a concise, up-to-date map of the codeba
 - When creating new backend modules, wire them in `app.module.ts` and expose routes with `/api/*` prefix.
 - Check `docker-compose.yml` first whenever adding dependencies between services.
 
+## Assistant Access Helper Guide
+
+- Workspace context runs in `/home/ubuntu/pipeline` with `workspace-write` sandboxing; stay inside repo paths and note that network access is restricted unless explicitly approved.
+- Use `shell` commands with `["bash","-lc",...]`, always set the `workdir`, and prefer `rg` for searching files or content.
+- Default to `apply_patch` for focused edits, keep changes in ASCII unless the file already uses Unicode, and add only concise clarifying comments.
+- Never revert user-authored changes, avoid destructive git commands, and pause to ask if unexpected modifications appear.
+- Run or mention relevant tests when you can; if something cannot be validated locally, call it out in the final notes.
 

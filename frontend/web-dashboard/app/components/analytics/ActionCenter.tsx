@@ -9,6 +9,8 @@ export interface ActionItem {
   status?: string;
   icon?: 'warning' | 'info' | 'success';
   priority?: 'high' | 'medium' | 'low';
+  manualStatus?: string;
+  autoStatus?: string;
   [key: string]: any;
 }
 
@@ -29,7 +31,10 @@ interface ActionCenterProps {
   onEscalate?: (item: ActionItem) => void;
   expandedActionId?: string;
   onExpandAction?: (id: string) => void;
-  onViewCompletedTasks?: () => void;
+  onViewCompletedTasks?: (category?: string) => void;
+  onToggleActionType?: (id: string) => void;
+  onToggleAutomationMode?: (modeName: string) => void;
+  isCompletedTasksOpen?: boolean;
 }
 
 const ActionCenter: React.FC<ActionCenterProps> = ({ 
@@ -39,7 +44,10 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
   onEscalate,
   expandedActionId,
   onExpandAction,
-  onViewCompletedTasks
+  onViewCompletedTasks,
+  onToggleActionType,
+  onToggleAutomationMode,
+  isCompletedTasksOpen
 }) => {
   const getIcon = (iconType: string) => {
     switch (iconType) {
@@ -70,15 +78,24 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
     }
   };
 
-  const getTypeBadge = (type: string) => {
+  const getTypeBadge = (type: string, onToggle?: () => void) => {
+    const isAuto = type === 'auto';
     return (
-      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium leading-none ${
-        type === 'auto' 
-          ? 'bg-green-100 text-green-800' 
-          : 'bg-blue-100 text-blue-800'
-      }`}>
-        {type === 'auto' ? 'Auto' : 'Manual'}
-      </span>
+      <button
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation();
+          onToggle?.();
+        }}
+        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium leading-none transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[#2CB3BF] ${
+          isAuto
+            ? 'bg-green-100 text-green-800 hover:bg-green-200'
+            : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+        }`}
+        aria-pressed={isAuto}
+      >
+        {isAuto ? 'Auto' : 'Manual'}
+      </button>
     );
   };
 
@@ -94,10 +111,10 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
       <div className="flex flex-col xl:flex-row gap-6">
         {/* Left Side - Action Items List */}
         <div className="xl:w-2/3 w-full">
-          <div className="space-y-4">
+          <div className="space-y-2.5">
             {(actionItems || []).map((item) => {
               const itemType: 'manual' | 'auto' = item.type ?? 'manual';
-              const itemStatus = item.status ?? (itemType === 'manual' ? 'Escalate' : 'Automated');
+              const itemStatus = item.status ?? (itemType === 'manual' ? (item.manualStatus ?? 'Escalate') : (item.autoStatus ?? 'Automated'));
               const itemIconType: 'warning' | 'info' | 'success' = item.icon ?? (itemType === 'manual' ? 'warning' : 'info');
               const isExpanded = expandedActionId === item.id;
               return (
@@ -108,7 +125,7 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
                     isExpanded ? 'scale-[1.02] border-[#2CB3BF]' : ''
                   }`}
                 >
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-3">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 pr-2">
                         <div className="flex flex-wrap items-baseline gap-3 mb-2">
@@ -126,7 +143,7 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
                     )}
 
                     <div className="flex items-center justify-between gap-4 pt-3">
-                      {getTypeBadge(itemType)}
+                      {getTypeBadge(itemType, () => onToggleActionType?.(item.id))}
                       {itemType === 'manual' ? (
                         <button
                           onClick={(event) => {
@@ -164,13 +181,17 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
                   style={{ borderBottom: index === (automationLength - 1) ? 'none' : '0.5px solid #F3F3F3' }}
                 >
                   <span className="text-sm font-medium text-gray-700">{mode.name}</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    mode.status === 'auto' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-blue-100 text-blue-800'
-                  }`}>
+                  <button
+                    type="button"
+                    onClick={() => onToggleAutomationMode?.(mode.name)}
+                    className={`px-3 py-1 rounded-full text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[#2CB3BF] ${
+                      mode.status === 'auto' 
+                        ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                        : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+                    }`}
+                  >
                     {mode.status === 'auto' ? 'Auto' : 'Manual'}
-                  </span>
+                  </button>
                 </div>
               ))}
             </div>
@@ -183,10 +204,19 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
               {(completedTasks || []).map((task, index) => (
                 <div
                   key={index}
-                  className={`flex items-center justify-between py-2 px-2 -mx-2 transition-colors ${
-                    expandedActionId === 'completed-tasks' ? 'bg-[#F3F3F3] rounded-md' : 'hover:bg-[#F3F3F3]'
+                  className={`flex items-center justify-between py-2 px-2 -mx-2 transition-colors cursor-pointer ${
+                    isCompletedTasksOpen ? 'bg-[#F3F3F3] rounded-md' : 'hover:bg-[#F3F3F3]'
                   }`}
                   style={{ borderBottom: index === (completedLength - 1) ? 'none' : '0.5px solid #F3F3F3' }}
+                  onClick={() => onViewCompletedTasks?.(task.category)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      onViewCompletedTasks?.(task.category);
+                    }
+                  }}
                 >
                   <span className="text-sm font-medium text-gray-700">{task.category}</span>
                   <span className="text-sm font-semibold text-[#01253F]">{task.count} actions</span>
@@ -196,12 +226,12 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
             <button
               onClick={onViewCompletedTasks}
               className={`w-full px-4 py-2 rounded-md transition-colors text-sm ${
-                expandedActionId === 'completed-tasks'
+                isCompletedTasksOpen
                   ? 'bg-[#2CB3BF] text-white shadow'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              {expandedActionId === 'completed-tasks' ? 'Hide Completed Tasks' : 'View All Completed Tasks'}
+              {isCompletedTasksOpen ? 'Hide Completed Tasks' : 'View All Completed Tasks'}
             </button>
           </div>
         </div>
