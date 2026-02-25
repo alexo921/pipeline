@@ -43,11 +43,43 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - PORT=3001
+      # OpenAI API key
+      - OPENAI_API_KEY=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
+      # Pip chat model
+      - PIP_CHAT_MODEL=gpt-4o-mini
     ports:
       - "3001:3001"
     depends_on:
       - postgres
       - redis
+    restart: unless-stopped
+
+  # Mobile app (Expo)
+  mobile-app:
+    build:
+      context: ./mobile
+      dockerfile: Dockerfile
+    container_name: pipeline-mobile
+    environment:
+      - NODE_ENV=development
+      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+      - EXPO_DEV_SERVER_LISTEN_ADDRESS=0.0.0.0
+      - EXPO_DEVTOOLS_LISTEN_PORT=19002
+      - HOST=0.0.0.0
+      - RCT_METRO_PORT=8081
+      - EXPO_PUBLIC_API_URL=https://api.pipelineworkforce.com/api
+      - EXPO_PACKAGER_HOSTNAME=18.119.0.100
+      - REACT_NATIVE_PACKAGER_HOSTNAME=18.119.0.100
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+      - "8081:8081"
+    volumes:
+      - ./mobile:/app
+      - mobile_node_modules:/app/node_modules
+    depends_on:
+      - api
     restart: unless-stopped
 
   # Web Dashboard (Next.js)
@@ -72,6 +104,7 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  mobile_node_modules:
 
 networks:
   default:

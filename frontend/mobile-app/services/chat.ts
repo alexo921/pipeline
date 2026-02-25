@@ -215,7 +215,7 @@ Be empathetic, professional, and focused on helping workers process their shift 
       body: JSON.stringify({
              model: '/app/models/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf',
         messages,
-        temperature: 0.7,
+        temperature: 0.25,
         max_tokens: 150,
         stream: true
       }),

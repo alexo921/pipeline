@@ -29,6 +29,7 @@ interface ActionCenterProps {
   automationModes: AutomationMode[];
   completedTasks: CompletedTask[];
   onEscalate?: (item: ActionItem) => void;
+  onViewAutoAction?: (item: ActionItem) => void;
   expandedActionId?: string;
   onExpandAction?: (id: string) => void;
   onViewCompletedTasks?: (category?: string) => void;
@@ -37,11 +38,12 @@ interface ActionCenterProps {
   isCompletedTasksOpen?: boolean;
 }
 
-const ActionCenter: React.FC<ActionCenterProps> = ({ 
-  actionItems, 
-  automationModes, 
+const ActionCenter: React.FC<ActionCenterProps> = ({
+  actionItems,
+  automationModes,
   completedTasks,
   onEscalate,
+  onViewAutoAction,
   expandedActionId,
   onExpandAction,
   onViewCompletedTasks,
@@ -155,10 +157,15 @@ const ActionCenter: React.FC<ActionCenterProps> = ({
                           {itemStatus}
                         </button>
                       ) : (
-                        <div className="flex items-center gap-2 text-xs font-medium text-[#A1ACB3]">
-                          <Clock className="w-4 h-4" />
-                          <span>{itemStatus}</span>
-                        </div>
+                        <button
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onViewAutoAction?.(item);
+                          }}
+                          className="px-3 py-1.5 bg-green-600 text-white text-xs font-semibold rounded-md shadow transition-transform hover:-translate-y-0.5 hover:bg-green-700"
+                        >
+                          View Details
+                        </button>
                       )}
                     </div>
                   </div>

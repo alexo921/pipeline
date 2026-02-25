@@ -8,9 +8,9 @@
     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
   },
   "llm_config": {
-    "provider": "openai/gpt-4o-mini",
+    "provider": "openai/gpt-4o",
     "api_key": null,
-    "temperature": 0.1,
+    "temperature": 0.25,
     "max_tokens": 4000,
     "chunk_size": 4000,
     "chunk_overlap": 200

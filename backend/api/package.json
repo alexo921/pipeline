@@ -41,10 +41,12 @@
     "cookie-parser": "^1.4.7",
     "csv-parser": "^3.2.0",
     "nodemailer": "^7.0.3",
+    "openai": "^4.57.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.3",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "tiktoken": "^1.0.22"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

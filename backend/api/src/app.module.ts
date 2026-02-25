@@ -16,6 +16,7 @@ import { QueueModule } from './queue/queue.module';
 import { UnsubscribeModule } from './unsubscribe/unsubscribe.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { IntakeFormsModule } from './intake-forms/intake-forms.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { IntakeFormsModule } from './intake-forms/intake-forms.module';
     UnsubscribeModule,
     AnalyticsModule,
     IntakeFormsModule,
+    ChatModule,
     EventEmitterModule.forRoot(),
   ],
   providers: [UserEventsListener, JobsService],

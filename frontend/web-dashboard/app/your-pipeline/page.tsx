@@ -34,7 +34,7 @@ type CompletedTaskDetail = {
   summary: string;
 };
 
-type AnalyticsTileKey = 'orientationFillForecast' | 'strongMatches' | 'retentionOutcomes' | 'pulseTrends';
+type AnalyticsTileKey = 'orientationFillForecast' | 'engagementIndex' | 'retentionOutcomes' | 'pulseTrends';
 
 const YourPipelinePage = () => {
   const { user } = useAuth();
@@ -65,6 +65,8 @@ const YourPipelinePage = () => {
   const [isCompletedTasksModalOpen, setIsCompletedTasksModalOpen] = useState(false);
   const [selectedCompletedCategory, setSelectedCompletedCategory] = useState<string | null>(null);
   const [selectedAnalyticsTile, setSelectedAnalyticsTile] = useState<AnalyticsTileKey | null>(null);
+  const [showAutoActionModal, setShowAutoActionModal] = useState(false);
+  const [activeAutoActionItem, setActiveAutoActionItem] = useState<ActionItem | null>(null);
   // Full-screen expansion removed
 
   // Demo data
@@ -448,9 +450,9 @@ const YourPipelinePage = () => {
       threshold: 'amber', // amber 80-89%
       orientationDaysAway: 5 // <7 days triggers alert
     },
-    strongMatches: {
-      percentage: 86,
-      timeframe: 'this month',
+    engagementIndex: {
+      percentage: 78,
+      timeframe: 'last 30d',
       threshold: 'green' // green ≥75%
     },
     retentionOutcomes: {
@@ -647,19 +649,19 @@ const YourPipelinePage = () => {
         'Consider adding weekend interview blocks to unlock 60d coverage.'
       ]
     },
-    strongMatches: {
-      title: 'Strong Matches',
-      summary: 'Candidates surfaced with strong fit and retention signals.',
-      leadMetric: `${analyticsData.strongMatches.percentage}% of surfaced candidates tagged strong`,
+    engagementIndex: {
+      title: 'Engagement Index',
+      summary: 'Percentage of caregivers actively using Pip in the last 30 days.',
+      leadMetric: `${analyticsData.engagementIndex.percentage}% of caregivers actively using Pip`,
       timeframes: [
-        { label: '30d', value: '78%', delta: '+2 pts vs prior cycle' },
-        { label: '60d', value: '74%', delta: 'Flat vs prior cycle' },
-        { label: '90d', value: '79%', delta: '+4 pts vs prior cycle' }
+        { label: '30d', value: '78%', delta: '+5 pts vs prior cycle' },
+        { label: '60d', value: '73%', delta: '+3 pts vs prior cycle' },
+        { label: '90d', value: '70%', delta: '+8 pts vs prior cycle' }
       ],
       insights: [
-        'Physical therapy requisitions gained 6 new strong matches this week.',
-        'Speech language pathologists remain coverage gap – expand sourcing radius.',
-        'Automation retargeting added 18 silver medalists to the funnel.'
+        'Night shift engagement increased by 12% after SMS reminder updates.',
+        'Rehab unit shows highest daily active usage at 84%.',
+        'Memory care unit engagement lagging at 65% – consider targeted outreach.'
       ]
     },
     retentionOutcomes: {
@@ -893,10 +895,10 @@ const YourPipelinePage = () => {
         threshold: analyticsData.orientationFillForecast.threshold
       },
       {
-        metric: 'Strong Matches',
-        value: `${analyticsData.strongMatches.percentage}%`,
-        details: `${analyticsData.strongMatches.percentage}% strong matches ${analyticsData.strongMatches.timeframe}`,
-        threshold: analyticsData.strongMatches.threshold
+        metric: 'Engagement Index',
+        value: `${analyticsData.engagementIndex.percentage}%`,
+        details: `${analyticsData.engagementIndex.percentage}% of caregivers actively using Pip ${analyticsData.engagementIndex.timeframe}`,
+        threshold: analyticsData.engagementIndex.threshold
       },
       {
         metric: 'Retention Outcomes',
@@ -1079,6 +1081,16 @@ const YourPipelinePage = () => {
       subject: '',
       message: ''
     });
+  };
+
+  const handleViewAutoAction = (item: ActionItem) => {
+    setActiveAutoActionItem(item);
+    setShowAutoActionModal(true);
+  };
+
+  const handleCloseAutoActionModal = () => {
+    setShowAutoActionModal(false);
+    setActiveAutoActionItem(null);
   };
 
   const handlePageChange = (page: number) => {
@@ -1264,34 +1276,34 @@ const YourPipelinePage = () => {
                     </div>
                   </div>
 
-                  {/* Strong Matches Card */}
+                  {/* Engagement Index Card */}
                   <div
                     className="bg-white rounded-[21px] shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 p-4 h-[180px] xl:h-full cursor-pointer transition-transform hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#97B3FB] focus-visible:ring-offset-2"
-                    onClick={() => handleOpenAnalyticsDrilldown('strongMatches')}
+                    onClick={() => handleOpenAnalyticsDrilldown('engagementIndex')}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(event) => {
                       if (event.key === 'Enter' || event.key === ' ') {
                         event.preventDefault();
-                        handleOpenAnalyticsDrilldown('strongMatches');
+                        handleOpenAnalyticsDrilldown('engagementIndex');
                       }
                     }}
                   >
                     <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-lg font-medium text-[#01253F] leading-tight">Strong Matches</h3>
+                      <h3 className="text-lg font-medium text-[#01253F] leading-tight">Engagement Index</h3>
                       <div className="relative group">
                         <Info className="w-4 h-4 text-gray-400 cursor-help" />
                         <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                          % of surfaced candidates rated as strong fit + predicted to stay ≥30d
+                          % of caregivers actively using Pip (30d)
                           <div className="absolute top-full right-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
                         </div>
                       </div>
                     </div>
                     <div className="flex items-baseline justify-start mb-2 mt-12">
-                      <span className="text-3xl font-bold text-[#01253F]">{analyticsData.strongMatches.percentage}%</span>
+                      <span className="text-3xl font-bold text-[#01253F]">{analyticsData.engagementIndex.percentage}%</span>
                     </div>
                     <div className="text-xs text-gray-600">
-                      {analyticsData.strongMatches.percentage}% strong matches {analyticsData.strongMatches.timeframe}
+                      {analyticsData.engagementIndex.percentage}% of caregivers actively using Pip ({analyticsData.engagementIndex.timeframe})
                     </div>
                   </div>
 
@@ -1581,11 +1593,12 @@ const YourPipelinePage = () => {
           
           {/* Action Center Section */}
           {actionCenterData && (
-            <ActionCenter 
+            <ActionCenter
               actionItems={actionCenterData.actionItems || []}
               automationModes={actionCenterData.automationModes || []}
               completedTasks={actionCenterData.completedTasks || []}
               onEscalate={handleEscalateAction}
+              onViewAutoAction={handleViewAutoAction}
               expandedActionId={expandedItem?.section === 'action' && expandedItem.id !== 'completed-tasks' ? expandedItem.id : undefined}
               onExpandAction={(id) => toggleExpandedItem('action', id)}
               onViewCompletedTasks={handleViewCompletedTasks}
@@ -1710,6 +1723,111 @@ const YourPipelinePage = () => {
                   className="px-4 py-2 text-sm font-medium text-[#01253F] bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   Send Escalation Email
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAutoActionModal && activeAutoActionItem && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-[#01253F]/40 backdrop-blur-sm px-4"
+          onClick={handleCloseAutoActionModal}
+        >
+          <div
+            className="relative w-full max-w-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="bg-white/95 border border-gray-100 rounded-[24px] shadow-[0px_16px_48px_rgba(1,37,63,0.2)] p-6 md:p-8">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+                <div className="flex items-start gap-3">
+                  <div className="w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-[#91D7DE] to-[#2CB3BF] text-[#01253F]">
+                    <CheckCircle className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-semibold text-[#01253F] leading-tight">
+                      {activeAutoActionItem.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 mt-2">
+                      {activeAutoActionItem.description}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCloseAutoActionModal}
+                  className="text-gray-500 hover:text-gray-700 transition-colors text-xl leading-none self-start"
+                  aria-label="Close automation details modal"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 mb-6">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-green-600 text-white">
+                  {activeAutoActionItem.priority}
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 border border-green-200 text-green-800">
+                  Automated Action
+                </span>
+                <span className="px-3 py-1 rounded-full text-xs font-medium bg-white border border-gray-200 text-[#01253F]">
+                  {activeAutoActionItem.status}
+                </span>
+              </div>
+
+              <div className="bg-[#F3F6F8] border border-gray-100 rounded-xl p-6 mb-6">
+                <h4 className="text-sm font-semibold text-[#01253F] uppercase tracking-wide mb-3">Automation Details</h4>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Action Triggered</p>
+                    <p className="text-sm text-[#01253F]">
+                      {activeAutoActionItem.id === '2' && 'Automated pulse reminder sent to 48 caregivers via SMS and email'}
+                      {activeAutoActionItem.id === '4' && 'Automated encouragement message sent to 6 high-performing caregivers'}
+                      {activeAutoActionItem.id === '5' && 'Automated escalation to Compliance Officer with flagged incident details'}
+                      {activeAutoActionItem.id !== '2' && activeAutoActionItem.id !== '4' && activeAutoActionItem.id !== '5' && 'Automated workflow executed successfully'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Trigger Condition</p>
+                    <p className="text-sm text-[#01253F]">
+                      {activeAutoActionItem.id === '2' && 'Pulse participation dropped 50 points from baseline (below 40% threshold)'}
+                      {activeAutoActionItem.id === '4' && 'Retention forecast increased 10+ points above baseline for 6 caregivers'}
+                      {activeAutoActionItem.id === '5' && 'Keyword "unsafe" detected in employee complaint submission'}
+                      {activeAutoActionItem.id !== '2' && activeAutoActionItem.id !== '4' && activeAutoActionItem.id !== '5' && 'Automated threshold condition met'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Result</p>
+                    <p className="text-sm text-[#01253F]">
+                      {activeAutoActionItem.id === '2' && '32 caregivers responded to pulse survey within 24 hours (+67% response rate)'}
+                      {activeAutoActionItem.id === '4' && 'Recognition messages delivered successfully to all recipients'}
+                      {activeAutoActionItem.id === '5' && 'Compliance officer notified and case number #2024-047 created'}
+                      {activeAutoActionItem.id !== '2' && activeAutoActionItem.id !== '4' && activeAutoActionItem.id !== '5' && 'Automation completed successfully'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
+                <div className="flex items-start gap-3">
+                  <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-blue-900 mb-1">About Automation</p>
+                    <p className="text-xs text-blue-700">
+                      This action was triggered automatically based on predefined rules and thresholds. You can toggle between Auto and Manual modes in the Action Center to control automation behavior.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={handleCloseAutoActionModal}
+                  className="px-4 py-2 text-sm font-medium text-white bg-[#2CB3BF] rounded-lg hover:bg-[#27a6b2] transition-colors shadow"
+                >
+                  Close
                 </button>
               </div>
             </div>

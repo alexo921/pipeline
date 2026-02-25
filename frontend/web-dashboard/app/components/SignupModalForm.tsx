@@ -5,6 +5,7 @@ import { User, Mail, Lock, Eye, EyeOff, Briefcase, Award } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
 import { signupBasicSchema } from "../schemas/AuthSchema";
 import { analyticsService } from "../services/analytics.service";
@@ -41,12 +42,13 @@ interface SignupModalFormProps {
   onStep2?: () => void;
 }
 
-const SignupModalForm: React.FC<SignupModalFormProps> = ({ 
-  onClose, 
+const SignupModalForm: React.FC<SignupModalFormProps> = ({
+  onClose,
   onSwitchToLogin,
   onStep1,
   onStep2
 }) => {
+  const router = useRouter();
   const [isStep1, setIsStep1] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -163,6 +165,7 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
 
   const handleSkip = () => {
     onClose();
+    router.push('/dashboard'); // Navigate to dashboard/homepage
   };
 
   const roles = [
@@ -318,7 +321,7 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
     <form onSubmit={handleSubmitBasic(onSubmitBasic)} className="space-y-6">
       <div className="text-center">
         <h3 className="text-xl font-semibold text-gray-900 mb-2">Create Your Account</h3>
-        <p className="text-gray-600 text-sm">Join Pipeline to find your next healthcare job</p>
+        <p className="text-gray-600 text-sm font-avenir">Join Pipeline to find your next healthcare job</p>
       </div>
 
       {signupError && (
@@ -460,7 +463,7 @@ const SignupModalForm: React.FC<SignupModalFormProps> = ({
       </button>
 
       <div className="text-center">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 font-avenir">
           Already have an account?{" "}
           <button
             type="button"
