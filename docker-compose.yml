@@ -43,8 +43,8 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - PORT=3001
-      # OpenAI API key
-      - OPENAI_API_KEY=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
+      # OpenAI API key (set via .env or environment)
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
       # Pip chat model
       - PIP_CHAT_MODEL=gpt-4o-mini
     ports:
