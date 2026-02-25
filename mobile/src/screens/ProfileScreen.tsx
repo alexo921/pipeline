@@ -22,7 +22,8 @@ import {
   NavHomeIconPip,
   NavProfileIconProfile,
 } from '../components/NavIcons';
-import UserAvatar from '../../assets/mobile-user.svg';
+
+const userIcon = require('../../assets/user-icon.png');
 
 const EllipseGlow: React.FC<{
   width: number;
@@ -257,7 +258,7 @@ const ProfileScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
                 colors={['#E9F0FF', '#95A9FF', '#ECF4FF']}
                 style={[StyleSheet.absoluteFill, styles.avatarGradient]}
               />
-              <UserAvatar width={80} height={80} />
+              <Image source={userIcon} style={styles.avatarIcon} resizeMode="contain" />
             </View>
             <Text style={styles.name}>{displayName}</Text>
             <Text style={styles.location}>{displayLocation}</Text>
@@ -443,6 +444,10 @@ const styles = StyleSheet.create({
   },
   avatarGradient: {
     borderRadius: 60,
+  },
+  avatarIcon: {
+    width: 64,
+    height: 64,
   },
   name: {
     marginTop: 16,
