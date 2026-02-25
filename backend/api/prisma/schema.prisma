@@ -387,6 +387,7 @@ model employees {
   retention_forecasts retention_forecasts[]
   action_items       action_items[]
   complaints         complaints[]
+  pip_conversations  pip_conversations[]
 
   @@index([facilityId])
   @@index([role])
@@ -498,6 +499,139 @@ model complaints {
   @@index([category])
   @@index([severity])
   @@index([status])
+}
+
+// Tiered Safety & Escalation - Tier 3 secure storage
+// IF urgency=high AND topic in [safety, harassment, discrimination, violence, self_harm]
+// → Log here, notify admin, store transcript, do NOT surface in general dashboard
+model pip_safety_tier3 {
+  id              String   @id @default(uuid())
+  conversationId  String
+  userId          String
+  facilityId      String?
+  topic           String   // safety, harassment, discrimination, violence, self_harm
+  urgency         String   @default("high")
+  routing         String   // Safety, HR
+  summary         String   @db.Text
+  transcriptCopy  String?  @db.Text // Restricted access - full transcript excerpt
+  adminNotifiedAt DateTime?
+  status          String   @default("pending") // pending, acknowledged, in_progress, resolved
+  metadata        Json?
+  createdAt       DateTime @default(now())
+
+  @@index([facilityId])
+  @@index([topic])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Facility-level config for safety admin notifications (configurable)
+model facility_safety_config {
+  id                    String   @id @default(uuid())
+  facilityId            String   @unique
+  tier3AdminEmails      Json     // ["email@example.com"] - emails to notify on Tier 3
+  tier3EmailEnabled     Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([facilityId])
+}
+
+// Legacy chat logs (kept for backward compatibility)
+model pip_chat_logs {
+  id         String   @id @default(uuid())
+  userId     String
+  ack        String
+  role       String   @default("assistant")
+  summary    String
+  sentiment  String
+  topic      String
+  urgency    String
+  routing    String
+  language   String
+  nextStep   String?
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ---------------------------------------------
+// Pip Context Layer - Memory System
+// ---------------------------------------------
+
+// 1.1 Messages Table (Cold Storage / Ground Truth)
+// Stores ALL messages - never implicitly visible to the model
+model pip_messages {
+  id               String   @id @default(uuid())
+  conversationId   String
+  role             String   // "user" or "assistant"
+  content          String   @db.Text
+  tokenCount       Int
+  createdAt        DateTime @default(now())
+
+  // Relations
+  conversation     pip_conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([createdAt])
+}
+
+// 1.2 Conversation Memory (Hot Memory)
+// Contains pinned facts and running summary per conversation
+model pip_conversation_memory {
+  id                  String   @id @default(uuid())
+  conversationId      String   @unique
+  pinnedFacts         Json     // Structured, authoritative defaults
+  runningSummary      String?  @db.Text // Single evolving narrative
+  summaryVersion      Int      @default(0) // Increment on update
+  summaryUpdatedAt    DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Relations
+  conversation        pip_conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+}
+
+// Conversation Sessions
+// Groups messages into coherent conversation threads
+model pip_conversations {
+  id                  String   @id @default(uuid())
+  userId              String
+  employeeId          String?  // Link to employee if available
+  status              String   @default("active") // active, completed, archived
+  messageCount        Int      @default(0)
+  totalInputTokens    Int      @default(0)
+  totalOutputTokens   Int      @default(0)
+  startedAt           DateTime @default(now())
+  lastMessageAt       DateTime @default(now())
+  endedAt             DateTime?
+
+  // Relations
+  messages            pip_messages[]
+  memory              pip_conversation_memory?
+  employee            employees? @relation(fields: [employeeId], references: [id])
+
+  @@index([userId])
+  @@index([employeeId])
+  @@index([status])
+  @@index([lastMessageAt])
+}
+
+// Summary Update Log (for observability)
+model pip_summary_updates {
+  id                  String   @id @default(uuid())
+  conversationId      String
+  oldSummary          String?  @db.Text
+  newSummary          String   @db.Text
+  summaryVersion      Int
+  messagesProcessed   Int      // How many messages were used in this update
+  tokenCount          Int      // Tokens in the summary update prompt
+  triggerReason       String   // "message_count", "token_limit", "manual"
+  createdAt           DateTime @default(now())
+
+  @@index([conversationId])
+  @@index([createdAt])
 }
 
 model analytics_insights {

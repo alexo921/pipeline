@@ -2,12 +2,14 @@ import { Controller, Get, Post, Body, Param, Query, UseGuards, Req, ForbiddenExc
 import { AnalyticsService } from './analytics.service';
 import { AnalyticsTrackingService } from './analytics-tracking.service';
 import { AuthGuard } from '@nestjs/passport';
+import { SafetyEscalationService } from '../chat/services/safety-escalation.service';
 
 @Controller('analytics')
 export class AnalyticsController {
   constructor(
     private readonly analyticsService: AnalyticsService,
     private readonly analyticsTrackingService: AnalyticsTrackingService,
+    private readonly safetyEscalationService: SafetyEscalationService,
   ) {}
 
   @Post('track/view')
@@ -356,6 +358,32 @@ export class AnalyticsController {
         }
       };
     }
+  }
+
+  /**
+   * Tier 3 Safety items for Action Center.
+   * Restricted - does NOT surface in general dashboard tiles.
+   * Requires admin/auth.
+   */
+  @Get('safety/tier3')
+  @UseGuards(AuthGuard('jwt'))
+  async getSafetyTier3Items(
+    @Req() req: any,
+    @Query('facilityId') facilityId?: string,
+    @Query('limit') limit?: string,
+  ) {
+    if (req.user?.role !== 'ADMIN') {
+      throw new ForbiddenException('Admin access required for safety tier items');
+    }
+    const limitNumber = limit ? parseInt(limit) : 50;
+    const items = await this.safetyEscalationService.getTier3ItemsForActionCenter(
+      facilityId,
+      limitNumber,
+    );
+    return {
+      success: true,
+      data: items,
+    };
   }
 
   @Get('users')
