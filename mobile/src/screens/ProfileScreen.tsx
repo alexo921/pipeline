@@ -1,4 +1,5 @@
 import React from 'react';
+import { CommonActions } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -229,7 +230,17 @@ const ProfileScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     }
   };
   const handleLogout = async () => {
-    await setUser(null, null);
+    try {
+      await setUser(null, null);
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        })
+      );
+    } catch (e) {
+      if (__DEV__) console.warn('[Profile] Logout failed', e);
+    }
   };
   return (
     <SafeAreaView style={styles.safeArea} edges={[]}>
@@ -240,6 +251,7 @@ const ProfileScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       <View style={styles.contentLayer}>
         <ScrollView
           style={styles.scrollArea}
+          keyboardShouldPersistTaps="handled"
           contentContainerStyle={[
             styles.content,
             { paddingTop: insets.top + 10, paddingBottom: insets.bottom + 30 },
@@ -253,13 +265,7 @@ const ProfileScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           </View>
 
           <View style={styles.avatarWrapper}>
-            <View style={styles.avatarCircle}>
-              <LinearGradient
-                colors={['#E9F0FF', '#95A9FF', '#ECF4FF']}
-                style={[StyleSheet.absoluteFill, styles.avatarGradient]}
-              />
-              <Image source={userIcon} style={styles.avatarIcon} resizeMode="contain" />
-            </View>
+            <Image source={userIcon} style={styles.avatarIcon} resizeMode="contain" />
             <Text style={styles.name}>{displayName}</Text>
             <Text style={styles.location}>{displayLocation}</Text>
           </View>
@@ -307,7 +313,14 @@ const ProfileScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
                 <Text style={styles.cardText}>Terms and Policies</Text>
                 <Ionicons name="chevron-forward" size={18} color="#A3A9BA" />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.cardRow} activeOpacity={0.85} onPress={handleLogout}>
+              <TouchableOpacity
+                style={styles.cardRow}
+                activeOpacity={0.85}
+                onPress={handleLogout}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                accessibilityRole="button"
+                accessibilityLabel="Log out"
+              >
                 <Ionicons name="log-out-outline" size={20} color="#C6534C" />
                 <Text style={[styles.cardText, styles.logoutText]}>Log out</Text>
               </TouchableOpacity>
@@ -430,24 +443,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 32,
   },
-  avatarCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    shadowColor: '#6573FF',
-    shadowOpacity: 0.35,
-    shadowRadius: 20,
-    elevation: 6,
-  },
-  avatarGradient: {
-    borderRadius: 60,
-  },
   avatarIcon: {
-    width: 64,
-    height: 64,
+    width: 96,
+    height: 96,
   },
   name: {
     marginTop: 16,
