@@ -21,6 +21,7 @@ import AdminDashboardNav from '../components/AdminDashboardNav';
 import ActionCenter, { ActionItem } from '../components/analytics/ActionCenter';
 import HotspotsSection from '../components/analytics/HotspotsSection';
 import { useAuth } from '../contexts/AuthContext';
+import { useCompany } from '../contexts/CompanyContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -38,6 +39,7 @@ type AnalyticsTileKey = 'orientationFillForecast' | 'engagementIndex' | 'retenti
 
 const YourPipelinePage = () => {
   const { user } = useAuth();
+  const company = useCompany();
   const router = useRouter();
   const [authChecked, setAuthChecked] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -74,7 +76,7 @@ const YourPipelinePage = () => {
     {
       id: 1,
       title: "Registered Nurse",
-      company: "St. Mary's Health Center",
+      company: company.name,
       location: "New Haven, CT",
       salary: "75k/yr - 85k/yr",
       applicants: 4,
@@ -83,7 +85,7 @@ const YourPipelinePage = () => {
     {
       id: 2,
       title: "Physical Therapist", 
-      company: "St. Mary's Health Center",
+      company: company.name,
       location: "New Haven, CT",
       salary: "80k/yr - 95k/yr",
       applicants: 7,
@@ -92,7 +94,7 @@ const YourPipelinePage = () => {
     {
       id: 3,
       title: "Medical Assistant",
-      company: "St. Mary's Health Center", 
+      company: company.name, 
       location: "New Haven, CT",
       salary: "45k/yr - 55k/yr",
       applicants: 12,
@@ -101,7 +103,7 @@ const YourPipelinePage = () => {
     {
       id: 4,
       title: "Respiratory Therapist",
-      company: "St. Mary's Health Center",
+      company: company.name,
       location: "New Haven, CT", 
       salary: "70k/yr - 85k/yr",
       applicants: 3,
@@ -110,7 +112,7 @@ const YourPipelinePage = () => {
     {
       id: 5,
       title: "Laboratory Technician",
-      company: "St. Mary's Health Center",
+      company: company.name,
       location: "New Haven, CT",
       salary: "50k/yr - 65k/yr",
       applicants: 8,
@@ -119,7 +121,7 @@ const YourPipelinePage = () => {
     {
       id: 6,
       title: "Radiology Technologist",
-      company: "St. Mary's Health Center",
+      company: company.name,
       location: "New Haven, CT",
       salary: "60k/yr - 75k/yr",
       applicants: 5,
@@ -128,7 +130,7 @@ const YourPipelinePage = () => {
     {
       id: 7,
       title: "Pharmacy Technician",
-      company: "St. Mary's Health Center",
+      company: company.name,
       location: "New Haven, CT",
       salary: "40k/yr - 55k/yr",
       applicants: 15,
@@ -137,7 +139,7 @@ const YourPipelinePage = () => {
     {
       id: 8,
       title: "Occupational Therapist",
-      company: "St. Mary's Health Center",
+      company: company.name,
       location: "New Haven, CT",
       salary: "75k/yr - 90k/yr",
       applicants: 6,
@@ -146,7 +148,7 @@ const YourPipelinePage = () => {
     {
       id: 9,
       title: "Speech Language Pathologist",
-      company: "St. Mary's Health Center",
+      company: company.name,
       location: "New Haven, CT",
       salary: "70k/yr - 85k/yr",
       applicants: 4,
@@ -155,7 +157,7 @@ const YourPipelinePage = () => {
     {
       id: 10,
       title: "Clinical Social Worker",
-      company: "St. Mary's Health Center",
+      company: company.name,
       location: "New Haven, CT",
       salary: "55k/yr - 70k/yr",
       applicants: 9,
@@ -1201,7 +1203,7 @@ const YourPipelinePage = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
             <div>
               <h2 className="text-[30px] font-black leading-[154%] text-[#01253F] font-avenir">
-                St. Mary&apos;s Health Center
+                {company.name}
               </h2>
               {user?.role === 'ADMIN' && (
                 <p className="text-sm text-blue-600 font-medium mt-1">Admin Access - Employee/User Dashboard</p>
