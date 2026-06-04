@@ -1,13 +1,16 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
+import { headers } from 'next/headers';
 import { AuthProvider } from './contexts/AuthContext';
+import { CompanyProvider } from './contexts/CompanyContext';
 import { Suspense } from 'react';
 import Loading from './components/Common/Loading';
 import GlobalAuthModal from './components/GlobalAuthModal';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { getCompanyConfig } from '@/lib/companies';
 
 // Import Baloo and configure a fallback for Avenir
-const baloo = Inter({ 
+const baloo = Inter({
   subsets: ['latin'],
   variable: '--font-baloo'
 });
@@ -17,11 +20,15 @@ export const metadata = {
   description: 'Pipeline: The Dedicated Long-Term Care Job Board | CNA, LPN, RN & Home Care Jobs',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const headersList = await headers();
+  const companyId = headersList.get('x-pipeline-company') ?? 'default';
+  const company = getCompanyConfig(companyId);
+
   return (
     <html lang="en">
       <head>
@@ -43,13 +50,15 @@ export default function RootLayout({
         <meta name="msapplication-TileImage" content="/pipeline_logo_p.png?v=6" />
       </head>
       <body className={baloo.className + ' font-avenir'} style={{ fontFamily: `var(--font-avenir), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif` }}>
-        <AuthProvider>
-        <Suspense fallback={<Loading />}>
-        <main>{children}</main>
-        </Suspense>
-        <GlobalAuthModal />
-        </AuthProvider>
-        
+        <CompanyProvider company={company}>
+          <AuthProvider>
+            <Suspense fallback={<Loading />}>
+              <main>{children}</main>
+            </Suspense>
+            <GlobalAuthModal />
+          </AuthProvider>
+        </CompanyProvider>
+
         {/* Google Tag Manager */}
         <GoogleTagManager gtmId="GTM-NB6Z3L2B" />
       </body>

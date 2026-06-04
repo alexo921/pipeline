@@ -17,7 +17,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config jest.config.js"
+    "test:e2e": "jest --config jest.config.js",
+    "seed:demo": "ts-node -r tsconfig-paths/register src/scripts/seed-demo-data.ts",
+    "seed:careone": "ts-node -r tsconfig-paths/register src/scripts/seed-careone-holyoke.ts"
   },
   "dependencies": {
     "@nestjs/bullmq": "^11.0.2",

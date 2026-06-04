@@ -4,48 +4,23 @@ import React from 'react';
 import BaseLayout from '../components/layout/BaseLayout';
 import { AnalyticsWorkspace } from '../components/analytics/AnalyticsWorkspace';
 import { useAuth } from '../contexts/AuthContext';
+import { useCompany } from '../contexts/CompanyContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const AnalyticsPage = () => {
   const { user } = useAuth();
+  const company = useCompany();
   const router = useRouter();
   const [authChecked, setAuthChecked] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
 
-  // Mock facility ID - in real implementation, this would come from user context or URL params
-  const facilityId = 'facility-123';
-
-  // Check authentication and authorization
   useEffect(() => {
     // For demo purposes, bypass authentication check
     setAuthChecked(true);
     setIsAuthorized(true);
-    
-    // Original authentication logic (commented out for demo)
-    /*
-    if (user === null) {
-      return;
-    }
-
-    if (authChecked) {
-      return;
-    }
-
-    setAuthChecked(true);
-
-    if (!user) {
-      router.push('/');
-      return;
-    }
-
-    // For now, allow all authenticated users to access analytics
-    // In production, you'd check for specific roles or permissions
-    setIsAuthorized(true);
-    */
   }, [user, router, authChecked]);
 
-  // Show loading while checking authentication
   if (!authChecked) {
     return (
       <BaseLayout>
@@ -59,7 +34,6 @@ const AnalyticsPage = () => {
     );
   }
 
-  // Show access denied if not authorized
   if (!isAuthorized) {
     return (
       <BaseLayout>
@@ -84,10 +58,15 @@ const AnalyticsPage = () => {
       {/* Page Header */}
       <div className="w-full py-4 sm:py-6 md:py-8 lg:py-12 relative" style={{ zIndex: 1 }}>
         <div className="max-w-[1400px] mx-auto px-2 sm:px-4 lg:px-6 xl:px-8">
-          <div className="flex justify-start">
-            <h1 className="text-[70px] font-bold leading-[115%] text-[#01253F] font-baloo ml-14">
+          <div className="flex justify-start flex-col ml-14">
+            <h1 className="text-[70px] font-bold leading-[115%] text-[#01253F] font-baloo">
               Analytics
             </h1>
+            {company.id !== 'default' && (
+              <p className="text-xl text-[#7691A4] font-medium mt-1">
+                {company.name}
+              </p>
+            )}
           </div>
           {user?.role === 'ADMIN' && (
             <p className="text-sm text-blue-600 font-medium mt-2 ml-6">Admin Access - Analytics Dashboard</p>
@@ -97,7 +76,7 @@ const AnalyticsPage = () => {
 
       {/* Main Content */}
       <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 lg:px-6 xl:px-8 pb-6 sm:pb-8 md:pb-12" style={{ position: 'relative', zIndex: 1 }}>
-        <AnalyticsWorkspace facilityId={facilityId} />
+        <AnalyticsWorkspace facilityId={company.facilityId} facilityName={company.name} />
       </div>
     </BaseLayout>
   );

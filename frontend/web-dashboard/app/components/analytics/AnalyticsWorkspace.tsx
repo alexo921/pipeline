@@ -11,9 +11,10 @@ import { useRouter } from 'next/navigation';
 
 interface AnalyticsWorkspaceProps {
   facilityId: string;
+  facilityName?: string;
 }
 
-export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facilityId }) => {
+export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facilityId, facilityName }) => {
   const router = useRouter();
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d' | 'custom'>('30d');
   const [roleFilter, setRoleFilter] = useState<string>('all');
@@ -437,7 +438,12 @@ export const AnalyticsWorkspace: React.FC<AnalyticsWorkspaceProps> = ({ facility
 
         {/* Action Center - First item under buttons */}
         <div className="mb-8">
-          <ActionCenter 
+          {facilityName && facilityName !== 'Pipeline Workforce' && (
+            <p className="text-sm text-[#7691A4] font-medium mb-3">
+              Facility: {facilityName}
+            </p>
+          )}
+          <ActionCenter
             actionItems={actions}
             automationModes={automationModes}
             completedTasks={completedTasks}
