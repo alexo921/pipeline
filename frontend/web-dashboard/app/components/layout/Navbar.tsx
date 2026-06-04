@@ -104,12 +104,12 @@ const Navbar: React.FC<NavbarProps> = ({
                       {/* Employer dashboard — visible to EMPLOYER and ADMIN */}
                       {(user.role === 'EMPLOYER' || user.role === 'ADMIN') && (
                         <Link
-                          href="/my-pipeline"
+                          href="/your-pipeline"
                           className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
                           onClick={() => setIsUserDropdownOpen(false)}
                         >
                           <LayoutDashboard className="w-4 h-4" />
-                          <span>My Pipeline</span>
+                          <span>Your Pipeline</span>
                         </Link>
                       )}
                       {/* Candidate dashboard — visible to CANDIDATE */}
