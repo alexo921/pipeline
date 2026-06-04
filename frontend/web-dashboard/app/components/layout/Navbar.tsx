@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCompany } from "@/contexts/CompanyContext";
 import { useRouter } from "next/navigation";
-import { LogOut, ChevronDown, BarChart3, FileText } from "lucide-react";
+import { LogOut, ChevronDown, BarChart3, FileText, LayoutDashboard, Users } from "lucide-react";
 
 type NavbarProps = {
   onLoginClick: () => void;
@@ -100,8 +100,31 @@ const Navbar: React.FC<NavbarProps> = ({
                   </button>
 
                   {isUserDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border">
-                      {user.role === 'ADMIN' && (
+                    <div className="absolute right-0 mt-2 w-52 bg-white rounded-md shadow-lg py-1 z-50 border">
+                      {/* Employer dashboard — visible to EMPLOYER and ADMIN */}
+                      {(user.role === 'EMPLOYER' || user.role === 'ADMIN') && (
+                        <Link
+                          href="/my-pipeline"
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                          onClick={() => setIsUserDropdownOpen(false)}
+                        >
+                          <LayoutDashboard className="w-4 h-4" />
+                          <span>My Pipeline</span>
+                        </Link>
+                      )}
+                      {/* Candidate dashboard — visible to CANDIDATE */}
+                      {user.role === 'CANDIDATE' && (
+                        <Link
+                          href="/your-pipeline"
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                          onClick={() => setIsUserDropdownOpen(false)}
+                        >
+                          <Users className="w-4 h-4" />
+                          <span>Your Pipeline</span>
+                        </Link>
+                      )}
+                      {/* Analytics — visible to EMPLOYER and ADMIN */}
+                      {(user.role === 'EMPLOYER' || user.role === 'ADMIN') && (
                         <Link
                           href="/analytics"
                           className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
@@ -111,6 +134,7 @@ const Navbar: React.FC<NavbarProps> = ({
                           <span>Analytics</span>
                         </Link>
                       )}
+                      {/* Intake Forms — ADMIN only */}
                       {user.role === 'ADMIN' && (
                         <Link
                           href="/admin/intake-forms"
