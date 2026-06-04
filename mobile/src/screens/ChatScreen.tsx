@@ -114,6 +114,8 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onGoBack, onNavigateToProfile, 
   const [historyDisplayCount, setHistoryDisplayCount] = useState(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { markChatsAsRead, user, hydrated } = useAuth();
+  // Use logged-in userId when available, otherwise fall back to an anonymous session ID
+  const userId = user?.id ?? 'anon-pip-demo';
   const micGlow = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef<FlatList<ConversationMessage> | null>(null);
   const insets = useSafeAreaInsets();
@@ -194,11 +196,6 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onGoBack, onNavigateToProfile, 
       return;
     }
 
-    if (!user?.id) {
-      setErrorMessage('Please sign in to chat with Pip.');
-      return;
-    }
-
     if (mode === 'listening') {
       setMode('chat');
     }
@@ -217,11 +214,11 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onGoBack, onNavigateToProfile, 
     setIsSending(true);
 
     try {
-      console.log('[Chat] sending message for user', user.id);
+      console.log('[Chat] sending message for user', userId);
       // Pull recent history to give Pip extra context (most recent first).
       let systemPrompt = PIP_SYSTEM_PROMPT;
       try {
-        const history = await fetchChatHistory(user?.id, 100);
+        const history = await fetchChatHistory(userId, 100);
         if (history && history.length > 0) {
           const contextLines = history.map((item, index) => `${index + 1}. ${item.message ?? ''}`).join('\n');
           systemPrompt = `${PIP_SYSTEM_PROMPT}\n\nContext from last chats (newest first):\n${contextLines}`;
@@ -235,7 +232,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onGoBack, onNavigateToProfile, 
         content,
       }));
 
-      const completion = await createChatCompletion(payload, systemPrompt, undefined, user.id);
+      const completion = await createChatCompletion(payload, systemPrompt, undefined, userId);
       const pipContent = completion.message?.content?.trim();
       if (pipContent) {
         const assistantCreatedAt = completion.created
@@ -259,7 +256,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onGoBack, onNavigateToProfile, 
     } finally {
       setIsSending(false);
     }
-  }, [draft, hydrated, isSending, messages, mode, user?.id]);
+  }, [draft, hydrated, isSending, messages, mode, userId]);
 
   useEffect(() => {
     if (mode === 'chat' && isAtBottomRef.current) {
@@ -277,7 +274,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onGoBack, onNavigateToProfile, 
   const keyExtractor = useCallback((item: ConversationMessage) => item.id, []);
 
   const handleLoadHistory = useCallback(async () => {
-    if (!hydrated || !user?.id || isLoadingHistory) {
+    if (!hydrated || isLoadingHistory) {
       return;
     }
     setIsLoadingHistory(true);
@@ -285,8 +282,8 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onGoBack, onNavigateToProfile, 
     try {
       // If we haven't fetched history yet, grab a batch (up to 40)
       if (historyCache.length === 0) {
-        console.log('[Chat] fetching history for user', user.id);
-        const history = await fetchChatHistory(user.id, 40);
+        console.log('[Chat] fetching history for user', userId);
+        const history = await fetchChatHistory(userId, 40);
         console.log('[Chat] history result count', history?.length ?? 0);
         const historyMessages: ConversationMessage[] = (history ?? [])
           .slice()
@@ -328,7 +325,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onGoBack, onNavigateToProfile, 
     } finally {
       setIsLoadingHistory(false);
     }
-  }, [historyCache, historyDisplayCount, hydrated, isLoadingHistory, user?.id]);
+  }, [historyCache, historyDisplayCount, hydrated, isLoadingHistory, userId]);
 
   return (
     <View style={styles.safeArea}>

@@ -59,33 +59,9 @@ const IntroScreen: React.FC<IntroScreenProps> = ({ onComplete, onSkip }) => {
   );
 
   const handleContinue = async () => {
-    if (step === 0) {
-      setStep(1);
-      setError('');
-      return;
-    }
-    if (!canSubmit) {
-      setError('Please provide an email and a password.');
-      return;
-    }
-    setIsSubmitting(true);
-    setError('');
-    try {
-      console.log('[Intro] attempting login', email.trim());
-      const session = await login(email.trim(), password.trim());
-      console.log('[Intro] login success', session.user?.id);
-      await setUser(session.user, session.token);
-      onComplete();
-    } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : 'Could not sign in. Please try again.';
-      setError(message);
-      Alert.alert('Sign in failed', message);
-      // eslint-disable-next-line no-console
-      console.warn('Sign in failed', err);
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Skip sign-in — go straight to the app as anonymous
+    await setUser(null, null);
+    onSkip();
   };
 
   const handleSkip = async () => {
