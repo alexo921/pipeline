@@ -212,6 +212,10 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onGoBack, onNavigateToProfile, 
     setDraft('');
     setErrorMessage(null);
     setIsSending(true);
+    hideInfoBanner();
+    // Always track as "at bottom" when the user sends — they want to see Pip's reply
+    isAtBottomRef.current = true;
+    setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 50);
 
     try {
       console.log('[Chat] sending message for user', userId);
@@ -263,6 +267,14 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onGoBack, onNavigateToProfile, 
       scrollViewRef.current?.scrollToEnd({ animated: true });
     }
   }, [messages, mode]);
+
+  // Scroll to end when keyboard rises so the latest message stays visible
+  useEffect(() => {
+    if (isKeyboardVisible && isAtBottomRef.current) {
+      const t = setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: false }), 120);
+      return () => clearTimeout(t);
+    }
+  }, [isKeyboardVisible]);
 
   const renderMessage = useCallback(
     ({ item }: { item: ConversationMessage }) => (
@@ -461,7 +473,6 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ onGoBack, onNavigateToProfile, 
                           scrollEnabled
                           returnKeyType="default"
                           onSubmitEditing={handleSend}
-                          onFocus={hideInfoBanner}
                         />
                         <View style={styles.inlineControls}>
                           <TouchableOpacity

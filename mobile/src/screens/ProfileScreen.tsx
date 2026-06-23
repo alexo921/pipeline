@@ -254,7 +254,7 @@ const ProfileScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={[
             styles.content,
-            { paddingTop: insets.top + 10, paddingBottom: insets.bottom + 30 },
+            { paddingTop: insets.top + 10, paddingBottom: 110 + insets.bottom },
           ]}
           showsVerticalScrollIndicator={false}
         >
@@ -268,6 +268,54 @@ const ProfileScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             <Image source={userIcon} style={styles.avatarIcon} resizeMode="contain" />
             <Text style={styles.name}>{displayName}</Text>
             <Text style={styles.location}>{displayLocation}</Text>
+          </View>
+
+          {/* Achievements Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Achievements</Text>
+            <View style={styles.achievementsGrid}>
+              {[
+                { icon: 'flame', label: '7-Day Streak', earned: true, color: '#F59E0B' },
+                { icon: 'checkmark-circle', label: 'First Check-In', earned: true, color: '#22C55E' },
+                { icon: 'chatbubble-ellipses', label: 'First Pip Chat', earned: true, color: '#6366F1' },
+                { icon: 'star', label: '30-Day Streak', earned: false, color: '#A3A9BA' },
+                { icon: 'heart', label: 'Pulse Responder', earned: true, color: '#EC4899' },
+                { icon: 'trophy', label: '90-Day Milestone', earned: false, color: '#A3A9BA' },
+              ].map((achievement) => (
+                <View
+                  key={achievement.label}
+                  style={[
+                    styles.achievementBadge,
+                    !achievement.earned && styles.achievementBadgeLocked,
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.achievementIconCircle,
+                      { backgroundColor: achievement.earned ? `${achievement.color}22` : '#F3F4F6' },
+                    ]}
+                  >
+                    <Ionicons
+                      name={achievement.icon as any}
+                      size={22}
+                      color={achievement.earned ? achievement.color : '#CBD5E1'}
+                    />
+                  </View>
+                  <Text
+                    style={[
+                      styles.achievementLabel,
+                      !achievement.earned && styles.achievementLabelLocked,
+                    ]}
+                    numberOfLines={2}
+                  >
+                    {achievement.label}
+                  </Text>
+                  {achievement.earned && (
+                    <View style={styles.earnedDot} />
+                  )}
+                </View>
+              ))}
+            </View>
           </View>
 
           <View style={styles.section}>
@@ -326,43 +374,38 @@ const ProfileScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.bottomNavOuter}>
-            <View
-              style={[
-                styles.bottomNavContainer,
-                {
-                  paddingBottom: Math.max(insets.bottom + 8, 20),
-                },
-              ]}
-            >
-              <View style={styles.bottomNavWrapper}>
-                <View style={styles.bottomNavShadow} pointerEvents="none" />
-                <LinearGradient colors={['#FFFFFF', '#F6F7FF']} style={styles.bottomNav}>
-                  <View style={styles.bottomNavHighlight} pointerEvents="none" />
-                  <TouchableOpacity
-                    style={styles.bottomNavIcon}
-                    activeOpacity={0.85}
-                    onPress={() => navigation.navigate('Home', { animation: 'slide_from_left' })}
-                  >
-                    <NavHomeIconPip size={51} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.floatingButton}
-                    activeOpacity={0.85}
-                    onPress={() => navigation.navigate('Chat', { animation: 'slide_from_left' })}
-                  >
-                    <View style={styles.chatIconWrapper}>
-                      <NavChatIcon size={51} />
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.bottomNavIcon} activeOpacity={0.85}>
-                    <NavProfileIconProfile size={51} />
-                  </TouchableOpacity>
-                </LinearGradient>
-              </View>
+        </ScrollView>
+
+        {/* Sticky bottom nav */}
+        <View style={[styles.stickyNavOuter, { paddingBottom: insets.bottom + 12 }]}>
+          <View style={styles.bottomNavContainer}>
+            <View style={styles.bottomNavWrapper}>
+              <View style={styles.bottomNavShadow} pointerEvents="none" />
+              <LinearGradient colors={['#FFFFFF', '#F6F7FF']} style={styles.bottomNav}>
+                <View style={styles.bottomNavHighlight} pointerEvents="none" />
+                <TouchableOpacity
+                  style={styles.bottomNavIcon}
+                  activeOpacity={0.85}
+                  onPress={() => navigation.navigate('Home', { animation: 'slide_from_left' })}
+                >
+                  <NavHomeIconPip size={51} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.floatingButton}
+                  activeOpacity={0.85}
+                  onPress={() => navigation.navigate('Chat', { animation: 'slide_from_left' })}
+                >
+                  <View style={styles.chatIconWrapper}>
+                    <NavChatIcon size={51} />
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.bottomNavIcon} activeOpacity={0.85}>
+                  <NavProfileIconProfile size={51} />
+                </TouchableOpacity>
+              </LinearGradient>
             </View>
           </View>
-        </ScrollView>
+        </View>
       </View>
 
       <Modal visible={!!activeModal} transparent animationType="fade" onRequestClose={() => setActiveModal(null)}>
@@ -469,6 +512,56 @@ const styles = StyleSheet.create({
     color: '#0B1F41',
     marginBottom: 12,
   },
+  achievementsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  achievementBadge: {
+    width: '30%',
+    flexGrow: 1,
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.07,
+    shadowRadius: 10,
+    elevation: 2,
+    position: 'relative',
+  },
+  achievementBadgeLocked: {
+    opacity: 0.55,
+  },
+  achievementIconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  achievementLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#1F2A44',
+    textAlign: 'center',
+    lineHeight: 14,
+    fontFamily: Platform.select({ ios: 'Avenir-Heavy', android: 'sans-serif-medium' }),
+  },
+  achievementLabelLocked: {
+    color: '#A3A9BA',
+  },
+  earnedDot: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#22C55E',
+  },
   card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
@@ -494,6 +587,12 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     color: '#C6534C',
+  },
+  stickyNavOuter: {
+    width: '100%',
+    alignItems: 'center',
+    paddingTop: 10,
+    backgroundColor: 'transparent',
   },
   bottomNavOuter: {
     width: '85%',

@@ -20,8 +20,12 @@ import type { ImageStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import LottieView from 'lottie-react-native';
 import { useAuth } from '../context/AuthContext';
+import ModelViewer from '../components/ModelViewer';
 import { NavChatIcon, NavHomeIcon, NavProfileIcon } from '../components/NavIcons';
+
+const lockAnimation = require('../../assets/lock-animation.json');
 
 type TwoStopGradient = readonly [string, string];
 
@@ -44,6 +48,37 @@ const moodFaces: MoodDescriptor[] = [
   { id: 'soft-smile', gradient: ['#DDEEDB', '#C4E3CE'] as TwoStopGradient, expression: 'soft-smile', label: 'Good' },
   { id: 'smile', gradient: ['#BCE4F4', '#A6D6F1'] as TwoStopGradient, expression: 'smile', label: 'Great' },
 ];
+
+type Achievement = {
+  id: string;
+  title: string;
+  description: string;
+  earned: boolean;
+  assetModule: number;
+};
+
+// Each achievement maps 1-to-1 with a GLB file
+const ACHIEVEMENT_MODELS = [
+  require('../../assets/achievements/PIP_nursing-home-3d-1.glb'),
+  require('../../assets/achievements/PIP_nursing-home-3d-2.glb'),
+  require('../../assets/achievements/PIP_nursing-home-3d-3.glb'),
+  require('../../assets/achievements/PIP_nursing-home-3d-4.glb'),
+  require('../../assets/achievements/PIP_nursing-home-3d-5.glb'),
+  require('../../assets/achievements/PIP_nursing-home-3d-6.glb'),
+  require('../../assets/achievements/PIP_nursing-home-3d-7.glb'),
+  require('../../assets/achievements/PIP_nursing-home-3d-8.glb'),
+  require('../../assets/achievements/PIP_nursing-home-3d-9.glb'),
+];
+
+const ACHIEVEMENTS: Achievement[] = [
+  { id: 'first_checkin', title: 'First Check-In', description: 'Completed your first mood check-in', earned: true, assetModule: ACHIEVEMENT_MODELS[0] },
+  { id: 'nursing_home', title: 'Nursing Home', description: 'Welcome to the care team!', earned: true, assetModule: ACHIEVEMENT_MODELS[1] },
+  { id: 'first_chat', title: 'First Chat', description: 'Had your first conversation with Pip', earned: false, assetModule: ACHIEVEMENT_MODELS[2] },
+  { id: 'streak_7', title: '7-Day Streak', description: 'Logged in 7 days in a row', earned: false, assetModule: ACHIEVEMENT_MODELS[3] },
+  { id: 'pulse', title: 'Pulse Keeper', description: 'Completed 3 pulse surveys', earned: false, assetModule: ACHIEVEMENT_MODELS[4] },
+  { id: 'streak_30', title: '30-Day Streak', description: 'Logged in 30 days in a row', earned: false, assetModule: ACHIEVEMENT_MODELS[5] },
+];
+
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 const AnimatedUserIcon = Animated.createAnimatedComponent(Image);
@@ -94,6 +129,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigateToChat, onNavigateToP
   const [surveySupport, setSurveySupport] = useState('');
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [notificationsCleared, setNotificationsCleared] = useState(false);
+  const [achievementModalVisible, setAchievementModalVisible] = useState(false);
+  const [currentAchievementIndex, setCurrentAchievementIndex] = useState(0);
 
   const unreadCount = pendingChats.filter((chat) => chat.unread).length;
   const greetingName =
@@ -229,7 +266,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigateToChat, onNavigateToP
               {
                 paddingTop: insets.top + 44,
                 paddingHorizontal: horizontalPadding,
-                paddingBottom: insets.bottom + 16,
+                paddingBottom: 110 + insets.bottom,
               },
             ]}
             style={styles.scrollContainer}
@@ -419,46 +456,189 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigateToChat, onNavigateToP
               </AnimatedLinearGradient>
             </TouchableOpacity>
 
-            <Animated.View
-              style={[
-                styles.bottomNavOuter,
-                {
-                  marginHorizontal: -horizontalPadding,
-                  marginTop: -2,
-                },
-              ]}
+            <Text style={styles.sectionTitle}>Achievements</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.achievementScroll}
+              contentContainerStyle={styles.achievementScrollContent}
             >
-              <View style={styles.bottomNavContainer}>
-                <View style={styles.bottomNavWrapper}>
-                  <View style={styles.bottomNavShadow} pointerEvents="none" />
-                  <LinearGradient colors={['#FFFFFF', '#F6F7FF']} style={styles.bottomNav}>
-                    <View style={styles.bottomNavHighlight} pointerEvents="none" />
-                    <TouchableOpacity style={styles.bottomNavIcon} activeOpacity={0.8}>
-                      <NavHomeIcon size={51} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.floatingButton}
-                      activeOpacity={0.85}
-                      onPress={() => handleStartChat()}
-                    >
-                      <View style={styles.chatIconWrapper}>
-                        <NavChatIcon size={51} />
+              {ACHIEVEMENTS.map((achievement, index) => (
+                <TouchableOpacity
+                  key={achievement.id}
+                  style={styles.achievementThumbnail}
+                  activeOpacity={0.85}
+                  onPress={() => {
+                    setCurrentAchievementIndex(index);
+                    setAchievementModalVisible(true);
+                  }}
+                >
+                  <LinearGradient
+                    colors={achievement.earned ? ['#EDE9FF', '#E8F0FF'] : ['#F1F5F9', '#E2E8F0']}
+                    style={styles.achievementThumbIllustration}
+                  >
+                    <ModelViewer
+                      assetModule={achievement.assetModule}
+                      size={80}
+                      rotationSpeed={achievement.earned ? 0.008 : 0}
+                      cameraDistance={4}
+                    />
+                    {!achievement.earned && (
+                      <View style={styles.achievementLockedOverlay}>
+                        <LottieView
+                          source={lockAnimation}
+                          autoPlay
+                          loop
+                          style={styles.lockLottieThumb}
+                        />
                       </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.bottomNavIcon}
-                      activeOpacity={0.8}
-                      onPress={() => onNavigateToProfile()}
-                    >
-                      <NavProfileIcon size={51} />
-                    </TouchableOpacity>
+                    )}
                   </LinearGradient>
-                </View>
-              </View>
-            </Animated.View>
+                  <Text style={[styles.achievementThumbTitle, !achievement.earned && styles.achievementThumbTitleLocked]} numberOfLines={1}>
+                    {achievement.earned ? achievement.title : '???'}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
           </ScrollView>
+
+          {/* Sticky bottom nav */}
+          <View style={[styles.stickyNavOuter, { paddingBottom: insets.bottom + 12 }]}>
+            <View style={styles.bottomNavContainer}>
+              <View style={styles.bottomNavWrapper}>
+                <View style={styles.bottomNavShadow} pointerEvents="none" />
+                <LinearGradient colors={['#FFFFFF', '#F6F7FF']} style={styles.bottomNav}>
+                  <View style={styles.bottomNavHighlight} pointerEvents="none" />
+                  <TouchableOpacity style={styles.bottomNavIcon} activeOpacity={0.8}>
+                    <NavHomeIcon size={51} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.floatingButton}
+                    activeOpacity={0.85}
+                    onPress={() => handleStartChat()}
+                  >
+                    <View style={styles.chatIconWrapper}>
+                      <NavChatIcon size={51} />
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.bottomNavIcon}
+                    activeOpacity={0.8}
+                    onPress={() => onNavigateToProfile()}
+                  >
+                    <NavProfileIcon size={51} />
+                  </TouchableOpacity>
+                </LinearGradient>
+              </View>
+            </View>
+          </View>
         </View>
       </TouchableWithoutFeedback>
+
+      <Modal
+        visible={achievementModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setAchievementModalVisible(false)}
+      >
+        <View style={styles.achievementModalBackdrop}>
+          <View style={styles.achievementModalCard}>
+            {/* Header */}
+            <View style={styles.achievementModalHeader}>
+              <Text style={styles.achievementModalLabel}>Achievements</Text>
+              <TouchableOpacity hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+                <Ionicons name="information-circle-outline" size={22} color="#9AA2B4" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Illustration area */}
+            <LinearGradient
+              colors={
+                ACHIEVEMENTS[currentAchievementIndex]?.earned
+                  ? ['#E8E3FF', '#EDE8FF', '#F0EEFF', '#E8F0FF']
+                  : ['#F1F5F9', '#E8EDF5', '#EEF2F8', '#F1F5F9']
+              }
+              style={styles.achievementIllustrationArea}
+            >
+              {ACHIEVEMENTS[currentAchievementIndex]?.earned ? (
+                <>
+                  <View style={styles.achievementIllustrationGlow} />
+                  <ModelViewer
+                    assetModule={ACHIEVEMENTS[currentAchievementIndex]?.assetModule ?? ACHIEVEMENT_MODELS[0]}
+                    size={170}
+                    rotationSpeed={0.006}
+                    cameraDistance={3.5}
+                    cameraElevation={0.8}
+                  />
+                </>
+              ) : (
+                <LottieView
+                  source={lockAnimation}
+                  autoPlay
+                  loop
+                  style={styles.lockLottieModal}
+                />
+              )}
+            </LinearGradient>
+
+            {/* Title */}
+            <Text style={styles.achievementCardTitle}>
+              {ACHIEVEMENTS[currentAchievementIndex]?.earned
+                ? ACHIEVEMENTS[currentAchievementIndex]?.title
+                : '???'}
+            </Text>
+            <Text style={styles.achievementCardDesc}>
+              {ACHIEVEMENTS[currentAchievementIndex]?.earned
+                ? ACHIEVEMENTS[currentAchievementIndex]?.description
+                : 'Keep going to unlock this achievement'}
+            </Text>
+
+            {/* Nav arrows + dots */}
+            <View style={styles.achievementNavRow}>
+              <TouchableOpacity
+                style={[styles.achievementNavArrow, currentAchievementIndex === 0 && styles.achievementNavArrowDisabled]}
+                onPress={() => setCurrentAchievementIndex((prev) => Math.max(0, prev - 1))}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="chevron-back" size={20} color={currentAchievementIndex === 0 ? '#CBD5E1' : '#0B1F41'} />
+              </TouchableOpacity>
+
+              <View style={styles.achievementDots}>
+                {ACHIEVEMENTS.map((_, i) => (
+                  <TouchableOpacity key={i} onPress={() => setCurrentAchievementIndex(i)}>
+                    <View style={[styles.achievementDot, i === currentAchievementIndex && styles.achievementDotActive]} />
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <TouchableOpacity
+                style={[styles.achievementNavArrow, currentAchievementIndex === ACHIEVEMENTS.length - 1 && styles.achievementNavArrowDisabled]}
+                onPress={() => setCurrentAchievementIndex((prev) => Math.min(ACHIEVEMENTS.length - 1, prev + 1))}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="chevron-forward" size={20} color={currentAchievementIndex === ACHIEVEMENTS.length - 1 ? '#CBD5E1' : '#0B1F41'} />
+              </TouchableOpacity>
+            </View>
+
+            {/* Close button */}
+            <TouchableOpacity style={styles.achievementCloseBtn} onPress={() => setAchievementModalVisible(false)}>
+              <Ionicons name="close" size={20} color="#6B7280" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Simulated bottom nav */}
+          <View style={styles.achievementModalNavBar}>
+            <LinearGradient colors={['#FFFFFF', '#F6F7FF']} style={styles.achievementModalNavBarInner}>
+              <NavHomeIcon size={51} />
+              <View style={styles.achievementModalNavChat}>
+                <NavChatIcon size={51} />
+              </View>
+              <NavProfileIcon size={51} />
+            </LinearGradient>
+          </View>
+        </View>
+      </Modal>
 
       <Modal visible={isSurveyOpen} transparent animationType="slide" onRequestClose={closeSurvey}>
         <View style={styles.modalBackdrop}>
@@ -843,11 +1023,25 @@ const styles = StyleSheet.create({
     overflow: 'visible',
     alignSelf: 'center',
   },
+  stickyNavOuter: {
+    width: '100%',
+    alignItems: 'center',
+    paddingTop: 10,
+    backgroundColor: 'transparent',
+  },
   bottomNavOuter: {
     width: '85%',
     alignSelf: 'center',
     alignItems: 'center',
     marginTop: 32,
+  },
+  lockLottieThumb: {
+    width: 48,
+    height: 48,
+  },
+  lockLottieModal: {
+    width: 180,
+    height: 180,
   },
   bottomNav: {
     flexDirection: 'row',
@@ -1018,6 +1212,189 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
+  },
+  achievementScroll: {
+    marginBottom: 28,
+  },
+  achievementScrollContent: {
+    paddingRight: 8,
+    gap: 12,
+  },
+  achievementThumbnail: {
+    width: 96,
+    alignItems: 'center',
+    gap: 8,
+  },
+  achievementThumbIllustration: {
+    width: 88,
+    height: 88,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#6B7CD6',
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  achievementLockedOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 20,
+    backgroundColor: 'rgba(241,245,249,0.55)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  achievementThumbTitle: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#1A1F36',
+    textAlign: 'center',
+    fontFamily: Platform.select({ ios: 'Avenir-Heavy', android: 'sans-serif-medium' }),
+  },
+  achievementThumbTitleLocked: {
+    color: '#94A3B8',
+  },
+  achievementModalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(10,16,32,0.5)',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingBottom: 0,
+  },
+  achievementModalCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    paddingHorizontal: 28,
+    paddingTop: 20,
+    paddingBottom: 16,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.18,
+    shadowRadius: 24,
+    elevation: 10,
+    position: 'relative',
+  },
+  achievementModalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 20,
+  },
+  achievementModalLabel: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#0B1F41',
+    fontFamily: Platform.select({ ios: 'Avenir-Heavy', android: 'sans-serif-medium' }),
+  },
+  achievementIllustrationArea: {
+    width: '100%',
+    height: 200,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+  achievementIllustrationGlow: {
+    position: 'absolute',
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    backgroundColor: 'rgba(167,139,250,0.18)',
+    transform: [{ scaleX: 1.6 }],
+  },
+  achievementCardTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#0B1F41',
+    marginBottom: 6,
+    fontFamily: Platform.select({ ios: 'Avenir-Heavy', android: 'sans-serif-medium' }),
+  },
+  achievementCardDesc: {
+    fontSize: 14,
+    color: '#6B7280',
+    textAlign: 'center',
+    marginBottom: 24,
+    fontFamily: Platform.select({ ios: 'Avenir', android: 'sans-serif' }),
+  },
+  achievementNavRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 12,
+  },
+  achievementNavArrow: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#F1F5F9',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  achievementNavArrowDisabled: {
+    backgroundColor: '#F8FAFC',
+  },
+  achievementDots: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  achievementDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: '#CBD5E1',
+  },
+  achievementDotActive: {
+    width: 20,
+    backgroundColor: '#0B1F41',
+  },
+  achievementCloseBtn: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F1F5F9',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  achievementModalNavBar: {
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingBottom: 16,
+    paddingTop: 4,
+  },
+  achievementModalNavBarInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 44,
+    paddingHorizontal: 26,
+    paddingVertical: 6,
+    width: '80%',
+    maxWidth: 320,
+    shadowColor: '#7B84D6',
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  achievementModalNavChat: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
